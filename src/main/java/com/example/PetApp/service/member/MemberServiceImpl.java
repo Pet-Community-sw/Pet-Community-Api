@@ -44,7 +44,6 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     @Override
     public MemberSignResponseDto createMember(MemberSignDto memberSignDto) {
-        log.info("createMember 요청 : {}",memberSignDto.toString());
         if (memberRepository.existsByEmail(memberSignDto.getEmail())) {
             throw new ConflictException("이미 가입된 회원입니다.");
         }
@@ -57,7 +56,6 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     @Override
     public LoginResponseDto login(LoginDto loginDto, HttpServletResponse response) {
-        log.info("login 요청 : {}", loginDto.toString());
         Member member = memberQueryService.findByMember(loginDto.getEmail());
         if (!passwordEncoder.matches(loginDto.getPassword(),member.getPassword())) {
             throw new UnAuthorizedException("이메일 혹은 비밀번호가 일치하지 않습니다.");
@@ -75,7 +73,6 @@ public class MemberServiceImpl implements MemberService{
     @Transactional(readOnly = true)
     @Override
     public FindByIdResponseDto findById(String phoneNumber) {
-        log.info("findById 요청 phonNumber : {}", phoneNumber);
         Member member = memberRepository.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new NotFoundException("해당 유저는 없는 유저입니다. 회원가입 해주세요."));
         return new FindByIdResponseDto(member.getEmail());
@@ -84,7 +81,6 @@ public class MemberServiceImpl implements MemberService{
     @Transactional(readOnly = true)
     @Override
     public void sendEmail(SendEmailDto sendEmailDto) {
-        log.info("sendEmail 요청 : {}",sendEmailDto.getEmail());
         Member member = memberQueryService.findByMember(sendEmailDto.getEmail());
         emailService.sendMail(member.getEmail());
     }
@@ -92,7 +88,6 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public void logout(String accessToken) {
-        log.info("logout 요청");
         tokenService.deleteRefreshToken(accessToken);
     }
 
@@ -104,7 +99,6 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     @Override
     public void resetPassword(ResetPasswordDto resetPasswordDto, String email) {
-        log.info("resetPassword 요청 email : {}, newPassword : {}", email, resetPasswordDto.getNewPassword());
         Member member = memberQueryService.findByMember(email);
         if (passwordEncoder.matches(resetPasswordDto.getNewPassword(),member.getPassword())) {
             throw new IllegalArgumentException("전 비밀번호와 다르게 설정해야합니다.");
@@ -116,7 +110,6 @@ public class MemberServiceImpl implements MemberService{
     @Transactional(readOnly = true)//상세 멤버 프로필 추가랑 어떤거 해야할지 해야됨. 여기에 자기가 쓴 게시물, 산책길 추천, 후기 추가해야할듯.
     @Override
     public GetMemberResponseDto getMember(Long memberId, String email) {
-        log.info("getMember 요청 : {}", memberId);
         Member member = memberQueryService.findByMember(email);
         return MemberMapper.toGetMemberResponseDto(member);
     }
@@ -124,7 +117,6 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     @Override
     public void deleteMember(String email) {
-        log.info("deleteMember 요청 email:{}", email);
         Member member = memberQueryService.findByMember(email);
         memberRepository.delete(member);
     }
@@ -132,7 +124,6 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     @Override
     public void createFcmToken(FcmTokenDto fcmTokenDto) {
-        log.info("createFcmToken 요청 : {}",fcmTokenDto.getMemberId());
         Member member = memberRepository.findById(fcmTokenDto.getMemberId())
                 .orElseThrow(() -> new NotFoundException("해당 유저는 없습니다."));
         fcmTokenService.createFcmToken(member, fcmTokenDto.getFcmToken());
