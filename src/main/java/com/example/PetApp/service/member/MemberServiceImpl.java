@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class MemberServiceImpl implements MemberService{
 
     @Value("${spring.dog.member.image.upload}")
