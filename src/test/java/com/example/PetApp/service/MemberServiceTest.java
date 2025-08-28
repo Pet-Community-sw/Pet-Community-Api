@@ -1,6 +1,7 @@
 package com.example.PetApp.service;
 
 
+import com.example.PetApp.aop.LogAop;
 import com.example.PetApp.domain.Member;
 import com.example.PetApp.domain.Role;
 import com.example.PetApp.dto.member.*;
@@ -19,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -36,6 +38,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@Import(LogAop.class)
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
 
