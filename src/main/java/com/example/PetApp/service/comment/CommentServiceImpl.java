@@ -27,7 +27,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     @Override
     public List<GetCommentsResponseDto> getComments(Long postId, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         Post post = queryService.findByPost(postId);
 
         return CommentMapper.toGetCommentsResponseDtos((Commentable) post, member);
@@ -36,20 +36,20 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public CreateCommentResponseDto createComment(CommentDto commentDto, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         Post post = queryService.findByPost(commentDto.getPostId());
 
         Comment comment = CommentMapper.toEntity(commentDto, post, member);
         commentRepository.save(comment);
         sendCommentNotification(post.getMember(), member);
-        return new CreateCommentResponseDto(comment.getCommentId());
+        return new CreateCommentResponseDto(comment.getId());
     }
 
 
     @Transactional
     @Override
     public void deleteComment(Long commentId, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         Comment comment = queryService.findByComment(commentId);
         validateMember(comment, member);
         commentRepository.deleteById(commentId);
@@ -58,7 +58,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public void updateComment(Long commentId, UpdateCommentDto updateCommentDto, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         Comment comment = queryService.findByComment(commentId);
         validateMember(comment, member);
         comment.setContent(updateCommentDto.getContent());

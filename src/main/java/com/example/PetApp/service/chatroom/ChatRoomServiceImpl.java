@@ -40,7 +40,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         Profile profile = queryService.findByProfile(profileId);
         List<ChatRoom> chatRoomList = chatRoomRepository.findAllByProfilesContains(profile);
         return chatRoomList.stream()
-                .map(chatRoom -> toChatRoomsResponseDtoWithRedis(chatRoom, profile.getProfileId()))
+                .map(chatRoom -> toChatRoomsResponseDtoWithRedis(chatRoom, profile.getId()))
                 .collect(Collectors.toList());
     }
 
@@ -52,14 +52,14 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         if (chatRoom1.isEmpty()) {//채팅방이 없으면 새로운생성 있으면 profiles에 신청자 Profile 추가
             ChatRoom chatRoom = ChatRoomMapper.toEntity(walkingTogetherPost, profile);
             ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
-            return new CreateChatRoomResponseDto(savedChatRoom.getChatRoomId(), true);
+            return new CreateChatRoomResponseDto(savedChatRoom.getId(), true);
         } else {
             if (walkingTogetherPost.getLimitCount() <= chatRoom1.get().getProfiles().size()) {
                 throw new ConflictException("인원초과");//채팅방 limitCount설정.
             }
             ChatRoom chatRoom = chatRoom1.get();
             chatRoom.addProfiles(profile);
-            return new CreateChatRoomResponseDto(chatRoom.getChatRoomId(), false);
+            return new CreateChatRoomResponseDto(chatRoom.getId(), false);
         }
     }
 
@@ -71,7 +71,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         return chatRoom
                 .getProfiles()
                 .stream()
-                .map(Profile::getProfileId)
+                .map(Profile::getId)
                 .collect(Collectors.toList());
     }
 
@@ -97,7 +97,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     public void updateChatRoom(Long chatRoomId, UpdateChatRoomDto updateChatRoomDto, Long profileId) {
         ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
         Profile profile = queryService.findByProfile(profileId);
-        if (!(chatRoom.getWalkingTogetherPost().getProfile().getProfileId().equals(profile.getProfileId()))) {
+        if (!(chatRoom.getWalkingTogetherPost().getProfile().getId().equals(profile.getId()))) {
             throw new ForbiddenException("권한이 없습니다.");
         }
         chatRoom.setName(updateChatRoomDto.getChatRoomName());
@@ -111,9 +111,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     private ChatRoomsResponseDto toChatRoomsResponseDtoWithRedis(ChatRoom chatRoom, Long profileId) {
-        String lastMessage = redisTemplate.opsForValue().get("chat:lastMessage" + chatRoom.getChatRoomId());
-        String lastMessageTime = redisTemplate.opsForValue().get("chat:lastMessageTime" + chatRoom.getChatRoomId());
-        String count = redisTemplate.opsForValue().get("unRead:" + chatRoom.getChatRoomId() + ":" + profileId);
+        String lastMessage = redisTemplate.opsForValue().get("chat:lastMessage" + chatRoom.getId());
+        String lastMessageTime = redisTemplate.opsForValue().get("chat:lastMessageTime" + chatRoom.getId());
+        String count = redisTemplate.opsForValue().get("unRead:" + chatRoom.getId() + ":" + profileId);
         int unReadCount = count != null ? Integer.parseInt(count) : 0;
         LocalDateTime lastMessageLocalDateTime = null;
         if (lastMessageTime != null) {

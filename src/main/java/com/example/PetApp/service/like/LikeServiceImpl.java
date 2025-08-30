@@ -42,7 +42,7 @@ public class LikeServiceImpl implements LikeService {
     @Transactional(readOnly = true)
     @Override
     public <T extends Post> Map<Long, Long> getLikeCountMap(List<T> posts) {
-        List<Long> postIds = posts.stream().map(Post::getPostId).toList();
+        List<Long> postIds = posts.stream().map(Post::getId).toList();
         List<LikeCountDto> likeCountDtos = likeRepository.countByPostIds(postIds);
         return likeCountDtos.stream().collect(Collectors.toMap(
                 LikeCountDto::getPostId,
@@ -53,7 +53,7 @@ public class LikeServiceImpl implements LikeService {
     @Transactional
     @Override
     public ResponseEntity<String> createAndDeleteLike(Long postId, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         Post post = queryService.findByPost(postId);
         Optional<Like> existingLike = post.getLikes().stream()
                 .filter(like -> like.getMember().equals(member))
@@ -66,7 +66,7 @@ public class LikeServiceImpl implements LikeService {
     private ResponseEntity<String> deleteLike(Like like) {
         log.info("좋아요 삭제");
         likeRepository.delete(like);
-        likeRedisTemplate.opsForSet().remove("post:likes:" + like.getMember().getMemberId(), like.getPost().getPostId());
+        likeRedisTemplate.opsForSet().remove("post:likes:" + like.getMember().getId(), like.getPost().getId());
         return ResponseEntity.ok("좋아요 삭제했습니다.");
     }
 
@@ -75,7 +75,7 @@ public class LikeServiceImpl implements LikeService {
         Like like = LikeMapper.toEntity(member, post);
         post.getLikes().add(like);
         likeRepository.save(like);
-        likeRedisTemplate.opsForSet().add("post:likes:" + member.getMemberId(), post.getPostId());
+        likeRedisTemplate.opsForSet().add("post:likes:" + member.getId(), post.getId());
 
         sendNotification(post, member);
 

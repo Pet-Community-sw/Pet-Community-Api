@@ -42,17 +42,17 @@ public class NormalPostServiceImpl implements NormalPostService {
     @Transactional(readOnly = true)
     @Override
     public List<PostResponseDto> getPosts(int page, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "postId"));
         List<NormalPost> normalPosts = normalPostRepository.findAll(pageRequest).getContent();
-        Set<Long> members = likeRedisTemplate.opsForSet().members("member:likes:" + member.getMemberId());
+        Set<Long> members = likeRedisTemplate.opsForSet().members("member:likes:" + member.getId());
         return PostMapper.toPostListResponseDto(normalPosts, likeService.getLikeCountMap(normalPosts),members);
     }
 
     @Transactional
     @Override
     public GetPostResponseDto getPost(Long postId, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         NormalPost normalPost = queryService.findByNormalPost(postId);
         if (!(normalPost.getMember().equals(member))) {//조회수
             normalPost.setViewCount(normalPost.getViewCount()+1);
@@ -64,17 +64,17 @@ public class NormalPostServiceImpl implements NormalPostService {
     @Transactional
     @Override
     public CreatePostResponseDto createPost(PostDto createPostDto, String email)  {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         String imageFileName = FileUploadUtil.fileUpload(createPostDto.getPostImageFile(), postUploadDir, FileImageKind.POST);
         NormalPost normalPost = PostMapper.toEntity(createPostDto, imageFileName, member);
         NormalPost savedPost = normalPostRepository.save(normalPost);
-        return new CreatePostResponseDto(savedPost.getPostId());
+        return new CreatePostResponseDto(savedPost.getId());
     }
 
     @Transactional
     @Override
     public void deletePost(Long postId, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         NormalPost normalPost = queryService.findByNormalPost(postId);
         validateMember(normalPost, member);
         normalPostRepository.deleteById(postId);
@@ -83,7 +83,7 @@ public class NormalPostServiceImpl implements NormalPostService {
     @Transactional
     @Override
     public void updatePost(Long postId, PostDto updatePostDto, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         NormalPost normalPost = queryService.findByNormalPost(postId);
         validateMember(normalPost, member);
 

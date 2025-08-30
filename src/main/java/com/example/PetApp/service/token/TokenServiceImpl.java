@@ -50,8 +50,8 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
         *
         * */
 
-        String accessToken = jwtTokenizer.createAccessToken(member.getMemberId(), null, member.getEmail(),roles);
-        String refreshToken = jwtTokenizer.createRefreshToken(member.getMemberId(), member.getEmail(), roles);
+        String accessToken = jwtTokenizer.createAccessToken(member.getId(), null, member.getEmail(),roles);
+        String refreshToken = jwtTokenizer.createRefreshToken(member.getId(), member.getEmail(), roles);
 
         saveAndSendRefreshToken(member, response, byMember, refreshToken);
         log.info("로그인 요청 성공");
@@ -107,7 +107,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
     public String newAccessTokenByProfile(String accessToken, String refreshToken, Member member, Long profileId) {
         blacklistAccessToken(accessToken);
         List<String> roles = getRoles(member);
-        return jwtTokenizer.createAccessToken(member.getMemberId(), profileId, member.getEmail(), roles);
+        return jwtTokenizer.createAccessToken(member.getId(), profileId, member.getEmail(), roles);
     }
 
 

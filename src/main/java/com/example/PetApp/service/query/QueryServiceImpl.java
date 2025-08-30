@@ -30,13 +30,18 @@ public class QueryServiceImpl implements QueryService{
     private final WalkRecordRepository walkRecordRepository;
 
     @Override
-    public Member findbyMember(String email) {
+    public Member findByMember(String email) {
         return memberRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("해당 유저는 없습니다."));
     }
 
     @Override
-    public Member findbyMember(Long memberId) {
+    public Member findByMember(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(() -> new NotFoundException("해당 유저는 없습니다."));
+    }
+
+    @Override
+    public Member findByMemberToPhoneNumber(String phoneNumber) {
+        return memberRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new NotFoundException("해당 유저는 없는 유저입니다. 회원가입 해주세요."));
     }
 
     @Override

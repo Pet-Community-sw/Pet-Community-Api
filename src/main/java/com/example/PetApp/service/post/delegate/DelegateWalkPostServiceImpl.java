@@ -38,13 +38,13 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     public CreateDelegateWalkPostResponseDto createDelegateWalkPost(CreateDelegateWalkPostDto createDelegateWalkPostDto, Long profileId) {
         Profile profile = queryService.findByProfile(profileId);
         DelegateWalkPost savedDelegateWalkPost = delegateWalkPostRepository.save(DelegateWalkPostMapper.toEntity(createDelegateWalkPostDto, profile));
-        return new CreateDelegateWalkPostResponseDto(savedDelegateWalkPost.getPostId());
+        return new CreateDelegateWalkPostResponseDto(savedDelegateWalkPost.getId());
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByLocation(Double minLongitude, Double minLatitude, Double maxLongitude, Double maxLatitude, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         List<DelegateWalkPost> delegateWalkPosts = delegateWalkPostRepository.findByDelegateWalkPostByLocation(minLongitude - 0.01, minLatitude - 0.01, maxLongitude + 0.01, maxLatitude + 0.01);
         return DelegateWalkPostMapper.toGetDelegateWalkPostsResponseDtos(member, delegateWalkPosts);
     }
@@ -52,7 +52,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Transactional(readOnly = true)
     @Override
     public List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByPlace(Double longitude, Double latitude, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         List<DelegateWalkPost> delegateWalkPosts = delegateWalkPostRepository.findByDelegateWalkPostByPlace(longitude, latitude);
 
         return DelegateWalkPostMapper.toGetDelegateWalkPostsResponseDtos(member, delegateWalkPosts);
@@ -61,7 +61,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Transactional(readOnly = true)
     @Override
     public GetPostResponseDto getDelegateWalkPost(Long delegateWalkPostId, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
          if (DelegateWalkPostMapper.filter(delegateWalkPost, member)) {
              throw new ForbiddenException("프로필 등록해주세요.");
@@ -72,8 +72,8 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Transactional
     @Override
     public CreateMemberChatRoomResponseDto selectApplicant(Long delegateWalkPostId, Long memberId, String email) {
-        Member member = queryService.findbyMember(email);
-        Member applicantMember = queryService.findbyMember(memberId);
+        Member member = queryService.findByMember(email);
+        Member applicantMember = queryService.findByMember(memberId);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
         validateSelect(memberId, delegateWalkPost, member);
         delegateWalkPost.setStatus(DelegateWalkStatus.COMPLETED);
@@ -95,7 +95,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Transactional
     @Override
     public void updateDelegateWalkPost(Long delegateWalkPostId, UpdateDelegateWalkPostDto updateDelegateWalkPostDto, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
 
         validatedMember(delegateWalkPost, member);
@@ -105,7 +105,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Transactional
     @Override
     public void deleteDelegateWalkPost(Long delegateWalkPostId, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
 
         validatedMember(delegateWalkPost, member);
@@ -124,20 +124,20 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Transactional
     @Override
     public ApplyToDelegateWalkPostResponseDto applyToDelegateWalkPost(Long delegateWalkPostId, String content, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
 
         validateApply(delegateWalkPost, member);
         delegateWalkPost.getApplicants().add(Applicant.builder()
-                .memberId(member.getMemberId())
+                .memberId(member.getId())
                 .content(content)
                 .build());
         sendToDelegateWalkPostNotification(member, delegateWalkPost);
-        return new ApplyToDelegateWalkPostResponseDto(member.getMemberId());
+        return new ApplyToDelegateWalkPostResponseDto(member.getId());
     }
 
     private static void validateProfile(DelegateWalkPost delegateWalkPost, Long profileId) {
-        if (!(delegateWalkPost.getProfile().getProfileId().equals(profileId))) {
+        if (!(delegateWalkPost.getProfile().getId().equals(profileId))) {
             throw new ForbiddenException("권한 없음.");
         }
     }
@@ -152,7 +152,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         if (DelegateWalkPostMapper.filter(delegateWalkPost, member)) {
             throw new ForbiddenException("프로필 등록해주세요.");
         } else if (delegateWalkPost.getApplicants().stream().
-                anyMatch(applicant -> applicant.getMemberId().equals(member.getMemberId()))) {
+                anyMatch(applicant -> applicant.getMemberId().equals(member.getId()))) {
             throw new ConflictException("이미 신청한 회원입니다.");
         } else if (delegateWalkPost.getStatus() == DelegateWalkStatus.COMPLETED) {
             throw new ConflictException("모집 완료 게시글입니다.");

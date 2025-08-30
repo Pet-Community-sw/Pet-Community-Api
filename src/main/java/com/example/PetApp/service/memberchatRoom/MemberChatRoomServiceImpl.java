@@ -35,7 +35,7 @@ public class MemberChatRoomServiceImpl implements MemberChatRoomService {
     @Transactional(readOnly = true)
     @Override
     public List<MemberChatRoomsResponseDto> getMemberChatRooms(String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         List<MemberChatRoom> memberChatRooms = memberChatRoomRepository.findAllByMembersContains(member);
 
         return getMemberChatRoomsResponseDtos(memberChatRooms, member);
@@ -46,17 +46,17 @@ public class MemberChatRoomServiceImpl implements MemberChatRoomService {
     public CreateMemberChatRoomResponseDto createMemberChatRoom(Member fromMember, Member member) {//방 제목을 어떻게 할까 대리 산책자 구인했을 때 채팅방
         MemberChatRoom memberChatRoom = getMemberChatRoom(fromMember, member);
         memberChatRoomRepository.save(memberChatRoom);
-        return new CreateMemberChatRoomResponseDto(memberChatRoom.getMemberChatRoomId());
+        return new CreateMemberChatRoomResponseDto(memberChatRoom.getId());
     }
 
     @Transactional
     @Override
     public CreateMemberChatRoomResponseDto createMemberChatRoom(Long memberId, String email) {
-        Member fromMember = queryService.findbyMember(memberId);
-        Member member = queryService.findbyMember(email);
+        Member fromMember = queryService.findByMember(memberId);
+        Member member = queryService.findByMember(email);
         MemberChatRoom memberChatRoom = getMemberChatRoom(fromMember, member);
         MemberChatRoom newMemberChatRoom = memberChatRoomRepository.save(memberChatRoom);
-        return new CreateMemberChatRoomResponseDto(newMemberChatRoom.getMemberChatRoomId());
+        return new CreateMemberChatRoomResponseDto(newMemberChatRoom.getId());
     }
 
     private static MemberChatRoom getMemberChatRoom(Member fromMember, Member member) {
@@ -77,7 +77,7 @@ public class MemberChatRoomServiceImpl implements MemberChatRoomService {
     @Transactional
     @Override
     public void deleteMemberChatRoom(Long memberChatRoomId, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         MemberChatRoom memberChatRoom = queryService.findByMemberChatRoom(memberChatRoomId);
         if (!(memberChatRoom.getMembers().contains(member))) {
             throw new ForbiddenException("권한이 없습니다.");
@@ -88,8 +88,8 @@ public class MemberChatRoomServiceImpl implements MemberChatRoomService {
     @Transactional(readOnly = true)
     @Override
     public ChatMessageResponseDto getMessages(Long memberChatRoomId, String email, int page) {
-        Member member = queryService.findbyMember(email);
-        return chattingReader.getMessages(memberChatRoomId, member.getMemberId(), ChatMessage.ChatRoomType.ONE, page);
+        Member member = queryService.findByMember(email);
+        return chattingReader.getMessages(memberChatRoomId, member.getId(), ChatMessage.ChatRoomType.ONE, page);
     }
 
     private static Member filterMember(List<Member> members, Member member) {
@@ -109,9 +109,9 @@ public class MemberChatRoomServiceImpl implements MemberChatRoomService {
                     Member anotherMember = filterMember(memberChatRoom.getMembers(), member);
                     String roomName = anotherMember.getName();
                     String roomImageUrl = anotherMember.getMemberImageUrl();
-                    String lastMessage = redisTemplate.opsForValue().get("memberChat:lastMessage" + memberChatRoom.getMemberChatRoomId());
-                    String count = redisTemplate.opsForValue().get("unReadMemberChat:" + memberChatRoom.getMemberChatRoomId() + ":" + member.getMemberId());
-                    String lastMessageTime = redisTemplate.opsForValue().get("memberChat:lastMessageTime:" + memberChatRoom.getMemberChatRoomId());
+                    String lastMessage = redisTemplate.opsForValue().get("memberChat:lastMessage" + memberChatRoom.getId());
+                    String count = redisTemplate.opsForValue().get("unReadMemberChat:" + memberChatRoom.getId() + ":" + member.getId());
+                    String lastMessageTime = redisTemplate.opsForValue().get("memberChat:lastMessageTime:" + memberChatRoom.getId());
                     return MemberChatRoomMapper.toMemberChatRoomsResponseDto(roomName, roomImageUrl, lastMessage, count, lastMessageTime);
                 }).collect(Collectors.toList());
     }

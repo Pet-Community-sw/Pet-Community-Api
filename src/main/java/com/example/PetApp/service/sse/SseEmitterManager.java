@@ -34,24 +34,24 @@ public class SseEmitterManager {
 
         SseEmitter sseEmitter = new SseEmitter(DEFAULT_TIMEOUT);
 
-        sseEmitterMap.put(member.getMemberId(), sseEmitter);
+        sseEmitterMap.put(member.getId(), sseEmitter);
 
-        sseEmitter.onCompletion(() -> sseEmitterMap.remove(member.getMemberId()));
+        sseEmitter.onCompletion(() -> sseEmitterMap.remove(member.getId()));
 
         sseEmitter.onTimeout(() -> {
-            sseEmitterMap.remove(member.getMemberId());
-            log.info("timeout memberId:{}", member.getMemberId());
+            sseEmitterMap.remove(member.getId());
+            log.info("timeout memberId:{}", member.getId());
         });
 
         sseEmitter.onError(e -> {
-            sseEmitterMap.remove(member.getMemberId());
-            log.error("sse 오류 발생 memberId:{}", member.getMemberId(), e);
+            sseEmitterMap.remove(member.getId());
+            log.error("sse 오류 발생 memberId:{}", member.getId(), e);
         });
 
         try {
             sseEmitter.send(SseEmitter.event().name("connect").data("connected"));//503에러를 막고자 더미코드를 보냄.
         } catch (IOException e) {
-            sseEmitterMap.remove(member.getMemberId());
+            sseEmitterMap.remove(member.getId());
             log.error("sse connect 오류 발생 ", e);
         }
 

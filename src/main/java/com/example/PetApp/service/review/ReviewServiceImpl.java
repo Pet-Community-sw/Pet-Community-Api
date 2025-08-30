@@ -29,7 +29,7 @@ public class ReviewServiceImpl implements ReviewService{
     @Transactional
     @Override
     public CreateReviewResponseDto createReview(CreateReviewDto createReviewDto, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         WalkRecord walkRecord = queryService.findByWalkRecord(createReviewDto.getWalkRecordId());
         if (walkRecord.getWalkStatus() != WalkRecord.WalkStatus.FINISH) {
             throw new ConflictException("산책을 다해야 후기를 작성할 수 있습니다.");
@@ -37,25 +37,25 @@ public class ReviewServiceImpl implements ReviewService{
             throw new ForbiddenException("권한이 없습니다.");
         }
         Review savedReview = reviewRepository.save(ReviewMapper.toEntity(walkRecord, createReviewDto));
-        return new CreateReviewResponseDto(savedReview.getReviewId());
+        return new CreateReviewResponseDto(savedReview.getId());
     }
 
     @Transactional(readOnly = true)
     @Override
     public GetReviewListResponseDto getReviewListByMember(Long memberId, String email) {
-        Member member = queryService.findbyMember(email);
-        Member ownerMember = queryService.findbyMember(memberId);
+        Member member = queryService.findByMember(email);
+        Member ownerMember = queryService.findByMember(memberId);
         List<Review> reviewList = reviewRepository.findAllByMemberAndReviewType(member, ReviewType.PROFILE_TO_MEMBER);
-        return ReviewMapper.toGetReviewListResponseDto(reviewList, ownerMember.getMemberId(), ownerMember.getName(), ownerMember.getMemberImageUrl(), ReviewMapper.toGetReviewList(reviewList, member));
+        return ReviewMapper.toGetReviewListResponseDto(reviewList, ownerMember.getId(), ownerMember.getName(), ownerMember.getMemberImageUrl(), ReviewMapper.toGetReviewList(reviewList, member));
     }
 
     @Transactional(readOnly = true)
     @Override
     public GetReviewListResponseDto getReviewListByProfile(Long profileId, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         Profile profile = queryService.findByProfile(profileId);
         List<Review> reviewList = reviewRepository.findAllByProfileAndReviewType(profile, ReviewType.MEMBER_TO_PROFILE);
-        return ReviewMapper.toGetReviewListResponseDto(reviewList, profile.getProfileId(), profile.getPetName(), profile.getPetImageUrl(), ReviewMapper.toGetReviewList(reviewList, member));
+        return ReviewMapper.toGetReviewListResponseDto(reviewList, profile.getId(), profile.getPetName(), profile.getPetImageUrl(), ReviewMapper.toGetReviewList(reviewList, member));
 
     }
 
@@ -63,7 +63,7 @@ public class ReviewServiceImpl implements ReviewService{
     @Transactional(readOnly = true)
     @Override
     public GetReviewResponseDto getReview(Long reviewId, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         Review review = queryService.findByReview(reviewId);
         return ReviewMapper.toGetReviewResponseDto(review, member);
     }
@@ -82,11 +82,11 @@ public class ReviewServiceImpl implements ReviewService{
     public void deleteReview(Long reviewId, String email) {
         Review review = findReviewWithAuth(reviewId, email);
 
-        reviewRepository.deleteById(review.getReviewId());
+        reviewRepository.deleteById(review.getId());
     }
 
     private Review findReviewWithAuth(Long reviewId, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         Review review = queryService.findByReview(reviewId);
 
         if (review.getReviewType() == ReviewType.MEMBER_TO_PROFILE) {
