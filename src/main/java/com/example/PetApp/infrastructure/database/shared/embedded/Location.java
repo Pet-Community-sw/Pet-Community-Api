@@ -1,0 +1,19 @@
+package com.example.PetApp.infrastructure.database.shared.embedded;
+
+import lombok.*;
+
+import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
+
+@Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Getter
+public class Location {
+
+    @NotNull
+    private Double locationLongitude;
+
+    @NotNull
+    private Double locationLatitude;
+}

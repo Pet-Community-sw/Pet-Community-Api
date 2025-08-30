@@ -1,8 +1,8 @@
 package com.example.PetApp.config;
 
-import com.example.PetApp.util.RedisUtil;
-import com.example.PetApp.security.jwt.filter.JwtAuthenticationFilter;
-import com.example.PetApp.security.jwt.provider.JwtAuthenticationProvider;
+import com.example.PetApp.common.util.RedisUtil;
+import com.example.PetApp.infrastructure.app.jwt.filter.JwtAuthenticationFilter;
+import com.example.PetApp.infrastructure.app.jwt.provider.JwtAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -2,14 +2,14 @@
 //
 //import com.example.PetApp.domain.Member;
 //import com.example.PetApp.domain.post.RecommendRoutePost;
-//import com.example.PetApp.dto.recommendroutepost.CreateRecommendRoutePostDto;
-//import com.example.PetApp.dto.recommendroutepost.CreateRecommendRoutePostResponseDto;
-//import com.example.PetApp.dto.recommendroutepost.GetRecommendRoutePostsResponseDto;
+//import com.example.PetApp.domain.post.recommend.model.dto.request.CreateRecommendRoutePostDto;
+//import com.example.PetApp.domain.post.recommend.model.dto.response.CreateRecommendRoutePostResponseDto;
+//import com.example.PetApp.domain.post.recommend.model.dto.response.GetRecommendRoutePostsResponseDto;
 //import com.example.PetApp.exception.NotFoundException;
-//import com.example.PetApp.mapper.RecommendRoutePostMapper;
+//import com.example.PetApp.domain.post.recommend.mapper.RecommendRoutePostMapper;
 //import com.example.PetApp.query.MemberQueryService;
-//import com.example.PetApp.repository.jpa.MemberRepository;
-//import com.example.PetApp.repository.jpa.RecommendRoutePostRepository;
+//import com.example.PetApp.domain.member.MemberRepository;
+//import com.example.PetApp.domain.post.recommend.RecommendRoutePostRepository;
 //import com.example.PetApp.service.like.LikeService;
 //import com.example.PetApp.service.post.recommend.RecommendRoutePostServiceImpl;
 //import org.junit.jupiter.api.BeforeEach;
