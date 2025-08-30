@@ -1,8 +1,9 @@
 package com.example.PetApp.domain;
 
 import com.example.PetApp.domain.post.RecommendRoutePost;
-import com.example.PetApp.domain.superclass.BaseTimeEntity;
+import com.example.PetApp.domain.superclass.BaseEntity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -15,12 +16,8 @@ import java.util.Set;
 @Entity
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
-@Builder
-public class WalkingTogetherPost extends BaseTimeEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long walkingTogetherPostId;
+@SuperBuilder
+public class WalkingTogetherPost extends BaseEntity {
 
     @Setter
     @NotNull

@@ -1,21 +1,18 @@
 package com.example.PetApp.domain;
 
-import com.example.PetApp.domain.superclass.BaseTimeEntity;
+import com.example.PetApp.domain.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FcmToken extends BaseTimeEntity {
+public class FcmToken extends BaseEntity {
 
 
     @Setter

@@ -1,7 +1,8 @@
 package com.example.PetApp.domain;
 
-import com.example.PetApp.domain.superclass.BaseTimeEntity;
+import com.example.PetApp.domain.superclass.BaseEntity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -16,12 +17,8 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
-public class Profile extends BaseTimeEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "profile_id")
-    private Long profileId;
+@SuperBuilder
+public class Profile extends BaseEntity {
 
     @Setter
     @NotBlank

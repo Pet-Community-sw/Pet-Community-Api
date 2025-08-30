@@ -1,8 +1,9 @@
 package com.example.PetApp.domain;
 
 import com.example.PetApp.domain.embedded.Content;
-import com.example.PetApp.domain.superclass.BaseTimeEntity;
+import com.example.PetApp.domain.superclass.BaseEntity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -11,16 +12,12 @@ import javax.validation.constraints.NotNull;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
-public class Review extends BaseTimeEntity {
+@SuperBuilder
+public class Review extends BaseEntity {
 
     public enum ReviewType {
         MEMBER_TO_PROFILE, PROFILE_TO_MEMBER
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reviewId;
 
     @ManyToOne
     @JoinColumn(name = "member_id")

@@ -1,6 +1,6 @@
 package com.example.PetApp.domain;
 
-import com.example.PetApp.domain.superclass.BaseTimeEntity;
+import com.example.PetApp.domain.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 @SuperBuilder
-public class ChatRoom extends BaseTimeEntity {
+public class ChatRoom extends BaseEntity {
 
     @Setter
     @NotBlank

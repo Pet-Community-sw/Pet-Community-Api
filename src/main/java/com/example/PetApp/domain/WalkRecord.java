@@ -1,8 +1,9 @@
 package com.example.PetApp.domain;
 
 import com.example.PetApp.domain.post.DelegateWalkPost;
-import com.example.PetApp.domain.superclass.BaseTimeEntity;
+import com.example.PetApp.domain.superclass.BaseEntity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,16 +15,12 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
-public class WalkRecord extends BaseTimeEntity {
+@SuperBuilder
+public class WalkRecord extends BaseEntity {
 
     public enum WalkStatus {
         READY, START, FINISH, CANCELED
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long walkRecordId;
 
     @Setter
     @NotNull
@@ -60,6 +57,4 @@ public class WalkRecord extends BaseTimeEntity {
     @CollectionTable(name = "walk_path_points", joinColumns = @JoinColumn(name = "walk_record_id"))
     @Column(name = "point")
     private List<String> pathPoints = new ArrayList<>();
-
-
 }

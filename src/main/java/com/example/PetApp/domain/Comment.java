@@ -1,9 +1,7 @@
 package com.example.PetApp.domain;
 
-import com.example.PetApp.domain.post.NormalPost;
 import com.example.PetApp.domain.post.Post;
-import com.example.PetApp.domain.post.RecommendRoutePost;
-import com.example.PetApp.domain.superclass.BaseTimeEntity;
+import com.example.PetApp.domain.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -19,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @SuperBuilder//좋아요 어떻게할까
 //따로 db에 리스틑 저장안할거임 누른 후 인식만하고 어떤 요청이 있을 때 좋아요 올리기 요청을 보냄?
-public class Comment extends BaseTimeEntity {
+public class Comment extends BaseEntity {
 
     @Setter
     @NotBlank

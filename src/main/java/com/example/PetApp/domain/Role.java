@@ -1,7 +1,9 @@
 package com.example.PetApp.domain;
 
 
+import com.example.PetApp.domain.superclass.BaseEntity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -12,13 +14,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
-public class Role {
-
-    @Id
-    @Column(name = "role_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long roleId;
+@SuperBuilder
+public class Role extends BaseEntity {
 
     @NotBlank
     @Column(nullable = false)

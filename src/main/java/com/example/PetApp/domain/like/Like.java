@@ -2,7 +2,7 @@ package com.example.PetApp.domain.like;
 
 import com.example.PetApp.domain.Member;
 import com.example.PetApp.domain.post.Post;
-import com.example.PetApp.domain.superclass.BaseTimeEntity;
+import com.example.PetApp.domain.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -16,7 +16,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @SuperBuilder
 @Getter
-public class Like extends BaseTimeEntity {
+public class Like extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)

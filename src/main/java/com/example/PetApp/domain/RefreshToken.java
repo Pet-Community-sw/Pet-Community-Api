@@ -1,7 +1,9 @@
 package com.example.PetApp.domain;
 
 
+import com.example.PetApp.domain.superclass.BaseEntity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -10,12 +12,8 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
-public class RefreshToken {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@SuperBuilder
+public class RefreshToken extends BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", unique = true)

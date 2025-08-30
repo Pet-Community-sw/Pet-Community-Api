@@ -1,7 +1,7 @@
 package com.example.PetApp.domain;
 
 import com.example.PetApp.domain.post.Post;
-import com.example.PetApp.domain.superclass.BaseTimeEntity;
+import com.example.PetApp.domain.superclass.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -23,7 +23,7 @@ import java.util.List;
 자식 클래스의 필드만 비교하고 싶다면
  @EqualsAndHashCode(callSuper = false) 사용
 * */
-public class Member extends BaseTimeEntity {//수정 필요
+public class Member extends BaseEntity {//수정 필요
 
     @Setter
     @NotBlank
