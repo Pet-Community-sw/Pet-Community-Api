@@ -4,14 +4,9 @@ import com.example.PetApp.domain.*;
 import com.example.PetApp.dto.profile.*;
 import com.example.PetApp.exception.ConflictException;
 import com.example.PetApp.exception.ForbiddenException;
-import com.example.PetApp.exception.NotFoundException;
 import com.example.PetApp.mapper.ProfileMapper;
-import com.example.PetApp.query.MemberQueryService;
-import com.example.PetApp.query.PetBreedQueryService;
-import com.example.PetApp.query.ProfileQueryService;
-import com.example.PetApp.repository.jpa.MemberRepository;
 import com.example.PetApp.repository.jpa.ProfileRepository;
-import com.example.PetApp.service.dogbreed.PetBreedService;
+import com.example.PetApp.service.query.QueryService;
 import com.example.PetApp.service.token.TokenService;
 import com.example.PetApp.util.imagefile.FileImageKind;
 import com.example.PetApp.util.imagefile.FileUploadUtil;
@@ -32,9 +27,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Value("${spring.dog.profile.image.upload}")
     private String profileUploadDir;
 
-    private final ProfileQueryService profileQueryService;
-    private final PetBreedQueryService petBreedQueryService;
-    private final MemberQueryService memberQueryService;
+    private final QueryService queryService;
     private final ProfileRepository profileRepository;
     private final TokenService tokenService;
 
@@ -42,11 +35,11 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public CreateProfileResponseDto createProfile(ProfileDto profileDto, String email) {
         log.info("createProfile 요청 email : {}", email);
-        Member member = memberQueryService.findByMember(email);
+        Member member = queryService.findbyMember(email);
         if (profileRepository.countByMember(member) >= 4) {
             throw new ConflictException("프로필은 최대 4개 입니다.");
         }
-        PetBreed petBreed = petBreedQueryService.findByPetBreed(profileDto.getPetBreed());
+        PetBreed petBreed = queryService.findByPetBreed(profileDto.getPetBreed());
 
         String imageFileName = FileUploadUtil.fileUpload(profileDto.getPetImageUrl(), profileUploadDir, FileImageKind.PROFILE);
         Profile profile = ProfileMapper.toEntity(profileDto, member, imageFileName, petBreed);
@@ -61,7 +54,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public List<ProfileListResponseDto> getProfiles(String email) {
         log.info("getProfiles 요청 email : {}", email);
-        Member member = memberQueryService.findByMember(email);
+        Member member = queryService.findbyMember(email);
         List<Profile> profiles = profileRepository.findByMember(member);
         return profiles.stream()
                 .map(ProfileMapper::toProfileListResponseDto)
@@ -72,8 +65,8 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public GetProfileResponseDto getProfile(Long profileId, String email) {
         log.info("getProfile 요청 email : {}, profileId : {}", email, profileId);
-        Member member = memberQueryService.findByMember(email);
-        Profile profile = profileQueryService.findByProfile(profileId);
+        Member member = queryService.findbyMember(email);
+        Profile profile = queryService.findByProfile(profileId);
         return ProfileMapper.toGetProfileResponseDto(profile, member);
     }
 
@@ -82,9 +75,9 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public void updateProfile(Long profileId, ProfileDto profileDto, String email) {
         log.info("updateProfile 요청 email : {}, profileId : {}", email, profileId);
-        Member member = memberQueryService.findByMember(email);
-        Profile profile = profileQueryService.findByProfile(profileId);
-        PetBreed petBreed = petBreedQueryService.findByPetBreed(profileDto.getPetBreed());
+        Member member = queryService.findbyMember(email);
+        Profile profile = queryService.findByProfile(profileId);
+        PetBreed petBreed = queryService.findByPetBreed(profileDto.getPetBreed());
 
         validateProfile(member, profile.getMember());
         validateBreed(profileDto, profile);
@@ -96,8 +89,8 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public void deleteProfile(Long profileId, String email) {
         log.info("deleteProfile 요청 email : {}, profileId : {}", email, profileId);
-        Member member = memberQueryService.findByMember(email);
-        Profile profile = profileQueryService.findByProfile(profileId);
+        Member member = queryService.findbyMember(email);
+        Profile profile = queryService.findByProfile(profileId);
         validateProfile(member, profile.getMember());
         profileRepository.deleteById(profileId);
     }
@@ -106,8 +99,8 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public AccessTokenByProfileIdResponseDto accessTokenByProfile(String accessToken, String refreshToken, Long profileId, String email) {//요청했을 당시 토큰을 redis에 저장시켜서 이전 토큰으로 요청 시 인증이 안되게 끔 해야됨.
         log.info("accessTokenByProfile 요청 email : {}, profileId : {}", email, profileId);
-        Member member = memberQueryService.findByMember(email);
-        Profile profile = profileQueryService.findByProfile(profileId);
+        Member member = queryService.findbyMember(email);
+        Profile profile = queryService.findByProfile(profileId);
         validateProfile(member, profile.getMember());
         String newAccessToken = tokenService.newAccessTokenByProfile(accessToken, refreshToken, member, profileId);
 
@@ -126,7 +119,7 @@ public class ProfileServiceImpl implements ProfileService {
         String[] arr = profileDto.getAvoidBreeds().split(",");
         for (String breeds : arr) {
             breeds = breeds.trim();
-            PetBreed avoidBreed = petBreedQueryService.findByPetBreed(breeds);
+            PetBreed avoidBreed = queryService.findByPetBreed(breeds);
             if (profile.getAvoidBreeds() == null) {
                 profile.setAvoidBreeds(new HashSet<>());
             }

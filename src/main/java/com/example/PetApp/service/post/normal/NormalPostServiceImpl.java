@@ -9,11 +9,10 @@ import com.example.PetApp.dto.post.GetPostResponseDto;
 import com.example.PetApp.dto.post.PostResponseDto;
 import com.example.PetApp.exception.ForbiddenException;
 import com.example.PetApp.mapper.PostMapper;
-import com.example.PetApp.query.MemberQueryService;
-import com.example.PetApp.query.NormalPostQueryService;
 import com.example.PetApp.repository.jpa.LikeRepository;
 import com.example.PetApp.repository.jpa.NormalPostRepository;
 import com.example.PetApp.service.like.LikeService;
+import com.example.PetApp.service.query.QueryService;
 import com.example.PetApp.util.imagefile.FileUploadUtil;
 import com.example.PetApp.util.imagefile.FileImageKind;
 import lombok.RequiredArgsConstructor;
@@ -39,15 +38,14 @@ public class NormalPostServiceImpl implements NormalPostService {
     private final NormalPostRepository normalPostRepository;
     private final LikeRepository likeRepository;
     private final LikeService likeService;
-    private final MemberQueryService memberQueryService;
-    private final NormalPostQueryService normalPostQueryService;
+    private final QueryService queryService;
     private final RedisTemplate<String, Long> likeRedisTemplate;
 
     @Transactional(readOnly = true)
     @Override
     public List<PostResponseDto> getPosts(int page, String email) {
         log.info("getPosts 요청 : {}", email);
-        Member member = memberQueryService.findByMember(email);
+        Member member = queryService.findbyMember(email);
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "postId"));
         List<NormalPost> normalPosts = normalPostRepository.findAll(pageRequest).getContent();
         Set<Long> members = likeRedisTemplate.opsForSet().members("member:likes:" + member.getMemberId());
@@ -58,8 +56,8 @@ public class NormalPostServiceImpl implements NormalPostService {
     @Override
     public GetPostResponseDto getPost(Long postId, String email) {
         log.info("getPost 요청 email : {}",email);
-        Member member = memberQueryService.findByMember(email);
-        NormalPost normalPost = normalPostQueryService.findByNormalPost(postId);
+        Member member = queryService.findbyMember(email);
+        NormalPost normalPost = queryService.findByNormalPost(postId);
         if (!(normalPost.getMember().equals(member))) {//조회수
             normalPost.setViewCount(normalPost.getViewCount()+1);
         }
@@ -71,7 +69,7 @@ public class NormalPostServiceImpl implements NormalPostService {
     @Override
     public CreatePostResponseDto createPost(PostDto createPostDto, String email)  {
         log.info("createPost 요청 email : {}", email);
-        Member member = memberQueryService.findByMember(email);
+        Member member = queryService.findbyMember(email);
         String imageFileName = FileUploadUtil.fileUpload(createPostDto.getPostImageFile(), postUploadDir, FileImageKind.POST);
         NormalPost normalPost = PostMapper.toEntity(createPostDto, imageFileName, member);
         NormalPost savedPost = normalPostRepository.save(normalPost);
@@ -82,8 +80,8 @@ public class NormalPostServiceImpl implements NormalPostService {
     @Override
     public void deletePost(Long postId, String email) {
         log.info("deletePost 요청 email : {}, postId : {}", email, postId);
-        Member member = memberQueryService.findByMember(email);
-        NormalPost normalPost = normalPostQueryService.findByNormalPost(postId);
+        Member member = queryService.findbyMember(email);
+        NormalPost normalPost = queryService.findByNormalPost(postId);
         if (!(normalPost.getMember().equals(member))) {
             throw new ForbiddenException("삭제 권한이 없습니다.");
         }
@@ -93,8 +91,8 @@ public class NormalPostServiceImpl implements NormalPostService {
     @Transactional
     @Override
     public void updatePost(Long postId, PostDto updatePostDto, String email) {
-        Member member = memberQueryService.findByMember(email);
-        NormalPost normalPost = normalPostQueryService.findByNormalPost(postId);
+        Member member = queryService.findbyMember(email);
+        NormalPost normalPost = queryService.findByNormalPost(postId);
         if (!(normalPost.getMember().equals(member))) {
             throw new ForbiddenException("수정 권한이 없습니다.");
         }

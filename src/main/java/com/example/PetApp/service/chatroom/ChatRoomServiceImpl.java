@@ -5,14 +5,11 @@ import com.example.PetApp.dto.chatroom.CreateChatRoomResponseDto;
 import com.example.PetApp.dto.groupchat.*;
 import com.example.PetApp.exception.ConflictException;
 import com.example.PetApp.exception.ForbiddenException;
-import com.example.PetApp.exception.NotFoundException;
 import com.example.PetApp.mapper.ChatRoomMapper;
-import com.example.PetApp.query.ChatRoomQueryService;
-import com.example.PetApp.query.ProfileQueryService;
 import com.example.PetApp.repository.jpa.ChatRoomRepository;
-import com.example.PetApp.repository.jpa.ProfileRepository;
 import com.example.PetApp.repository.mongo.ChatMessageRepository;
 import com.example.PetApp.service.chatting.ChattingReader;
+import com.example.PetApp.service.query.QueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -35,14 +32,12 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChattingReader chattingReader;
     private final StringRedisTemplate redisTemplate;
-    private final ProfileQueryService profileQueryService;
-    private final ChatRoomQueryService chatRoomQueryService;
-
+    private final QueryService queryService;
 
     @Transactional(readOnly = true)
     @Override
     public List<ChatRoomsResponseDto> getChatRooms(Long profileId) {
-        Profile profile = profileQueryService.findByProfile(profileId);
+        Profile profile = queryService.findByProfile(profileId);
         List<ChatRoom> chatRoomList = chatRoomRepository.findAllByProfilesContains(profile);
         return chatRoomList.stream()
                 .map(chatRoom -> toChatRoomsResponseDtoWithRedis(chatRoom, profile.getProfileId()))
@@ -71,7 +66,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Transactional(readOnly = true)
     @Override
     public List<Long> getProfiles(Long chatRoomId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new NotFoundException("채팅방 없습니다."));
+        ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
 
         return chatRoom
                 .getProfiles()
@@ -83,8 +78,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Transactional
     @Override
     public void deleteChatRoom(Long chatRoomId, Long profileId) {
-        ChatRoom chatRoom = chatRoomQueryService.findByChatRoom(chatRoomId);
-        Profile profile = profileQueryService.findByProfile(profileId);
+        ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
+        Profile profile = queryService.findByProfile(profileId);
         List<Profile> profiles = chatRoom.getProfiles();
         if (!(profiles.contains(profile))) {
             throw new ForbiddenException("권한이 없습니다.");
@@ -100,8 +95,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Transactional
     @Override//방장만 수정할 수 있도록 설정.
     public void updateChatRoom(Long chatRoomId, UpdateChatRoomDto updateChatRoomDto, Long profileId) {
-        ChatRoom chatRoom = chatRoomQueryService.findByChatRoom(chatRoomId);
-        Profile profile = profileQueryService.findByProfile(profileId);
+        ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
+        Profile profile = queryService.findByProfile(profileId);
         if (!(chatRoom.getWalkingTogetherPost().getProfile().getProfileId().equals(profile.getProfileId()))) {
             throw new ForbiddenException("권한이 없습니다.");
         }

@@ -7,12 +7,9 @@ import com.example.PetApp.dto.walkrecord.CreateWalkRecordResponseDto;
 import com.example.PetApp.dto.walkrecord.GetWalkRecordLocationResponseDto;
 import com.example.PetApp.dto.walkrecord.GetWalkRecordResponseDto;
 import com.example.PetApp.exception.ForbiddenException;
-import com.example.PetApp.exception.NotFoundException;
 import com.example.PetApp.mapper.WalkRecordMapper;
-import com.example.PetApp.query.MemberQueryService;
-import com.example.PetApp.query.WalkRecordQueryService;
-import com.example.PetApp.repository.jpa.MemberRepository;
 import com.example.PetApp.repository.jpa.WalkRecordRepository;
+import com.example.PetApp.service.query.QueryService;
 import com.example.PetApp.util.DistanceUtil;
 import com.example.PetApp.util.SendNotificationUtil;
 import lombok.RequiredArgsConstructor;
@@ -32,14 +29,13 @@ public class WalkRecordServiceImpl implements WalkRecordService{
     private final WalkRecordRepository walkRecordRepository;
     private final StringRedisTemplate stringRedisTemplate;
     private final SendNotificationUtil sendNotificationUtil;
-    private final MemberQueryService memberQueryService;
-    private final WalkRecordQueryService walkRecordQueryService;
+    private final QueryService queryService;
 
     @Transactional
     @Override
     public CreateWalkRecordResponseDto createWalkRecord(DelegateWalkPost delegateWalkPost) {
         log.info("createWalkRecord 요청");
-        Member member = memberQueryService.findByMember(delegateWalkPost.getSelectedApplicantMemberId());
+        Member member = queryService.findbyMember(delegateWalkPost.getSelectedApplicantMemberId());
         WalkRecord walkRecord = WalkRecordMapper.toEntity(delegateWalkPost, member);
         WalkRecord savedWalkRecord = walkRecordRepository.save(walkRecord);
         sendNotificationUtil.sendNotification(member, "산책 권한이 부여 되었습니다.");
@@ -50,7 +46,7 @@ public class WalkRecordServiceImpl implements WalkRecordService{
     @Override
     public GetWalkRecordResponseDto getWalkRecord(Long walkRecordId, String email) {
         log.info("getWalkRecord 요청 walkRecordId : {}, email : {}", walkRecordId, email);
-        WalkRecord walkRecord = walkRecordQueryService.findByWalkRecord(walkRecordId);
+        WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
         return WalkRecordMapper.toGetWalkRecordResponseDto(walkRecord);
     }
 
@@ -58,8 +54,8 @@ public class WalkRecordServiceImpl implements WalkRecordService{
     @Override
     public GetWalkRecordLocationResponseDto getWalkRecordLocation(Long walkRecordId, String email) {
         log.info("getWalkRecordLocation 요청 walkRecordId : {}, email : {}", walkRecordId, email);
-        Member member = memberQueryService.findByMember(email);
-        WalkRecord walkRecord = walkRecordQueryService.findByWalkRecord(walkRecordId);
+        Member member = queryService.findbyMember(email);
+        WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
         validateMember(walkRecord.getDelegateWalkPost().getProfile().getMember().equals(member));
         String lastLocation = stringRedisTemplate.opsForList().index("walk:path:" + walkRecordId, -1);
         return new GetWalkRecordLocationResponseDto(lastLocation);
@@ -69,8 +65,8 @@ public class WalkRecordServiceImpl implements WalkRecordService{
     @Override
     public void updateStartWalkRecord(Long walkRecordId, String email) {
         log.info("updateStartWalkRecord 요청 walkRecordId : {}, email : {}",walkRecordId, email);
-        Member member = memberQueryService.findByMember(email);
-        WalkRecord walkRecord = walkRecordQueryService.findByWalkRecord(walkRecordId);
+        Member member = queryService.findbyMember(email);
+        WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
         validateMember(walkRecord.getDelegateWalkPost().getSelectedApplicantMemberId().equals(member.getMemberId()));
         walkRecord.setWalkStatus(WalkRecord.WalkStatus.START);
         walkRecord.setStartTime(LocalDateTime.now());
@@ -82,8 +78,8 @@ public class WalkRecordServiceImpl implements WalkRecordService{
     @Override
     public void updateFinishWalkRecord(Long walkRecordId, String email) {
         log.info("updateFinishWalkRecord 요청 walkRecordId : {}, email : {}",walkRecordId, email);
-        Member member = memberQueryService.findByMember(email);
-        WalkRecord walkRecord = walkRecordQueryService.findByWalkRecord(walkRecordId);
+        Member member = queryService.findbyMember(email);
+        WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
         validateMember(walkRecord.getDelegateWalkPost().getSelectedApplicantMemberId().equals(member.getMemberId()));
         walkRecord.setWalkStatus(WalkRecord.WalkStatus.FINISH);
         walkRecord.setFinishTime(LocalDateTime.now());
