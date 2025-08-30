@@ -23,11 +23,6 @@ import java.util.List;
 @Getter
 public abstract class Post extends BaseTimeEntity {
 
-    @Id
-    @Setter
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postId;
-
     @Embedded
     @Setter
     private Content content;

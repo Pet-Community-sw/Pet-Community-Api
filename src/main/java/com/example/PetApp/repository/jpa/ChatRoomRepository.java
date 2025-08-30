@@ -14,13 +14,13 @@ import java.util.Optional;
 
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
-    @Query("select size( c.profiles) from ChatRoom c where c.chatRoomId=:chatRoomId")
+    @Query("select size( c.profiles) from ChatRoom c where c.id=:chatRoomId")
     int countByProfile(@Param("chatRoomId") Long chatRoomId);
 
     List<ChatRoom> findAllByProfilesContains(Profile profile);// 이거 검사해봐야할듯.
 
     Optional<ChatRoom> findByWalkingTogetherPost(WalkingTogetherPost walkingTogetherPost);
 
-    boolean existsByChatRoomIdAndProfilesContains(Long chatRoomId, Profile profile);
+    boolean existsByIdAndProfilesContains(Long chatRoomId, Profile profile);
 
 }

@@ -4,6 +4,7 @@ import com.example.PetApp.domain.post.Post;
 import com.example.PetApp.domain.superclass.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -15,8 +16,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)//JPA 내부에서는 접근 가능하고, 외부에서는 new로 빈 객체 생성 못 하게
 //기본 생성자를 protected로 두는 게 안전하고 객체지향적이다
 @AllArgsConstructor
-@Builder
-@EqualsAndHashCode(of = "memberId", callSuper = false) //엔티티의 동등/중복 판단은 memberId(유일한값)으로 판단하기 위함.
+@SuperBuilder
 /*
 * 부모 클래스의 필드를 equals/hashCode에 포함하고 싶다면
  @EqualsAndHashCode(callSuper = true) 사용
@@ -24,10 +24,6 @@ import java.util.List;
  @EqualsAndHashCode(callSuper = false) 사용
 * */
 public class Member extends BaseTimeEntity {//수정 필요
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
 
     @Setter
     @NotBlank
