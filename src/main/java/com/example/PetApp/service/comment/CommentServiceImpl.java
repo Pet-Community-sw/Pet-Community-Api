@@ -11,13 +11,11 @@ import com.example.PetApp.repository.jpa.CommentRepository;
 import com.example.PetApp.service.query.QueryService;
 import com.example.PetApp.util.SendNotificationUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor//memberId를 받아서 유효성 검사해야할듯.
 public class CommentServiceImpl implements CommentService {
@@ -29,7 +27,6 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     @Override
     public List<GetCommentsResponseDto> getComments(Long postId, String email) {
-        log.info("getComments 요청 email : {}, postId : {}", email, postId);
         Member member = queryService.findbyMember(email);
         Post post = queryService.findByPost(postId);
 
@@ -39,7 +36,6 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public CreateCommentResponseDto createComment(CommentDto commentDto, String email) {
-        log.info("createComment 요청 email : {}", email);
         Member member = queryService.findbyMember(email);
         Post post = queryService.findByPost(commentDto.getPostId());
 
@@ -53,7 +49,6 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public void deleteComment(Long commentId, String email) {
-        log.info("deleteComment 요청 email : {}, commentId : {}", email, commentId);
         Member member = queryService.findbyMember(email);
         Comment comment = queryService.findByComment(commentId);
         validateMember(comment, member);
@@ -63,7 +58,6 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public void updateComment(Long commentId, UpdateCommentDto updateCommentDto, String email) {
-        log.info("updateComment 요청 email : {}, commentId : {}", email, commentId);
         Member member = queryService.findbyMember(email);
         Comment comment = queryService.findByComment(commentId);
         validateMember(comment, member);
