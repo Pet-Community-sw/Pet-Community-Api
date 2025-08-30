@@ -8,16 +8,15 @@ import com.example.PetApp.exception.ConflictException;
 import com.example.PetApp.exception.NotFoundException;
 import com.example.PetApp.exception.UnAuthorizedException;
 import com.example.PetApp.mapper.MemberMapper;
-import com.example.PetApp.query.MemberQueryService;
 import com.example.PetApp.repository.jpa.MemberRepository;
 import com.example.PetApp.repository.jpa.RoleRepository;
 import com.example.PetApp.service.email.EmailService;
 import com.example.PetApp.service.fcm.FcmTokenService;
+import com.example.PetApp.service.query.QueryService;
 import com.example.PetApp.service.token.TokenService;
 import com.example.PetApp.util.imagefile.FileUploadUtil;
 import com.example.PetApp.util.imagefile.FileImageKind;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,7 +32,7 @@ public class MemberServiceImpl implements MemberService{
     @Value("${spring.dog.member.image.upload}")
     private String memberUploadDir;
 
-    private final MemberQueryService memberQueryService;
+    private final QueryService queryService;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
@@ -56,7 +55,7 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     @Override
     public LoginResponseDto login(LoginDto loginDto, HttpServletResponse response) {
-        Member member = memberQueryService.findByMember(loginDto.getEmail());
+        Member member = queryService.findbyMember(loginDto.getEmail());
         if (!passwordEncoder.matches(loginDto.getPassword(),member.getPassword())) {
             throw new UnAuthorizedException("이메일 혹은 비밀번호가 일치하지 않습니다.");
         }
@@ -81,7 +80,7 @@ public class MemberServiceImpl implements MemberService{
     @Transactional(readOnly = true)
     @Override
     public void sendEmail(SendEmailDto sendEmailDto) {
-        Member member = memberQueryService.findByMember(sendEmailDto.getEmail());
+        Member member = queryService.findbyMember(sendEmailDto.getEmail());
         emailService.sendMail(member.getEmail());
     }
 
@@ -93,13 +92,13 @@ public class MemberServiceImpl implements MemberService{
 
     @Transactional(readOnly = true)
     public Member findByEmail(String email) {
-        return memberQueryService.findByMember(email);
+        return queryService.findbyMember(email);
     }
 
     @Transactional
     @Override
     public void resetPassword(ResetPasswordDto resetPasswordDto, String email) {
-        Member member = memberQueryService.findByMember(email);
+        Member member = queryService.findbyMember(email);
         if (passwordEncoder.matches(resetPasswordDto.getNewPassword(),member.getPassword())) {
             throw new IllegalArgumentException("전 비밀번호와 다르게 설정해야합니다.");
         } else {
@@ -110,22 +109,21 @@ public class MemberServiceImpl implements MemberService{
     @Transactional(readOnly = true)//상세 멤버 프로필 추가랑 어떤거 해야할지 해야됨. 여기에 자기가 쓴 게시물, 산책길 추천, 후기 추가해야할듯.
     @Override
     public GetMemberResponseDto getMember(Long memberId, String email) {
-        Member member = memberQueryService.findByMember(email);
+        Member member = queryService.findbyMember(email);
         return MemberMapper.toGetMemberResponseDto(member);
     }
 
     @Transactional
     @Override
     public void deleteMember(String email) {
-        Member member = memberQueryService.findByMember(email);
+        Member member = queryService.findbyMember(email);
         memberRepository.delete(member);
     }
 
     @Transactional
     @Override
     public void createFcmToken(FcmTokenDto fcmTokenDto) {
-        Member member = memberRepository.findById(fcmTokenDto.getMemberId())
-                .orElseThrow(() -> new NotFoundException("해당 유저는 없습니다."));
+        Member member = queryService.findbyMember(fcmTokenDto.getMemberId());
         fcmTokenService.createFcmToken(member, fcmTokenDto.getFcmToken());
     }
 

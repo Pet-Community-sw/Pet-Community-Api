@@ -6,9 +6,8 @@ import com.example.PetApp.domain.post.Post;
 import com.example.PetApp.dto.like.LikeCountDto;
 import com.example.PetApp.dto.like.LikeResponseDto;
 import com.example.PetApp.mapper.LikeMapper;
-import com.example.PetApp.query.MemberQueryService;
-import com.example.PetApp.query.PostQueryService;
 import com.example.PetApp.repository.jpa.*;
+import com.example.PetApp.service.query.QueryService;
 import com.example.PetApp.util.SendNotificationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,15 +29,13 @@ public class LikeServiceImpl implements LikeService {
     private final LikeRepository likeRepository;
     private final SendNotificationUtil sendNotificationUtil;
     private final RedisTemplate<String, Long> likeRedisTemplate;
-    private final PostQueryService postQueryService;
-    private final MemberQueryService memberQueryService;
-
+    private final QueryService queryService;
 
     @Transactional(readOnly = true)
     @Override
     public LikeResponseDto getLikes(Long postId) {
         log.info("getLikes 요청 postId : {}", postId);
-        Post post = postQueryService.findByPost(postId);
+        Post post = queryService.findByPost(postId);
         return LikeMapper.toLikeResponseDto(post.getLikes());
     }
 
@@ -57,8 +54,8 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public ResponseEntity<String> createAndDeleteLike(Long postId, String email) {
         log.info("createAndDeleteLike 요청 postId : {}", postId);
-        Member member = memberQueryService.findByMember(email);
-        Post post = postQueryService.findByPost(postId);
+        Member member = queryService.findbyMember(email);
+        Post post = queryService.findByPost(postId);
         Optional<Like> existingLike = post.getLikes().stream()
                 .filter(like -> like.getMember().equals(member))
                 .findFirst();

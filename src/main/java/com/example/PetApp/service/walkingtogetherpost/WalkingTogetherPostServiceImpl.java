@@ -13,9 +13,9 @@ import com.example.PetApp.dto.walkingtogetherpost.UpdateWalkingTogetherPostDto;
 import com.example.PetApp.exception.ConflictException;
 import com.example.PetApp.exception.ForbiddenException;
 import com.example.PetApp.mapper.WalkingTogetherPostMapper;
-import com.example.PetApp.query.*;
 import com.example.PetApp.repository.jpa.WalkingTogetherPostRepository;
 import com.example.PetApp.service.chatroom.ChatRoomService;
+import com.example.PetApp.service.query.QueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,19 +30,15 @@ public class WalkingTogetherPostServiceImpl implements WalkingTogetherPostServic
 
     private final ChatRoomService chatRoomService;
     private final WalkingTogetherPostRepository walkingTogetherPostRepository;
-    private final WalkingTogetherPostQueryService walkingTogetherPostQueryService;
-    private final PetBreedQueryService petBreedQueryService;
-    private final ProfileQueryService profileQueryService;
-    private final RecommendRoutePostQueryService recommendRoutePostQueryService;
-
+    private final QueryService queryService;
 
     @Transactional(readOnly = true)
     @Override//피해야하는종을 여기서 필터링 하면될듯 피해야하는종에 자신의 종이 포함되어있으면 true를 반환
     public GetWalkingTogetherPostResponseDto getWalkingTogetherPost(Long walkingTogetherPostId, Long profileId) {
         log.info("getWalingTogetherPost 요청 walkingTogetherPostId : {}, profileId : {}", walkingTogetherPostId,profileId);
-        Profile profile = profileQueryService.findByProfile(profileId);
-        WalkingTogetherPost walkingTogetherPost = walkingTogetherPostQueryService.findByWalkingTogetherPost(walkingTogetherPostId);
-        PetBreed petBreed = petBreedQueryService.findByPetBreed(profile.getPetBreed().getName());
+        Profile profile = queryService.findByProfile(profileId);
+        WalkingTogetherPost walkingTogetherPost = queryService.findByWalkingTogetherPost(walkingTogetherPostId);
+        PetBreed petBreed = queryService.findByPetBreed(profile.getPetBreed().getName());
 
         return WalkingTogetherPostMapper.toGetWalkingTogetherPostResponseDto(walkingTogetherPostId, walkingTogetherPost, profile, petBreed);
 
@@ -52,9 +48,9 @@ public class WalkingTogetherPostServiceImpl implements WalkingTogetherPostServic
     @Override
     public List<GetWalkingTogetherPostResponseDto> getWalkingTogetherPosts(Long recommendRoutePostId, Long profileId) {
         log.info("getWalkingTogetherPostsList 요청 recommendRoutePostId : {}, profileId : {}", recommendRoutePostId, profileId);
-        Profile profile = profileQueryService.findByProfile(profileId);
-        RecommendRoutePost recommendRoutePost = recommendRoutePostQueryService.findByRecommendRoutePost(recommendRoutePostId);
-        PetBreed petBreed = petBreedQueryService.findByPetBreed(profile.getPetBreed().getName());
+        Profile profile = queryService.findByProfile(profileId);
+        RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(recommendRoutePostId);
+        PetBreed petBreed = queryService.findByPetBreed(profile.getPetBreed().getName());
         List<WalkingTogetherPost> walkingTogetherPosts = walkingTogetherPostRepository.findAllByRecommendRoutePost(recommendRoutePost);
         return WalkingTogetherPostMapper.toGetWalkingTogetherPostResponseDtos(walkingTogetherPosts, petBreed);
     }
@@ -63,8 +59,8 @@ public class WalkingTogetherPostServiceImpl implements WalkingTogetherPostServic
     @Override
     public CreateWalkingTogetherPostResponseDto createWalkingTogetherPost(CreateWalkingTogetherPostDto createWalkingTogetherPostDto, Long profileId) {
         log.info("createWalkingTogetherPost 요청 profileId : {}", profileId);
-        Profile profile = profileQueryService.findByProfile(profileId);
-        RecommendRoutePost recommendRoutePost = recommendRoutePostQueryService.findByRecommendRoutePost(createWalkingTogetherPostDto.getRecommendRoutePostId());
+        Profile profile = queryService.findByProfile(profileId);
+        RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(createWalkingTogetherPostDto.getRecommendRoutePostId());
         WalkingTogetherPost walkingTogetherPost = WalkingTogetherPostMapper.toEntity(profile, recommendRoutePost, createWalkingTogetherPostDto);
         walkingTogetherPost.addMatchPostProfiles(profileId);
         walkingTogetherPost.addAvoidBreeds(profile);
@@ -90,7 +86,7 @@ public class WalkingTogetherPostServiceImpl implements WalkingTogetherPostServic
     }
 
     private WalkingTogetherPost validateProfile(Long walkingTogetherPostId, Long profileId) {
-        WalkingTogetherPost walkingTogetherPost = walkingTogetherPostQueryService.findByWalkingTogetherPost(walkingTogetherPostId);
+        WalkingTogetherPost walkingTogetherPost = queryService.findByWalkingTogetherPost(walkingTogetherPostId);
         if (!walkingTogetherPost.getProfile().getProfileId().equals(profileId)) {
             throw new ForbiddenException("권한이 없습니다.");
         }
@@ -101,13 +97,13 @@ public class WalkingTogetherPostServiceImpl implements WalkingTogetherPostServic
     @Override
     public CreateChatRoomResponseDto startMatch(Long walkingTogetherPostId, Long profileId) {
         log.info("startMatch 요청 walkingTogetherPostId : {}, profileId : {}", walkingTogetherPostId, profileId);
-        Profile profile = profileQueryService.findByProfile(profileId);
-        WalkingTogetherPost walkingTogetherPost = walkingTogetherPostQueryService.findByWalkingTogetherPost(walkingTogetherPostId);
+        Profile profile = queryService.findByProfile(profileId);
+        WalkingTogetherPost walkingTogetherPost = queryService.findByWalkingTogetherPost(walkingTogetherPostId);
 
         if (walkingTogetherPost.getProfiles().contains(profileId)) {
             throw new ConflictException("이미 채팅방에 들어가있습니다.");
         }
-        PetBreed petBreed = petBreedQueryService.findByPetBreed(profile.getPetBreed().getName());
+        PetBreed petBreed = queryService.findByPetBreed(profile.getPetBreed().getName());
 
         if (walkingTogetherPost.getAvoidBreeds().contains(petBreed.getPetBreedId())) {
             throw new ForbiddenException("해당 종은 참여할 수 없습니다.");

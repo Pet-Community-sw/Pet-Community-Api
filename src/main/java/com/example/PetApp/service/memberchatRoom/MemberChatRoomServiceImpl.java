@@ -6,15 +6,11 @@ import com.example.PetApp.domain.MemberChatRoom;
 import com.example.PetApp.dto.groupchat.ChatMessageResponseDto;
 import com.example.PetApp.dto.memberchat.CreateMemberChatRoomResponseDto;
 import com.example.PetApp.dto.memberchat.MemberChatRoomsResponseDto;
-import com.example.PetApp.exception.ConflictException;
 import com.example.PetApp.exception.ForbiddenException;
-import com.example.PetApp.exception.NotFoundException;
 import com.example.PetApp.mapper.MemberChatRoomMapper;
-import com.example.PetApp.query.MemberChatRoomQueryService;
-import com.example.PetApp.query.MemberQueryService;
 import com.example.PetApp.repository.jpa.MemberChatRoomRepository;
-import com.example.PetApp.repository.jpa.MemberRepository;
 import com.example.PetApp.service.chatting.ChattingReader;
+import com.example.PetApp.service.query.QueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -34,13 +30,12 @@ public class MemberChatRoomServiceImpl implements MemberChatRoomService {
     private final MemberChatRoomRepository memberChatRoomRepository;
     private final ChattingReader chattingReader;
     private final StringRedisTemplate redisTemplate;
-    private final MemberQueryService memberQueryService;
-    private final MemberChatRoomQueryService memberChatRoomQueryService;
+    private final QueryService queryService;
 
     @Transactional(readOnly = true)
     @Override
     public List<MemberChatRoomsResponseDto> getMemberChatRooms(String email) {
-        Member member = memberQueryService.findByMember(email);
+        Member member = queryService.findbyMember(email);
         List<MemberChatRoom> memberChatRooms = memberChatRoomRepository.findAllByMembersContains(member);
 
         return getMemberChatRoomsResponseDtos(memberChatRooms, member);
@@ -57,8 +52,8 @@ public class MemberChatRoomServiceImpl implements MemberChatRoomService {
     @Transactional
     @Override
     public CreateMemberChatRoomResponseDto createMemberChatRoom(Long memberId, String email) {
-        Member fromMember = memberQueryService.findByMember(memberId);
-        Member member = memberQueryService.findByMember(email);
+        Member fromMember = queryService.findbyMember(memberId);
+        Member member = queryService.findbyMember(email);
         MemberChatRoom memberChatRoom = getMemberChatRoom(fromMember, member);
         MemberChatRoom newMemberChatRoom = memberChatRoomRepository.save(memberChatRoom);
         return new CreateMemberChatRoomResponseDto(newMemberChatRoom.getMemberChatRoomId());
@@ -82,8 +77,8 @@ public class MemberChatRoomServiceImpl implements MemberChatRoomService {
     @Transactional
     @Override
     public void deleteMemberChatRoom(Long memberChatRoomId, String email) {
-        Member member = memberQueryService.findByMember(email);
-        MemberChatRoom memberChatRoom = memberChatRoomQueryService.findByMemberChatRoom(memberChatRoomId);
+        Member member = queryService.findbyMember(email);
+        MemberChatRoom memberChatRoom = queryService.findByMemberChatRoom(memberChatRoomId);
         if (!(memberChatRoom.getMembers().contains(member))) {
             throw new ForbiddenException("권한이 없습니다.");
         }
@@ -93,7 +88,7 @@ public class MemberChatRoomServiceImpl implements MemberChatRoomService {
     @Transactional(readOnly = true)
     @Override
     public ChatMessageResponseDto getMessages(Long memberChatRoomId, String email, int page) {
-        Member member = memberQueryService.findByMember(email);
+        Member member = queryService.findbyMember(email);
         return chattingReader.getMessages(memberChatRoomId, member.getMemberId(), ChatMessage.ChatRoomType.ONE, page);
     }
 

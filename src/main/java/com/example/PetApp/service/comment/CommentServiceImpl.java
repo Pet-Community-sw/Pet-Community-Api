@@ -6,14 +6,9 @@ import com.example.PetApp.domain.post.Post;
 import com.example.PetApp.domain.post.Commentable;
 import com.example.PetApp.dto.commment.*;
 import com.example.PetApp.exception.ForbiddenException;
-import com.example.PetApp.exception.NotFoundException;
 import com.example.PetApp.mapper.CommentMapper;
-import com.example.PetApp.query.CommentQueryService;
-import com.example.PetApp.query.MemberQueryService;
-import com.example.PetApp.query.PostQueryService;
 import com.example.PetApp.repository.jpa.CommentRepository;
-import com.example.PetApp.repository.jpa.MemberRepository;
-import com.example.PetApp.repository.jpa.PostRepository;
+import com.example.PetApp.service.query.QueryService;
 import com.example.PetApp.util.SendNotificationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,18 +23,15 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final MemberRepository memberRepository;
     private final SendNotificationUtil sendNotificationUtil;
-    private final MemberQueryService memberQueryService;
-    private final PostQueryService postQueryService;
-    private final CommentQueryService commentQueryService;
+    private final QueryService queryService;
 
     @Transactional(readOnly = true)
     @Override
     public List<GetCommentsResponseDto> getComments(Long postId, String email) {
         log.info("getComments 요청 email : {}, postId : {}", email, postId);
-        Member member = memberQueryService.findByMember(email);
-        Post post = postQueryService.findByPost(postId);
+        Member member = queryService.findbyMember(email);
+        Post post = queryService.findByPost(postId);
 
         return CommentMapper.toGetCommentsResponseDtos((Commentable) post, member);
     }
@@ -48,8 +40,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CreateCommentResponseDto createComment(CommentDto commentDto, String email) {
         log.info("createComment 요청 email : {}", email);
-        Member member = memberQueryService.findByMember(email);
-        Post post = postQueryService.findByPost(commentDto.getPostId());
+        Member member = queryService.findbyMember(email);
+        Post post = queryService.findByPost(commentDto.getPostId());
 
         Comment comment = CommentMapper.toEntity(commentDto, post, member);
         commentRepository.save(comment);
@@ -62,8 +54,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void deleteComment(Long commentId, String email) {
         log.info("deleteComment 요청 email : {}, commentId : {}", email, commentId);
-        Member member = memberQueryService.findByMember(email);
-        Comment comment = commentQueryService.findByComment(commentId);
+        Member member = queryService.findbyMember(email);
+        Comment comment = queryService.findByComment(commentId);
         validateMember(comment, member);
         commentRepository.deleteById(commentId);
     }
@@ -72,8 +64,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void updateComment(Long commentId, UpdateCommentDto updateCommentDto, String email) {
         log.info("updateComment 요청 email : {}, commentId : {}", email, commentId);
-        Member member = memberQueryService.findByMember(email);
-        Comment comment = commentQueryService.findByComment(commentId);
+        Member member = queryService.findbyMember(email);
+        Comment comment = queryService.findByComment(commentId);
         validateMember(comment, member);
         comment.setContent(updateCommentDto.getContent());
 
