@@ -1,20 +1,20 @@
 package com.example.PetApp.service;
 
-import com.example.PetApp.domain.ChatRoom;
-import com.example.PetApp.domain.Profile;
-import com.example.PetApp.domain.WalkingTogetherPost;
-import com.example.PetApp.dto.chatroom.CreateChatRoomResponseDto;
-import com.example.PetApp.dto.groupchat.ChatRoomsResponseDto;
-import com.example.PetApp.dto.groupchat.UpdateChatRoomDto;
-import com.example.PetApp.exception.ConflictException;
-import com.example.PetApp.exception.ForbiddenException;
-import com.example.PetApp.exception.NotFoundException;
-import com.example.PetApp.mapper.ChatRoomMapper;
-import com.example.PetApp.repository.jpa.ChatRoomRepository;
-import com.example.PetApp.repository.jpa.ProfileRepository;
-import com.example.PetApp.repository.mongo.ChatMessageRepository;
-import com.example.PetApp.service.chatroom.ChatRoomServiceImpl;
-import com.example.PetApp.service.chatting.ChattingReader;
+import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
+import com.example.PetApp.domain.profile.model.entity.Profile;
+import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
+import com.example.PetApp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
+import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatRoomsResponseDto;
+import com.example.PetApp.domain.groupchatroom.model.dto.request.UpdateChatRoomDto;
+import com.example.PetApp.common.exception.ConflictException;
+import com.example.PetApp.common.exception.ForbiddenException;
+import com.example.PetApp.common.exception.NotFoundException;
+import com.example.PetApp.domain.groupchatroom.mapper.ChatRoomMapper;
+import com.example.PetApp.domain.groupchatroom.ChatRoomRepository;
+import com.example.PetApp.domain.profile.ProfileRepository;
+import com.example.PetApp.domain.chatting.ChatMessageRepository;
+import com.example.PetApp.domain.groupchatroom.ChatRoomServiceImpl;
+import com.example.PetApp.domain.chatting.ChattingReader;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -63,7 +63,7 @@ class ChatRoomServiceTest {
                 .petName("초코")
                 .build();
 
-        WalkingTogetherPost walkingTogetherPost = WalkingTogetherPost.builder()
+        WalkingTogetherMatch walkingTogetherMatch = WalkingTogetherMatch.builder()
                 .walkingTogetherPostId(100L)
                 .profile(Profile.builder().profileId(1L).build())
                 .build();
@@ -72,7 +72,7 @@ class ChatRoomServiceTest {
                 .chatRoomId(99L)
                 .profiles(List.of(profile))
                 .name("테스트방")
-                .walkingTogetherPost(walkingTogetherPost)
+                .walkingTogetherPost(walkingTogetherMatch)
                 .build();
 
         when(redisTemplate.opsForValue()).thenReturn(valueOperations);
@@ -117,7 +117,7 @@ class ChatRoomServiceTest {
                 .petName("초이선자이")
                 .build();
 
-        WalkingTogetherPost post = WalkingTogetherPost.builder()
+        WalkingTogetherMatch post = WalkingTogetherMatch.builder()
                 .walkingTogetherPostId(1L)
                 .limitCount(5)
                 .profile(profile)
@@ -153,7 +153,7 @@ class ChatRoomServiceTest {
                 .petName("초이선자이")
                 .build();
 
-        WalkingTogetherPost post = WalkingTogetherPost.builder()
+        WalkingTogetherMatch post = WalkingTogetherMatch.builder()
                 .walkingTogetherPostId(1L)
                 .profile(profile)
                 .limitCount(5)
@@ -188,7 +188,7 @@ class ChatRoomServiceTest {
                 .petName("멍멍이")
                 .build();
 
-        WalkingTogetherPost post = WalkingTogetherPost.builder()
+        WalkingTogetherMatch post = WalkingTogetherMatch.builder()
                 .walkingTogetherPostId(1L)
                 .profile(fakeProfile)
                 .limitCount(1)
@@ -364,7 +364,7 @@ class ChatRoomServiceTest {
                 .petName("멍멍")
                 .build();
 
-        WalkingTogetherPost walkingTogetherPost = WalkingTogetherPost.builder()
+        WalkingTogetherMatch walkingTogetherMatch = WalkingTogetherMatch.builder()
                 .walkingTogetherPostId(1L)
                 .profile(profile)
                 .build();
@@ -373,7 +373,7 @@ class ChatRoomServiceTest {
                 .chatRoomId(1L)
                 .name("냐옹")
                 .limitCount(5)
-                .walkingTogetherPost(walkingTogetherPost)
+                .walkingTogetherPost(walkingTogetherMatch)
                 .build();
 
         when(chatRoomRepository.findById(chatRoomId)).thenReturn(Optional.of(chatRoom));
@@ -460,7 +460,7 @@ class ChatRoomServiceTest {
                 .petName("멍멍")
                 .build();
 
-        WalkingTogetherPost walkingTogetherPost = WalkingTogetherPost.builder()
+        WalkingTogetherMatch walkingTogetherMatch = WalkingTogetherMatch.builder()
                 .walkingTogetherPostId(1L)
                 .profile(profile)
                 .build();
@@ -469,7 +469,7 @@ class ChatRoomServiceTest {
                 .chatRoomId(1L)
                 .name("냐옹")
                 .limitCount(5)
-                .walkingTogetherPost(walkingTogetherPost)
+                .walkingTogetherPost(walkingTogetherMatch)
                 .build();
 
         when(chatRoomRepository.findById(chatRoomId)).thenReturn(Optional.of(chatRoom));

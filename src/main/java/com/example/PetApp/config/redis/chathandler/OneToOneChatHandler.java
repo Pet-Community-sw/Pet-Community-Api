@@ -1,11 +1,11 @@
 package com.example.PetApp.config.redis.chathandler;
 
-import com.example.PetApp.domain.ChatMessage;
-import com.example.PetApp.domain.Member;
-import com.example.PetApp.domain.MemberChatRoom;
-import com.example.PetApp.exception.NotFoundException;
-import com.example.PetApp.mapper.ChatMessageMapper;
-import com.example.PetApp.repository.jpa.MemberChatRoomRepository;
+import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
+import com.example.PetApp.domain.member.model.entity.Member;
+import com.example.PetApp.domain.memberchatRoom.model.entity.MemberChatRoom;
+import com.example.PetApp.common.exception.NotFoundException;
+import com.example.PetApp.domain.chatting.mapper.ChatMessageMapper;
+import com.example.PetApp.domain.memberchatRoom.MemberChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

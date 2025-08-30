@@ -1,10 +1,9 @@
 package com.example.PetApp.config.redis;
 
-import com.example.PetApp.domain.ChatMessage;
-import com.example.PetApp.repository.mongo.ChatMessageRepository;
+import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
+import com.example.PetApp.domain.chatting.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,0 +1,32 @@
+package com.example.PetApp.domain.post.normal.model.dto.response;
+
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class PostResponseDto {
+
+    private Long postId;
+
+    private String postImageUrl;
+
+    private Long memberId;
+
+    private String memberName;
+
+    private String memberImageUrl;
+
+    private String createdAt;
+
+    private Long viewCount;
+
+    private Long likeCount;
+
+    private String title;
+
+    private boolean like;
+
+}

@@ -1,7 +1,7 @@
 package com.example.PetApp.util;
 
-import com.example.PetApp.domain.Member;
-import com.example.PetApp.dto.post.PostDto;
+import com.example.PetApp.domain.member.model.entity.Member;
+import com.example.PetApp.domain.post.normal.model.dto.request.PostDto;
 
 public class Mapper {
     public static Member createFakeMember() {

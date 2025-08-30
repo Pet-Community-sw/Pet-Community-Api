@@ -7,9 +7,9 @@
 //import com.example.PetApp.domain.ChatRoom;
 //import com.example.PetApp.domain.Member;
 //import com.example.PetApp.domain.Profile;
-//import com.example.PetApp.dto.groupchat.UpdateChatRoomList;
-//import com.example.PetApp.repository.jpa.ChatRoomRepository;
-//import com.example.PetApp.repository.jpa.MemberChatRoomRepository;
+//import com.example.PetApp.domain.groupchatroom.model.dto.request.UpdateChatRoomList;
+//import com.example.PetApp.domain.groupchatroom.ChatRoomRepository;
+//import com.example.PetApp.domain.memberchatRoom.MemberChatRoomRepository;
 //import com.fasterxml.jackson.databind.ObjectMapper;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.DisplayName;

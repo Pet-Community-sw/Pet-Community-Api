@@ -1,6 +1,6 @@
 package com.example.PetApp.config.redis;
 
-import com.example.PetApp.service.sse.SseEmitterManager;
+import com.example.PetApp.domain.sse.SseEmitterManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

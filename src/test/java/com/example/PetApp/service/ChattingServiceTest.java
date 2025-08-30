@@ -5,10 +5,10 @@
 //import com.example.PetApp.domain.ChatRoom;
 //import com.example.PetApp.domain.Member;
 //import com.example.PetApp.domain.Profile;
-//import com.example.PetApp.repository.jpa.ChatRoomRepository;
-//import com.example.PetApp.repository.jpa.MemberChatRoomRepository;
-//import com.example.PetApp.repository.jpa.MemberRepository;
-//import com.example.PetApp.repository.jpa.ProfileRepository;
+//import com.example.PetApp.domain.groupchatroom.ChatRoomRepository;
+//import com.example.PetApp.domain.memberchatRoom.MemberChatRoomRepository;
+//import com.example.PetApp.domain.member.MemberRepository;
+//import com.example.PetApp.domain.profile.ProfileRepository;
 //import com.example.PetApp.service.chatroom.ChatRoomService;
 //import com.example.PetApp.service.chatting.ChattingService;
 //import com.example.PetApp.service.chatting.ChattingServiceImp;

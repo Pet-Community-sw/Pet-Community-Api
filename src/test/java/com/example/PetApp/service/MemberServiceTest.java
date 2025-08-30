@@ -1,31 +1,32 @@
 package com.example.PetApp.service;
 
 
-import com.example.PetApp.aop.LogAop;
-import com.example.PetApp.domain.Member;
-import com.example.PetApp.domain.Role;
-import com.example.PetApp.dto.member.*;
-import com.example.PetApp.exception.NotFoundException;
-import com.example.PetApp.repository.jpa.MemberRepository;
-import com.example.PetApp.repository.jpa.RoleRepository;
-import com.example.PetApp.service.email.EmailService;
-import com.example.PetApp.service.token.TokenService;
+import com.example.PetApp.common.aop.LogAop;
+import com.example.PetApp.domain.member.MemberServiceImpl;
+import com.example.PetApp.domain.member.model.dto.request.LoginDto;
+import com.example.PetApp.domain.member.model.dto.request.MemberSignDto;
+import com.example.PetApp.domain.member.model.dto.request.ResetPasswordDto;
+import com.example.PetApp.domain.member.model.dto.request.SendEmailDto;
+import com.example.PetApp.domain.member.model.dto.response.MemberSignResponseDto;
+import com.example.PetApp.domain.member.model.entity.Member;
+import com.example.PetApp.common.exception.NotFoundException;
+import com.example.PetApp.domain.member.MemberRepository;
+import com.example.PetApp.domain.member.RoleRepository;
+import com.example.PetApp.domain.email.EmailService;
+import com.example.PetApp.domain.token.TokenService;
 import com.example.PetApp.util.Mapper;
-import com.example.PetApp.util.imagefile.FileImageKind;
-import com.example.PetApp.util.imagefile.FileUploadUtil;
+import com.example.PetApp.common.util.imagefile.FileImageKind;
+import com.example.PetApp.common.util.imagefile.FileUploadUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -43,7 +44,7 @@ import static org.mockito.Mockito.when;
 class MemberServiceTest {
 
     @InjectMocks
-    private com.example.PetApp.service.member.MemberServiceImpl memberServiceImp;
+    private MemberServiceImpl memberServiceImp;
     @Mock
     private MemberRepository memberRepository;
     @Mock
