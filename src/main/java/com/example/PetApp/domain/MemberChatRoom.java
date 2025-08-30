@@ -1,25 +1,19 @@
 package com.example.PetApp.domain;
 
-import com.example.PetApp.domain.superclass.BaseTimeEntity;
+import com.example.PetApp.domain.superclass.BaseEntity;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
-public class MemberChatRoom extends BaseTimeEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberChatRoomId;
+@SuperBuilder
+public class MemberChatRoom extends BaseEntity {
 
     @Builder.Default//이미 초기화가 되어있기때문에 notnull이 필요 없음.
     @Setter

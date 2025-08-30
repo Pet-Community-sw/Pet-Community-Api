@@ -1,7 +1,8 @@
 package com.example.PetApp.domain;
 
-import com.example.PetApp.domain.superclass.BaseTimeEntity;
+import com.example.PetApp.domain.superclass.BaseEntity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
@@ -10,12 +11,8 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
-public class MemberRole extends BaseTimeEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberRoleId;
+@SuperBuilder
+public class MemberRole extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "member_id")

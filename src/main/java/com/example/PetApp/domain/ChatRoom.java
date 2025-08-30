@@ -1,7 +1,8 @@
 package com.example.PetApp.domain;
 
-import com.example.PetApp.domain.superclass.BaseTimeEntity;
+import com.example.PetApp.domain.superclass.BaseEntity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -13,12 +14,8 @@ import java.util.List;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
-@Builder
-public class ChatRoom extends BaseTimeEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long chatRoomId;
+@SuperBuilder
+public class ChatRoom extends BaseEntity {
 
     @Setter
     @NotBlank

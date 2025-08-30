@@ -18,7 +18,7 @@ public class WalkRecordMapper {
 
     public static GetWalkRecordResponseDto toGetWalkRecordResponseDto(WalkRecord walkRecord) {
         return GetWalkRecordResponseDto.builder()
-                .walkRecordId(walkRecord.getWalkRecordId())
+                .walkRecordId(walkRecord.getId())
                 .startTime(walkRecord.getStartTime())
                 .finishTime(walkRecord.getFinishTime())
                 .walkTime(CreatedAtUtil.createdAt(walkRecord.getStartTime(),walkRecord.getFinishTime()))

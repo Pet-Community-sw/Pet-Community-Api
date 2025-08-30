@@ -32,7 +32,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional//accesstoken 수정 필요 이름이 같은지 확인해야됨.
     @Override
     public CreateProfileResponseDto createProfile(ProfileDto profileDto, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         if (profileRepository.countByMember(member) >= 4) {
             throw new ConflictException("프로필은 최대 4개 입니다.");
         }
@@ -43,14 +43,14 @@ public class ProfileServiceImpl implements ProfileService {
         validateBreed(profileDto, profile);
         profileRepository.save(profile);
 
-        return new CreateProfileResponseDto(profile.getProfileId());
+        return new CreateProfileResponseDto(profile.getId());
     }
 
 
     @Transactional(readOnly = true)
     @Override
     public List<ProfileListResponseDto> getProfiles(String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         List<Profile> profiles = profileRepository.findByMember(member);
         return profiles.stream()
                 .map(ProfileMapper::toProfileListResponseDto)
@@ -60,7 +60,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional(readOnly = true)
     @Override
     public GetProfileResponseDto getProfile(Long profileId, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         Profile profile = queryService.findByProfile(profileId);
         return ProfileMapper.toGetProfileResponseDto(profile, member);
     }
@@ -69,7 +69,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional
     @Override
     public void updateProfile(Long profileId, ProfileDto profileDto, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         Profile profile = queryService.findByProfile(profileId);
         PetBreed petBreed = queryService.findByPetBreed(profileDto.getPetBreed());
 
@@ -82,7 +82,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional
     @Override
     public void deleteProfile(Long profileId, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         Profile profile = queryService.findByProfile(profileId);
         validateProfile(member, profile.getMember());
         profileRepository.deleteById(profileId);
@@ -91,7 +91,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional
     @Override
     public AccessTokenByProfileIdResponseDto accessTokenByProfile(String accessToken, String refreshToken, Long profileId, String email) {//요청했을 당시 토큰을 redis에 저장시켜서 이전 토큰으로 요청 시 인증이 안되게 끔 해야됨.
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         Profile profile = queryService.findByProfile(profileId);
         validateProfile(member, profile.getMember());
         String newAccessToken = tokenService.newAccessTokenByProfile(accessToken, refreshToken, member, profileId);

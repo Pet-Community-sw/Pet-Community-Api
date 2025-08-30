@@ -1,7 +1,6 @@
 package com.example.PetApp.service.token;
 
 import com.example.PetApp.domain.Member;
-import com.example.PetApp.domain.MemberRole;
 import com.example.PetApp.domain.RefreshToken;
 import com.example.PetApp.domain.Role;
 import com.example.PetApp.dto.member.AccessTokenResponseDto;
@@ -51,8 +50,8 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
         *
         * */
 
-        String accessToken = jwtTokenizer.createAccessToken(member.getMemberId(), null, member.getEmail(),roles);
-        String refreshToken = jwtTokenizer.createRefreshToken(member.getMemberId(), member.getEmail(), roles);
+        String accessToken = jwtTokenizer.createAccessToken(member.getId(), null, member.getEmail(),roles);
+        String refreshToken = jwtTokenizer.createRefreshToken(member.getId(), member.getEmail(), roles);
 
         saveAndSendRefreshToken(member, response, byMember, refreshToken);
         log.info("로그인 요청 성공");
@@ -85,7 +84,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
         String token = accessToken.split(" ")[1];
         Claims claims = getClaimsFromToken(token,TokenType.ACCESS);
         Long memberId = Long.valueOf((Integer) claims.get("memberId"));
-        RefreshToken savedRefreshToken = refreshRepository.findByMemberMemberId(memberId)
+        RefreshToken savedRefreshToken = refreshRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new NotFoundException("refreshToken이 없음. 다시 로그인."));
 
         if (!savedRefreshToken.getRefreshToken().equals(refreshToken)) {
@@ -108,7 +107,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
     public String newAccessTokenByProfile(String accessToken, String refreshToken, Member member, Long profileId) {
         blacklistAccessToken(accessToken);
         List<String> roles = getRoles(member);
-        return jwtTokenizer.createAccessToken(member.getMemberId(), profileId, member.getEmail(), roles);
+        return jwtTokenizer.createAccessToken(member.getId(), profileId, member.getEmail(), roles);
     }
 
 
@@ -119,7 +118,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
         String[] arr = accessToken.split(" ");
         Claims claims = jwtTokenizer.parseAccessToken(arr[1]);
         Long memberId = Long.valueOf((Integer) claims.get("memberId"));
-        refreshRepository.deleteByMemberMemberId(memberId);
+        refreshRepository.deleteByMemberId(memberId);
         blacklistAccessToken(accessToken);
     }
 

@@ -5,9 +5,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
@@ -16,9 +14,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @SuperBuilder
-public abstract class BaseTimeEntity {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public abstract class BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    private Long id;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
-    public LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 }

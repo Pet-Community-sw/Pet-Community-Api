@@ -56,7 +56,7 @@ public class SubscribeStrategy implements StompCommandStrategy {
         Profile profile = profileRepository.findById(Long.valueOf(profileId))
                 .orElseThrow(() -> new IllegalArgumentException("프로필이 존재하지 않습니다."));
 
-        if (!chatRoomRepository.existsByChatRoomIdAndProfilesContains(chatRoomId, profile)) {
+        if (!chatRoomRepository.existsByIdAndProfilesContains(chatRoomId, profile)) {
             log.error("[STOMP] chatRoomId:{} 접근 권한 없는 profileId:{}", chatRoomId, profileId);
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }

@@ -7,9 +7,11 @@ import com.example.PetApp.domain.post.Post;
 import com.example.PetApp.domain.post.RecommendRoutePost;
 
 public interface QueryService {
-    Member findbyMember(String email);
+    Member findByMember(String email);
 
-    Member findbyMember(Long memberId);
+    Member findByMember(Long memberId);
+
+    Member findByMemberToPhoneNumber(String phoneNumber);
 
     ChatRoom findByChatRoom(Long chatRoomId);
 

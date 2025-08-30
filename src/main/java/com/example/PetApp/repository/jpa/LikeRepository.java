@@ -9,14 +9,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Set;
 
 //프로젝션을 통해 한 번 번경해보자
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
-    @Query("select new com.example.PetApp.dto.like.LikeCountDto(l.post.postId, count(*)) " +
-            "from Like l where l.post.postId in :postIds " +
-            "group by l.post.postId")
+    @Query("select new com.example.PetApp.dto.like.LikeCountDto(l.post.id, count(*)) " +
+            "from Like l where l.post.id in :postIds " +
+            "group by l.post.id")
     List<LikeCountDto> countByPostIds(@Param("postIds") List<Long> postIds);
 
     Long countByPost(Post post);

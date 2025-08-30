@@ -21,9 +21,9 @@ public class OfflineUserServiceImpl implements OfflineUserService{
     public void setOfflineProfilesAndUnreadCount(ChatMessage chatMessage, ChatRoom chatRoom) {
         List<Profile> profiles = chatRoom.getProfiles();
         Set<String> onlineProfiles = stringRedisTemplate.opsForSet()
-                .members("chatRoomId:" + chatRoom.getChatRoomId() + ":onlineProfiles");
+                .members("chatRoomId:" + chatRoom.getId() + ":onlineProfiles");
         List<Long> offlineProfiles = profiles.stream()
-                .map(Profile::getProfileId)
+                .map(Profile::getId)
                 .filter(profileId -> onlineProfiles == null || !onlineProfiles.contains(profileId.toString()))
                 .collect(Collectors.toList());
 
@@ -37,9 +37,9 @@ public class OfflineUserServiceImpl implements OfflineUserService{
     public void setOfflineMembersAndUnreadCount(ChatMessage chatMessage, MemberChatRoom memberChatRoom) {
         List<Member> members = memberChatRoom.getMembers();
         Set<String> onlineMembers = stringRedisTemplate.opsForSet()
-                .members("memberChatRoomId:" + memberChatRoom.getMemberChatRoomId() + ":onlineMembers");
+                .members("memberChatRoomId:" + memberChatRoom.getId() + ":onlineMembers");
         List<Long> offlineMembers = members.stream()
-                .map(Member::getMemberId)
+                .map(Member::getId)
                 .filter(memberId -> onlineMembers == null || !onlineMembers.contains(memberId.toString()))
                 .collect(Collectors.toList());
 

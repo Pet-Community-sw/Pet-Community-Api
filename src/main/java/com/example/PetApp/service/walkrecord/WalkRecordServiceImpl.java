@@ -32,11 +32,11 @@ public class WalkRecordServiceImpl implements WalkRecordService{
     @Transactional
     @Override
     public CreateWalkRecordResponseDto createWalkRecord(DelegateWalkPost delegateWalkPost) {
-        Member member = queryService.findbyMember(delegateWalkPost.getSelectedApplicantMemberId());
+        Member member = queryService.findByMember(delegateWalkPost.getSelectedApplicantMemberId());
         WalkRecord walkRecord = WalkRecordMapper.toEntity(delegateWalkPost, member);
         WalkRecord savedWalkRecord = walkRecordRepository.save(walkRecord);
         sendNotificationUtil.sendNotification(member, "산책 권한이 부여 되었습니다.");
-        return new CreateWalkRecordResponseDto(savedWalkRecord.getWalkRecordId());
+        return new CreateWalkRecordResponseDto(savedWalkRecord.getId());
     }
 
     @Transactional(readOnly = true)
@@ -49,7 +49,7 @@ public class WalkRecordServiceImpl implements WalkRecordService{
     @Transactional(readOnly = true)
     @Override
     public GetWalkRecordLocationResponseDto getWalkRecordLocation(Long walkRecordId, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
         validateMember(walkRecord.getDelegateWalkPost().getProfile().getMember().equals(member));
         String lastLocation = stringRedisTemplate.opsForList().index("walk:path:" + walkRecordId, -1);
@@ -59,9 +59,9 @@ public class WalkRecordServiceImpl implements WalkRecordService{
     @Transactional
     @Override
     public void updateStartWalkRecord(Long walkRecordId, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
-        validateMember(walkRecord.getDelegateWalkPost().getSelectedApplicantMemberId().equals(member.getMemberId()));
+        validateMember(walkRecord.getDelegateWalkPost().getSelectedApplicantMemberId().equals(member.getId()));
         walkRecord.setWalkStatus(WalkRecord.WalkStatus.START);
         walkRecord.setStartTime(LocalDateTime.now());
         sendNotificationUtil.sendNotification(walkRecord.getDelegateWalkPost().getProfile().getMember(),
@@ -71,9 +71,9 @@ public class WalkRecordServiceImpl implements WalkRecordService{
     @Transactional//분리를 어떻게 시키면 졸을까
     @Override
     public void updateFinishWalkRecord(Long walkRecordId, String email) {
-        Member member = queryService.findbyMember(email);
+        Member member = queryService.findByMember(email);
         WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
-        validateMember(walkRecord.getDelegateWalkPost().getSelectedApplicantMemberId().equals(member.getMemberId()));
+        validateMember(walkRecord.getDelegateWalkPost().getSelectedApplicantMemberId().equals(member.getId()));
         walkRecord.setWalkStatus(WalkRecord.WalkStatus.FINISH);
         walkRecord.setFinishTime(LocalDateTime.now());
 

@@ -61,7 +61,7 @@ public class WalkingTogetherPostServiceImpl implements WalkingTogetherPostServic
         walkingTogetherPost.addMatchPostProfiles(profileId);
         walkingTogetherPost.addAvoidBreeds(profile);
         WalkingTogetherPost savedWalkingTogetherPost = walkingTogetherPostRepository.save(walkingTogetherPost);
-        return new CreateWalkingTogetherPostResponseDto(savedWalkingTogetherPost.getWalkingTogetherPostId());
+        return new CreateWalkingTogetherPostResponseDto(savedWalkingTogetherPost.getId());
     }
 
     @Transactional
@@ -81,7 +81,7 @@ public class WalkingTogetherPostServiceImpl implements WalkingTogetherPostServic
 
     private WalkingTogetherPost validateProfile(Long walkingTogetherPostId, Long profileId) {
         WalkingTogetherPost walkingTogetherPost = queryService.findByWalkingTogetherPost(walkingTogetherPostId);
-        if (!walkingTogetherPost.getProfile().getProfileId().equals(profileId)) {
+        if (!walkingTogetherPost.getProfile().getId().equals(profileId)) {
             throw new ForbiddenException("권한이 없습니다.");
         }
         return walkingTogetherPost;
@@ -98,7 +98,7 @@ public class WalkingTogetherPostServiceImpl implements WalkingTogetherPostServic
         }
         PetBreed petBreed = queryService.findByPetBreed(profile.getPetBreed().getName());
 
-        if (walkingTogetherPost.getAvoidBreeds().contains(petBreed.getPetBreedId())) {
+        if (walkingTogetherPost.getAvoidBreeds().contains(petBreed.getId())) {
             throw new ForbiddenException("해당 종은 참여할 수 없습니다.");
         }
 

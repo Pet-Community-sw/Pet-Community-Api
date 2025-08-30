@@ -3,7 +3,7 @@ package com.example.PetApp.domain.post;
 import com.example.PetApp.domain.Member;
 import com.example.PetApp.domain.embedded.Content;
 import com.example.PetApp.domain.like.Like;
-import com.example.PetApp.domain.superclass.BaseTimeEntity;
+import com.example.PetApp.domain.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.BatchSize;
@@ -21,12 +21,7 @@ import java.util.List;
 @DiscriminatorColumn(name = "post_type")
 @SuperBuilder
 @Getter
-public abstract class Post extends BaseTimeEntity {
-
-    @Id
-    @Setter
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postId;
+public abstract class Post extends BaseEntity {
 
     @Embedded
     @Setter
