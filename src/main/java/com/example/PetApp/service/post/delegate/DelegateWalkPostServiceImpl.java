@@ -87,9 +87,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Override
     public CreateWalkRecordResponseDto grantAuthorize(Long delegateWalkPostId, Long profileId) {
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
-        if (!(delegateWalkPost.getProfile().getProfileId().equals(profileId))) {
-            throw new ForbiddenException("권한 없음.");
-        }
+        validateProfile(delegateWalkPost, profileId);
         delegateWalkPost.setStartAuthorized(true);//산책 start 허가.
         return walkRecordService.createWalkRecord(delegateWalkPost);
     }
@@ -100,9 +98,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         Member member = queryService.findbyMember(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
 
-        if (!(delegateWalkPost.getProfile().getMember().equals(member))) {
-             throw new ForbiddenException("수정 권한 없음.");
-        }
+        validatedMember(delegateWalkPost, member);
         DelegateWalkPostMapper.updateDelegateWalkPost(updateDelegateWalkPostDto, delegateWalkPost);
     }
 
@@ -112,21 +108,16 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         Member member = queryService.findbyMember(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
 
-        if (!(delegateWalkPost.getProfile().getMember().equals(member))) {
-             throw new ForbiddenException("삭제 권한 없음.");
-        }
+        validatedMember(delegateWalkPost, member);
         delegateWalkPostRepository.deleteById(delegateWalkPostId);
     }
 
     @Transactional(readOnly = true)
     @Override
     public Set<Applicant> getApplicants(Long delegateWalkPostId, Long profileId) {
-        Profile profile = queryService.findByProfile(profileId);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
+        validateProfile(delegateWalkPost, profileId);
 
-        if (!(delegateWalkPost.getProfile().equals(profile))) {
-            throw new ForbiddenException("권한 없음.");
-        }
         return delegateWalkPost.getApplicants();
     }
 
@@ -143,6 +134,18 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
                 .build());
         sendToDelegateWalkPostNotification(member, delegateWalkPost);
         return new ApplyToDelegateWalkPostResponseDto(member.getMemberId());
+    }
+
+    private static void validateProfile(DelegateWalkPost delegateWalkPost, Long profileId) {
+        if (!(delegateWalkPost.getProfile().getProfileId().equals(profileId))) {
+            throw new ForbiddenException("권한 없음.");
+        }
+    }
+
+    private static void validatedMember(DelegateWalkPost delegateWalkPost, Member member) {
+        if (!(delegateWalkPost.getProfile().getMember().equals(member))) {
+            throw new ForbiddenException("권한 없음.");
+        }
     }
 
     private static void validateApply(DelegateWalkPost delegateWalkPost, Member member) {
