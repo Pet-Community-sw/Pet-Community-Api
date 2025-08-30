@@ -25,7 +25,6 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class WalkingTogetherPostServiceImpl implements WalkingTogetherPostService {
 
     private final ChatRoomService chatRoomService;
@@ -35,7 +34,6 @@ public class WalkingTogetherPostServiceImpl implements WalkingTogetherPostServic
     @Transactional(readOnly = true)
     @Override//피해야하는종을 여기서 필터링 하면될듯 피해야하는종에 자신의 종이 포함되어있으면 true를 반환
     public GetWalkingTogetherPostResponseDto getWalkingTogetherPost(Long walkingTogetherPostId, Long profileId) {
-        log.info("getWalingTogetherPost 요청 walkingTogetherPostId : {}, profileId : {}", walkingTogetherPostId,profileId);
         Profile profile = queryService.findByProfile(profileId);
         WalkingTogetherPost walkingTogetherPost = queryService.findByWalkingTogetherPost(walkingTogetherPostId);
         PetBreed petBreed = queryService.findByPetBreed(profile.getPetBreed().getName());
@@ -47,7 +45,6 @@ public class WalkingTogetherPostServiceImpl implements WalkingTogetherPostServic
     @Transactional(readOnly = true)
     @Override
     public List<GetWalkingTogetherPostResponseDto> getWalkingTogetherPosts(Long recommendRoutePostId, Long profileId) {
-        log.info("getWalkingTogetherPostsList 요청 recommendRoutePostId : {}, profileId : {}", recommendRoutePostId, profileId);
         Profile profile = queryService.findByProfile(profileId);
         RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(recommendRoutePostId);
         PetBreed petBreed = queryService.findByPetBreed(profile.getPetBreed().getName());
@@ -58,7 +55,6 @@ public class WalkingTogetherPostServiceImpl implements WalkingTogetherPostServic
     @Transactional
     @Override
     public CreateWalkingTogetherPostResponseDto createWalkingTogetherPost(CreateWalkingTogetherPostDto createWalkingTogetherPostDto, Long profileId) {
-        log.info("createWalkingTogetherPost 요청 profileId : {}", profileId);
         Profile profile = queryService.findByProfile(profileId);
         RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(createWalkingTogetherPostDto.getRecommendRoutePostId());
         WalkingTogetherPost walkingTogetherPost = WalkingTogetherPostMapper.toEntity(profile, recommendRoutePost, createWalkingTogetherPostDto);
@@ -71,7 +67,6 @@ public class WalkingTogetherPostServiceImpl implements WalkingTogetherPostServic
     @Transactional
     @Override
     public void updateWalkingTogetherPost(Long walkingTogetherPostId, UpdateWalkingTogetherPostDto updateWalkingTogetherPostDto, Long profileId) {
-        log.info("updateWalkingTogetherPost 요청 walkingTogetherPostId : {}, profileId : {}", walkingTogetherPostId, profileId);
         WalkingTogetherPost walkingTogetherPost = validateProfile(walkingTogetherPostId, profileId);
         walkingTogetherPost.setScheduledTime(updateWalkingTogetherPostDto.getScheduledTime());
         walkingTogetherPost.setLimitCount(updateWalkingTogetherPostDto.getLimitCount());
@@ -80,7 +75,6 @@ public class WalkingTogetherPostServiceImpl implements WalkingTogetherPostServic
     @Transactional
     @Override
     public void deleteWalkingTogetherPost(Long walkingTogetherPostId, Long profileId) {
-        log.info("deleteWalkingTogetherPost 요청 walkingTogetherPostId : {}, profileId : {}", walkingTogetherPostId, profileId);
         WalkingTogetherPost walkingTogetherPost = validateProfile(walkingTogetherPostId, profileId);
         walkingTogetherPostRepository.delete(walkingTogetherPost);
     }
@@ -96,7 +90,6 @@ public class WalkingTogetherPostServiceImpl implements WalkingTogetherPostServic
     @Transactional
     @Override
     public CreateChatRoomResponseDto startMatch(Long walkingTogetherPostId, Long profileId) {
-        log.info("startMatch 요청 walkingTogetherPostId : {}, profileId : {}", walkingTogetherPostId, profileId);
         Profile profile = queryService.findByProfile(profileId);
         WalkingTogetherPost walkingTogetherPost = queryService.findByWalkingTogetherPost(walkingTogetherPostId);
 

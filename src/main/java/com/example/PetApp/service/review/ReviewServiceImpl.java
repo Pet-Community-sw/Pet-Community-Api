@@ -12,7 +12,6 @@ import com.example.PetApp.mapper.ReviewMapper;
 import com.example.PetApp.repository.jpa.ReviewRepository;
 import com.example.PetApp.service.query.QueryService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +21,6 @@ import static com.example.PetApp.domain.Review.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ReviewServiceImpl implements ReviewService{
 
     private final ReviewRepository reviewRepository;
@@ -31,7 +29,6 @@ public class ReviewServiceImpl implements ReviewService{
     @Transactional
     @Override
     public CreateReviewResponseDto createReview(CreateReviewDto createReviewDto, String email) {
-        log.info("createReview 요청 walkRecord : {}, email : {}", createReviewDto.getWalkRecordId(), email);
         Member member = queryService.findbyMember(email);
         WalkRecord walkRecord = queryService.findByWalkRecord(createReviewDto.getWalkRecordId());
         if (walkRecord.getWalkStatus() != WalkRecord.WalkStatus.FINISH) {
@@ -46,7 +43,6 @@ public class ReviewServiceImpl implements ReviewService{
     @Transactional(readOnly = true)
     @Override
     public GetReviewListResponseDto getReviewListByMember(Long memberId, String email) {
-        log.info("getReviewListByMember 요청 memberId : {}, email : {}", memberId, email);
         Member member = queryService.findbyMember(email);
         Member ownerMember = queryService.findbyMember(memberId);
         List<Review> reviewList = reviewRepository.findAllByMemberAndReviewType(member, ReviewType.PROFILE_TO_MEMBER);
@@ -56,7 +52,6 @@ public class ReviewServiceImpl implements ReviewService{
     @Transactional(readOnly = true)
     @Override
     public GetReviewListResponseDto getReviewListByProfile(Long profileId, String email) {
-        log.info("getReviewListByProfile 요청 profileId : {}, email : {}", profileId, email);
         Member member = queryService.findbyMember(email);
         Profile profile = queryService.findByProfile(profileId);
         List<Review> reviewList = reviewRepository.findAllByProfileAndReviewType(profile, ReviewType.MEMBER_TO_PROFILE);
@@ -68,7 +63,6 @@ public class ReviewServiceImpl implements ReviewService{
     @Transactional(readOnly = true)
     @Override
     public GetReviewResponseDto getReview(Long reviewId, String email) {
-        log.info("getReview 요청 reviewId : {}, email : {}", reviewId,email);
         Member member = queryService.findbyMember(email);
         Review review = queryService.findByReview(reviewId);
         return ReviewMapper.toGetReviewResponseDto(review, member);
@@ -77,7 +71,6 @@ public class ReviewServiceImpl implements ReviewService{
     @Transactional
     @Override
     public void updateReview(Long reviewId, UpdateReviewDto updateReviewDto, String email) {
-        log.info("updateReview 요청 reviewId : {}, email : {}", reviewId, email);
         Review review = findReviewWithAuth(reviewId, email);
 
         review.setContent(new Content(updateReviewDto.getTitle(), updateReviewDto.getContent()));
@@ -87,7 +80,6 @@ public class ReviewServiceImpl implements ReviewService{
     @Transactional
     @Override
     public void deleteReview(Long reviewId, String email) {
-        log.info("deleteReview 요청 reviewId : {}, email : {}", reviewId, email);
         Review review = findReviewWithAuth(reviewId, email);
 
         reviewRepository.deleteById(review.getReviewId());

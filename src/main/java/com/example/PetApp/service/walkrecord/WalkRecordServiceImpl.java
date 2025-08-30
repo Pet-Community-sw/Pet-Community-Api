@@ -13,7 +13,6 @@ import com.example.PetApp.service.query.QueryService;
 import com.example.PetApp.util.DistanceUtil;
 import com.example.PetApp.util.SendNotificationUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +22,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class WalkRecordServiceImpl implements WalkRecordService{
 
     private final WalkRecordRepository walkRecordRepository;
@@ -34,7 +32,6 @@ public class WalkRecordServiceImpl implements WalkRecordService{
     @Transactional
     @Override
     public CreateWalkRecordResponseDto createWalkRecord(DelegateWalkPost delegateWalkPost) {
-        log.info("createWalkRecord 요청");
         Member member = queryService.findbyMember(delegateWalkPost.getSelectedApplicantMemberId());
         WalkRecord walkRecord = WalkRecordMapper.toEntity(delegateWalkPost, member);
         WalkRecord savedWalkRecord = walkRecordRepository.save(walkRecord);
@@ -45,7 +42,6 @@ public class WalkRecordServiceImpl implements WalkRecordService{
     @Transactional(readOnly = true)
     @Override
     public GetWalkRecordResponseDto getWalkRecord(Long walkRecordId, String email) {
-        log.info("getWalkRecord 요청 walkRecordId : {}, email : {}", walkRecordId, email);
         WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
         return WalkRecordMapper.toGetWalkRecordResponseDto(walkRecord);
     }
@@ -53,7 +49,6 @@ public class WalkRecordServiceImpl implements WalkRecordService{
     @Transactional(readOnly = true)
     @Override
     public GetWalkRecordLocationResponseDto getWalkRecordLocation(Long walkRecordId, String email) {
-        log.info("getWalkRecordLocation 요청 walkRecordId : {}, email : {}", walkRecordId, email);
         Member member = queryService.findbyMember(email);
         WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
         validateMember(walkRecord.getDelegateWalkPost().getProfile().getMember().equals(member));
@@ -64,7 +59,6 @@ public class WalkRecordServiceImpl implements WalkRecordService{
     @Transactional
     @Override
     public void updateStartWalkRecord(Long walkRecordId, String email) {
-        log.info("updateStartWalkRecord 요청 walkRecordId : {}, email : {}",walkRecordId, email);
         Member member = queryService.findbyMember(email);
         WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
         validateMember(walkRecord.getDelegateWalkPost().getSelectedApplicantMemberId().equals(member.getMemberId()));
@@ -77,7 +71,6 @@ public class WalkRecordServiceImpl implements WalkRecordService{
     @Transactional//분리를 어떻게 시키면 졸을까
     @Override
     public void updateFinishWalkRecord(Long walkRecordId, String email) {
-        log.info("updateFinishWalkRecord 요청 walkRecordId : {}, email : {}",walkRecordId, email);
         Member member = queryService.findbyMember(email);
         WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
         validateMember(walkRecord.getDelegateWalkPost().getSelectedApplicantMemberId().equals(member.getMemberId()));

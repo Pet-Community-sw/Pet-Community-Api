@@ -7,6 +7,7 @@ import com.example.PetApp.exception.ForbiddenException;
 import com.example.PetApp.exception.NotFoundException;
 import com.example.PetApp.mapper.LocationMapper;
 import com.example.PetApp.repository.jpa.WalkRecordRepository;
+import com.example.PetApp.service.query.QueryService;
 import com.example.PetApp.util.HaversineUtil;
 import com.example.PetApp.util.SendNotificationUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +23,12 @@ public class LocationServiceImpl implements LocationService {//예외 처리해�
 
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final StringRedisTemplate stringRedisTemplate;
-    private final WalkRecordRepository walkRecordRepository;
     private final SendNotificationUtil sendNotificationUtil;
-
+    private final QueryService queryService;
 
     @Override
     public void sendLocation(LocationMessage locationMessage, String memberId) {
-        WalkRecord walkRecord = walkRecordRepository.findById(locationMessage.getWalkRecordId())
-                .orElseThrow(() -> new NotFoundException("해당 산책 기록이 없습니다."));
+        WalkRecord walkRecord = queryService.findByWalkRecord(locationMessage.getWalkRecordId());
 
         if (!(walkRecord.getDelegateWalkPost().getSelectedApplicantMemberId().equals(Long.valueOf(memberId)))) {
             throw new ForbiddenException("접근 권한 없음.");

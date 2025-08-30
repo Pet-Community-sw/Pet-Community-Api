@@ -16,7 +16,6 @@ import com.example.PetApp.service.query.QueryService;
 import com.example.PetApp.util.imagefile.FileUploadUtil;
 import com.example.PetApp.util.imagefile.FileImageKind;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,7 +28,6 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class NormalPostServiceImpl implements NormalPostService {
 
     @Value("${spring.dog.post.image.upload}")
@@ -44,7 +42,6 @@ public class NormalPostServiceImpl implements NormalPostService {
     @Transactional(readOnly = true)
     @Override
     public List<PostResponseDto> getPosts(int page, String email) {
-        log.info("getPosts 요청 : {}", email);
         Member member = queryService.findbyMember(email);
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "postId"));
         List<NormalPost> normalPosts = normalPostRepository.findAll(pageRequest).getContent();
@@ -55,7 +52,6 @@ public class NormalPostServiceImpl implements NormalPostService {
     @Transactional
     @Override
     public GetPostResponseDto getPost(Long postId, String email) {
-        log.info("getPost 요청 email : {}",email);
         Member member = queryService.findbyMember(email);
         NormalPost normalPost = queryService.findByNormalPost(postId);
         if (!(normalPost.getMember().equals(member))) {//조회수
@@ -68,7 +64,6 @@ public class NormalPostServiceImpl implements NormalPostService {
     @Transactional
     @Override
     public CreatePostResponseDto createPost(PostDto createPostDto, String email)  {
-        log.info("createPost 요청 email : {}", email);
         Member member = queryService.findbyMember(email);
         String imageFileName = FileUploadUtil.fileUpload(createPostDto.getPostImageFile(), postUploadDir, FileImageKind.POST);
         NormalPost normalPost = PostMapper.toEntity(createPostDto, imageFileName, member);
@@ -79,12 +74,9 @@ public class NormalPostServiceImpl implements NormalPostService {
     @Transactional
     @Override
     public void deletePost(Long postId, String email) {
-        log.info("deletePost 요청 email : {}, postId : {}", email, postId);
         Member member = queryService.findbyMember(email);
         NormalPost normalPost = queryService.findByNormalPost(postId);
-        if (!(normalPost.getMember().equals(member))) {
-            throw new ForbiddenException("삭제 권한이 없습니다.");
-        }
+        validateMember(normalPost, member);
         normalPostRepository.deleteById(postId);
     }
 
@@ -93,15 +85,20 @@ public class NormalPostServiceImpl implements NormalPostService {
     public void updatePost(Long postId, PostDto updatePostDto, String email) {
         Member member = queryService.findbyMember(email);
         NormalPost normalPost = queryService.findByNormalPost(postId);
-        if (!(normalPost.getMember().equals(member))) {
-            throw new ForbiddenException("수정 권한이 없습니다.");
-        }
+        validateMember(normalPost, member);
+
         String imageFileName = FileUploadUtil.fileUpload(updatePostDto.getPostImageFile(),
                 postUploadDir,
                 FileImageKind.POST);
 
         normalPost.setPostImageUrl(imageFileName);
         normalPost.setContent(new Content(updatePostDto.getTitle(), updatePostDto.getContent()));
+    }
+
+    private static void validateMember(NormalPost normalPost, Member member) {
+        if (!(normalPost.getMember().equals(member))) {
+            throw new ForbiddenException("권한 없음.");
+        }
     }
 
 }
