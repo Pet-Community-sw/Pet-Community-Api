@@ -127,7 +127,7 @@ class ChatRoomServiceTest {
                 .chatRoomId(2L)
                 .build();
 
-        when(chatRoomRepository.findByWalkingTogetherPost(post)).thenReturn(Optional.empty());
+        when(chatRoomRepository.findByWalkingTogetherMatch(post)).thenReturn(Optional.empty());
         try(MockedStatic<ChatRoomMapper> mockedStatic = mockStatic(ChatRoomMapper.class)) {
             mockedStatic.when(()->ChatRoomMapper.toEntity(post, profile)).thenReturn(chatRoom);
         }
@@ -164,7 +164,7 @@ class ChatRoomServiceTest {
                 .profiles(new ArrayList<>()) // 현재 참여자 0명
                 .build();
 
-        when(chatRoomRepository.findByWalkingTogetherPost(post)).thenReturn(Optional.of(existingRoom));
+        when(chatRoomRepository.findByWalkingTogetherMatch(post)).thenReturn(Optional.of(existingRoom));
 
         // when
         CreateChatRoomResponseDto result = chatRoomServiceImpl.createChatRoom(post, profile);
@@ -199,7 +199,7 @@ class ChatRoomServiceTest {
                 .profiles(List.of(fakeProfile))
                 .build();
 
-        when(chatRoomRepository.findByWalkingTogetherPost(post)).thenReturn(Optional.of(chatRoom));
+        when(chatRoomRepository.findByWalkingTogetherMatch(post)).thenReturn(Optional.of(chatRoom));
 
         //when & then
         assertThatThrownBy(() -> chatRoomServiceImpl.createChatRoom(post, profile))

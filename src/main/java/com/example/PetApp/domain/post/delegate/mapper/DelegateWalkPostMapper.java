@@ -39,8 +39,8 @@ public class DelegateWalkPostMapper {
     public static List<GetDelegateWalkPostsResponseDto> toGetDelegateWalkPostsResponseDtos(Member member, List<DelegateWalkPost> delegateWalkPosts) {
         return delegateWalkPosts.stream()
                 .map(delegateWalkPost -> GetDelegateWalkPostsResponseDto.builder()
-                        .delegateWalkPostId(delegateWalkPost.getPostId())
-                        .profileId(delegateWalkPost.getProfile().getProfileId())
+                        .delegateWalkPostId(delegateWalkPost.getId())
+                        .profileId(delegateWalkPost.getProfile().getId())
                         .petName(delegateWalkPost.getProfile().getPetName())
                         .petImageUrl(delegateWalkPost.getProfile().getPetImageUrl())
                         .title(delegateWalkPost.getContent().getTitle())
@@ -57,7 +57,7 @@ public class DelegateWalkPostMapper {
 
     public static GetPostResponseDto toGetPostResponseDto(DelegateWalkPost delegateWalkPost) {
         return GetPostResponseDto.builder()
-                .delegateWalkPostId(delegateWalkPost.getPostId())
+                .delegateWalkPostId(delegateWalkPost.getId())
                 .title(delegateWalkPost.getContent().getTitle())
                 .content(delegateWalkPost.getContent().getContent())
                 .price(delegateWalkPost.getPrice())

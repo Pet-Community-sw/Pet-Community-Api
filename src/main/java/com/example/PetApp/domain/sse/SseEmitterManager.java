@@ -1,8 +1,10 @@
 package com.example.PetApp.domain.sse;
 
-import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.member.MemberRepository;
+import com.example.PetApp.domain.member.model.entity.Member;
+import com.example.PetApp.domain.query.QueryService;
 import com.example.PetApp.infrastructure.app.jwt.util.JwtTokenizer;
+import com.fasterxml.classmate.MemberResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -18,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class SseEmitterManager {
 
-    private final MemberRepository memberRepository;
+    private final QueryService queryService;
 
     private final JwtTokenizer jwtTokenizer;
 
@@ -29,7 +31,7 @@ public class SseEmitterManager {
     @Transactional(readOnly = true)
     public SseEmitter subscribe(String token) {
         String email = jwtTokenizer.parseAccessToken(token).getSubject();
-        Member member = memberRepository.findByEmail(email).get();
+        Member member = queryService.findByMember(email);
 
         SseEmitter sseEmitter = new SseEmitter(DEFAULT_TIMEOUT);
 

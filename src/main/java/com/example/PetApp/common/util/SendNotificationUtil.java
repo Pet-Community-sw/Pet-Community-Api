@@ -28,7 +28,7 @@ public class SendNotificationUtil {
 //    private final FcmService fcmService;
 
     public void sendNotification(Member member, String message) {
-        String key = "notifications:" + member.getMemberId() + ":" + UUID.randomUUID();//알림 설정 최대 3일.
+        String key = "notifications:" + member.getId() + ":" + UUID.randomUUID();//알림 설정 최대 3일.
         NotificationListDto notificationListDto = new NotificationListDto(message, LocalDateTime.now());
         String json = null;
         try {
@@ -37,8 +37,8 @@ public class SendNotificationUtil {
             throw new RuntimeException("알림 보내는 도중 예외 발생",e);
         }
         notificationRedisTemplate.opsForValue().set(key, json, Duration.ofDays(3));
-        if (Boolean.TRUE.equals(stringRedisTemplate.opsForSet().isMember("foreGroundMembers:", member.getMemberId().toString()))) {
-            notificationRedisPublisher.publish("member:" + member.getMemberId(), message);
+        if (Boolean.TRUE.equals(stringRedisTemplate.opsForSet().isMember("foreGroundMembers:", member.getId().toString()))) {
+            notificationRedisPublisher.publish("member:" + member.getId(), message);
         }else {
             log.info("backGroundMember");
 //            fcmService.sendNotification(member.getFcmToken().getFcmToken(), "명냥로드", message);

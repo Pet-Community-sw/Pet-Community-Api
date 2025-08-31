@@ -27,17 +27,17 @@ public class OneToOneChatHandler {
         MemberChatRoom chatRoom = memberChatRoomRepository.findById(message.getChatRoomId())
                 .orElseThrow(() -> new NotFoundException("해당 채팅방이 없습니다."));
 
-        messagingTemplate.convertAndSend("/sub/member/chat/" + chatRoom.getMemberChatRoomId(), message);
+        messagingTemplate.convertAndSend("/sub/member/chat/" + chatRoom.getId(), message);
 
         saveLastMessageToRedis(message);
 
         Set<String> onlineMembers = redisTemplate.opsForSet()
-                .members("memberChatRoomId:" + chatRoom.getMemberChatRoomId() + ":onlineMembers");
+                .members("memberChatRoomId:" + chatRoom.getId() + ":onlineMembers");
 
         Map<Long, Long> unReadMap = countUnread(chatRoom, message, onlineMembers);
 
         messagingTemplate.convertAndSend("/sub/member/chat/update",
-                ChatMessageMapper.toUpdateChatRoomList(chatRoom.getMemberChatRoomId(), message, unReadMap));
+                ChatMessageMapper.toUpdateChatRoomList(chatRoom.getId(), message, unReadMap));
     }
 
     private void saveLastMessageToRedis(ChatMessage message) {
@@ -48,12 +48,12 @@ public class OneToOneChatHandler {
     private Map<Long, Long> countUnread(MemberChatRoom chatRoom, ChatMessage message, Set<String> onlineMembers) {
         Map<Long, Long> map = new HashMap<>();
         for (Member member : chatRoom.getMembers()) {
-            if (!member.getMemberId().equals(message.getSenderId())) {
-                boolean isOnline = onlineMembers != null && onlineMembers.contains(member.getMemberId().toString());
+            if (!member.getId().equals(message.getSenderId())) {
+                boolean isOnline = onlineMembers != null && onlineMembers.contains(member.getId().toString());
                 if (!isOnline) {
-                    String key = "unReadMemberChat:" + message.getChatRoomId() + ":" + member.getMemberId();
+                    String key = "unReadMemberChat:" + message.getChatRoomId() + ":" + member.getId();
                     Long count = redisTemplate.opsForValue().increment(key);
-                    map.put(member.getMemberId(), count);
+                    map.put(member.getId(), count);
                 }
             }
         }

@@ -18,7 +18,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@DiscriminatorColumn(name = "post_type")
+//@DiscriminatorColumn(name = "post_type")
 @SuperBuilder
 @Getter
 public abstract class Post extends BaseEntity {

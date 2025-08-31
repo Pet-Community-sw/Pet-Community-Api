@@ -29,7 +29,7 @@ public class ChatRoomMapper {
 
     public static ChatRoomsResponseDto toChatRoomsResponseDto(ChatRoom chatRoom, Long profileId, String lastMessage, int unReadCount, LocalDateTime lastMessageTime) {
         return ChatRoomsResponseDto.builder()
-                .chatRoomId(chatRoom.getChatRoomId())
+                .chatRoomId(chatRoom.getId())
                 .chatName(chatRoom.getName())
                 .chatLimitCount(chatRoom.getLimitCount())
                 .currentCount(chatRoom.getProfiles().size())
@@ -37,7 +37,7 @@ public class ChatRoomMapper {
                 .profiles(
                         chatRoom.getProfiles().stream()
                                 .map(profile -> ChatRoomProfilesResponseDto.builder()
-                                        .profileId(profile.getProfileId())
+                                        .profileId(profile.getId())
                                         .profileImageUrl(profile.getPetImageUrl())
                                         .build())
                                 .collect(Collectors.toSet())
@@ -45,7 +45,7 @@ public class ChatRoomMapper {
                 .lastMessage(lastMessage)
                 .unReadCount(unReadCount)
                 .lastMessageTime(lastMessageTime)
-                .isOwner(chatRoom.getWalkingTogetherMatch().getProfile().getProfileId().equals(profileId))
+                .isOwner(chatRoom.getWalkingTogetherMatch().getProfile().getId().equals(profileId))
                 .build();
     }
 

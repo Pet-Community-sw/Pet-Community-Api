@@ -29,9 +29,9 @@ public class CommentMapper {
     private static List<GetCommentsResponseDto> getCommentsResponseDtos(List<Comment> comments, Member member) {
         return comments.stream().map(
                 comment -> new GetCommentsResponseDto(
-                        comment.getCommentId(),
+                        comment.getId(),
                         comment.getContent(),
-                        comment.getMember().getMemberId(),
+                        comment.getMember().getId(),
                         comment.getMember().getName(),
                         comment.getMember().getMemberImageUrl(),
                         TimeAgoUtil.getTimeAgo(comment.getCreatedAt()),

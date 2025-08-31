@@ -1,4 +1,4 @@
-package com.example.PetApp.domain.member;
+package com.example.PetApp.domain.memberstatus;
 
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.query.QueryService;

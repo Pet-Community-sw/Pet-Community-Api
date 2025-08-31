@@ -1,8 +1,8 @@
 package com.example.PetApp.domain.walkrecord;
 
 import com.example.PetApp.domain.post.delegate.model.entity.DelegateWalkPost;
+import com.example.PetApp.domain.walklocation.model.dto.response.GetWalkRecordLocationResponseDto;
 import com.example.PetApp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
-import com.example.PetApp.domain.walkrecord.model.dto.response.GetWalkRecordLocationResponseDto;
 import com.example.PetApp.domain.walkrecord.model.dto.response.GetWalkRecordResponseDto;
 import org.springframework.stereotype.Service;
 

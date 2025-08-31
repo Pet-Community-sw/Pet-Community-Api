@@ -29,10 +29,10 @@ public class ProfileMapper {
 
     public static GetProfileResponseDto toGetProfileResponseDto(Profile profile, Member member) {
         return GetProfileResponseDto.builder()
-                .profileId(profile.getProfileId())
+                .profileId(profile.getId())
                 .petBreed(String.valueOf(profile.getPetBreed()))
                 .petImageUrl(profile.getPetImageUrl())
-                .memberId(profile.getMember().getMemberId())
+                .memberId(profile.getMember().getId())
                 .petName(profile.getPetName())
                 .petAge(profile.getPetAge())
                 .petBirthDate(profile.getPetBirthDate())
@@ -45,7 +45,7 @@ public class ProfileMapper {
         boolean isBirthday = MonthDay.from(LocalDate.now())
                 .equals(MonthDay.from(profile.getPetBirthDate()));
         return ProfileListResponseDto.builder()
-                .profileId(profile.getProfileId())
+                .profileId(profile.getId())
                 .petImageUrl(profile.getPetImageUrl())
                 .petName(profile.getPetName())
                 .hasBirthday(isBirthday)

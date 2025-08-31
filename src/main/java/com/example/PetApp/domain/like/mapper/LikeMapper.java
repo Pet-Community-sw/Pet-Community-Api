@@ -21,7 +21,7 @@ public class LikeMapper {
     public static List<LikeListDto> toLikeListDto(List<Like> likes) {
         return likes.stream()
                 .map(like -> LikeListDto.builder()
-                        .memberId(like.getMember().getMemberId())
+                        .memberId(like.getMember().getId())
                         .memberName(like.getMember().getName())
                         .memberImageUrl(like.getMember().getMemberImageUrl())
                         .build()

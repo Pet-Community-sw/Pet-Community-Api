@@ -1,7 +1,7 @@
 package com.example.PetApp.domain.walkrecord;
 
+import com.example.PetApp.domain.walklocation.model.dto.response.GetWalkRecordLocationResponseDto;
 import com.example.PetApp.infrastructure.app.common.MessageResponse;
-import com.example.PetApp.domain.walkrecord.model.dto.response.GetWalkRecordLocationResponseDto;
 import com.example.PetApp.domain.walkrecord.model.dto.response.GetWalkRecordResponseDto;
 import com.example.PetApp.common.util.AuthUtil;
 import lombok.RequiredArgsConstructor;

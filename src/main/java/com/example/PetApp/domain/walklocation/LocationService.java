@@ -1,6 +1,6 @@
-package com.example.PetApp.domain.walkrecord;
+package com.example.PetApp.domain.walklocation;
 
-import com.example.PetApp.domain.walkrecord.model.dto.request.LocationMessage;
+import com.example.PetApp.domain.walklocation.model.dto.request.LocationMessage;
 import org.springframework.stereotype.Repository;
 
 @Repository

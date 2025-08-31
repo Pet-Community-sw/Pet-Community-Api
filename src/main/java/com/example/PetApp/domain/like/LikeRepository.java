@@ -7,13 +7,15 @@ import com.example.PetApp.domain.like.model.dto.request.LikeCountDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 //프로젝션을 통해 한 번 번경해보자
+@Repository
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
-    @Query("select new com.example.PetApp.common.like.LikeCountDto(l.post.id, count(*)) " +
+    @Query("select new com.example.PetApp.domain.like.model.dto.request.LikeCountDto(l.post.id, count(*)) " +
             "from Like l where l.post.id in :postIds " +
             "group by l.post.id")
     List<LikeCountDto> countByPostIds(@Param("postIds") List<Long> postIds);

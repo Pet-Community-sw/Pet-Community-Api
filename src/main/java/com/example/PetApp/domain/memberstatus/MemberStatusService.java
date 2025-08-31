@@ -1,4 +1,4 @@
-package com.example.PetApp.domain.member;
+package com.example.PetApp.domain.memberstatus;
 
 import org.springframework.stereotype.Service;
 

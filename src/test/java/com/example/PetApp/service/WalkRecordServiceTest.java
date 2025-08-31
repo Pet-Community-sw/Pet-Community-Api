@@ -5,7 +5,6 @@ import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.domain.walkrecord.model.entity.WalkRecord;
 import com.example.PetApp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
-import com.example.PetApp.domain.walkrecord.model.dto.response.GetWalkRecordLocationResponseDto;
 import com.example.PetApp.domain.walkrecord.model.dto.response.GetWalkRecordResponseDto;
 import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.common.exception.NotFoundException;
