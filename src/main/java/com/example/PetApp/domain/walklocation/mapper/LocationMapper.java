@@ -1,8 +1,8 @@
-package com.example.PetApp.domain.walkrecord.mapper;
+package com.example.PetApp.domain.walklocation.mapper;
 
-import com.example.PetApp.domain.walkrecord.model.entity.WalkRecord;
+import com.example.PetApp.domain.walklocation.model.dto.request.LocationMessage;
 import com.example.PetApp.domain.walkrecord.model.dto.request.SendLocationDto;
-import com.example.PetApp.domain.walkrecord.model.dto.request.LocationMessage;
+import com.example.PetApp.domain.walkrecord.model.entity.WalkRecord;
 
 public class LocationMapper {
 

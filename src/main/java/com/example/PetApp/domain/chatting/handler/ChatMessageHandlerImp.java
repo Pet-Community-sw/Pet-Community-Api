@@ -83,8 +83,8 @@ public class ChatMessageHandlerImp implements ChatMessageHandler{
                     .members("memberChatRoomId:" + chatRoomId + ":onlineMembers");
 
             for (Member member : chatRoom.getMembers()) {
-                if (!member.getMemberId().equals(senderId) &&
-                        (onlineMembers == null || !onlineMembers.contains(member.getMemberId().toString()))) {
+                if (!member.getId().equals(senderId) &&
+                        (onlineMembers == null || !onlineMembers.contains(member.getId().toString()))) {
                     sendNotificationUtil.sendNotification(member, message);
                 }
             }

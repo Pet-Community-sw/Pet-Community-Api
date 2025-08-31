@@ -27,19 +27,19 @@ public class ReviewMapper {
 
     public static GetReviewResponseDto toGetReviewResponseDto(Review review, Member member) {
         GetReviewResponseDto getReviewResponseDto = GetReviewResponseDto.builder()
-                .reviewId(review.getReviewId())
+                .reviewId(review.getId())
                 .title(review.getContent().getTitle())
                 .content(review.getContent().getContent())
                 .rating(review.getRating())
                 .reviewTime(review.getCreatedAt())
                 .build();
         if (review.getReviewType() == Review.ReviewType.PROFILE_TO_MEMBER) {
-            getReviewResponseDto.setUserId(review.getProfile().getProfileId());
+            getReviewResponseDto.setUserId(review.getProfile().getId());
             getReviewResponseDto.setUserName(review.getProfile().getPetName());
             getReviewResponseDto.setUserImageUrl(review.getProfile().getPetImageUrl());
             getReviewResponseDto.setOwner(member.equals(review.getProfile().getMember()));
         } else {
-            getReviewResponseDto.setUserId(review.getMember().getMemberId());
+            getReviewResponseDto.setUserId(review.getMember().getId());
             getReviewResponseDto.setUserName(review.getMember().getName());
             getReviewResponseDto.setUserImageUrl(review.getMember().getMemberImageUrl());
             getReviewResponseDto.setOwner(member.equals(review.getMember()));
@@ -62,8 +62,8 @@ public class ReviewMapper {
     public static List<GetReviewList> toGetReviewList(List<Review> reviews, Member member) {
         return reviews.stream()
                 .map(review -> GetReviewList.builder()
-                        .reviewId(review.getReviewId())
-                        .userId(review.getProfile().getProfileId())
+                        .reviewId(review.getId())
+                        .userId(review.getProfile().getId())
                         .userName(review.getProfile().getPetName())
                         .userImageUrl(review.getProfile().getPetImageUrl())
                         .title(review.getContent().getTitle())

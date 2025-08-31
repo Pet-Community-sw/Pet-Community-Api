@@ -43,8 +43,8 @@ public class ConnectStrategy implements StompCommandStrategy {
             String email = claims.getSubject();
             Member member = memberRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("해당 이메일의 사용자를 찾을 수 없습니다."));
-            authentication = new UsernamePasswordAuthenticationToken(member.getMemberId(), null);
-            log.info("[STOMP][CONNECT] memberId 인증 완료: {}", member.getMemberId());
+            authentication = new UsernamePasswordAuthenticationToken(member.getId(), null);
+            log.info("[STOMP][CONNECT] memberId 인증 완료: {}", member.getId());
         } else {
             authentication = new UsernamePasswordAuthenticationToken(profileId, null);
             log.info("[STOMP][CONNECT] profileId 인증 완료: {}", profileId);

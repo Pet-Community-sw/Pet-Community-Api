@@ -27,17 +27,17 @@ public class GroupChatHandler {
         ChatRoom chatRoom = chatRoomRepository.findById(message.getChatRoomId())
                 .orElseThrow(() -> new NotFoundException("해당 채팅방이 없습니다."));
 
-        messagingTemplate.convertAndSend("/sub/chat/" + chatRoom.getChatRoomId(), message);
+        messagingTemplate.convertAndSend("/sub/chat/" + chatRoom.getId(), message);
 
         saveLastMessageToRedis(message);
 
         Set<String> onlineProfiles = redisTemplate.opsForSet()
-                .members("chatRoomId:" + chatRoom.getChatRoomId() + ":onlineProfiles");
+                .members("chatRoomId:" + chatRoom.getId() + ":onlineProfiles");
 
         Map<Long, Long> unReadMap = countUnread(chatRoom, message, onlineProfiles);
 
         messagingTemplate.convertAndSend("/sub/chat/update",
-                ChatMessageMapper.toUpdateChatRoomList(chatRoom.getChatRoomId(), message, unReadMap));
+                ChatMessageMapper.toUpdateChatRoomList(chatRoom.getId(), message, unReadMap));
     }
 
     private void saveLastMessageToRedis(ChatMessage message) {
@@ -48,12 +48,12 @@ public class GroupChatHandler {
     private Map<Long, Long> countUnread(ChatRoom chatRoom, ChatMessage message, Set<String> onlineProfiles) {
         Map<Long, Long> map = new HashMap<>();
         for (Profile profile : chatRoom.getProfiles()) {
-            if (!profile.getProfileId().equals(message.getSenderId())) {
-                boolean isOnline = onlineProfiles != null && onlineProfiles.contains(profile.getProfileId().toString());
+            if (!profile.getId().equals(message.getSenderId())) {
+                boolean isOnline = onlineProfiles != null && onlineProfiles.contains(profile.getId().toString());
                 if (!isOnline) {
-                    String key = "unReadChatCount:" + message.getChatRoomId() + ":" + profile.getProfileId();
+                    String key = "unReadChatCount:" + message.getChatRoomId() + ":" + profile.getId();
                     Long count = redisTemplate.opsForValue().increment(key);
-                    map.put(profile.getMember().getMemberId(), count);
+                    map.put(profile.getMember().getId(), count);
                 }
             }
         }

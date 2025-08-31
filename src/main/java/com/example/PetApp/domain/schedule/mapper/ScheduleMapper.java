@@ -11,14 +11,14 @@ public class ScheduleMapper {
 
     public static GetSchedulesResponseDto toGetSchedulesResponseDto(Profile profile, WalkingTogetherMatch walkingTogetherMatch) {
         return GetSchedulesResponseDto.builder()
-                .memberId(profile.getMember().getMemberId())
+                .memberId(profile.getMember().getId())
                 .scheduleDate(walkingTogetherMatch.getScheduledTime())
                 .scheduleType(ScheduleType.WALKING_TOGETHER)
                 .build();
     }
     public static GetSchedulesResponseDto toGetSchedulesResponseDto(Member member, DelegateWalkPost delegateWalkPost) {
         return GetSchedulesResponseDto.builder()
-                .memberId(member.getMemberId())
+                .memberId(member.getId())
                 .scheduleDate(delegateWalkPost.getScheduledTime())
                 .scheduleType(ScheduleType.DELEGATE_WALK)
                 .build();

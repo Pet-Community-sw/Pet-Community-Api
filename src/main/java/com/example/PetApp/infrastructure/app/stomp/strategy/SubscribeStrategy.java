@@ -89,7 +89,7 @@ public class SubscribeStrategy implements StompCommandStrategy {
                 .orElseThrow(() -> new IllegalArgumentException("1:1 채팅방이 존재하지 않습니다."));
 
         boolean hasAccess = room.getMembers().stream()
-                .anyMatch(m -> m.getMemberId().equals(Long.valueOf(memberId)));
+                .anyMatch(m -> m.getId().equals(Long.valueOf(memberId)));
 
         if (!hasAccess) {
             log.error("[STOMP] memberChatRoomId:{} 접근 권한 없는 memberId:{}", memberChatRoomId, memberId);
@@ -117,7 +117,7 @@ public class SubscribeStrategy implements StompCommandStrategy {
         WalkRecord walkRecord = walkRecordRepository.findById(walkRecordId)
                 .orElseThrow(() -> new IllegalArgumentException("산책기록이 존재하지 않습니다."));
 
-        if (!walkRecord.getDelegateWalkPost().getProfile().getMember().getMemberId().equals(Long.valueOf(memberId))) {
+        if (!walkRecord.getDelegateWalkPost().getProfile().getMember().getId().equals(Long.valueOf(memberId))) {
             log.error("[STOMP] walkRecordId:{} 접근 권한 없는 memberId:{}", walkRecordId, memberId);
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }

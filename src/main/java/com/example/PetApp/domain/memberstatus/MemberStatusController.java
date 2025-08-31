@@ -1,4 +1,4 @@
-package com.example.PetApp.domain.member;
+package com.example.PetApp.domain.memberstatus;
 
 import com.example.PetApp.infrastructure.app.common.MessageResponse;
 import lombok.RequiredArgsConstructor;

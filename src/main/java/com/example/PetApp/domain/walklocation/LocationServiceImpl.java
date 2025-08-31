@@ -1,10 +1,10 @@
-package com.example.PetApp.domain.walkrecord;
+package com.example.PetApp.domain.walklocation;
 
+import com.example.PetApp.domain.walklocation.mapper.LocationMapper;
+import com.example.PetApp.domain.walklocation.model.dto.request.LocationMessage;
 import com.example.PetApp.domain.walkrecord.model.entity.WalkRecord;
 import com.example.PetApp.domain.walkrecord.model.dto.request.SendLocationDto;
-import com.example.PetApp.domain.walkrecord.model.dto.request.LocationMessage;
 import com.example.PetApp.common.exception.ForbiddenException;
-import com.example.PetApp.domain.walkrecord.mapper.LocationMapper;
 import com.example.PetApp.domain.query.QueryService;
 import com.example.PetApp.common.util.HaversineUtil;
 import com.example.PetApp.common.util.SendNotificationUtil;

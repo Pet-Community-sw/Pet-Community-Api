@@ -51,7 +51,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Transactional
     @Override
     public CreateChatRoomResponseDto createChatRoom(WalkingTogetherMatch walkingTogetherMatch, Profile profile) {
-        Optional<ChatRoom> chatRoom1 = chatRoomRepository.findByWalkingTogetherPost(walkingTogetherMatch);
+        Optional<ChatRoom> chatRoom1 = chatRoomRepository.findByWalkingTogetherMatch(walkingTogetherMatch);
         if (chatRoom1.isEmpty()) {//채팅방이 없으면 새로운생성 있으면 profiles에 신청자 Profile 추가
             ChatRoom chatRoom = ChatRoomMapper.toEntity(walkingTogetherMatch, profile);
             ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
