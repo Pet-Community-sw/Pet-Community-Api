@@ -1,4 +1,4 @@
-package com.example.PetApp.domain.chatting;
+package com.example.PetApp.domain.chatting.offline;
 
 import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
 import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
