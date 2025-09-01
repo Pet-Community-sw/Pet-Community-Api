@@ -10,7 +10,7 @@ import com.example.PetApp.domain.groupchatroom.ChatRoomRepository;
 import com.example.PetApp.domain.memberchatRoom.MemberChatRoomRepository;
 import com.example.PetApp.domain.member.MemberRepository;
 import com.example.PetApp.domain.profile.ProfileRepository;
-import com.example.PetApp.domain.chatting.OfflineUserService;
+import com.example.PetApp.domain.chatting.offline.OfflineUserService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
