@@ -24,6 +24,7 @@ public class ChatRoomsResponseDto {
 
     private LocalDateTime chatRoomTime;
 
+    @Builder.Default
     private Set<ChatRoomProfilesResponseDto> profiles = new HashSet<>();
 
     private String lastMessage;
