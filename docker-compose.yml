@@ -4,10 +4,10 @@ services:
     container_name: pet-app-mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: fpdlswj365
-      MYSQL_DATABASE: memberdb
-      MYSQL_USER: sunjae
-      MYSQL_PASSWORD: fpdlswj365
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       TZ: Asia/Seoul
     ports:
       - "3306:3306"
@@ -18,7 +18,7 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-pfpdlswj365"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -51,17 +51,19 @@ services:
     volumes:
       - ./build/libs/PetApp-0.0.1-SNAPSHOT.jar:/app/app.jar:ro
     command: ["java", "-jar", "/app/app.jar"]
+    env_file:
+      - .env
     environment:
-      PASSWORD : titvhgisbkbzrgcw
-      EMAIL : chltjswo789@gmail.com
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/memberdb?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
-      SPRING_DATASOURCE_USERNAME: sunjae
-      SPRING_DATASOURCE_PASSWORD: fpdlswj365
+      PASSWORD : ${SMTP_PASSWORD}
+      EMAIL : ${SMTP_EMAIL}
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL8Dialect
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: "6379"
-      SPRING_DATA_MONGODB_URI: mongodb+srv://chltjswo:fpdlswj365@mycluster.zzoydp8.mongodb.net/chat?retryWrites=true&w=majority&appName=myCluster
+      SPRING_DATA_MONGODB_URI: ${MONGO_URI}
       TZ: Asia/Seoul
     ports:
       - "8080:8080"
