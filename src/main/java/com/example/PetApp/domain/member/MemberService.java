@@ -25,7 +25,6 @@ public interface MemberService {
 
     void resetPassword(ResetPasswordDto resetPasswordDto, String email);
 
-
     GetMemberResponseDto getMember(Long memberId, String email);
 
     void deleteMember(String email);

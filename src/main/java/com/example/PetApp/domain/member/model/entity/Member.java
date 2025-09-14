@@ -8,6 +8,7 @@ import com.example.PetApp.infrastructure.database.shared.superclass.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -73,5 +74,13 @@ public class Member extends BaseEntity {//수정 필요
 
     public void addRole(MemberRole memberRole) {
         memberRoles.add(memberRole);
+    }
+
+    public boolean isSamePassword(PasswordEncoder passwordEncoder, String newPassword) {
+        return passwordEncoder.matches(newPassword, this.password);
+    }
+
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
     }
 }
