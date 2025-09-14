@@ -81,7 +81,7 @@ public class ProfileServiceImpl implements ProfileService {
         validateProfile(member, profile.getMember());
         validateBreed(profileDto, profile);
         String imageFimeName = FileUploadUtil.fileUpload(profileDto.getPetImageUrl(), profileUploadDir, FileImageKind.PROFILE);
-        ProfileMapper.updateProfile(profile, profileDto, imageFimeName, petBreed);
+        profile.updateProfile(profile, profileDto, imageFimeName, petBreed);
     }
 
     @Transactional

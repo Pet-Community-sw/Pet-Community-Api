@@ -1,6 +1,7 @@
 package com.example.PetApp.domain.profile.model.entity;
 
 import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
+import com.example.PetApp.domain.profile.model.dto.request.ProfileDto;
 import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.petbreed.model.entity.PetBreed;
@@ -16,6 +17,8 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.example.PetApp.common.util.AgeUtil.CalculateAge;
 
 @Entity
 @Getter
@@ -77,5 +80,15 @@ public class Profile extends BaseEntity {
     public void addAvoidBreeds(PetBreed dogBreed) {
 
         avoidBreeds.add(dogBreed);
+    }
+
+    public void updateProfile(Profile profile, ProfileDto profileDto, String imageFimeName, PetBreed petBreed) {
+        profile.setPetImageUrl("/profile/" + imageFimeName);
+        profile.setPetName(profileDto.getPetName());
+        profile.setPetBirthDate(profileDto.getPetBirthDate());
+        profile.setPetAge(CalculateAge(profileDto.getPetBirthDate()) + "살");
+        profile.setPetBreed(petBreed);
+        profile.setExtraInfo(profileDto.getExtraInfo());
+        profile.getAvoidBreeds().clear();
     }
 }
