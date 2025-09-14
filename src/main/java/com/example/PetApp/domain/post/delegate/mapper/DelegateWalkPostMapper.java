@@ -28,14 +28,6 @@ public class DelegateWalkPostMapper {
                 .build();
     }
 
-    public static void updateDelegateWalkPost(UpdateDelegateWalkPostDto updateDelegateWalkPostDto, DelegateWalkPost delegateWalkPost) {
-        delegateWalkPost.setContent(new Content(updateDelegateWalkPostDto.getTitle(), updateDelegateWalkPostDto.getContent()));
-        delegateWalkPost.setPrice(updateDelegateWalkPostDto.getPrice());
-        delegateWalkPost.setAllowedRadiusMeters(updateDelegateWalkPostDto.getAllowedRedisMeters());
-        delegateWalkPost.setRequireProfile(updateDelegateWalkPostDto.isRequireProfile());
-        delegateWalkPost.setScheduledTime(updateDelegateWalkPostDto.getScheduledTime());
-    }
-
     public static List<GetDelegateWalkPostsResponseDto> toGetDelegateWalkPostsResponseDtos(Member member, List<DelegateWalkPost> delegateWalkPosts) {
         return delegateWalkPosts.stream()
                 .map(delegateWalkPost -> GetDelegateWalkPostsResponseDto.builder()
@@ -48,7 +40,7 @@ public class DelegateWalkPostMapper {
                         .locationLongitude(delegateWalkPost.getLocation().getLocationLongitude())
                         .locationLatitude(delegateWalkPost.getLocation().getLocationLatitude())
                         .scheduledTime(delegateWalkPost.getScheduledTime())
-                        .filtering(filter(delegateWalkPost, member))
+                        .filtering(delegateWalkPost.filtering(member))
                         .applicantCount(delegateWalkPost.getApplicants().size())
                         .createdAt(TimeAgoUtil.getTimeAgo(delegateWalkPost.getCreatedAt()))
                         .build())
@@ -73,13 +65,5 @@ public class DelegateWalkPostMapper {
                 .createdAt(TimeAgoUtil.getTimeAgo(delegateWalkPost.getCreatedAt()))
                 .build();
     }
-    public static boolean filter(DelegateWalkPost delegateWalkPost, Member member) {
-        if (delegateWalkPost.isRequireProfile()) {
-            if (member.getProfiles().size() != 0) {
-                return false;
-            }else
-                return true;
-        }else
-            return false;
-    }
+
 }

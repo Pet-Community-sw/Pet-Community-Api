@@ -2,7 +2,9 @@ package com.example.PetApp.domain.post.normal.model.entity;
 
 import com.example.PetApp.domain.comment.model.entity.Comment;
 import com.example.PetApp.domain.comment.model.entity.Commentable;
+import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.post.common.Post;
+import com.example.PetApp.infrastructure.database.shared.embedded.Content;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -23,14 +25,21 @@ public class NormalPost extends Post implements Commentable {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-//    @Override
-//    public Like createLike(Member member) {
-//        return new NormalPostLike(member, this);
-//    }
-
     @Override
     public List<Comment> getComments() {
         return this.comments;
+    }
+
+    public void updateNormalPost(String newPostImageUrl, String newTitle, String newContent) {
+        this.setPostImageUrl(newPostImageUrl);
+        this.setContent(new Content(newTitle,newContent));
+    }
+
+    public void updateViewCount(Member member) {
+        if (!this.getMember().equals(member)) {
+            this.setViewCount(this.getViewCount()+1);
+        }
+
     }
 
 }

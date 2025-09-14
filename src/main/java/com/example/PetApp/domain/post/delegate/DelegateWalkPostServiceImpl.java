@@ -68,8 +68,8 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     public GetPostResponseDto getDelegateWalkPost(Long delegateWalkPostId, String email) {
         Member member = queryService.findByMember(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
-         if (DelegateWalkPostMapper.filter(delegateWalkPost, member)) {
-             throw new ForbiddenException("프로필 등록해주세요.");
+        if (delegateWalkPost.filtering(member)) {
+            throw new ForbiddenException("프로필 등록해주세요.");
         }
         return DelegateWalkPostMapper.toGetPostResponseDto(delegateWalkPost);
     }
@@ -81,8 +81,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         Member applicantMember = queryService.findByMember(memberId);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
         validateSelect(memberId, delegateWalkPost, member);
-        delegateWalkPost.setStatus(DelegateWalkStatus.COMPLETED);
-        delegateWalkPost.setSelectedApplicantMemberId(memberId);
+        delegateWalkPost.updateStatusAndSelectedApplicantMemberId(memberId);
         //켈린더에 넣는 로직필요.
         sendNotification(applicantMember, "대리산책자 지원에 선정되었습니다.");
         return memberChatRoomService.createMemberChatRoom(member, applicantMember);
@@ -93,7 +92,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     public CreateWalkRecordResponseDto grantAuthorize(Long delegateWalkPostId, Long profileId) {
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
         validateProfile(delegateWalkPost, profileId);
-        delegateWalkPost.setStartAuthorized(true);//산책 start 허가.
+        delegateWalkPost.grantAuthorize();//산책 start 허가.
         return walkRecordService.createWalkRecord(delegateWalkPost);
     }
 
@@ -104,7 +103,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
 
         validatedMember(delegateWalkPost, member);
-        DelegateWalkPostMapper.updateDelegateWalkPost(updateDelegateWalkPostDto, delegateWalkPost);
+        delegateWalkPost.updateDelegateWalkPost(updateDelegateWalkPostDto);
     }
 
     @Transactional
@@ -132,43 +131,26 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         Member member = queryService.findByMember(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
 
-        validateApply(delegateWalkPost, member);
-        delegateWalkPost.getApplicants().add(Applicant.builder()
-                .memberId(member.getId())
-                .content(content)
-                .build());
+        delegateWalkPost.apply(member, content);
         sendToDelegateWalkPostNotification(member, delegateWalkPost);
         return new ApplyToDelegateWalkPostResponseDto(member.getId());
     }
 
     private static void validateProfile(DelegateWalkPost delegateWalkPost, Long profileId) {
-        if (!(delegateWalkPost.getProfile().getId().equals(profileId))) {
+        if (delegateWalkPost.validatedUser(profileId)) {
             throw new ForbiddenException("권한 없음.");
         }
     }
 
     private static void validatedMember(DelegateWalkPost delegateWalkPost, Member member) {
-        if (!(delegateWalkPost.getProfile().getMember().equals(member))) {
+        if (delegateWalkPost.validatedUser(member)) {
             throw new ForbiddenException("권한 없음.");
-        }
-    }
-
-    private static void validateApply(DelegateWalkPost delegateWalkPost, Member member) {
-        if (DelegateWalkPostMapper.filter(delegateWalkPost, member)) {
-            throw new ForbiddenException("프로필 등록해주세요.");
-        } else if (delegateWalkPost.getApplicants().stream().
-                anyMatch(applicant -> applicant.getMemberId().equals(member.getId()))) {
-            throw new ConflictException("이미 신청한 회원입니다.");
-        } else if (delegateWalkPost.getStatus() == DelegateWalkStatus.COMPLETED) {
-            throw new ConflictException("모집 완료 게시글입니다.");
         }
     }
 
     private static void validateSelect(Long memberId, DelegateWalkPost delegateWalkPost, Member member) {
-        if (!(delegateWalkPost.getProfile().getMember().equals(member))) {
+        if (delegateWalkPost.validatedUser(member.getId()) && delegateWalkPost.validatedApplicantsInMember(memberId)) {
             throw new ForbiddenException("권한 없음.");
-        } else if (delegateWalkPost.getApplicants().stream().noneMatch(applicant -> applicant.getMemberId().equals(memberId))) {
-            throw new ConflictException("해당 지원자는 없습니다.");
         }
     }
 
@@ -179,7 +161,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     }
 
     private void sendNotification(Member member, String message) {
-            sendNotificationUtil.sendNotification(member, message);
+        sendNotificationUtil.sendNotification(member, message);
     }
 }
 

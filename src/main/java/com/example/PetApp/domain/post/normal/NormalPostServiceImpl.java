@@ -45,7 +45,7 @@ public class NormalPostServiceImpl implements NormalPostService {
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "postId"));
         List<NormalPost> normalPosts = normalPostRepository.findAll(pageRequest).getContent();
         Set<Long> members = likeRedisTemplate.opsForSet().members("member:likes:" + member.getId());
-        return NormalPostMapper.toPostListResponseDto(normalPosts, likeService.getLikeCountMap(normalPosts),members);
+        return NormalPostMapper.toPostListResponseDto(normalPosts, likeService.getLikeCountMap(normalPosts), members);
     }
 
     @Transactional
@@ -53,16 +53,14 @@ public class NormalPostServiceImpl implements NormalPostService {
     public GetPostResponseDto getPost(Long postId, String email) {
         Member member = queryService.findByMember(email);
         NormalPost normalPost = queryService.findByNormalPost(postId);
-        if (!(normalPost.getMember().equals(member))) {//조회수
-            normalPost.setViewCount(normalPost.getViewCount()+1);
-        }
+        normalPost.updateViewCount(member);
 
         return NormalPostMapper.toGetPostResponseDto(normalPost, member, likeRepository.countByPost(normalPost), likeRepository.existsByPostAndMember(normalPost, member));
     }
 
     @Transactional
     @Override
-    public CreatePostResponseDto createPost(PostDto createPostDto, String email)  {
+    public CreatePostResponseDto createPost(PostDto createPostDto, String email) {
         Member member = queryService.findByMember(email);
         String imageFileName = FileUploadUtil.fileUpload(createPostDto.getPostImageFile(), postUploadDir, FileImageKind.POST);
         NormalPost normalPost = NormalPostMapper.toEntity(createPostDto, imageFileName, member);
@@ -86,12 +84,7 @@ public class NormalPostServiceImpl implements NormalPostService {
         NormalPost normalPost = queryService.findByNormalPost(postId);
         validateMember(normalPost, member);
 
-        String imageFileName = FileUploadUtil.fileUpload(updatePostDto.getPostImageFile(),
-                postUploadDir,
-                FileImageKind.POST);
-
-        normalPost.setPostImageUrl(imageFileName);
-        normalPost.setContent(new Content(updatePostDto.getTitle(), updatePostDto.getContent()));
+        normalPost.updateNormalPost(FileUploadUtil.fileUpload(updatePostDto.getPostImageFile(), postUploadDir, FileImageKind.POST), updatePostDto.getTitle(), updatePostDto.getContent());
     }
 
     private static void validateMember(NormalPost normalPost, Member member) {

@@ -79,7 +79,7 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService{
         Member member = queryService.findByMember(email);
         RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(recommendRoutePostId);
         validateMember(recommendRoutePost, member);
-        recommendRoutePost.setContent(new Content(updateRecommendRoutePostDto.getTitle(), updateRecommendRoutePostDto.getContent()));
+        recommendRoutePost.updateContent(updateRecommendRoutePostDto.getTitle(), updateRecommendRoutePostDto.getContent());
     }
 
     @Transactional
