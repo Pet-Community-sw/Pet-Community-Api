@@ -10,10 +10,8 @@ import com.example.PetApp.domain.post.delegate.model.dto.response.GetDelegateWal
 import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.infrastructure.database.shared.embedded.Applicant;
 import com.example.PetApp.domain.post.delegate.model.entity.DelegateWalkPost;
-import com.example.PetApp.domain.post.delegate.model.entity.DelegateWalkStatus;
 import com.example.PetApp.domain.memberchatRoom.model.dto.response.CreateMemberChatRoomResponseDto;
 import com.example.PetApp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
-import com.example.PetApp.common.exception.ConflictException;
 import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.post.delegate.mapper.DelegateWalkPostMapper;
 import com.example.PetApp.domain.memberchatRoom.MemberChatRoomService;
@@ -80,8 +78,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         Member member = queryService.findByMember(email);
         Member applicantMember = queryService.findByMember(memberId);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
-        validateSelect(memberId, delegateWalkPost, member);
-        delegateWalkPost.updateStatusAndSelectedApplicantMemberId(memberId);
+        delegateWalkPost.validatedAndSelectApplicant(memberId, member);
         //켈린더에 넣는 로직필요.
         sendNotification(applicantMember, "대리산책자 지원에 선정되었습니다.");
         return memberChatRoomService.createMemberChatRoom(member, applicantMember);
@@ -91,7 +88,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Override
     public CreateWalkRecordResponseDto grantAuthorize(Long delegateWalkPostId, Long profileId) {
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
-        validateProfile(delegateWalkPost, profileId);
+        delegateWalkPost.validatedUser(profileId);
         delegateWalkPost.grantAuthorize();//산책 start 허가.
         return walkRecordService.createWalkRecord(delegateWalkPost);
     }
@@ -102,7 +99,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         Member member = queryService.findByMember(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
 
-        validatedMember(delegateWalkPost, member);
+        delegateWalkPost.validatedUser(member);
         delegateWalkPost.updateDelegateWalkPost(updateDelegateWalkPostDto);
     }
 
@@ -112,7 +109,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         Member member = queryService.findByMember(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
 
-        validatedMember(delegateWalkPost, member);
+        delegateWalkPost.validatedUser(member);
         delegateWalkPostRepository.deleteById(delegateWalkPostId);
     }
 
@@ -120,9 +117,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Override
     public Set<Applicant> getApplicants(Long delegateWalkPostId, Long profileId) {
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
-        validateProfile(delegateWalkPost, profileId);
-
-        return delegateWalkPost.getApplicants();
+        return delegateWalkPost.validatedAndGetApplicants(profileId);
     }
 
     @Transactional
@@ -134,24 +129,6 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         delegateWalkPost.apply(member, content);
         sendToDelegateWalkPostNotification(member, delegateWalkPost);
         return new ApplyToDelegateWalkPostResponseDto(member.getId());
-    }
-
-    private static void validateProfile(DelegateWalkPost delegateWalkPost, Long profileId) {
-        if (delegateWalkPost.validatedUser(profileId)) {
-            throw new ForbiddenException("권한 없음.");
-        }
-    }
-
-    private static void validatedMember(DelegateWalkPost delegateWalkPost, Member member) {
-        if (delegateWalkPost.validatedUser(member)) {
-            throw new ForbiddenException("권한 없음.");
-        }
-    }
-
-    private static void validateSelect(Long memberId, DelegateWalkPost delegateWalkPost, Member member) {
-        if (delegateWalkPost.validatedUser(member.getId()) && delegateWalkPost.validatedApplicantsInMember(memberId)) {
-            throw new ForbiddenException("권한 없음.");
-        }
     }
 
     private void sendToDelegateWalkPostNotification(Member member, DelegateWalkPost delegateWalkPost) {

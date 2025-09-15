@@ -86,52 +86,64 @@ public class DelegateWalkPost extends Post {
             return false;
     }
 
-    public boolean validatedUser(Member member) {
-        return !this.getProfile().getMember().equals(member);
+    public Set<Applicant> validatedAndGetApplicants(Long profileId) {
+        validatedUser(profileId);
+        return getApplicants();
     }
 
-    public boolean validatedUser(Long profileId) {
-        return !this.getProfile().getId().equals(profileId);
+    public void validatedUser(Member member) {
+        if (!getProfile().getMember().equals(member)) {
+            throw new ForbiddenException("권한 없음.");
+        }
     }
 
-    public boolean validatedApplicantsInMember(Long memberId) {
-        return this.applicants.stream().noneMatch(applicant -> applicant.getMemberId().equals(memberId));
+    public void validatedUser(Long profileId) {
+        if (!getProfile().getId().equals(profileId)) {
+            throw new ForbiddenException("권한 없음.");
+        }
     }
 
-    public void updateStatusAndSelectedApplicantMemberId(Long selectedMemberId) {
-        this.setStatus(DelegateWalkStatus.COMPLETED);
-        this.setSelectedApplicantMemberId(selectedMemberId);
+    public boolean hasApplicant(Long memberId) {
+        return applicants.stream().noneMatch(applicant -> applicant.getMemberId().equals(memberId));
     }
 
     public void grantAuthorize() {
-        this.setStartAuthorized(true);
+        setStartAuthorized(true);
     }
 
     public void updateDelegateWalkPost(UpdateDelegateWalkPostDto updateDelegateWalkPostDto) {
-        this.setContent(new Content(updateDelegateWalkPostDto.getTitle(), updateDelegateWalkPostDto.getContent()));
-        this.setPrice(updateDelegateWalkPostDto.getPrice());
-        this.setAllowedRadiusMeters(updateDelegateWalkPostDto.getAllowedRedisMeters());
-        this.setRequireProfile(updateDelegateWalkPostDto.isRequireProfile());
-        this.setScheduledTime(updateDelegateWalkPostDto.getScheduledTime());
+        setContent(new Content(updateDelegateWalkPostDto.getTitle(), updateDelegateWalkPostDto.getContent()));
+        setPrice(updateDelegateWalkPostDto.getPrice());
+        setAllowedRadiusMeters(updateDelegateWalkPostDto.getAllowedRedisMeters());
+        setRequireProfile(updateDelegateWalkPostDto.isRequireProfile());
+        setScheduledTime(updateDelegateWalkPostDto.getScheduledTime());
     }
 
     public void addApplicant(Member member, String content) {
-        this.getApplicants().add(Applicant.builder()
+        getApplicants().add(Applicant.builder()
                 .memberId(member.getId())
                 .content(content)
                 .build());
     }
 
-    public void apply( Member member, String content) {
-        if (this.filtering(member)) {
-            throw new ForbiddenException("프로필 등록해주세요.");
-        } else if (this.validatedApplicantsInMember(member.getId())) {
+    public void apply(Member member, String content) {
+        filtering(member);
+        if (!hasApplicant(member.getId())) {
             throw new ConflictException("이미 신청한 회원입니다.");
-        } else if (this.getStatus() == DelegateWalkStatus.COMPLETED) {
+        } else if (getStatus() == DelegateWalkStatus.COMPLETED) {
             throw new ConflictException("모집 완료 게시글입니다.");
-        }else {
+        } else {
             this.addApplicant(member, content);
         }
+    }
+
+    public void validatedAndSelectApplicant(Long selectedMemberId, Member member) {
+        validatedUser(member);
+        if (hasApplicant(selectedMemberId)) {
+            throw new ForbiddenException("권한 없음.");
+        }
+        setStatus(DelegateWalkStatus.COMPLETED);
+        setSelectedApplicantMemberId(selectedMemberId);
     }
 }
 
