@@ -11,7 +11,7 @@ import com.example.PetApp.domain.comment.model.entity.Commentable;
 import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.comment.mapper.CommentMapper;
 import com.example.PetApp.domain.query.QueryService;
-import com.example.PetApp.common.util.SendNotificationUtil;
+import com.example.PetApp.common.util.notification.SendNotificationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

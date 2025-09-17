@@ -1,4 +1,4 @@
-package com.example.PetApp.common.util;
+package com.example.PetApp.common.util.notification;
 
 import com.example.PetApp.config.redis.NotificationRedisPublisher;
 import com.example.PetApp.domain.member.model.entity.Member;

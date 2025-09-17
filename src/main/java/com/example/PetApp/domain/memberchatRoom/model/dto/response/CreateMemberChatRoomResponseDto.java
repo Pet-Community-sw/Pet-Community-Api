@@ -1,5 +1,7 @@
 package com.example.PetApp.domain.memberchatRoom.model.dto.response;
 
+import com.example.PetApp.common.util.notification.NotificationDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 @Getter
@@ -9,4 +11,7 @@ import lombok.*;
 @Builder
 public class CreateMemberChatRoomResponseDto {
     private Long memberChatRoomId;
+
+    @JsonIgnore
+    private NotificationDto notificationDto;
 }

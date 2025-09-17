@@ -13,7 +13,7 @@ import com.example.PetApp.domain.member.MemberRepository;
 import com.example.PetApp.domain.walkrecord.WalkRecordRepository;
 import com.example.PetApp.domain.walkrecord.WalkRecordServiceImpl;
 import com.example.PetApp.common.util.DistanceUtil;
-import com.example.PetApp.common.util.SendNotificationUtil;
+import com.example.PetApp.common.util.notification.SendNotificationUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
