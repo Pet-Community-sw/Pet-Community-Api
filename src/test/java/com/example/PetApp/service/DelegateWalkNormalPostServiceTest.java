@@ -24,7 +24,7 @@ import com.example.PetApp.domain.profile.ProfileRepository;
 import com.example.PetApp.domain.memberchatRoom.MemberChatRoomService;
 import com.example.PetApp.domain.post.delegate.DelegateWalkPostServiceImpl;
 import com.example.PetApp.domain.walkrecord.WalkRecordService;
-import com.example.PetApp.common.util.SendNotificationUtil;
+import com.example.PetApp.common.util.notification.SendNotificationUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

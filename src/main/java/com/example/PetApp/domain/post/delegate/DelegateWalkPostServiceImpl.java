@@ -1,5 +1,7 @@
 package com.example.PetApp.domain.post.delegate;
 
+import com.example.PetApp.common.annotation.Notification;
+import com.example.PetApp.common.util.notification.NotificationDto;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
 import com.example.PetApp.domain.post.delegate.model.dto.request.GetPostResponseDto;
@@ -17,7 +19,7 @@ import com.example.PetApp.domain.post.delegate.mapper.DelegateWalkPostMapper;
 import com.example.PetApp.domain.memberchatRoom.MemberChatRoomService;
 import com.example.PetApp.domain.query.QueryService;
 import com.example.PetApp.domain.walkrecord.WalkRecordService;
-import com.example.PetApp.common.util.SendNotificationUtil;
+import com.example.PetApp.common.util.notification.SendNotificationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +35,6 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     private final DelegateWalkPostRepository delegateWalkPostRepository;
     private final MemberChatRoomService memberChatRoomService;
     private final WalkRecordService walkRecordService;
-    private final SendNotificationUtil sendNotificationUtil;
     private final QueryService queryService;
 
     @Transactional
@@ -72,6 +73,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         return DelegateWalkPostMapper.toGetPostResponseDto(delegateWalkPost);
     }
 
+    @Notification(recipient = "#ret.notificationDto.ownerMember", message = "대리산책자 지원에 선정되었습니다.")
     @Transactional
     @Override
     public CreateMemberChatRoomResponseDto selectApplicant(Long delegateWalkPostId, Long memberId, String email) {
@@ -80,7 +82,6 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
         delegateWalkPost.validatedAndSelectApplicant(memberId, member);
         //켈린더에 넣는 로직필요.
-        sendNotification(applicantMember, "대리산책자 지원에 선정되었습니다.");
         return memberChatRoomService.createMemberChatRoom(member, applicantMember);
     }
 
@@ -120,6 +121,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         return delegateWalkPost.validatedAndGetApplicants(profileId);
     }
 
+    @Notification(recipient = "#ret.notificationDto.ownerMember", message = "#ret.notificationDto.member.name + '님이 회원님의 대리산책자 게시글에 지원했습니다.'")
     @Transactional
     @Override
     public ApplyToDelegateWalkPostResponseDto applyToDelegateWalkPost(Long delegateWalkPostId, String content, String email) {
@@ -127,18 +129,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
 
         delegateWalkPost.apply(member, content);
-        sendToDelegateWalkPostNotification(member, delegateWalkPost);
-        return new ApplyToDelegateWalkPostResponseDto(member.getId());
-    }
-
-    private void sendToDelegateWalkPostNotification(Member member, DelegateWalkPost delegateWalkPost) {
-        String message = member.getName() + "님이 회원님의 대리산책자 게시글에 지원했습니다.";
-        sendNotification(delegateWalkPost.getProfile().getMember(), message);
-
-    }
-
-    private void sendNotification(Member member, String message) {
-        sendNotificationUtil.sendNotification(member, message);
+        return new ApplyToDelegateWalkPostResponseDto(member.getId(), new NotificationDto(delegateWalkPost.getProfile().getMember(), member));
     }
 }
 
