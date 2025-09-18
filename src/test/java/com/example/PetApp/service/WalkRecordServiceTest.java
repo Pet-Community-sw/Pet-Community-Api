@@ -377,7 +377,7 @@ public class WalkRecordServiceTest {
             mockedStatic.when(() -> DistanceUtil.calculateTotalDistance(paths)).thenReturn(1.2);
 
             // when
-            walkRecordServiceImpl.updateFinishWalkRecord(walkRecordId, email);
+            walkRecordServiceImpl.FinishWalkRecord(walkRecordId, email);
 
             // then
             assertThat(walkRecord.getWalkStatus()).isEqualTo(WalkRecord.WalkStatus.FINISH);
@@ -402,7 +402,7 @@ public class WalkRecordServiceTest {
         when(walkRecordRepository.findById(walkRecordId)).thenReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> walkRecordServiceImpl.updateFinishWalkRecord(walkRecordId, email))
+        assertThatThrownBy(() -> walkRecordServiceImpl.FinishWalkRecord(walkRecordId, email))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("해당 산책기록은 없습니다.");
     }
@@ -428,7 +428,7 @@ public class WalkRecordServiceTest {
         when(walkRecordRepository.findById(walkRecordId)).thenReturn(Optional.of(walkRecord));
 
         // when & then
-        assertThatThrownBy(() -> walkRecordServiceImpl.updateFinishWalkRecord(walkRecordId, email))
+        assertThatThrownBy(() -> walkRecordServiceImpl.FinishWalkRecord(walkRecordId, email))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("권한 없음.");
     }

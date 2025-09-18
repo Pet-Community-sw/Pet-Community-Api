@@ -1,5 +1,7 @@
 package com.example.PetApp.domain.walkrecord;
 
+import com.example.PetApp.common.annotation.Notification;
+import com.example.PetApp.common.util.notification.NotificationDto;
 import com.example.PetApp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.walklocation.model.dto.response.GetWalkRecordLocationResponseDto;
@@ -16,7 +18,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -28,14 +29,14 @@ public class WalkRecordServiceImpl implements WalkRecordService{
     private final SendNotificationUtil sendNotificationUtil;
     private final QueryService queryService;
 
+    @Notification(recipient = "#ret.notificationDto.ownerMember", message = "산책 권한이 부여 되었습니다.")
     @Transactional
     @Override
     public CreateWalkRecordResponseDto createWalkRecord(DelegateWalkPost delegateWalkPost) {
         Member member = queryService.findByMember(delegateWalkPost.getSelectedApplicantMemberId());
         WalkRecord walkRecord = WalkRecordMapper.toEntity(delegateWalkPost, member);
         WalkRecord savedWalkRecord = walkRecordRepository.save(walkRecord);
-        sendNotificationUtil.sendNotification(member, "산책 권한이 부여 되었습니다.");
-        return new CreateWalkRecordResponseDto(savedWalkRecord.getId());
+        return new CreateWalkRecordResponseDto(savedWalkRecord.getId(), new NotificationDto(member, null));
     }
 
     @Transactional(readOnly = true)
@@ -50,7 +51,8 @@ public class WalkRecordServiceImpl implements WalkRecordService{
     public GetWalkRecordLocationResponseDto getWalkRecordLocation(Long walkRecordId, String email) {
         Member member = queryService.findByMember(email);
         WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
-        validateMember(walkRecord.getDelegateWalkPost().getProfile().getMember().equals(member));
+        walkRecord.validateMember(member);
+
         String lastLocation = stringRedisTemplate.opsForList().index("walk:path:" + walkRecordId, -1);
         return new GetWalkRecordLocationResponseDto(lastLocation);
     }
@@ -60,21 +62,19 @@ public class WalkRecordServiceImpl implements WalkRecordService{
     public void updateStartWalkRecord(Long walkRecordId, String email) {
         Member member = queryService.findByMember(email);
         WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
-        validateMember(walkRecord.getDelegateWalkPost().getSelectedApplicantMemberId().equals(member.getId()));
-        walkRecord.setWalkStatus(WalkRecord.WalkStatus.START);
-        walkRecord.setStartTime(LocalDateTime.now());
+        walkRecord.validateMember(member.getId());
+        walkRecord.updateWalkStatus(WalkRecord.WalkStatus.START);
         sendNotificationUtil.sendNotification(walkRecord.getDelegateWalkPost().getProfile().getMember(),
                 walkRecord.getMember().getName()+"님이 산책을 시작하였습니다.");
     }
 
     @Transactional//분리를 어떻게 시키면 졸을까
     @Override
-    public void updateFinishWalkRecord(Long walkRecordId, String email) {
+    public void FinishWalkRecord(Long walkRecordId, String email) {
         Member member = queryService.findByMember(email);
         WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
-        validateMember(walkRecord.getDelegateWalkPost().getSelectedApplicantMemberId().equals(member.getId()));
-        walkRecord.setWalkStatus(WalkRecord.WalkStatus.FINISH);
-        walkRecord.setFinishTime(LocalDateTime.now());
+        walkRecord.validateMember(member.getId());
+        walkRecord.updateWalkStatus(WalkRecord.WalkStatus.FINISH);
 
         updateWalkRecordPathData(walkRecordId, walkRecord);
         sendNotificationUtil.sendNotification(walkRecord.getDelegateWalkPost().getProfile().getMember(),
@@ -83,15 +83,9 @@ public class WalkRecordServiceImpl implements WalkRecordService{
 
     private void updateWalkRecordPathData(Long walkRecordId, WalkRecord walkRecord) {
         List<String> paths = stringRedisTemplate.opsForList().range("walk:path:" + walkRecordId, 0, -1);
-        Double totalDistance = DistanceUtil.calculateTotalDistance(paths);
-        walkRecord.setWalkDistance(totalDistance);
-        walkRecord.setPathPoints(paths);
-        stringRedisTemplate.delete("walk:path:" + walkRecordId);
-    }
 
-    private static void validateMember(boolean walkRecord) {
-        if (!walkRecord) {
-            throw new ForbiddenException("권한 없음.");
-        }
+        Double totalDistance = DistanceUtil.calculateTotalDistance(paths);
+        walkRecord.updateRecordToPath(totalDistance, paths);
+        stringRedisTemplate.delete("walk:path:" + walkRecordId);
     }
 }

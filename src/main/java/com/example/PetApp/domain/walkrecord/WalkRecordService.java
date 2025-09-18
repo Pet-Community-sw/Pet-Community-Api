@@ -14,7 +14,7 @@ public interface WalkRecordService {
 
     void updateStartWalkRecord(Long walkRecordId, String email);
 
-    void updateFinishWalkRecord(Long walkRecordId, String email);
+    void FinishWalkRecord(Long walkRecordId, String email);
 
     GetWalkRecordLocationResponseDto getWalkRecordLocation(Long walkRecordId, String email);
 
