@@ -1,5 +1,6 @@
 package com.example.PetApp.domain.comment.model.entity;
 
+import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.post.common.Post;
 import com.example.PetApp.infrastructure.database.shared.superclass.BaseEntity;
@@ -39,5 +40,14 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    public void validated(Member member) {
+        if (!(getMember().equals(member))) {
+            throw new ForbiddenException("권한이 없습니다.");
+        }
+    }
+
+    public void update( String content) {
+        setContent(content);
+    }
 }
 
