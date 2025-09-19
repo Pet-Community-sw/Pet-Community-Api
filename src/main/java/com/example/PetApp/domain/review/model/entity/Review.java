@@ -1,5 +1,7 @@
 package com.example.PetApp.domain.review.model.entity;
 
+import com.example.PetApp.common.exception.ForbiddenException;
+import com.example.PetApp.domain.review.model.dto.request.UpdateReviewDto;
 import com.example.PetApp.domain.walkrecord.model.entity.WalkRecord;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.profile.model.entity.Profile;
@@ -45,4 +47,21 @@ public class Review extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private ReviewType reviewType;
+
+    public void update(UpdateReviewDto updateReviewDto) {
+        setContent(new Content(updateReviewDto.getTitle(), updateReviewDto.getContent()));
+        setRating(updateReviewDto.getRating());
+    }
+
+    public void validated(Member member) {
+        if (getReviewType() == ReviewType.MEMBER_TO_PROFILE) {
+            if (!getMember().equals(member)) {
+                throw new ForbiddenException("권한이 없습니다.");
+            }
+        } else if (getReviewType() == ReviewType.PROFILE_TO_MEMBER) {
+            if (!getProfile().getMember().equals(member)) {
+                throw new ForbiddenException("권한이 없습니다.");
+            }
+        }
+    }
 }
