@@ -1,7 +1,11 @@
 package com.example.PetApp.domain.walkingtogethermatch.model.entity;
 
+import com.example.PetApp.common.exception.ConflictException;
+import com.example.PetApp.common.exception.ForbiddenException;
+import com.example.PetApp.domain.petbreed.model.entity.PetBreed;
 import com.example.PetApp.domain.post.recommend.model.entity.RecommendRoutePost;
 import com.example.PetApp.domain.profile.model.entity.Profile;
+import com.example.PetApp.domain.walkingtogethermatch.model.dto.request.UpdateWalkingTogetherMatchDto;
 import com.example.PetApp.infrastructure.database.shared.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -49,6 +53,30 @@ public class WalkingTogetherMatch extends BaseEntity {
     @Cascade(org.hibernate.annotations.CascadeType.DELETE)
     @Builder.Default
     private Set<Long> avoidBreeds=new HashSet<>();
+
+    public void checkInMatch(Long profileId, PetBreed petBreed) {
+        if (getProfiles().contains(profileId)) {
+            throw new ConflictException("이미 채팅방에 들어가있습니다.");
+        } else if (getAvoidBreeds().contains(petBreed.getId())) {
+            throw new ForbiddenException("해당 종은 참여할 수 없습니다.");
+        }
+    }
+
+    public void validated(Long profileId) {
+        if (!(getProfile().getId().equals(profileId))) {
+            throw new ForbiddenException("권한이 없습니다.");
+        }
+    }
+
+    public void update(UpdateWalkingTogetherMatchDto updateWalkingTogetherMatchDto) {
+        setScheduledTime(updateWalkingTogetherMatchDto.getScheduledTime());
+        setLimitCount(updateWalkingTogetherMatchDto.getLimitCount());
+    }
+
+    public void matchingStart(Long profileId, Profile profile) {
+        addMatchPostProfiles(profileId);
+        addAvoidBreeds(profile);
+    }
 
     public void addMatchPostProfiles(Long profileId) {
         this.profiles.add(profileId);
