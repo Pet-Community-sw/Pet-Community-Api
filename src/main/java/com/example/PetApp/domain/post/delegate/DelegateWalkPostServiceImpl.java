@@ -10,7 +10,7 @@ import com.example.PetApp.domain.post.delegate.model.dto.response.ApplyToDelegat
 import com.example.PetApp.domain.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
 import com.example.PetApp.domain.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
 import com.example.PetApp.domain.profile.model.entity.Profile;
-import com.example.PetApp.infrastructure.database.shared.embedded.Applicant;
+import com.example.PetApp.infrastructure.database.base.embedded.Applicant;
 import com.example.PetApp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.PetApp.domain.memberchatRoom.model.dto.response.CreateMemberChatRoomResponseDto;
 import com.example.PetApp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
@@ -19,7 +19,6 @@ import com.example.PetApp.domain.post.delegate.mapper.DelegateWalkPostMapper;
 import com.example.PetApp.domain.memberchatRoom.MemberChatRoomService;
 import com.example.PetApp.domain.query.QueryService;
 import com.example.PetApp.domain.walkrecord.WalkRecordService;
-import com.example.PetApp.common.util.notification.SendNotificationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

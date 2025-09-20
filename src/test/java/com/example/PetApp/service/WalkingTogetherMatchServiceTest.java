@@ -8,7 +8,7 @@ import com.example.PetApp.domain.profile.ProfileRepository;
 import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.domain.walkingtogethermatch.WalkingTogetherMatchRepository;
 import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
-import com.example.PetApp.infrastructure.database.shared.embedded.Content;
+import com.example.PetApp.infrastructure.database.base.embedded.Content;
 import com.example.PetApp.domain.post.recommend.model.entity.RecommendRoutePost;
 import com.example.PetApp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.PetApp.domain.walkingtogethermatch.model.dto.request.CreateWalkingTogetherMatchDto;

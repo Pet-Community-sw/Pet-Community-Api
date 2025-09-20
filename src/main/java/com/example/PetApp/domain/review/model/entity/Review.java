@@ -5,8 +5,8 @@ import com.example.PetApp.domain.review.model.dto.request.UpdateReviewDto;
 import com.example.PetApp.domain.walkrecord.model.entity.WalkRecord;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.profile.model.entity.Profile;
-import com.example.PetApp.infrastructure.database.shared.embedded.Content;
-import com.example.PetApp.infrastructure.database.shared.superclass.BaseEntity;
+import com.example.PetApp.infrastructure.database.base.embedded.Content;
+import com.example.PetApp.infrastructure.database.base.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

@@ -9,9 +9,6 @@ import com.example.PetApp.domain.review.model.dto.response.GetReviewListResponse
 import com.example.PetApp.domain.review.model.dto.response.GetReviewResponseDto;
 import com.example.PetApp.domain.review.model.entity.Review;
 import com.example.PetApp.domain.walkrecord.model.entity.WalkRecord;
-import com.example.PetApp.infrastructure.database.shared.embedded.Content;
-import com.example.PetApp.common.exception.ConflictException;
-import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.review.mapper.ReviewMapper;
 import com.example.PetApp.domain.query.QueryService;
 import lombok.RequiredArgsConstructor;

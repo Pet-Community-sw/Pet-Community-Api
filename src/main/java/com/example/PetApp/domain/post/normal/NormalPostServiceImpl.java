@@ -2,7 +2,6 @@ package com.example.PetApp.domain.post.normal;
 
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.post.normal.model.entity.NormalPost;
-import com.example.PetApp.infrastructure.database.shared.embedded.Content;
 import com.example.PetApp.domain.post.normal.model.dto.response.CreatePostResponseDto;
 import com.example.PetApp.domain.post.normal.model.dto.request.PostDto;
 import com.example.PetApp.domain.post.normal.model.dto.response.GetPostResponseDto;

@@ -6,7 +6,7 @@ import com.example.PetApp.domain.post.delegate.model.dto.request.UpdateDelegateW
 import com.example.PetApp.domain.post.delegate.model.dto.response.ApplyToDelegateWalkPostResponseDto;
 import com.example.PetApp.domain.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
 import com.example.PetApp.domain.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
-import com.example.PetApp.infrastructure.database.shared.embedded.Applicant;
+import com.example.PetApp.infrastructure.database.base.embedded.Applicant;
 import com.example.PetApp.domain.memberchatRoom.model.dto.response.CreateMemberChatRoomResponseDto;
 import com.example.PetApp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
 import org.springframework.stereotype.Service;

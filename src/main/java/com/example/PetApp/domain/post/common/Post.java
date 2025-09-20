@@ -1,9 +1,9 @@
 package com.example.PetApp.domain.post.common;
 
 import com.example.PetApp.domain.member.model.entity.Member;
-import com.example.PetApp.infrastructure.database.shared.embedded.Content;
+import com.example.PetApp.infrastructure.database.base.embedded.Content;
 import com.example.PetApp.domain.like.model.entity.Like;
-import com.example.PetApp.infrastructure.database.shared.superclass.BaseEntity;
+import com.example.PetApp.infrastructure.database.base.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.BatchSize;

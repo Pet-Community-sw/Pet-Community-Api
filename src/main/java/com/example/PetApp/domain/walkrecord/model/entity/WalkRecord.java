@@ -4,7 +4,7 @@ import com.example.PetApp.common.exception.ConflictException;
 import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.PetApp.domain.member.model.entity.Member;
-import com.example.PetApp.infrastructure.database.shared.superclass.BaseEntity;
+import com.example.PetApp.infrastructure.database.base.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
