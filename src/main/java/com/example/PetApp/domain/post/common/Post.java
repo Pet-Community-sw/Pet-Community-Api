@@ -48,8 +48,11 @@ public abstract class Post extends BaseEntity {
 //    public abstract Like createLike(Member member);//게시글에서 Like생성 책임 위임
 
     public void updateContent(String newTitle, String newContent) {
-        this.content = new Content(newTitle, newTitle);
+        this.content = new Content(newTitle, newContent);
+    }
 
+    public void countUpLike(Like like) {
+        getLikes().add(like);
     }
 
 }

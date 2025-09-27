@@ -3,10 +3,14 @@ package com.example.PetApp.domain.like;
 
 import com.example.PetApp.domain.like.model.dto.response.LikeResponseDto;
 import com.example.PetApp.common.util.AuthUtil;
+import com.example.PetApp.infrastructure.app.common.MessageResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import javax.mail.Message;
 
 
 @RestController
@@ -22,7 +26,10 @@ public class LikeController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> createAndDeleteLike(@RequestBody Long postId, Authentication authentication) {
-        return likeService.createAndDeleteLike(postId, AuthUtil.getEmail(authentication));
+    public ResponseEntity<MessageResponse> createAndDeleteLike(@RequestBody Long postId, Authentication authentication) {
+        return likeService.createAndDeleteLike(postId, AuthUtil.getEmail(authentication)) ?
+                ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("좋아요 생성했습니다.")) :
+                ResponseEntity.ok(new MessageResponse("좋아요 삭제했습니다."));
+//        return ResponseEntity.ok(new MessageResponse(likeService.createAndDeleteLike(postId, AuthUtil.getEmail(authentication))));
     }
 }
