@@ -9,9 +9,6 @@ import com.example.PetApp.domain.review.model.dto.response.GetReviewListResponse
 import com.example.PetApp.domain.review.model.dto.response.GetReviewResponseDto;
 import com.example.PetApp.domain.review.model.entity.Review;
 import com.example.PetApp.domain.walkrecord.model.entity.WalkRecord;
-import com.example.PetApp.infrastructure.database.shared.embedded.Content;
-import com.example.PetApp.common.exception.ConflictException;
-import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.review.mapper.ReviewMapper;
 import com.example.PetApp.domain.query.QueryService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +21,7 @@ import static com.example.PetApp.domain.review.model.entity.Review.*;
 
 @Service
 @RequiredArgsConstructor
-public class ReviewServiceImpl implements ReviewService{
+public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final QueryService queryService;
@@ -34,11 +31,8 @@ public class ReviewServiceImpl implements ReviewService{
     public CreateReviewResponseDto createReview(CreateReviewDto createReviewDto, String email) {
         Member member = queryService.findByMember(email);
         WalkRecord walkRecord = queryService.findByWalkRecord(createReviewDto.getWalkRecordId());
-        if (walkRecord.getWalkStatus() != WalkRecord.WalkStatus.FINISH) {
-            throw new ConflictException("산책을 다해야 후기를 작성할 수 있습니다.");
-        } else if (!(walkRecord.getMember().equals(member))) {
-            throw new ForbiddenException("권한이 없습니다.");
-        }
+
+        walkRecord.validatedForCreate(member);
         Review savedReview = reviewRepository.save(ReviewMapper.toEntity(walkRecord, createReviewDto));
         return new CreateReviewResponseDto(savedReview.getId());
     }
@@ -59,7 +53,6 @@ public class ReviewServiceImpl implements ReviewService{
         Profile profile = queryService.findByProfile(profileId);
         List<Review> reviewList = reviewRepository.findAllByProfileAndReviewType(profile, ReviewType.MEMBER_TO_PROFILE);
         return ReviewMapper.toGetReviewListResponseDto(reviewList, profile.getId(), profile.getPetName(), profile.getPetImageUrl(), ReviewMapper.toGetReviewList(reviewList, member));
-
     }
 
 
@@ -75,9 +68,7 @@ public class ReviewServiceImpl implements ReviewService{
     @Override
     public void updateReview(Long reviewId, UpdateReviewDto updateReviewDto, String email) {
         Review review = findReviewWithAuth(reviewId, email);
-
-        review.setContent(new Content(updateReviewDto.getTitle(), updateReviewDto.getContent()));
-        review.setRating(updateReviewDto.getRating());
+        review.update(updateReviewDto);
     }
 
     @Transactional
@@ -92,15 +83,7 @@ public class ReviewServiceImpl implements ReviewService{
         Member member = queryService.findByMember(email);
         Review review = queryService.findByReview(reviewId);
 
-        if (review.getReviewType() == ReviewType.MEMBER_TO_PROFILE) {
-            if (!review.getMember().equals(member)) {
-                throw new ForbiddenException("권한이 없습니다.");
-            }
-        } else if (review.getReviewType() == ReviewType.PROFILE_TO_MEMBER) {
-            if (!review.getProfile().getMember().equals(member)) {
-                throw new ForbiddenException("권한이 없습니다.");
-            }
-        }
+        review.validated(member);
 
         return review;
     }

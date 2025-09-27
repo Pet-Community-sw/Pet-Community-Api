@@ -7,7 +7,7 @@ import com.example.PetApp.domain.walkrecord.model.dto.request.SendLocationDto;
 import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.query.QueryService;
 import com.example.PetApp.common.util.HaversineUtil;
-import com.example.PetApp.common.util.SendNotificationUtil;
+import com.example.PetApp.common.util.notification.SendNotificationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;

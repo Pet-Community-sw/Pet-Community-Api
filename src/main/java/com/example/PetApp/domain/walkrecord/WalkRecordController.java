@@ -33,7 +33,7 @@ public class WalkRecordController {
 
     @PutMapping("/{walkRecordId}/finish")
     public ResponseEntity<MessageResponse> updateFinishWalkRecord(@PathVariable Long walkRecordId, Authentication authentication) {
-        walkRecordService.updateFinishWalkRecord(walkRecordId, AuthUtil.getEmail(authentication));
+        walkRecordService.FinishWalkRecord(walkRecordId, AuthUtil.getEmail(authentication));
         return ResponseEntity.ok(new MessageResponse("finish"));
     }
 }

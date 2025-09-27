@@ -1,4 +1,4 @@
-package com.example.PetApp.infrastructure.database.shared.embedded;
+package com.example.PetApp.infrastructure.database.base.embedded;
 
 import lombok.*;
 

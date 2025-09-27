@@ -2,8 +2,8 @@ package com.example.PetApp.domain.post.recommend.mapper;
 
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.post.recommend.model.entity.RecommendRoutePost;
-import com.example.PetApp.infrastructure.database.shared.embedded.Location;
-import com.example.PetApp.infrastructure.database.shared.embedded.Content;
+import com.example.PetApp.infrastructure.database.base.embedded.Location;
+import com.example.PetApp.infrastructure.database.base.embedded.Content;
 import com.example.PetApp.domain.post.recommend.model.dto.request.CreateRecommendRoutePostDto;
 import com.example.PetApp.domain.post.recommend.model.dto.response.GetRecommendPostResponseDto;
 import com.example.PetApp.domain.post.recommend.model.dto.response.GetRecommendRoutePostsResponseDto;

@@ -3,12 +3,11 @@ package com.example.PetApp.domain.post.delegate.mapper;
 import com.example.PetApp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.profile.model.entity.Profile;
-import com.example.PetApp.infrastructure.database.shared.embedded.Location;
-import com.example.PetApp.infrastructure.database.shared.embedded.Content;
+import com.example.PetApp.infrastructure.database.base.embedded.Location;
+import com.example.PetApp.infrastructure.database.base.embedded.Content;
 import com.example.PetApp.domain.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
 import com.example.PetApp.domain.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
 import com.example.PetApp.domain.post.delegate.model.dto.request.GetPostResponseDto;
-import com.example.PetApp.domain.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
 import com.example.PetApp.common.util.TimeAgoUtil;
 
 import java.util.List;
@@ -28,14 +27,6 @@ public class DelegateWalkPostMapper {
                 .build();
     }
 
-    public static void updateDelegateWalkPost(UpdateDelegateWalkPostDto updateDelegateWalkPostDto, DelegateWalkPost delegateWalkPost) {
-        delegateWalkPost.setContent(new Content(updateDelegateWalkPostDto.getTitle(), updateDelegateWalkPostDto.getContent()));
-        delegateWalkPost.setPrice(updateDelegateWalkPostDto.getPrice());
-        delegateWalkPost.setAllowedRadiusMeters(updateDelegateWalkPostDto.getAllowedRedisMeters());
-        delegateWalkPost.setRequireProfile(updateDelegateWalkPostDto.isRequireProfile());
-        delegateWalkPost.setScheduledTime(updateDelegateWalkPostDto.getScheduledTime());
-    }
-
     public static List<GetDelegateWalkPostsResponseDto> toGetDelegateWalkPostsResponseDtos(Member member, List<DelegateWalkPost> delegateWalkPosts) {
         return delegateWalkPosts.stream()
                 .map(delegateWalkPost -> GetDelegateWalkPostsResponseDto.builder()
@@ -48,7 +39,7 @@ public class DelegateWalkPostMapper {
                         .locationLongitude(delegateWalkPost.getLocation().getLocationLongitude())
                         .locationLatitude(delegateWalkPost.getLocation().getLocationLatitude())
                         .scheduledTime(delegateWalkPost.getScheduledTime())
-                        .filtering(filter(delegateWalkPost, member))
+                        .filtering(delegateWalkPost.filtering(member))
                         .applicantCount(delegateWalkPost.getApplicants().size())
                         .createdAt(TimeAgoUtil.getTimeAgo(delegateWalkPost.getCreatedAt()))
                         .build())
@@ -73,13 +64,5 @@ public class DelegateWalkPostMapper {
                 .createdAt(TimeAgoUtil.getTimeAgo(delegateWalkPost.getCreatedAt()))
                 .build();
     }
-    public static boolean filter(DelegateWalkPost delegateWalkPost, Member member) {
-        if (delegateWalkPost.isRequireProfile()) {
-            if (member.getProfiles().size() != 0) {
-                return false;
-            }else
-                return true;
-        }else
-            return false;
-    }
+
 }

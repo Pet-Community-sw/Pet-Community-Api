@@ -1,9 +1,9 @@
 package com.example.PetApp.domain.post.common;
 
 import com.example.PetApp.domain.member.model.entity.Member;
-import com.example.PetApp.infrastructure.database.shared.embedded.Content;
+import com.example.PetApp.infrastructure.database.base.embedded.Content;
 import com.example.PetApp.domain.like.model.entity.Like;
-import com.example.PetApp.infrastructure.database.shared.superclass.BaseEntity;
+import com.example.PetApp.infrastructure.database.base.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.BatchSize;
@@ -46,5 +46,13 @@ public abstract class Post extends BaseEntity {
     private List<Like> likes = new ArrayList<>();
 
 //    public abstract Like createLike(Member member);//게시글에서 Like생성 책임 위임
+
+    public void updateContent(String newTitle, String newContent) {
+        this.content = new Content(newTitle, newContent);
+    }
+
+    public void countUpLike(Like like) {
+        getLikes().add(like);
+    }
 
 }

@@ -10,7 +10,7 @@ import com.example.PetApp.common.exception.NotFoundException;
 import com.example.PetApp.domain.walkrecord.WalkRecordRepository;
 import com.example.PetApp.domain.walklocation.LocationServiceImpl;
 import com.example.PetApp.common.util.HaversineUtil;
-import com.example.PetApp.common.util.SendNotificationUtil;
+import com.example.PetApp.common.util.notification.SendNotificationUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

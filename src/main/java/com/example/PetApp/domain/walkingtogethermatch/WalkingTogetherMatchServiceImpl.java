@@ -56,8 +56,7 @@ public class WalkingTogetherMatchServiceImpl implements WalkingTogetherMatchServ
         Profile profile = queryService.findByProfile(profileId);
         RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(createWalkingTogetherMatchDto.getRecommendRoutePostId());
         WalkingTogetherMatch walkingTogetherMatch = WalkingTogetherMatchMapper.toEntity(profile, recommendRoutePost, createWalkingTogetherMatchDto);
-        walkingTogetherMatch.addMatchPostProfiles(profileId);
-        walkingTogetherMatch.addAvoidBreeds(profile);
+        walkingTogetherMatch.matchingStart(profileId, profile);
         WalkingTogetherMatch savedWalkingTogetherMatch = walkingTogetherMatchRepository.save(walkingTogetherMatch);
         return new CreateWalkingTogetherMatchResponseDto(savedWalkingTogetherMatch.getId());
     }
@@ -65,49 +64,30 @@ public class WalkingTogetherMatchServiceImpl implements WalkingTogetherMatchServ
     @Transactional
     @Override
     public void updateWalkingTogetherPost(Long walkingTogetherPostId, UpdateWalkingTogetherMatchDto updateWalkingTogetherMatchDto, Long profileId) {
-        WalkingTogetherMatch walkingTogetherMatch = validateProfile(walkingTogetherPostId, profileId);
-        walkingTogetherMatch.setScheduledTime(updateWalkingTogetherMatchDto.getScheduledTime());
-        walkingTogetherMatch.setLimitCount(updateWalkingTogetherMatchDto.getLimitCount());
+        WalkingTogetherMatch walkingTogetherMatch = queryService.findByWalkingTogetherPost(walkingTogetherPostId);
+        walkingTogetherMatch.validated(profileId);
+        walkingTogetherMatch.update(updateWalkingTogetherMatchDto);
     }
 
     @Transactional
     @Override
     public void deleteWalkingTogetherPost(Long walkingTogetherPostId, Long profileId) {
-        WalkingTogetherMatch walkingTogetherMatch = validateProfile(walkingTogetherPostId, profileId);
+        WalkingTogetherMatch walkingTogetherMatch = queryService.findByWalkingTogetherPost(walkingTogetherPostId);
+        walkingTogetherMatch.validated(profileId);
         walkingTogetherMatchRepository.delete(walkingTogetherMatch);
     }
 
-    private WalkingTogetherMatch validateProfile(Long walkingTogetherPostId, Long profileId) {
-        WalkingTogetherMatch walkingTogetherMatch = queryService.findByWalkingTogetherPost(walkingTogetherPostId);
-        if (!walkingTogetherMatch.getProfile().getId().equals(profileId)) {
-            throw new ForbiddenException("권한이 없습니다.");
-        }
-        return walkingTogetherMatch;
-    }
 
     @Transactional
     @Override
     public CreateChatRoomResponseDto startMatch(Long walkingTogetherPostId, Long profileId) {
         Profile profile = queryService.findByProfile(profileId);
         WalkingTogetherMatch walkingTogetherMatch = queryService.findByWalkingTogetherPost(walkingTogetherPostId);
-
-        if (walkingTogetherMatch.getProfiles().contains(profileId)) {
-            throw new ConflictException("이미 채팅방에 들어가있습니다.");
-        }
         PetBreed petBreed = queryService.findByPetBreed(profile.getPetBreed().getName());
 
-        if (walkingTogetherMatch.getAvoidBreeds().contains(petBreed.getId())) {
-            throw new ForbiddenException("해당 종은 참여할 수 없습니다.");
-        }
-
-        addMatchingAndAvoid(walkingTogetherMatch, profileId, profile);
+        walkingTogetherMatch.checkInMatch(profileId, petBreed);
+        walkingTogetherMatch.matchingStart(profileId, profile);
 
         return chatRoomService.createChatRoom(walkingTogetherMatch, profile);
-    }
-
-
-    private void addMatchingAndAvoid(WalkingTogetherMatch post, Long profileId, Profile profile) {
-        post.addMatchPostProfiles(profileId);
-        post.addAvoidBreeds(profile);
     }
 }

@@ -59,13 +59,4 @@ public class ProfileMapper {
                 .build();
     }
 
-    public static void updateProfile(Profile profile, ProfileDto profileDto, String imageFimeName, PetBreed petBreed) {
-        profile.setPetImageUrl("/profile/" + imageFimeName);
-        profile.setPetName(profileDto.getPetName());
-        profile.setPetBirthDate(profileDto.getPetBirthDate());
-        profile.setPetAge(CalculateAge(profileDto.getPetBirthDate()) + "살");
-        profile.setPetBreed(petBreed);
-        profile.setExtraInfo(profileDto.getExtraInfo());
-        profile.getAvoidBreeds().clear();
-    }
 }

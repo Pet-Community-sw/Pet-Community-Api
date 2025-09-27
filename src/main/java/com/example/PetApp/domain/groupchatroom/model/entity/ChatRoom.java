@@ -2,7 +2,7 @@ package com.example.PetApp.domain.groupchatroom.model.entity;
 
 import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
-import com.example.PetApp.infrastructure.database.shared.superclass.BaseEntity;
+import com.example.PetApp.infrastructure.database.base.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

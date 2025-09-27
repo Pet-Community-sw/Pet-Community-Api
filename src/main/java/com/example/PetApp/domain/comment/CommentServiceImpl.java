@@ -1,5 +1,7 @@
 package com.example.PetApp.domain.comment;
 
+import com.example.PetApp.common.annotation.Notification;
+import com.example.PetApp.common.util.notification.NotificationDto;
 import com.example.PetApp.domain.comment.model.dto.request.CommentDto;
 import com.example.PetApp.domain.comment.model.dto.request.UpdateCommentDto;
 import com.example.PetApp.domain.comment.model.dto.response.CreateCommentResponseDto;
@@ -8,10 +10,8 @@ import com.example.PetApp.domain.comment.model.entity.Comment;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.post.common.Post;
 import com.example.PetApp.domain.comment.model.entity.Commentable;
-import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.comment.mapper.CommentMapper;
 import com.example.PetApp.domain.query.QueryService;
-import com.example.PetApp.common.util.SendNotificationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,6 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final SendNotificationUtil sendNotificationUtil;
     private final QueryService queryService;
 
     @Transactional(readOnly = true)
@@ -35,6 +34,7 @@ public class CommentServiceImpl implements CommentService {
         return CommentMapper.toGetCommentsResponseDtos((Commentable) post, member);
     }
 
+    @Notification(recipient = "#ret.notificationDto.ownerMember", message = "#ret.notification.member.name + '님이 회원님의 게시물에 댓글을 남겼습니다.'")
     @Transactional
     @Override
     public CreateCommentResponseDto createComment(CommentDto commentDto, String email) {
@@ -43,8 +43,7 @@ public class CommentServiceImpl implements CommentService {
 
         Comment comment = CommentMapper.toEntity(commentDto, post, member);
         commentRepository.save(comment);
-        sendCommentNotification(post.getMember(), member);
-        return new CreateCommentResponseDto(comment.getId());
+        return new CreateCommentResponseDto(comment.getId(), new NotificationDto(post.getMember(), member));
     }
 
 
@@ -53,7 +52,8 @@ public class CommentServiceImpl implements CommentService {
     public void deleteComment(Long commentId, String email) {
         Member member = queryService.findByMember(email);
         Comment comment = queryService.findByComment(commentId);
-        validateMember(comment, member);
+
+        comment.validated(member);
         commentRepository.deleteById(commentId);
     }
 
@@ -62,20 +62,9 @@ public class CommentServiceImpl implements CommentService {
     public void updateComment(Long commentId, UpdateCommentDto updateCommentDto, String email) {
         Member member = queryService.findByMember(email);
         Comment comment = queryService.findByComment(commentId);
-        validateMember(comment, member);
-        comment.setContent(updateCommentDto.getContent());
+
+        comment.validated(member);
+        comment.update(updateCommentDto.getContent());
 
     }
-
-    private static void validateMember(Comment comment, Member member) {
-        if (!(comment.getMember().equals(member))) {
-            throw new ForbiddenException("권한이 없습니다.");
-        }
-    }
-
-    private void sendCommentNotification(Member postmember, Member member) {
-        String message = member.getName() + "님이 회원님의 게시물에 댓글을 남겼습니다.";
-        sendNotificationUtil.sendNotification(postmember, message); // 알림 전송
-    }
-
 }

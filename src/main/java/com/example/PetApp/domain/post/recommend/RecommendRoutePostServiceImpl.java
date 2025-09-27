@@ -7,7 +7,6 @@ import com.example.PetApp.domain.post.recommend.model.dto.response.CreateRecomme
 import com.example.PetApp.domain.post.recommend.model.dto.response.GetRecommendPostResponseDto;
 import com.example.PetApp.domain.post.recommend.model.dto.response.GetRecommendRoutePostsResponseDto;
 import com.example.PetApp.domain.post.recommend.model.entity.RecommendRoutePost;
-import com.example.PetApp.infrastructure.database.shared.embedded.Content;
 import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.post.recommend.mapper.RecommendRoutePostMapper;
 import com.example.PetApp.domain.like.LikeRepository;
@@ -79,7 +78,7 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService{
         Member member = queryService.findByMember(email);
         RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(recommendRoutePostId);
         validateMember(recommendRoutePost, member);
-        recommendRoutePost.setContent(new Content(updateRecommendRoutePostDto.getTitle(), updateRecommendRoutePostDto.getContent()));
+        recommendRoutePost.updateContent(updateRecommendRoutePostDto.getTitle(), updateRecommendRoutePostDto.getContent());
     }
 
     @Transactional

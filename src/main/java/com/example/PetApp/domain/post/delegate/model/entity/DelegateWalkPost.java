@@ -1,8 +1,13 @@
 package com.example.PetApp.domain.post.delegate.model.entity;
 
+import com.example.PetApp.common.exception.ConflictException;
+import com.example.PetApp.common.exception.ForbiddenException;
+import com.example.PetApp.domain.member.model.entity.Member;
+import com.example.PetApp.domain.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
 import com.example.PetApp.domain.profile.model.entity.Profile;
-import com.example.PetApp.infrastructure.database.shared.embedded.Applicant;
-import com.example.PetApp.infrastructure.database.shared.embedded.Location;
+import com.example.PetApp.infrastructure.database.base.embedded.Applicant;
+import com.example.PetApp.infrastructure.database.base.embedded.Content;
+import com.example.PetApp.infrastructure.database.base.embedded.Location;
 import com.example.PetApp.domain.post.common.Post;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -74,10 +79,71 @@ public class DelegateWalkPost extends Post {
     @CollectionTable(name = "walker_post_applicants")
     private Set<Applicant> applicants = new HashSet<>();
 
+    public boolean filtering(Member member) {
+        if (this.isRequireProfile()) {
+            return member.getProfiles().isEmpty();
+        } else
+            return false;
+    }
 
-//    @Override
-//    public Like createLike(Member member) {
-//        return new DelegateWalkPostLike(member, this);
-//    }
+    public Set<Applicant> validatedAndGetApplicants(Long profileId) {
+        validatedUser(profileId);
+        return getApplicants();
+    }
+
+    public void validatedUser(Member member) {
+        if (!getProfile().getMember().equals(member)) {
+            throw new ForbiddenException("권한 없음.");
+        }
+    }
+
+    public void validatedUser(Long profileId) {
+        if (!getProfile().getId().equals(profileId)) {
+            throw new ForbiddenException("권한 없음.");
+        }
+    }
+
+    public boolean hasApplicant(Long memberId) {
+        return applicants.stream().noneMatch(applicant -> applicant.getMemberId().equals(memberId));
+    }
+
+    public void grantAuthorize() {
+        setStartAuthorized(true);
+    }
+
+    public void updateDelegateWalkPost(UpdateDelegateWalkPostDto updateDelegateWalkPostDto) {
+        setContent(new Content(updateDelegateWalkPostDto.getTitle(), updateDelegateWalkPostDto.getContent()));
+        setPrice(updateDelegateWalkPostDto.getPrice());
+        setAllowedRadiusMeters(updateDelegateWalkPostDto.getAllowedRedisMeters());
+        setRequireProfile(updateDelegateWalkPostDto.isRequireProfile());
+        setScheduledTime(updateDelegateWalkPostDto.getScheduledTime());
+    }
+
+    public void addApplicant(Member member, String content) {
+        getApplicants().add(Applicant.builder()
+                .memberId(member.getId())
+                .content(content)
+                .build());
+    }
+
+    public void apply(Member member, String content) {
+        filtering(member);
+        if (!hasApplicant(member.getId())) {
+            throw new ConflictException("이미 신청한 회원입니다.");
+        } else if (getStatus() == DelegateWalkStatus.COMPLETED) {
+            throw new ConflictException("모집 완료 게시글입니다.");
+        } else {
+            this.addApplicant(member, content);
+        }
+    }
+
+    public void validatedAndSelectApplicant(Long selectedMemberId, Member member) {
+        validatedUser(member);
+        if (hasApplicant(selectedMemberId)) {
+            throw new ForbiddenException("권한 없음.");
+        }
+        setStatus(DelegateWalkStatus.COMPLETED);
+        setSelectedApplicantMemberId(selectedMemberId);
+    }
 }
 

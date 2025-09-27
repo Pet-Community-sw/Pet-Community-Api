@@ -90,19 +90,15 @@ public class MemberServiceImpl implements MemberService{
         tokenService.deleteRefreshToken(accessToken);
     }
 
-    @Transactional(readOnly = true)
-    public Member findByEmail(String email) {
-        return queryService.findByMember(email);
-    }
 
     @Transactional
     @Override
     public void resetPassword(ResetPasswordDto resetPasswordDto, String email) {
         Member member = queryService.findByMember(email);
-        if (passwordEncoder.matches(resetPasswordDto.getNewPassword(),member.getPassword())) {
+        if (member.isSamePassword(passwordEncoder, resetPasswordDto.getNewPassword())) {
             throw new IllegalArgumentException("전 비밀번호와 다르게 설정해야합니다.");
         } else {
-            member.setPassword(passwordEncoder.encode(resetPasswordDto.getNewPassword()));
+            member.updatePassword(passwordEncoder.encode(resetPasswordDto.getNewPassword()));
         }
     }
 

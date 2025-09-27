@@ -1,5 +1,7 @@
 package com.example.PetApp.domain.post.delegate.model.dto.response;
 
+import com.example.PetApp.common.util.notification.NotificationDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,5 +14,9 @@ import lombok.Setter;
 public class ApplyToDelegateWalkPostResponseDto {
 
     private Long memberId;
+
+    @JsonIgnore
+    private NotificationDto notificationDto;
+
 
 }
