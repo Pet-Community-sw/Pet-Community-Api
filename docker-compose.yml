@@ -38,35 +38,35 @@ services:
       timeout: 5s
       retries: 10
 
-  app:
-    image: eclipse-temurin:17-jdk
-    container_name: pet-app
-    restart: always
-    depends_on:
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    working_dir: /app
-    volumes:
-      - ./build/libs/PetApp-0.0.1-SNAPSHOT.jar:/app/app.jar:ro
-    command: ["java", "-jar", "/app/app.jar"]
-    env_file:
-      - .env
-    environment:
-      PASSWORD : ${SMTP_PASSWORD}
-      EMAIL : ${SMTP_EMAIL}
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
-      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
-      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL8Dialect
-      SPRING_REDIS_HOST: redis
-      SPRING_REDIS_PORT: "6379"
-      SPRING_DATA_MONGODB_URI: ${MONGO_URI}
-      TZ: Asia/Seoul
-    ports:
-      - "8080:8080"
+#  app:
+#    image: eclipse-temurin:17-jdk
+#    container_name: pet-app
+#    restart: always
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#      redis:
+#        condition: service_healthy
+#    working_dir: /app
+#    volumes:
+#      - ./build/libs/PetApp-0.0.1-SNAPSHOT.jar:/app/app.jar:ro
+#    command: ["java", "-jar", "/app/app.jar"]
+#    env_file:
+#      - .env
+#    environment:
+#      PASSWORD : ${SMTP_PASSWORD}
+#      EMAIL : ${SMTP_EMAIL}
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
+#      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+#      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+#      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+#      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL8Dialect
+#      SPRING_REDIS_HOST: redis
+#      SPRING_REDIS_PORT: "6379"
+#      SPRING_DATA_MONGODB_URI: ${MONGO_URI}
+#      TZ: Asia/Seoul
+#    ports:
+#      - "8080:8080"
 
 volumes:
   mysql-data:

@@ -2,6 +2,10 @@ jwt :
   accessKey : 45124589562312457845134679461312
   refreshKey : 13462356794613462356897946132346
 spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/${MYSQL_DATABASE}?useUnicode=true&serverTimezone=Asia/Seoul
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
@@ -34,11 +38,12 @@ spring:
       image:
         upload: /Users/choiseonjae/Desktop/PetApp/members
   data:
-    redis:
-      repositories:
-        enabled: false
     mongodb:
       uri: ${MONGO_URI}
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
 
 server:
   address: 0.0.0.0
