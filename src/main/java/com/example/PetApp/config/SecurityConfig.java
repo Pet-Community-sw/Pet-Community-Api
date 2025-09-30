@@ -32,6 +32,14 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .antMatchers(
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/v3/api-docs.yaml",
+                        "/swagger-resources/**",
+                        "/webjars/**"
+                ).permitAll()
                 .antMatchers("/image/profiles/**","/image/members/**","/image/posts/**", "/image/basic/**","/favicon.ico").permitAll()
                 .mvcMatchers("/ws-stomp/**", "/pub/**", "/sub/**").permitAll()
                 .mvcMatchers("/members/signup", "/members/accessToken", "/members/login", "/members/find-id", "/members/send-email", "/members/verify-code", "/members/reset-password").permitAll()
