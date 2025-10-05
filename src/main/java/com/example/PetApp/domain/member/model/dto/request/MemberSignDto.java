@@ -38,7 +38,6 @@ public class MemberSignDto {
     @Schema(example = "01012345678")
     private String phoneNumber;
 
-
     private MultipartFile memberImageUrl;//디폴트 사진을 넣어야할듯.
 
 }
