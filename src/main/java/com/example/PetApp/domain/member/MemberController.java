@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +25,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/signup")
-    public ResponseEntity<MemberSignResponseDto> signUp(@ModelAttribute @Valid MemberSignDto memberSignDto) {
+    public ResponseEntity<MemberSignResponseDto> signUp(@ModelAttribute @Validated MemberSignDto memberSignDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(memberService.createMember(memberSignDto));
     }
 
