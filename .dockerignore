@@ -1,0 +1,17 @@
+.gradle
+build
+!build/libs/*.jar
+out
+node_modules
+.git
+.gitignore
+.DS_Store
+.env
+.idea
+.vscode
+logs
+tmp
+*.iml
+
+src/test
+**/src/test/**
