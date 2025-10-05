@@ -41,7 +41,7 @@ public class NormalPostServiceImpl implements NormalPostService {
     @Override
     public List<PostResponseDto> getPosts(int page, String email) {
         Member member = queryService.findByMember(email);
-        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "postId"));
+        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
         List<NormalPost> normalPosts = normalPostRepository.findAll(pageRequest).getContent();
         Set<Long> members = likeRedisTemplate.opsForSet().members("member:likes:" + member.getId());
         return NormalPostMapper.toPostListResponseDto(normalPosts, likeService.getLikeCountMap(normalPosts), members);
