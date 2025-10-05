@@ -1,24 +1,19 @@
 package com.example.PetApp.domain.post.normal.model.dto.response;
 
-import com.example.PetApp.domain.comment.model.dto.response.GetCommentsResponseDto;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GetPostResponseDto {
+public class PostResponseDto {
 
     private Long postId;
 
     private String postImageUrl;
 
     private Long memberId;
-
-    private String content;
 
     private String memberName;
 
@@ -33,9 +28,5 @@ public class GetPostResponseDto {
     private String title;
 
     private boolean like;
-
-    private boolean isOwner;
-
-    List<GetCommentsResponseDto> comments;
 
 }

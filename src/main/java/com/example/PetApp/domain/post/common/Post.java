@@ -32,9 +32,8 @@ public abstract class Post extends BaseEntity {
 
     @Setter
     @Min(0)
-    @NotNull
-    @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
-    private Long viewCount;
+    @Column(nullable = false)
+    private long viewCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
