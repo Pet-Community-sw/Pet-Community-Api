@@ -7,10 +7,13 @@ import com.example.PetApp.domain.member.model.dto.response.LoginResponseDto;
 import com.example.PetApp.domain.member.model.dto.response.MemberSignResponseDto;
 import com.example.PetApp.infrastructure.app.common.MessageResponse;
 import com.example.PetApp.common.util.AuthUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -23,8 +26,15 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<MemberSignResponseDto> signUp(@ModelAttribute @Valid MemberSignDto memberSignDto) {
+    @Operation(
+            summary = "회원가입",
+            description = "프로필 이미지는 선택, 기본이지미하고싶으면 send empty value 체크하지말고 그냥 요청"
+    )
+    @PostMapping(
+            value = "/signup",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<MemberSignResponseDto> signUp(@ModelAttribute @Validated MemberSignDto memberSignDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(memberService.createMember(memberSignDto));
     }
 
