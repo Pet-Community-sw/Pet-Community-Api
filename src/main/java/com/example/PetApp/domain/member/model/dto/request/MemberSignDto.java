@@ -32,7 +32,6 @@ public class MemberSignDto {
     @Pattern(regexp = "^010\\d{8}$", message = "휴대폰 번호는 010으로 시작하는 11자리 숫자여야 합니다.")
     private String phoneNumber;
 
-
     private MultipartFile memberImageUrl;//디폴트 사진을 넣어야할듯.
 
 }

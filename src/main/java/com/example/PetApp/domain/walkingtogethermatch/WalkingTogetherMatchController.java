@@ -7,6 +7,8 @@ import com.example.PetApp.domain.walkingtogethermatch.model.dto.response.CreateW
 import com.example.PetApp.domain.walkingtogethermatch.model.dto.response.GetWalkingTogetherMatchResponseDto;
 import com.example.PetApp.domain.walkingtogethermatch.model.dto.request.UpdateWalkingTogetherMatchDto;
 import com.example.PetApp.common.util.AuthUtil;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

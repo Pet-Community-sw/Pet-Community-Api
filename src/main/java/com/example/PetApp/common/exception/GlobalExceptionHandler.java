@@ -3,6 +3,8 @@ package com.example.PetApp.common.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -54,21 +56,24 @@ public class GlobalExceptionHandler {
                 .body(Map.of("message", ex.getMessage()));
     }
 
-    //binding에러
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        log.warn("Validation error: {}", ex.getMessage());
+    @ExceptionHandler(MethodArgumentNotValidException.class) // JSON(@RequestBody)
+    public ResponseEntity<?> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+        return buildValidationErrorResponse(ex.getBindingResult());
+    }
 
-        Map<String, String> errors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
+    @ExceptionHandler(BindException.class) // multipart/form-data(@ModelAttribute)
+    public ResponseEntity<?> handleBindException(BindException ex) {
+        return buildValidationErrorResponse(ex.getBindingResult());
+    }
+
+    private ResponseEntity<?> buildValidationErrorResponse(BindingResult bindingResult) {
+        Map<String, String> errors = bindingResult.getFieldErrors().stream()
                 .collect(Collectors.toMap(
                         FieldError::getField,
                         FieldError::getDefaultMessage,
-                        (existing, replacement) -> existing // 중복 필드 무시
+                        (a, b) -> a // 중복 필드 첫 메시지 유지
                 ));
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        return ResponseEntity.badRequest().body(errors);
     }
 
 }
