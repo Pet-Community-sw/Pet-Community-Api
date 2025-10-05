@@ -95,6 +95,11 @@ public class QueryServiceImpl implements QueryService{
     }
 
     @Override
+    public PetBreed findByPetBreed(Long petBreedId) {
+        return petBreedRepository.findById(petBreedId).orElseThrow(() -> new NotFoundException("종을 다시 입력해주세요."));
+    }
+
+    @Override
     public Post findByPost(Long postId) {
         return postRepository.findById(postId).orElseThrow(() -> new NotFoundException("해당 게시물은 없습니다."));
     }

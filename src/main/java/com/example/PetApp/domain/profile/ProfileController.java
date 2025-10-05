@@ -40,8 +40,8 @@ public class ProfileController {
         return profileService.createProfile(profileDto, AuthUtil.getEmail(authentication));
     }
 
-    @PutMapping("/{profileId}")
-    public ResponseEntity<MessageResponse> updateProfile(@PathVariable Long profileId, @ModelAttribute @Valid ProfileDto addProfileDto, Authentication authentication) {
+    @PutMapping(value = "/{profileId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<MessageResponse> updateProfile(@PathVariable Long profileId, @ModelAttribute @Validated ProfileDto addProfileDto, Authentication authentication) {
         profileService.updateProfile(profileId, addProfileDto, AuthUtil.getEmail(authentication));
         return ResponseEntity.ok(new MessageResponse("수정 되었습니다."));
     }

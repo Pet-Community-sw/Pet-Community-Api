@@ -1,5 +1,6 @@
 package com.example.PetApp.domain.profile.model.dto.request;
 
+import com.example.PetApp.domain.petbreed.model.entity.PetBreed;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
@@ -7,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,8 +20,8 @@ public class ProfileDto {
     @NotNull(message = "반려견 이미지는 필수입니다.")
     private MultipartFile petImageUrl;
 
-    @NotBlank(message = "반려견 종이름은 필수입니다.")
-    private String petBreed;
+    @NotNull(message = "반려견 종이름은 필수입니다.")
+    private Long petBreedId;
 
     @NotBlank(message = "반려견 이름은 필수입니다.")
     private String petName;//이거 연결해야함.
@@ -28,7 +30,7 @@ public class ProfileDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate petBirthDate;
 
-    private String avoidBreeds;
+    private List<Long> avoidBreeds;
 
     private String extraInfo;
 

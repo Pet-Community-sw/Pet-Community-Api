@@ -1,5 +1,6 @@
 package com.example.PetApp.domain.member.model.entity;
 
+import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.post.common.Post;
 import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.domain.token.model.entity.RefreshToken;
@@ -82,5 +83,11 @@ public class Member extends BaseEntity {//수정 필요
 
     public void updatePassword(String newPassword) {
         this.password = newPassword;
+    }
+
+    public void validateProfile(Member member, Member profileMember) {
+        if (!(member.equals(profileMember))) {
+            throw new ForbiddenException("권한이 없습니다.");
+        }
     }
 }
