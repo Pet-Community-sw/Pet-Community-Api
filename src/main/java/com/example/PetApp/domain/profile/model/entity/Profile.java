@@ -1,5 +1,6 @@
 package com.example.PetApp.domain.profile.model.entity;
 
+import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.PetApp.domain.profile.model.dto.request.ProfileDto;
 import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
@@ -44,7 +45,7 @@ public class Profile extends BaseEntity {
     private String petAge;
 
     @Setter
-    @NotBlank
+    @NotNull
     @JoinColumn(name = "pet_breed_id", nullable = false)
     @OneToOne
     private PetBreed petBreed;
@@ -78,7 +79,9 @@ public class Profile extends BaseEntity {
     private List<ChatRoom> chatRooms;
 
     public void addAvoidBreeds(PetBreed dogBreed) {
-
+        if (getAvoidBreeds() == null) {
+            setAvoidBreeds(new HashSet<>());
+        }
         avoidBreeds.add(dogBreed);
     }
 
@@ -91,4 +94,5 @@ public class Profile extends BaseEntity {
         profile.setExtraInfo(profileDto.getExtraInfo());
         profile.getAvoidBreeds().clear();
     }
+
 }

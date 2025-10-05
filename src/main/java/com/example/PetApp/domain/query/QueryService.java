@@ -33,6 +33,8 @@ public interface QueryService {
 
     PetBreed findByPetBreed(String petBreed);
 
+    PetBreed findByPetBreed(Long petBreedId);
+
     Post findByPost(Long postId);
 
     Profile findByProfile(Long profileId);

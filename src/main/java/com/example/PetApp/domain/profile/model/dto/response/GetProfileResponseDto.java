@@ -14,7 +14,7 @@ import java.util.Set;
 public class GetProfileResponseDto {
     private Long profileId;
 
-    private String petBreed;
+    private String petBreedName;
 
     private String petImageUrl;
 

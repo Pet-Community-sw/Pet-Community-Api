@@ -41,7 +41,7 @@ public class ProfileServiceImpl implements ProfileService {
         if (profileRepository.countByMember(member) >= 4) {
             throw new ConflictException("프로필은 최대 4개 입니다.");
         }
-        PetBreed petBreed = queryService.findByPetBreed(profileDto.getPetBreed());
+        PetBreed petBreed = queryService.findByPetBreed(profileDto.getPetBreedId());
 
         String imageFileName = FileUploadUtil.fileUpload(profileDto.getPetImageUrl(), profileUploadDir, FileImageKind.PROFILE);
         Profile profile = ProfileMapper.toEntity(profileDto, member, imageFileName, petBreed);
@@ -76,9 +76,9 @@ public class ProfileServiceImpl implements ProfileService {
     public void updateProfile(Long profileId, ProfileDto profileDto, String email) {
         Member member = queryService.findByMember(email);
         Profile profile = queryService.findByProfile(profileId);
-        PetBreed petBreed = queryService.findByPetBreed(profileDto.getPetBreed());
+        PetBreed petBreed = queryService.findByPetBreed(profileDto.getPetBreedId());
 
-        validateProfile(member, profile.getMember());
+        member.validateProfile(member, profile.getMember());
         validateBreed(profileDto, profile);
         String imageFimeName = FileUploadUtil.fileUpload(profileDto.getPetImageUrl(), profileUploadDir, FileImageKind.PROFILE);
         profile.updateProfile(profile, profileDto, imageFimeName, petBreed);
@@ -89,7 +89,7 @@ public class ProfileServiceImpl implements ProfileService {
     public void deleteProfile(Long profileId, String email) {
         Member member = queryService.findByMember(email);
         Profile profile = queryService.findByProfile(profileId);
-        validateProfile(member, profile.getMember());
+        member.validateProfile(member, profile.getMember());
         profileRepository.deleteById(profileId);
     }
 
@@ -98,28 +98,16 @@ public class ProfileServiceImpl implements ProfileService {
     public AccessTokenByProfileIdResponseDto accessTokenByProfile(String accessToken, String refreshToken, Long profileId, String email) {//요청했을 당시 토큰을 redis에 저장시켜서 이전 토큰으로 요청 시 인증이 안되게 끔 해야됨.
         Member member = queryService.findByMember(email);
         Profile profile = queryService.findByProfile(profileId);
-        validateProfile(member, profile.getMember());
+        member.validateProfile(member, profile.getMember());
         String newAccessToken = tokenService.newAccessTokenByProfile(accessToken, refreshToken, member, profileId);
 
         return ProfileMapper.toAccessTokenToProfileIdResponseDto(profileId, newAccessToken);
     }
 
-
-    private static void validateProfile(Member member, Member profile) {
-        if (!(member.equals(profile))) {
-            throw new ForbiddenException("권한이 없습니다.");
-        }
-    }
-
-
     private void validateBreed(ProfileDto profileDto, Profile profile) {
-        String[] arr = profileDto.getAvoidBreeds().split(",");
-        for (String breeds : arr) {
-            breeds = breeds.trim();
-            PetBreed avoidBreed = queryService.findByPetBreed(breeds);
-            if (profile.getAvoidBreeds() == null) {
-                profile.setAvoidBreeds(new HashSet<>());
-            }
+        List<Long> avoidBreeds = profileDto.getAvoidBreeds();
+        for (Long petBreedId : avoidBreeds) {
+            PetBreed avoidBreed = queryService.findByPetBreed(petBreedId);
             profile.addAvoidBreeds(avoidBreed);
         }
     }

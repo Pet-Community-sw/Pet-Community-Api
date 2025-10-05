@@ -30,7 +30,7 @@ public class ProfileMapper {
     public static GetProfileResponseDto toGetProfileResponseDto(Profile profile, Member member) {
         return GetProfileResponseDto.builder()
                 .profileId(profile.getId())
-                .petBreed(String.valueOf(profile.getPetBreed()))
+                .petBreedName(profile.getPetBreed().getName())
                 .petImageUrl(profile.getPetImageUrl())
                 .memberId(profile.getMember().getId())
                 .petName(profile.getPetName())

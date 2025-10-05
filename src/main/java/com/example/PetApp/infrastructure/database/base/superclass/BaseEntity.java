@@ -1,5 +1,6 @@
 package com.example.PetApp.infrastructure.database.base.superclass;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
@@ -26,6 +27,7 @@ public abstract class BaseEntity {
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
+    @JsonIgnore
     private LocalDateTime createdAt;
 
     /*
@@ -35,5 +37,6 @@ public abstract class BaseEntity {
      * */
     @LastModifiedDate
     @Column(name = "updated_at", updatable = true)
+    @JsonIgnore
     private LocalDateTime updatedAt;
 }
