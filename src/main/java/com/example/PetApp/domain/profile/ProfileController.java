@@ -7,9 +7,12 @@ import com.example.PetApp.domain.profile.model.dto.response.GetProfileResponseDt
 import com.example.PetApp.domain.profile.model.dto.response.ProfileListResponseDto;
 import com.example.PetApp.infrastructure.app.common.MessageResponse;
 import com.example.PetApp.common.util.AuthUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,8 +35,8 @@ public class ProfileController {
         return profileService.getProfile(profileId, AuthUtil.getEmail(authentication));
     }
 
-    @PostMapping
-    public CreateProfileResponseDto createProfile(@ModelAttribute @Valid ProfileDto profileDto, Authentication authentication) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public CreateProfileResponseDto createProfile(@ModelAttribute @Validated ProfileDto profileDto, Authentication authentication) {
         return profileService.createProfile(profileDto, AuthUtil.getEmail(authentication));
     }
 

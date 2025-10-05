@@ -37,7 +37,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-
+#
 #  app:
 #    image: sunjaegood/petapp:latest
 #    container_name: pet-app
