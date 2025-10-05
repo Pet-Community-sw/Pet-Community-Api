@@ -28,6 +28,9 @@ spring:
           starttls:
             enable: true
 
+  file:
+    base-path: /app/uploads
+
   dog:
     profile:
       image:
