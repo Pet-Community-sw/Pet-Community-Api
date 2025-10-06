@@ -1,10 +1,8 @@
 package com.example.PetApp.domain.sse;
 
-import com.example.PetApp.domain.member.MemberRepository;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.query.QueryService;
-import com.example.PetApp.infrastructure.app.jwt.util.JwtTokenizer;
-import com.fasterxml.classmate.MemberResolver;
+import com.example.PetApp.common.jwt.util.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

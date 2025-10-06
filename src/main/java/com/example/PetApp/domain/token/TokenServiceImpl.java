@@ -11,7 +11,7 @@ import com.example.PetApp.common.exception.UnAuthorizedException;
 import com.example.PetApp.domain.member.mapper.MemberMapper;
 import com.example.PetApp.domain.member.RoleRepository;
 import com.example.PetApp.common.util.RedisUtil;
-import com.example.PetApp.infrastructure.app.jwt.util.JwtTokenizer;
+import com.example.PetApp.common.jwt.util.JwtTokenizer;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -78,10 +80,19 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
 
     @Transactional
     @Override
-    public AccessTokenResponseDto reissueAccessToken(String accessToken, String refreshToken) {
+    public AccessTokenResponseDto reissueAccessToken(HttpServletRequest request) {
         log.info("에세스 토큰 재요청.");
-        String token = accessToken.split(" ")[1];
-        Claims claims = getClaimsFromToken(token,TokenType.ACCESS);
+        String header = request.getHeader("Authorization");
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) throw new ForbiddenException("쿠키가 없습니다.");
+        String refreshToken = Arrays.stream(cookies).filter(c -> "refreshToken".equals(c.getName()))
+                .map(Cookie::getValue)
+                .findFirst()
+                .orElseThrow(() -> new ForbiddenException("refreshToken 쿠키가 없습니다."));
+
+        String accessToken = header.split(" ")[1];
+        Claims claims = getClaimsFromToken(accessToken,TokenType.ACCESS);
         Long memberId = Long.valueOf((Integer) claims.get("memberId"));
         RefreshToken savedRefreshToken = refreshRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new NotFoundException("refreshToken이 없음. 다시 로그인."));
@@ -126,7 +137,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
         if (jwtTokenizer.isTokenExpired("refresh", refreshToken.getRefreshToken())) {
             throw new UnAuthorizedException("로그인 다시 해야됨.");
         } else {
-            Claims claims1 = getClaimsFromToken(accessToken, TokenType.REFRESH);
+            Claims claims1 = getClaimsFromToken(refreshToken.getRefreshToken(), TokenType.REFRESH);
             List<String> roles = (List<String>) claims1.get("roles");
             String email = claims1.getSubject();
             Optional<Object> profileId = Optional.ofNullable(claims.get("profileId"));//refresh에서 profileId를 꺼내는것이 보안상 좋을 듯한데

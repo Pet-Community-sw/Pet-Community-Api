@@ -1,4 +1,4 @@
-package com.example.PetApp.infrastructure.app.stomp.strategy;
+package com.example.PetApp.common.app.stomp.strategy;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

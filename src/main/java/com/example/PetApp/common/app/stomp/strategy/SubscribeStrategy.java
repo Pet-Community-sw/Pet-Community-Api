@@ -1,6 +1,6 @@
-package com.example.PetApp.infrastructure.app.stomp.strategy;
+package com.example.PetApp.common.app.stomp.strategy;
 
-import com.example.PetApp.infrastructure.app.stomp.SubscribeInfo;
+import com.example.PetApp.common.app.stomp.SubscribeInfo;
 import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
 import com.example.PetApp.domain.groupchatroom.ChatRoomRepository;
 import com.example.PetApp.domain.memberchatRoom.MemberChatRoomRepository;

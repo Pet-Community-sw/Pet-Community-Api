@@ -51,12 +51,13 @@ public class LikeServiceImpl implements LikeService {
         Member member = queryService.findByMember(email);
         Post post = queryService.findByPost(postId);
         Optional<Like> existingLike = post.getLikes().stream().filter(like -> like.getMember().equals(member)).findFirst();
-        return existingLike.map(this::deleteLike).orElseGet(() -> createLike(post, member));
+        return existingLike.map(like->deleteLike(like, post)).orElseGet(() -> createLike(post, member));
     }
 
-    private boolean deleteLike(Like like) {
-        log.info("좋아요 삭제");
+    private boolean deleteLike(Like like, Post post) {
+        post.removeLikes(like);
         likeRepository.delete(like);
+        log.info("좋아요 삭제");
         likeRedisTemplate.opsForSet().remove("post:likes:" + like.getMember().getId(), like.getPost().getId());
         return false;
     }

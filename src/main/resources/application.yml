@@ -43,6 +43,9 @@ spring:
   data:
     mongodb:
       uri: ${MONGO_URI}
+    redis:
+      repositories:
+        enabled: false
 
   redis:
     host: 127.0.0.1

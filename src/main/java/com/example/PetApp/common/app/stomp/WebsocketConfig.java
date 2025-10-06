@@ -1,4 +1,4 @@
-package com.example.PetApp.infrastructure.app.stomp;
+package com.example.PetApp.common.app.stomp;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

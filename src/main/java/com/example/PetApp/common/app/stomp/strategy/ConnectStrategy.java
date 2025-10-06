@@ -1,8 +1,8 @@
-package com.example.PetApp.infrastructure.app.stomp.strategy;
+package com.example.PetApp.common.app.stomp.strategy;
 
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.member.MemberRepository;
-import com.example.PetApp.infrastructure.app.jwt.util.JwtTokenizer;
+import com.example.PetApp.common.jwt.util.JwtTokenizer;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.example.PetApp.domain.comment;
 
 
-import com.example.PetApp.infrastructure.app.common.MessageResponse;
+import com.example.PetApp.common.app.common.MessageResponse;
 import com.example.PetApp.domain.comment.model.dto.request.CommentDto;
 import com.example.PetApp.domain.comment.model.dto.response.CreateCommentResponseDto;
 import com.example.PetApp.domain.comment.model.dto.response.GetCommentsResponseDto;
