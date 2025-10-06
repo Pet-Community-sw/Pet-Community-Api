@@ -8,6 +8,7 @@ import com.example.PetApp.domain.member.model.dto.response.MemberSignResponseDto
 import com.example.PetApp.infrastructure.app.common.MessageResponse;
 import com.example.PetApp.common.util.AuthUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,6 +39,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body(memberService.createMember(memberSignDto));
     }
 
+    @ApiResponse(description = "Set-Cookie 헤더에 refreshToken 포함")
     @PostMapping("/login")
     public LoginResponseDto login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
         return memberService.login(loginDto, response);
