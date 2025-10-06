@@ -1,10 +1,10 @@
 package com.example.PetApp.domain.groupchatroom;
 
-import com.example.PetApp.common.app.common.MessageResponse;
+import com.example.PetApp.common.base.dto.MessageResponse;
 import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatMessageResponseDto;
 import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatRoomsResponseDto;
 import com.example.PetApp.domain.groupchatroom.model.dto.request.UpdateChatRoomDto;
-import com.example.PetApp.common.util.AuthUtil;
+import com.example.PetApp.common.base.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

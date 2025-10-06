@@ -10,7 +10,7 @@ import com.example.PetApp.common.exception.NotFoundException;
 import com.example.PetApp.common.exception.UnAuthorizedException;
 import com.example.PetApp.domain.member.mapper.MemberMapper;
 import com.example.PetApp.domain.member.RoleRepository;
-import com.example.PetApp.common.util.RedisUtil;
+import com.example.PetApp.common.base.util.RedisUtil;
 import com.example.PetApp.common.jwt.util.JwtTokenizer;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -134,7 +134,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
 
     @NotNull
     private AccessTokenResponseDto createAccessToken(String accessToken, Claims claims, Long memberId, RefreshToken refreshToken) {
-        if (jwtTokenizer.isTokenExpired("refresh", refreshToken.getRefreshToken())) {
+        if (jwtTokenizer.isTokenExpired(TokenType.REFRESH, refreshToken.getRefreshToken())) {
             throw new UnAuthorizedException("로그인 다시 해야됨.");
         } else {
             Claims claims1 = getClaimsFromToken(refreshToken.getRefreshToken(), TokenType.REFRESH);

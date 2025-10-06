@@ -9,12 +9,11 @@ import com.example.PetApp.domain.profile.model.dto.response.GetProfileResponseDt
 import com.example.PetApp.domain.profile.model.dto.response.ProfileListResponseDto;
 import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.common.exception.ConflictException;
-import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.profile.mapper.ProfileMapper;
 import com.example.PetApp.domain.query.QueryService;
 import com.example.PetApp.domain.token.TokenService;
-import com.example.PetApp.common.util.imagefile.FileImageKind;
-import com.example.PetApp.common.util.imagefile.FileUploadUtil;
+import com.example.PetApp.common.base.util.imagefile.FileImageKind;
+import com.example.PetApp.common.base.util.imagefile.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

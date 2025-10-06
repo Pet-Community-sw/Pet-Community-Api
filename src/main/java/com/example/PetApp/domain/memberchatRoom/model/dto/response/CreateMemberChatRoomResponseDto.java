@@ -1,6 +1,6 @@
 package com.example.PetApp.domain.memberchatRoom.model.dto.response;
 
-import com.example.PetApp.common.util.notification.NotificationDto;
+import com.example.PetApp.common.base.util.notification.NotificationDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 

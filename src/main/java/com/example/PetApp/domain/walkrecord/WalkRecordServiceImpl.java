@@ -1,18 +1,17 @@
 package com.example.PetApp.domain.walkrecord;
 
-import com.example.PetApp.common.annotation.Notification;
-import com.example.PetApp.common.util.notification.NotificationDto;
+import com.example.PetApp.common.aop.annotation.Notification;
+import com.example.PetApp.common.base.util.notification.NotificationDto;
 import com.example.PetApp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.walklocation.model.dto.response.GetWalkRecordLocationResponseDto;
 import com.example.PetApp.domain.walkrecord.model.entity.WalkRecord;
 import com.example.PetApp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
 import com.example.PetApp.domain.walkrecord.model.dto.response.GetWalkRecordResponseDto;
-import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.walkrecord.mapper.WalkRecordMapper;
 import com.example.PetApp.domain.query.QueryService;
-import com.example.PetApp.common.util.DistanceUtil;
-import com.example.PetApp.common.util.notification.SendNotificationUtil;
+import com.example.PetApp.common.base.util.DistanceUtil;
+import com.example.PetApp.common.base.util.notification.SendNotificationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;

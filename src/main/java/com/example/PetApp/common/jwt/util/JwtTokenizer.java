@@ -1,5 +1,6 @@
 package com.example.PetApp.common.jwt.util;
 
+import com.example.PetApp.domain.token.TokenType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -67,9 +68,9 @@ public class JwtTokenizer {
                 .getBody();
     }
 
-    public boolean isTokenExpired(String tokenType, String token) {
+    public boolean isTokenExpired(TokenType tokenType, String token) {
         try{
-            if (tokenType.equals("refresh"))
+            if (tokenType.equals(TokenType.REFRESH))
                 return parseToken(token, refreshKey).getExpiration().before(new Date());
             else
                 return parseToken(token, accessKey).getExpiration().before(new Date());

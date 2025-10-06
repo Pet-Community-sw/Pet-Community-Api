@@ -1,7 +1,7 @@
 package com.example.PetApp.domain.comment;
 
-import com.example.PetApp.common.annotation.Notification;
-import com.example.PetApp.common.util.notification.NotificationDto;
+import com.example.PetApp.common.aop.annotation.Notification;
+import com.example.PetApp.common.base.util.notification.NotificationDto;
 import com.example.PetApp.domain.comment.model.dto.request.CommentDto;
 import com.example.PetApp.domain.comment.model.dto.request.UpdateCommentDto;
 import com.example.PetApp.domain.comment.model.dto.response.CreateCommentResponseDto;

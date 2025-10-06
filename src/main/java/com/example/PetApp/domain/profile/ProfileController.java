@@ -5,8 +5,8 @@ import com.example.PetApp.domain.profile.model.dto.response.AccessTokenByProfile
 import com.example.PetApp.domain.profile.model.dto.response.CreateProfileResponseDto;
 import com.example.PetApp.domain.profile.model.dto.response.GetProfileResponseDto;
 import com.example.PetApp.domain.profile.model.dto.response.ProfileListResponseDto;
-import com.example.PetApp.common.app.common.MessageResponse;
-import com.example.PetApp.common.util.AuthUtil;
+import com.example.PetApp.common.base.dto.MessageResponse;
+import com.example.PetApp.common.base.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

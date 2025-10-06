@@ -1,12 +1,11 @@
 package com.example.PetApp.domain.profile.model.entity;
 
-import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.PetApp.domain.profile.model.dto.request.ProfileDto;
 import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.petbreed.model.entity.PetBreed;
-import com.example.PetApp.infrastructure.database.base.superclass.BaseEntity;
+import com.example.PetApp.common.base.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,7 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.example.PetApp.common.util.AgeUtil.CalculateAge;
+import static com.example.PetApp.common.base.util.AgeUtil.CalculateAge;
 
 @Entity
 @Getter

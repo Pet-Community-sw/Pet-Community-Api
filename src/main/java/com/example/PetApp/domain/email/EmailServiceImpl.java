@@ -1,6 +1,6 @@
 package com.example.PetApp.domain.email;
 
-import com.example.PetApp.common.util.RedisUtil;
+import com.example.PetApp.common.base.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;

@@ -1,6 +1,6 @@
 package com.example.PetApp.config;
 
-import com.example.PetApp.common.util.RedisUtil;
+import com.example.PetApp.common.base.util.RedisUtil;
 import com.example.PetApp.common.jwt.filter.JwtAuthenticationFilter;
 import com.example.PetApp.common.jwt.provider.JwtAuthenticationProvider;
 import com.example.PetApp.domain.token.TokenService;

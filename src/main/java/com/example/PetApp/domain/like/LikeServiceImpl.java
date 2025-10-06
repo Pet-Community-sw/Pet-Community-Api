@@ -7,12 +7,10 @@ import com.example.PetApp.domain.like.model.dto.request.LikeCountDto;
 import com.example.PetApp.domain.like.model.dto.response.LikeResponseDto;
 import com.example.PetApp.domain.like.mapper.LikeMapper;
 import com.example.PetApp.domain.query.QueryService;
-import com.example.PetApp.common.util.notification.SendNotificationUtil;
+import com.example.PetApp.common.base.util.notification.SendNotificationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -6,7 +6,7 @@ import com.example.PetApp.domain.petbreed.model.entity.PetBreed;
 import com.example.PetApp.domain.post.recommend.model.entity.RecommendRoutePost;
 import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.domain.walkingtogethermatch.model.dto.request.UpdateWalkingTogetherMatchDto;
-import com.example.PetApp.infrastructure.database.base.superclass.BaseEntity;
+import com.example.PetApp.common.base.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Cascade;

@@ -2,7 +2,7 @@ package com.example.PetApp.domain.schedule;
 
 
 import com.example.PetApp.domain.schedule.model.dto.response.GetSchedulesResponseDto;
-import com.example.PetApp.common.util.AuthUtil;
+import com.example.PetApp.common.base.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;

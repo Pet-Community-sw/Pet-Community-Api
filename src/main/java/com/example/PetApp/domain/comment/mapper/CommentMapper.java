@@ -6,7 +6,7 @@ import com.example.PetApp.domain.comment.model.entity.Commentable;
 import com.example.PetApp.domain.post.common.Post;
 import com.example.PetApp.domain.comment.model.dto.request.CommentDto;
 import com.example.PetApp.domain.comment.model.dto.response.GetCommentsResponseDto;
-import com.example.PetApp.common.util.TimeAgoUtil;
+import com.example.PetApp.common.base.util.TimeAgoUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

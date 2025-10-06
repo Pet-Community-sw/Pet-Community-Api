@@ -1,7 +1,7 @@
 package com.example.PetApp.domain.post.delegate;
 
-import com.example.PetApp.common.annotation.Notification;
-import com.example.PetApp.common.util.notification.NotificationDto;
+import com.example.PetApp.common.aop.annotation.Notification;
+import com.example.PetApp.common.base.util.notification.NotificationDto;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
 import com.example.PetApp.domain.post.delegate.model.dto.request.GetPostResponseDto;
@@ -10,7 +10,7 @@ import com.example.PetApp.domain.post.delegate.model.dto.response.ApplyToDelegat
 import com.example.PetApp.domain.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
 import com.example.PetApp.domain.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
 import com.example.PetApp.domain.profile.model.entity.Profile;
-import com.example.PetApp.infrastructure.database.base.embedded.Applicant;
+import com.example.PetApp.common.base.embedded.Applicant;
 import com.example.PetApp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.PetApp.domain.memberchatRoom.model.dto.response.CreateMemberChatRoomResponseDto;
 import com.example.PetApp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;

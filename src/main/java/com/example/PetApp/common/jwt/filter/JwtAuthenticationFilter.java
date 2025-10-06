@@ -1,6 +1,6 @@
 package com.example.PetApp.common.jwt.filter;
 
-import com.example.PetApp.common.util.RedisUtil;
+import com.example.PetApp.common.base.util.RedisUtil;
 import com.example.PetApp.common.jwt.exception.JwtExceptionCode;
 import com.example.PetApp.common.jwt.token.JwtAuthenticationToken;
 import com.example.PetApp.domain.member.model.dto.request.AccessTokenResponseDto;
@@ -19,7 +19,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

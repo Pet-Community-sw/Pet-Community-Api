@@ -2,7 +2,7 @@ package com.example.PetApp.domain.post.recommend.model.entity;
 
 import com.example.PetApp.domain.comment.model.entity.Comment;
 import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
-import com.example.PetApp.infrastructure.database.base.embedded.Location;
+import com.example.PetApp.common.base.embedded.Location;
 import com.example.PetApp.domain.comment.model.entity.Commentable;
 import com.example.PetApp.domain.post.common.Post;
 import lombok.*;

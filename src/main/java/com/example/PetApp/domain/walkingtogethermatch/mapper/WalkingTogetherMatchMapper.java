@@ -6,7 +6,7 @@ import com.example.PetApp.domain.post.recommend.model.entity.RecommendRoutePost;
 import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import com.example.PetApp.domain.walkingtogethermatch.model.dto.request.CreateWalkingTogetherMatchDto;
 import com.example.PetApp.domain.walkingtogethermatch.model.dto.response.GetWalkingTogetherMatchResponseDto;
-import com.example.PetApp.common.util.TimeAgoUtil;
+import com.example.PetApp.common.base.util.TimeAgoUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;

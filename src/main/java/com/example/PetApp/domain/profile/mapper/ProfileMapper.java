@@ -7,12 +7,10 @@ import com.example.PetApp.domain.profile.model.dto.response.AccessTokenByProfile
 import com.example.PetApp.domain.profile.model.dto.response.GetProfileResponseDto;
 import com.example.PetApp.domain.profile.model.dto.request.ProfileDto;
 import com.example.PetApp.domain.profile.model.dto.response.ProfileListResponseDto;
-import com.example.PetApp.common.util.AgeUtil;
+import com.example.PetApp.common.base.util.AgeUtil;
 
 import java.time.LocalDate;
 import java.time.MonthDay;
-
-import static com.example.PetApp.common.util.AgeUtil.CalculateAge;
 
 public class ProfileMapper {
     public static Profile toEntity(ProfileDto profileDto, Member member, String imageFileName, PetBreed petBreed) {

@@ -2,8 +2,8 @@ package com.example.PetApp.domain.like;
 
 
 import com.example.PetApp.domain.like.model.dto.response.LikeResponseDto;
-import com.example.PetApp.common.util.AuthUtil;
-import com.example.PetApp.common.app.common.MessageResponse;
+import com.example.PetApp.common.base.util.AuthUtil;
+import com.example.PetApp.common.base.dto.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

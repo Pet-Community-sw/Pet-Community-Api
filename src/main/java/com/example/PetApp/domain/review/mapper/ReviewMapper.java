@@ -3,7 +3,7 @@ package com.example.PetApp.domain.review.mapper;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.review.model.entity.Review;
 import com.example.PetApp.domain.walkrecord.model.entity.WalkRecord;
-import com.example.PetApp.infrastructure.database.base.embedded.Content;
+import com.example.PetApp.common.base.embedded.Content;
 import com.example.PetApp.domain.review.model.dto.request.CreateReviewDto;
 import com.example.PetApp.domain.review.model.dto.request.GetReviewList;
 import com.example.PetApp.domain.review.model.dto.response.GetReviewListResponseDto;

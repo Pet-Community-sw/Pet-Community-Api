@@ -1,9 +1,9 @@
 package com.example.PetApp.domain.walkrecord;
 
 import com.example.PetApp.domain.walklocation.model.dto.response.GetWalkRecordLocationResponseDto;
-import com.example.PetApp.common.app.common.MessageResponse;
+import com.example.PetApp.common.base.dto.MessageResponse;
 import com.example.PetApp.domain.walkrecord.model.dto.response.GetWalkRecordResponseDto;
-import com.example.PetApp.common.util.AuthUtil;
+import com.example.PetApp.common.base.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

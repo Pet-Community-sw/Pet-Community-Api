@@ -1,12 +1,12 @@
 package com.example.PetApp.domain.walkingtogethermatch;
 
-import com.example.PetApp.common.app.common.MessageResponse;
+import com.example.PetApp.common.base.dto.MessageResponse;
 import com.example.PetApp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.PetApp.domain.walkingtogethermatch.model.dto.request.CreateWalkingTogetherMatchDto;
 import com.example.PetApp.domain.walkingtogethermatch.model.dto.response.CreateWalkingTogetherMatchResponseDto;
 import com.example.PetApp.domain.walkingtogethermatch.model.dto.response.GetWalkingTogetherMatchResponseDto;
 import com.example.PetApp.domain.walkingtogethermatch.model.dto.request.UpdateWalkingTogetherMatchDto;
-import com.example.PetApp.common.util.AuthUtil;
+import com.example.PetApp.common.base.util.AuthUtil;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -9,7 +9,7 @@ import com.example.PetApp.domain.memberchatRoom.MemberChatRoomRepository;
 import com.example.PetApp.domain.profile.ProfileRepository;
 import com.example.PetApp.domain.chatting.ChatRedisCleaner;
 import com.example.PetApp.domain.groupchatroom.ChatRoomService;
-import com.example.PetApp.common.util.notification.SendNotificationUtil;
+import com.example.PetApp.common.base.util.notification.SendNotificationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;

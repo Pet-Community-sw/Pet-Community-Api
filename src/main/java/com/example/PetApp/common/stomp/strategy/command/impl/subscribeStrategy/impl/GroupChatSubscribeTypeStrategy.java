@@ -1,0 +1,46 @@
+package com.example.PetApp.common.stomp.strategy.command.impl.subscribeStrategy.impl;
+
+import com.example.PetApp.common.stomp.SubscribeInfo;
+import com.example.PetApp.common.stomp.strategy.command.impl.subscribeStrategy.BaseSubscribeTypeStrategy;
+import com.example.PetApp.domain.groupchatroom.ChatRoomRepository;
+import com.example.PetApp.domain.profile.model.entity.Profile;
+import com.example.PetApp.domain.query.QueryService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Component;
+
+import java.util.Map;
+
+@Component
+@RequiredArgsConstructor
+@Slf4j
+public class GroupChatSubscribeTypeStrategy extends BaseSubscribeTypeStrategy {
+
+    private static final String PATTERN = "/topic/chat/{groupChatRoomId}";
+
+    private final QueryService queryService;
+    private final ChatRoomRepository chatRoomRepository;
+    private final StringRedisTemplate redisTemplate;
+
+    @Override
+    public boolean supports(String destination) {
+        return PATH.match(PATTERN, destination);
+    }
+
+    @Override
+    public void handle(SubscribeInfo subscribeInfo) {
+        Map<String, String> map = patternMap(PATTERN, subscribeInfo.getDestination());
+        Long groupChatRoomId = Long.valueOf(map.get("groupChatRoomId"));
+        Long profileId = principalId(subscribeInfo, "profileId");
+
+        Profile profile = queryService.findByProfile(profileId);
+        if (!chatRoomRepository.existsByIdAndProfilesContains(groupChatRoomId, profile)) {
+            throw new IllegalArgumentException("잘못된 접근입니다.");
+        }
+
+        redisTemplate.opsForSet().add("groupChatRoomId:" + groupChatRoomId + ":onlineProfiles", profileId.toString());
+
+        log.info("[STOMP] 구독 groupChatRoomId: {}, profileId: {}", groupChatRoomId, profileId);
+    }
+}

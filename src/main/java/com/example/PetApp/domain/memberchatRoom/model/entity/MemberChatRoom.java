@@ -1,7 +1,7 @@
 package com.example.PetApp.domain.memberchatRoom.model.entity;
 
 import com.example.PetApp.domain.member.model.entity.Member;
-import com.example.PetApp.infrastructure.database.base.superclass.BaseEntity;
+import com.example.PetApp.common.base.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -18,7 +18,7 @@ public class MemberChatRoom extends BaseEntity {
 
     @Builder.Default//이미 초기화가 되어있기때문에 notnull이 필요 없음.
     @Setter
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany
     private List<Member> members = new ArrayList<>();
 
 }
