@@ -1,8 +1,10 @@
-package com.example.PetApp.infrastructure.app.jwt.filter;
+package com.example.PetApp.common.jwt.filter;
 
 import com.example.PetApp.common.util.RedisUtil;
-import com.example.PetApp.infrastructure.app.jwt.exception.JwtExceptionCode;
-import com.example.PetApp.infrastructure.app.jwt.token.JwtAuthenticationToken;
+import com.example.PetApp.common.jwt.exception.JwtExceptionCode;
+import com.example.PetApp.common.jwt.token.JwtAuthenticationToken;
+import com.example.PetApp.domain.member.model.dto.request.AccessTokenResponseDto;
+import com.example.PetApp.domain.token.TokenService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -17,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -27,6 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
     private final RedisUtil redisUtil;
+    private final TokenService tokenService;
 
     @Override//filter 하지않게 하려고
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
@@ -56,10 +60,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.error("Set Request Exception Code : {}", request.getAttribute("exception"));
             throw new BadCredentialsException("throw new invalid token exception");
         } catch (ExpiredJwtException e) {
-            request.setAttribute("exception", JwtExceptionCode.EXPIRED_TOKEN.getCode());
-            log.error("EXPIRED Token // token : {}", token);
-            log.error("Set Request Exception Code : {}", request.getAttribute("exception"));
-            throw new BadCredentialsException("throw new expired token exception");
+            try {
+                AccessTokenResponseDto dto = tokenService.reissueAccessToken(request);
+                response.setHeader("Authorization", "Bearer " + dto.getNewAccessToken());
+                response.setHeader("Cache-Control", "no-store");
+                response.setHeader("Pragma", "no-cache");
+
+                authenticationToken(dto.getNewAccessToken());
+
+                filterChain.doFilter(request, response);
+            }catch (Exception exception) {
+                request.setAttribute("exception", JwtExceptionCode.EXPIRED_TOKEN.getCode());
+                log.error("EXPIRED Token // token : {}", token);
+                log.error("Set Request Exception Code : {}", request.getAttribute("exception"));
+                throw new BadCredentialsException("throw new expired token exception");
+            }
         } catch (UnsupportedJwtException e) {
             request.setAttribute("exception", JwtExceptionCode.UNSUPPORTED_TOKEN.getCode());
             log.error("Unsupported Token // token : {}", token);

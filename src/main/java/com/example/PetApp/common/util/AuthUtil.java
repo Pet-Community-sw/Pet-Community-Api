@@ -1,6 +1,6 @@
 package com.example.PetApp.common.util;
 
-import com.example.PetApp.infrastructure.app.jwt.token.JwtAuthenticationToken;
+import com.example.PetApp.common.jwt.token.JwtAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 public class AuthUtil {

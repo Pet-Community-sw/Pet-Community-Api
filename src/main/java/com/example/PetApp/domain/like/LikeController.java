@@ -3,14 +3,12 @@ package com.example.PetApp.domain.like;
 
 import com.example.PetApp.domain.like.model.dto.response.LikeResponseDto;
 import com.example.PetApp.common.util.AuthUtil;
-import com.example.PetApp.infrastructure.app.common.MessageResponse;
+import com.example.PetApp.common.app.common.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import javax.mail.Message;
 
 
 @RestController

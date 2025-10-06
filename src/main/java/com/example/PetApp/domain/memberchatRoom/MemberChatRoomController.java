@@ -1,6 +1,6 @@
 package com.example.PetApp.domain.memberchatRoom;
 
-import com.example.PetApp.infrastructure.app.common.MessageResponse;
+import com.example.PetApp.common.app.common.MessageResponse;
 import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatMessageResponseDto;
 import com.example.PetApp.domain.memberchatRoom.model.dto.response.CreateMemberChatRoomResponseDto;
 import com.example.PetApp.domain.memberchatRoom.model.dto.response.MemberChatRoomsResponseDto;

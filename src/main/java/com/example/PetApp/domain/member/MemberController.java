@@ -5,7 +5,7 @@ import com.example.PetApp.domain.member.model.dto.response.FindByIdResponseDto;
 import com.example.PetApp.domain.member.model.dto.response.GetMemberResponseDto;
 import com.example.PetApp.domain.member.model.dto.response.LoginResponseDto;
 import com.example.PetApp.domain.member.model.dto.response.MemberSignResponseDto;
-import com.example.PetApp.infrastructure.app.common.MessageResponse;
+import com.example.PetApp.common.app.common.MessageResponse;
 import com.example.PetApp.common.util.AuthUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

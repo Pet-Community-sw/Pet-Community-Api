@@ -1,6 +1,6 @@
 package com.example.PetApp.domain.walkingtogethermatch;
 
-import com.example.PetApp.infrastructure.app.common.MessageResponse;
+import com.example.PetApp.common.app.common.MessageResponse;
 import com.example.PetApp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.PetApp.domain.walkingtogethermatch.model.dto.request.CreateWalkingTogetherMatchDto;
 import com.example.PetApp.domain.walkingtogethermatch.model.dto.response.CreateWalkingTogetherMatchResponseDto;
@@ -8,7 +8,6 @@ import com.example.PetApp.domain.walkingtogethermatch.model.dto.response.GetWalk
 import com.example.PetApp.domain.walkingtogethermatch.model.dto.request.UpdateWalkingTogetherMatchDto;
 import com.example.PetApp.common.util.AuthUtil;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

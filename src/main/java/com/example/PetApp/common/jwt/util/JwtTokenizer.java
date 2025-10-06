@@ -1,4 +1,4 @@
-package com.example.PetApp.infrastructure.app.jwt.util;
+package com.example.PetApp.common.jwt.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

@@ -5,7 +5,7 @@ import com.example.PetApp.domain.post.recommend.model.dto.request.UpdateRecommen
 import com.example.PetApp.domain.post.recommend.model.dto.response.CreateRecommendRoutePostResponseDto;
 import com.example.PetApp.domain.post.recommend.model.dto.response.GetRecommendPostResponseDto;
 import com.example.PetApp.domain.post.recommend.model.dto.response.GetRecommendRoutePostsResponseDto;
-import com.example.PetApp.infrastructure.app.common.MessageResponse;
+import com.example.PetApp.common.app.common.MessageResponse;
 import com.example.PetApp.common.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

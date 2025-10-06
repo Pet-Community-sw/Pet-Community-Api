@@ -1,4 +1,4 @@
-package com.example.PetApp.infrastructure.app.jwt.exception;
+package com.example.PetApp.common.jwt.exception;
 
 import lombok.Getter;
 

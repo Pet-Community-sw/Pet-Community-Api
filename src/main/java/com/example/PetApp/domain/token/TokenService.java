@@ -5,6 +5,7 @@ import com.example.PetApp.domain.member.model.dto.request.AccessTokenResponseDto
 import com.example.PetApp.domain.member.model.dto.response.LoginResponseDto;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Service
@@ -13,7 +14,7 @@ public interface TokenService {
 
     LoginResponseDto save(Member member, HttpServletResponse response);
 
-    AccessTokenResponseDto reissueAccessToken(String accessToken, String refreshToken);
+    AccessTokenResponseDto reissueAccessToken(HttpServletRequest request);
 
 
     AccessTokenResponseDto createResetPasswordJwt(String email);

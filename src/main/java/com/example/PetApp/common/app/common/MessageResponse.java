@@ -1,4 +1,4 @@
-package com.example.PetApp.infrastructure.app.common;
+package com.example.PetApp.common.app.common;
 
 import lombok.*;
 

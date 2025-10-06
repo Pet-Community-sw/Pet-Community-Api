@@ -1,4 +1,4 @@
-package com.example.PetApp.infrastructure.app.stomp;
+package com.example.PetApp.common.app.stomp;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

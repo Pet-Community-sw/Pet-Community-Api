@@ -5,7 +5,7 @@ import com.example.PetApp.domain.review.model.dto.request.UpdateReviewDto;
 import com.example.PetApp.domain.review.model.dto.response.CreateReviewResponseDto;
 import com.example.PetApp.domain.review.model.dto.response.GetReviewListResponseDto;
 import com.example.PetApp.domain.review.model.dto.response.GetReviewResponseDto;
-import com.example.PetApp.infrastructure.app.common.MessageResponse;
+import com.example.PetApp.common.app.common.MessageResponse;
 import com.example.PetApp.common.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

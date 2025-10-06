@@ -5,9 +5,8 @@ import com.example.PetApp.domain.profile.model.dto.response.AccessTokenByProfile
 import com.example.PetApp.domain.profile.model.dto.response.CreateProfileResponseDto;
 import com.example.PetApp.domain.profile.model.dto.response.GetProfileResponseDto;
 import com.example.PetApp.domain.profile.model.dto.response.ProfileListResponseDto;
-import com.example.PetApp.infrastructure.app.common.MessageResponse;
+import com.example.PetApp.common.app.common.MessageResponse;
 import com.example.PetApp.common.util.AuthUtil;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
