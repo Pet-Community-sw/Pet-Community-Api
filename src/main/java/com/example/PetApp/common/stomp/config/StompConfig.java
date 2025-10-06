@@ -18,11 +18,11 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic");//MessageBroker로 넘어감
+        registry.enableSimpleBroker("/sub");//MessageBroker로 넘어감
 //                .setTaskScheduler(taskScheduler())
 //                .setHeartbeatValue(new long[]{3000L, 3000L});//하트비트설정(서버가 클라이언트에게 하트비트를 보내는 주기,서버가 클라이언트로부터 하트비트를 기대하는 주기)
         registry.setUserDestinationPrefix("/user");
-        registry.setApplicationDestinationPrefixes("/app");//@MessageMapping으로 넘어감
+        registry.setApplicationDestinationPrefixes("/pub");//@MessageMapping으로 넘어감
     }
 
     @Override

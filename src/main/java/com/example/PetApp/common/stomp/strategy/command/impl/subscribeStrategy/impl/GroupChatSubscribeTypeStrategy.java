@@ -17,14 +17,14 @@ import java.util.Map;
 @Slf4j
 public class GroupChatSubscribeTypeStrategy extends BaseSubscribeTypeStrategy {
 
-    private static final String PATTERN = "/topic/chat/{groupChatRoomId}";
+    private static final String PATTERN = "/sub/chat/{groupChatRoomId}";
 
     private final QueryService queryService;
     private final ChatRoomRepository chatRoomRepository;
     private final StringRedisTemplate redisTemplate;
 
     @Override
-    public boolean supports(String destination) {
+    public boolean isHandler(String destination) {
         return PATH.match(PATTERN, destination);
     }
 

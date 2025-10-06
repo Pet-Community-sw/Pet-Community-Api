@@ -35,7 +35,7 @@ public class SubscribeStrategy implements StompCommandStrategy {
                 .build();
 
         for (SubscribeTypeStrategy subscribeStrategyI : handlers) {
-            if (subscribeStrategyI.supports(destination)) {
+            if (subscribeStrategyI.isHandler(destination)) {
                 subscribeStrategyI.handle(subscribeInfo);
                 return;
             }

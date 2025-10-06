@@ -17,13 +17,13 @@ import java.util.Map;
 @Slf4j
 public class OneToOneSubscribeTypeStrategy extends BaseSubscribeTypeStrategy {
 
-    private static final String PATTERN = "/user/queue/chat/{memberChatRoomId}";
+    private static final String PATTERN = "/user/chat/{memberChatRoomId}";
 
     private final QueryService queryService;
     private final StringRedisTemplate redisTemplate;
 
     @Override
-    public boolean supports(String destination) {
+    public boolean isHandler(String destination) {
         return PATH.match(PATTERN, destination);
     }
 

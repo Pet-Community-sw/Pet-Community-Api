@@ -15,12 +15,12 @@ import java.util.Map;
 @Slf4j
 public class WalkRecordSubscribeTypeStrategy extends BaseSubscribeTypeStrategy {
 
-    private static final String PATTERN = "/topic/walk-record/location/{walkRecordId}";
+    private static final String PATTERN = "/sub/walk-record/location/{walkRecordId}";
 
     private final QueryService queryService;
 
     @Override
-    public boolean supports(String destination) {
+    public boolean isHandler(String destination) {
         return PATH.match(PATTERN, destination);
     }
 
