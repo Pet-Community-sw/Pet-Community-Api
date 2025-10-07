@@ -32,22 +32,9 @@ public class ChatMessage {
     private String message;
     private List<Long> users;
     private int chatUnReadCount;
+    private int seq;
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime messageTime;//포맷 필요함.
 
-    @Override
-    public String toString() {
-        return "ChatMessage{" +
-                "id='" + id + '\'' +
-                ", messageType=" + messageType +
-                ", chatRoomType=" + chatRoomType +
-                ", chatRoomId=" + chatRoomId +
-                ", senderId=" + senderId +
-                ", senderName='" + senderName + '\'' +
-                ", senderImageUrl='" + senderImageUrl + '\'' +
-                ", message='" + message + '\'' +
-                ", messageTime=" + messageTime +
-                '}';
-    }
 }

@@ -1,51 +1,43 @@
 package com.example.PetApp.domain.groupchatroom.mapper;
 
 import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
+import com.example.PetApp.domain.groupchatroom.model.dto.request.ChatMessageDtoMember;
+import com.example.PetApp.domain.groupchatroom.model.dto.request.UpdateChatUnReadCountDto;
+import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatRoomResponseDto;
 import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
+import com.example.PetApp.domain.profile.model.dto.response.ChatRoomUsersResponseDto;
 import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
-import com.example.PetApp.domain.groupchatroom.model.dto.request.ChatMessageDtoMember;
-import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatRoomsResponseDto;
-import com.example.PetApp.domain.groupchatroom.model.dto.request.UpdateChatUnReadCountDto;
-import com.example.PetApp.domain.profile.model.dto.response.ChatRoomProfilesResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ChatRoomMapper {
 
     public static ChatRoom toEntity(WalkingTogetherMatch walkingTogetherMatch, Profile profile) {
         ChatRoom chatRoom = ChatRoom.builder()
-                .name(walkingTogetherMatch.getProfile().getPetName()+"님의 방")
+                .name(walkingTogetherMatch.getProfile().getPetName() + "님의 방")
                 .limitCount(walkingTogetherMatch.getLimitCount())//나중에 게시물에서 인원 수를 고정.
                 .walkingTogetherMatch(walkingTogetherMatch)
                 //이게 수정에서 가능하려나?
                 .build();
-        chatRoom.addProfiles(walkingTogetherMatch.getProfile());//글 작성자.
-        chatRoom.addProfiles(profile);//신청하는사람.
+        chatRoom.addUser(walkingTogetherMatch.getProfile().getId());//글 작성자.
+        chatRoom.addUser(profile.getId());//신청하는사람.
         return chatRoom;
     }
 
-    public static ChatRoomsResponseDto toChatRoomsResponseDto(ChatRoom chatRoom, Long profileId, String lastMessage, int unReadCount, LocalDateTime lastMessageTime) {
-        return ChatRoomsResponseDto.builder()
+    public static ChatRoomResponseDto toChatRoomsResponseDto(ChatRoom chatRoom, Long userId, String lastMessage, int unReadCount, Set<ChatRoomUsersResponseDto> users, LocalDateTime lastMessageTime) {
+        return ChatRoomResponseDto.builder()
                 .chatRoomId(chatRoom.getId())
                 .chatName(chatRoom.getName())
-                .chatLimitCount(chatRoom.getLimitCount())
-                .currentCount(chatRoom.getProfiles().size())
-                .chatRoomTime(chatRoom.getCreatedAt())
-                .profiles(
-                        chatRoom.getProfiles().stream()
-                                .map(profile -> ChatRoomProfilesResponseDto.builder()
-                                        .profileId(profile.getId())
-                                        .profileImageUrl(profile.getPetImageUrl())
-                                        .build())
-                                .collect(Collectors.toSet())
-                )
+                .userSize(chatRoom.getUsers().size())
+                .users(users)
                 .lastMessage(lastMessage)
                 .unReadCount(unReadCount)
                 .lastMessageTime(lastMessageTime)
-                .isOwner(chatRoom.getWalkingTogetherMatch().getProfile().getId().equals(profileId))
+                .isOwner(chatRoom.getWalkingTogetherMatch().getProfile().getId().equals(userId))
                 .build();
     }
 

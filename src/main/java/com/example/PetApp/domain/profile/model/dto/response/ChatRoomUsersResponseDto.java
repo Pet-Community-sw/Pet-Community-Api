@@ -7,9 +7,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ChatRoomProfilesResponseDto {
+public class ChatRoomUsersResponseDto {
 
-    private Long profileId;
+    private Long userId;
 
-    private String profileImageUrl;
+    private String userImageUrl;
 }

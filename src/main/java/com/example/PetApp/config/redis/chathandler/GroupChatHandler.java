@@ -1,11 +1,11 @@
 package com.example.PetApp.config.redis.chathandler;
 
-import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
-import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
-import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.common.exception.NotFoundException;
 import com.example.PetApp.domain.chatting.mapper.ChatMessageMapper;
+import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
 import com.example.PetApp.domain.groupchatroom.ChatRoomRepository;
+import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
+import com.example.PetApp.domain.profile.model.entity.Profile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -40,9 +40,16 @@ public class GroupChatHandler {
                 ChatMessageMapper.toUpdateChatRoomList(chatRoom.getId(), message, unReadMap));
     }
 
-    private void saveLastMessageToRedis(ChatMessage message) {
-        redisTemplate.opsForValue().set("chat:lastMessage" + message.getChatRoomId(), message.getMessage());
-        redisTemplate.opsForValue().set("chat:lastMessageTime" + message.getChatRoomId(), String.valueOf(message.getMessageTime()));
+    private void saveLastMessageToRedis(ChatMessage chatMessage) {
+        Map<String, String> lastMessageInfo = new HashMap<>();
+        lastMessageInfo.put("seq", String.valueOf(chatMessage.getSeq()));
+        lastMessageInfo.put("lastMessage", chatMessage.getMessage());
+        lastMessageInfo.put("lastMessageTime", String.valueOf(chatMessage.getMessageTime()));
+
+        redisTemplate.opsForHash().putAll("chat:lastMessageInfo:" + chatMessage.getChatRoomId(), lastMessageInfo);
+
+//        redisTemplate.opsForValue().set("chat:lastMessage" + chatMessage.getChatRoomId(), chatMessage.getMessage());
+//        redisTemplate.opsForValue().set("chat:lastMessageTime" + chatMessage.getChatRoomId(), String.valueOf(chatMessage.getMessageTime()));
     }
 
     private Map<Long, Long> countUnread(ChatRoom chatRoom, ChatMessage message, Set<String> onlineProfiles) {

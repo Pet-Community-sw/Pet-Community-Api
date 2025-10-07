@@ -1,14 +1,14 @@
 package com.example.PetApp.domain.memberchatRoom;
 
-import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
-import com.example.PetApp.domain.member.model.entity.Member;
-import com.example.PetApp.domain.memberchatRoom.model.entity.MemberChatRoom;
+import com.example.PetApp.common.exception.ForbiddenException;
+import com.example.PetApp.domain.chatting.ChattingReader;
+import com.example.PetApp.domain.chatting.model.type.ChatRoomType;
 import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatMessageResponseDto;
+import com.example.PetApp.domain.member.model.entity.Member;
+import com.example.PetApp.domain.memberchatRoom.mapper.MemberChatRoomMapper;
 import com.example.PetApp.domain.memberchatRoom.model.dto.response.CreateMemberChatRoomResponseDto;
 import com.example.PetApp.domain.memberchatRoom.model.dto.response.MemberChatRoomsResponseDto;
-import com.example.PetApp.common.exception.ForbiddenException;
-import com.example.PetApp.domain.memberchatRoom.mapper.MemberChatRoomMapper;
-import com.example.PetApp.domain.chatting.ChattingReader;
+import com.example.PetApp.domain.memberchatRoom.model.entity.MemberChatRoom;
 import com.example.PetApp.domain.query.QueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -88,14 +88,14 @@ public class MemberChatRoomServiceImpl implements MemberChatRoomService {
     @Override
     public ChatMessageResponseDto getMessages(Long memberChatRoomId, String email, int page) {
         Member member = queryService.findByMember(email);
-        return chattingReader.getMessages(memberChatRoomId, member.getId(), ChatMessage.ChatRoomType.ONE, page);
+        return chattingReader.getMessages(memberChatRoomId, member.getId(), ChatRoomType.ONE, page);
     }
 
     private static Member filterMember(List<Member> members, Member member) {
         Member returnMember = null;
         for (Member member1 : members) {
             if (!(member1.equals(member))) {
-                returnMember= member1;
+                returnMember = member1;
             }
         }
         return returnMember;

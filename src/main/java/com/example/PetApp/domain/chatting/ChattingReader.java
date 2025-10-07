@@ -1,5 +1,6 @@
 package com.example.PetApp.domain.chatting;
 
+import com.example.PetApp.domain.chatting.model.type.ChatRoomType;
 import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatMessageResponseDto;
 import org.springframework.stereotype.Service;
 

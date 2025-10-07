@@ -1,17 +1,18 @@
 package com.example.PetApp.domain.groupchatroom.model.entity;
 
+import com.example.PetApp.common.base.superclass.BaseEntity;
 import com.example.PetApp.common.exception.ForbiddenException;
+import com.example.PetApp.domain.chatting.model.type.ChatRoomType;
 import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
-import com.example.PetApp.common.base.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -26,6 +27,13 @@ public class ChatRoom extends BaseEntity {
     private String name;
 
     @Setter
+    private String lastMessage;
+
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private ChatRoomType chatRoomType;
+
+    @Setter
     @NotNull
     @Column(nullable = false)
     private int limitCount;
@@ -35,19 +43,32 @@ public class ChatRoom extends BaseEntity {
     private WalkingTogetherMatch walkingTogetherMatch;
 
     @Setter
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(joinColumns = @JoinColumn(name = "chat_room_id"),
-            inverseJoinColumns = @JoinColumn(name = "profile_id"))
+    @ElementCollection
+    @CollectionTable(
+            name = "chat_room_users",
+            joinColumns = @JoinColumn(name = "chat_room_id")
+    )
+    @Column(name = "user_id")
     @Builder.Default
-    private List<Profile> profiles=new ArrayList<>();
+    private Set<Long> users = new HashSet<>();//memberchatroom을 삭제 시 Long으로 변환 해야할듯, profileId 와 memberId가 같을 수 있음. type설정해야하나?uuid로 한다면?
 
-    public void validateProfile(Profile profile) {
-        if (!getProfiles().contains(profile)) {
+    public void validateUser(Long userId) {
+        if (!users.contains(userId)) {
             throw new ForbiddenException("권한이 없습니다.");
         }
     }
 
-    public void addProfiles(Profile profile) {
-        profiles.add(profile);
+    public void validateChatOwner(Profile profile) {
+        if (!walkingTogetherMatch.getProfile().equals(profile)) {
+            throw new ForbiddenException("권한이 없습니다.");
+        }
+    }
+
+    public void deleteUser(Long userId) {
+        users.remove(userId);
+    }
+
+    public void addUser(Long userId) {
+        users.add(userId);
     }
 }

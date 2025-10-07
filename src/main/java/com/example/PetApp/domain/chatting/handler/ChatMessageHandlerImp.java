@@ -1,15 +1,17 @@
 package com.example.PetApp.domain.chatting.handler;
 
-import com.example.PetApp.config.redis.RedisPublisher;
-import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
-import com.example.PetApp.domain.member.model.entity.Member;
-import com.example.PetApp.domain.memberchatRoom.model.entity.MemberChatRoom;
-import com.example.PetApp.domain.profile.model.entity.Profile;
-import com.example.PetApp.domain.memberchatRoom.MemberChatRoomRepository;
-import com.example.PetApp.domain.profile.ProfileRepository;
-import com.example.PetApp.domain.chatting.ChatRedisCleaner;
-import com.example.PetApp.domain.groupchatroom.ChatRoomService;
 import com.example.PetApp.common.base.util.notification.SendNotificationUtil;
+import com.example.PetApp.config.redis.RedisPublisher;
+import com.example.PetApp.domain.chatting.ChatRedisCleaner;
+import com.example.PetApp.domain.chatting.model.dto.ChatMessageDto;
+import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
+import com.example.PetApp.domain.chatting.model.type.ChatRoomType;
+import com.example.PetApp.domain.groupchatroom.ChatRoomService;
+import com.example.PetApp.domain.member.model.entity.Member;
+import com.example.PetApp.domain.memberchatRoom.MemberChatRoomRepository;
+import com.example.PetApp.domain.memberchatRoom.model.entity.MemberChatRoom;
+import com.example.PetApp.domain.profile.ProfileRepository;
+import com.example.PetApp.domain.profile.model.entity.Profile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -21,7 +23,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class ChatMessageHandlerImp implements ChatMessageHandler{
+public class ChatMessageHandlerImp implements ChatMessageHandler {
 
     private final RedisPublisher redisPublisher;
     private final ChatRedisCleaner chatRedisCleaner;
@@ -30,7 +32,6 @@ public class ChatMessageHandlerImp implements ChatMessageHandler{
     private final MemberChatRoomRepository memberChatRoomRepository;
     private final StringRedisTemplate redisTemplate;
     private final SendNotificationUtil sendNotificationUtil;
-
 
 
     @Override
@@ -44,7 +45,7 @@ public class ChatMessageHandlerImp implements ChatMessageHandler{
         chatMessage.setMessage(chatMessage.getSenderName() + "님이 나가셨습니다.");
         redisPublisher.publish(chatMessage);
 
-        if (chatMessage.getChatRoomType() == ChatMessage.ChatRoomType.MANY) {
+        if (chatMessage.getChatRoomType() == ChatRoomType.MANY) {
             chatRedisCleaner.cleanChatRedis(chatMessage, senderId);
             chatRoomService.deleteChatRoom(chatMessage.getChatRoomId(), senderId);
         } else {
@@ -59,13 +60,21 @@ public class ChatMessageHandlerImp implements ChatMessageHandler{
         sendChatNotification(chatMessage);
     }
 
+    @Override//읽음 프레임 처리
+    public void handleReadMessage(ChatMessageDto chatMessageDto, Long senderId) {
+        redisTemplate.opsForHash().put("chatRoomId:" + chatMessageDto.getChatRoomId() + ":read",
+                String.valueOf(senderId),
+                String.valueOf(chatMessageDto.getSeq()));
+    }
+
+
     private void sendChatNotification(ChatMessage chatMessage) {
         Long chatRoomId = chatMessage.getChatRoomId();
         Long senderId = chatMessage.getSenderId();
         String message = chatMessage.getSenderName() + "님이 메시지를 보냈습니다.";
 
-        if (chatMessage.getChatRoomType() == ChatMessage.ChatRoomType.MANY) {
-            List<Long> profileIds = chatRoomService.getProfiles(chatRoomId);
+        if (chatMessage.getChatRoomType() == ChatRoomType.MANY) {
+            List<Long> profileIds = chatRoomService.getUsers(chatRoomId);
             Set<String> onlineProfiles = redisTemplate.opsForSet()
                     .members("chatRoomId:" + chatRoomId + ":onlineProfiles");
 

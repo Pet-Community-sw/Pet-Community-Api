@@ -1,20 +1,20 @@
 package com.example.PetApp.service;
 
-import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
-import com.example.PetApp.domain.profile.model.entity.Profile;
-import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
-import com.example.PetApp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
-import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatRoomsResponseDto;
-import com.example.PetApp.domain.groupchatroom.model.dto.request.UpdateChatRoomDto;
 import com.example.PetApp.common.exception.ConflictException;
 import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.common.exception.NotFoundException;
-import com.example.PetApp.domain.groupchatroom.mapper.ChatRoomMapper;
-import com.example.PetApp.domain.groupchatroom.ChatRoomRepository;
-import com.example.PetApp.domain.profile.ProfileRepository;
 import com.example.PetApp.domain.chatting.ChatMessageRepository;
-import com.example.PetApp.domain.groupchatroom.ChatRoomServiceImpl;
 import com.example.PetApp.domain.chatting.ChattingReader;
+import com.example.PetApp.domain.groupchatroom.ChatRoomRepository;
+import com.example.PetApp.domain.groupchatroom.ChatRoomServiceImpl;
+import com.example.PetApp.domain.groupchatroom.mapper.ChatRoomMapper;
+import com.example.PetApp.domain.groupchatroom.model.dto.request.UpdateChatRoomDto;
+import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatRoomResponseDto;
+import com.example.PetApp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
+import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
+import com.example.PetApp.domain.profile.ProfileRepository;
+import com.example.PetApp.domain.profile.model.entity.Profile;
+import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -51,7 +52,8 @@ class ChatRoomServiceTest {
     @Mock
     private ChattingReader chattingReader;
 
-    @Mock private ValueOperations<String, String> valueOperations;
+    @Mock
+    private ValueOperations<String, String> valueOperations;
 
     @Test
     @DisplayName("getChatRooms_성공")
@@ -77,18 +79,18 @@ class ChatRoomServiceTest {
 
         when(redisTemplate.opsForValue()).thenReturn(valueOperations);
         when(profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
-        when(chatRoomRepository.findAllByProfilesContains(profile)).thenReturn(List.of(chatRoom));
+        when(chatRoomRepository.findAllByUserIdAndChatRoomType(profile, chatRoomType)).thenReturn(List.of(chatRoom));
 
         when(valueOperations.get("chat:lastMessage99")).thenReturn("안녕!");
         when(valueOperations.get("chat:lastMessageTime99")).thenReturn(LocalDateTime.now().toString());
         when(valueOperations.get("unRead:99:" + profileId)).thenReturn("3");
 
         // when
-        List<ChatRoomsResponseDto> result = chatRoomServiceImpl.getChatRooms(profileId);
+        List<ChatRoomResponseDto> result = chatRoomServiceImpl.getChatRooms(profileId);
 
         // then
         assertThat(result).hasSize(1);
-        ChatRoomsResponseDto dto = result.get(0);
+        ChatRoomResponseDto dto = result.get(0);
         assertThat(dto.getChatRoomId()).isEqualTo(99L);
         assertThat(dto.getLastMessage()).isEqualTo("안녕!");
         assertThat(dto.getUnReadCount()).isEqualTo(3);
@@ -128,8 +130,8 @@ class ChatRoomServiceTest {
                 .build();
 
         when(chatRoomRepository.findByWalkingTogetherMatch(post)).thenReturn(Optional.empty());
-        try(MockedStatic<ChatRoomMapper> mockedStatic = mockStatic(ChatRoomMapper.class)) {
-            mockedStatic.when(()->ChatRoomMapper.toEntity(post, profile)).thenReturn(chatRoom);
+        try (MockedStatic<ChatRoomMapper> mockedStatic = mockStatic(ChatRoomMapper.class)) {
+            mockedStatic.when(() -> ChatRoomMapper.toEntity(post, profile)).thenReturn(chatRoom);
         }
         when(chatRoomRepository.save(any(ChatRoom.class))).thenReturn(chatRoom);
 
@@ -220,7 +222,7 @@ class ChatRoomServiceTest {
         Profile profile1 = Profile.builder().profileId(2L).build();
 
 
-        ChatRoom chatRoom=ChatRoom.builder()
+        ChatRoom chatRoom = ChatRoom.builder()
                 .chatRoomId(1L)
                 .profiles(List.of(profile1, profile))
                 .build();
@@ -228,7 +230,7 @@ class ChatRoomServiceTest {
         when(chatRoomRepository.findById(chatRoomId)).thenReturn(Optional.of(chatRoom));
 
         //when
-        List<Long> result = chatRoomServiceImpl.getProfiles(chatRoomId);
+        List<Long> result = chatRoomServiceImpl.getUsers(chatRoomId);
 
         //then
         assertThat(result.size()).isEqualTo(2);
@@ -244,7 +246,7 @@ class ChatRoomServiceTest {
         when(chatRoomRepository.findById(chatRoomId)).thenReturn(Optional.empty());
 
         //when & then
-        assertThatThrownBy(() -> chatRoomServiceImpl.getProfiles(chatRoomId))
+        assertThatThrownBy(() -> chatRoomServiceImpl.getUsers(chatRoomId))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("채팅방 없습니다.");
     }
@@ -369,7 +371,7 @@ class ChatRoomServiceTest {
                 .profile(profile)
                 .build();
 
-        ChatRoom chatRoom=ChatRoom.builder()
+        ChatRoom chatRoom = ChatRoom.builder()
                 .chatRoomId(1L)
                 .name("냐옹")
                 .limitCount(5)
@@ -422,7 +424,7 @@ class ChatRoomServiceTest {
                 .limitCount(3)
                 .build();
 
-        ChatRoom chatRoom=ChatRoom.builder()
+        ChatRoom chatRoom = ChatRoom.builder()
                 .chatRoomId(1L)
                 .build();
 
@@ -465,7 +467,7 @@ class ChatRoomServiceTest {
                 .profile(profile)
                 .build();
 
-        ChatRoom chatRoom=ChatRoom.builder()
+        ChatRoom chatRoom = ChatRoom.builder()
                 .chatRoomId(1L)
                 .name("냐옹")
                 .limitCount(5)

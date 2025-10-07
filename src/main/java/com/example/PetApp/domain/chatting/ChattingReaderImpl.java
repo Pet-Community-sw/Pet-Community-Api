@@ -1,10 +1,11 @@
 package com.example.PetApp.domain.chatting;
 
+import com.example.PetApp.domain.chatting.handler.ChatRoomHandler;
 import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
+import com.example.PetApp.domain.chatting.model.type.ChatRoomType;
+import com.example.PetApp.domain.groupchatroom.mapper.ChatRoomMapper;
 import com.example.PetApp.domain.groupchatroom.model.dto.request.ChatMessageDtoMember;
 import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatMessageResponseDto;
-import com.example.PetApp.domain.groupchatroom.mapper.ChatRoomMapper;
-import com.example.PetApp.domain.chatting.handler.ChatRoomHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ChattingReaderImpl implements ChattingReader{
+public class ChattingReaderImpl implements ChattingReader {
 
     private final ChatRedisCleaner chatRedisCleaner;
     private final MessageUpdate messageUpdate;
@@ -29,7 +30,7 @@ public class ChattingReaderImpl implements ChattingReader{
 
     @Transactional
     @Override
-    public ChatMessageResponseDto getMessages(Long chatRoomId, Long userId, ChatMessage.ChatRoomType chatRoomType, int page) {
+    public ChatMessageResponseDto getMessages(Long chatRoomId, Long userId, ChatRoomType chatRoomType, int page) {
         log.info("getMessages 요청 chatRoomId : {}, userId :{}, chatRoomType : {}", chatRoomId, userId, chatRoomType);
 
         validateUserInChatRoom(chatRoomId, userId, chatRoomType);

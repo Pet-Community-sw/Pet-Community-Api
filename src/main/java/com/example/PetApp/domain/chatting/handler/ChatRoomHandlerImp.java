@@ -19,22 +19,24 @@ public class ChatRoomHandlerImp implements ChatRoomHandler {
     private final OfflineUserService offlineUserService;
 
     @Override
-    public void handleGroupChat(ChatMessageDto chatMessageDto, Long senderId) {
+    public ChatMessage handleGroupChat(ChatMessageDto chatMessageDto, Long senderId) {
         Profile profile = queryService.findByProfile(senderId);
         ChatRoom chatRoom = queryService.findByChatRoom(chatMessageDto.getChatRoomId());
         chatRoom.validateProfile(profile);
         ChatMessage chatMessage = ChatMessageMapper.toEntity(chatMessageDto, senderId, profile.getPetName(), profile.getPetImageUrl());
 
         offlineUserService.setOfflineUsersAndUnreadCount(chatMessage, chatRoom);
+        return chatMessage;
     }
 
     @Override
-    public void handleOneToOneChat(ChatMessageDto chatMessageDto, Long senderId) {
+    public ChatMessage handleOneToOneChat(ChatMessageDto chatMessageDto, Long senderId) {
         Member member = queryService.findByMember(senderId);
         MemberChatRoom memberChatRoom = queryService.findByMemberChatRoom(chatMessageDto.getChatRoomId());
         memberChatRoom.validateMember(member);
         ChatMessage chatMessage = ChatMessageMapper.toEntity(chatMessageDto, senderId, member.getName(), member.getMemberImageUrl());
 
         offlineUserService.setOfflineUsersAndUnreadCount(chatMessage, memberChatRoom);
+        return chatMessage;
     }
 }

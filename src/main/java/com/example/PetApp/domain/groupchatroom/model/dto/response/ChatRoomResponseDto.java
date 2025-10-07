@@ -1,6 +1,6 @@
 package com.example.PetApp.domain.groupchatroom.model.dto.response;
 
-import com.example.PetApp.domain.profile.model.dto.response.ChatRoomProfilesResponseDto;
+import com.example.PetApp.domain.profile.model.dto.response.ChatRoomUsersResponseDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -12,28 +12,23 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ChatRoomsResponseDto {
+public class ChatRoomResponseDto {
 
     private Long chatRoomId;
 
     private String chatName;
 
-    private int chatLimitCount;
-
-    private int currentCount;
-
-    private LocalDateTime chatRoomTime;
-
     @Builder.Default
-    private Set<ChatRoomProfilesResponseDto> profiles = new HashSet<>();
+    private Set<ChatRoomUsersResponseDto> users = new HashSet<>();
 
-    private String lastMessage;
+    private int userSize;
 
     private int unReadCount;
+
+    private String lastMessage;
 
     private LocalDateTime lastMessageTime;
 
     private boolean isOwner;
-
 
 }

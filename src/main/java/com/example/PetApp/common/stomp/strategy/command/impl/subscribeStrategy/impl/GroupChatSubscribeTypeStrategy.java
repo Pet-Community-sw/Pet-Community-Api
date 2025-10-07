@@ -35,7 +35,7 @@ public class GroupChatSubscribeTypeStrategy extends BaseSubscribeTypeStrategy {
         Long profileId = principalId(subscribeInfo, "profileId");
 
         Profile profile = queryService.findByProfile(profileId);
-        if (!chatRoomRepository.existsByIdAndProfilesContains(groupChatRoomId, profile)) {
+        if (!chatRoomRepository.existsByIdAndUsersContains(groupChatRoomId, profile.getId())) {
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }
 
