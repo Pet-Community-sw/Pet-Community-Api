@@ -1,7 +1,7 @@
 package com.example.PetApp.domain.chatting;
 
 import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
-import com.example.PetApp.domain.groupchatroom.model.dto.request.ChatMessageDto;
+import com.example.PetApp.domain.groupchatroom.model.dto.request.ChatMessageDtoMember;
 import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatMessageResponseDto;
 import com.example.PetApp.domain.groupchatroom.mapper.ChatRoomMapper;
 import com.example.PetApp.domain.chatting.handler.ChatRoomHandler;
@@ -41,8 +41,8 @@ public class ChattingReaderImpl implements ChattingReader{
 
         messageUpdate.updateProfilesForMessages(messages.getContent(), userId);
 
-        List<ChatMessageDto> chatMessageDtos = ChatRoomMapper.toChatMessageDtos(messages.getContent());
-        return new ChatMessageResponseDto(chatRoomId, chatMessageDtos);
+        List<ChatMessageDtoMember> chatMessageDtoMembers = ChatRoomMapper.toChatMessageDtos(messages.getContent());
+        return new ChatMessageResponseDto(chatRoomId, chatMessageDtoMembers);
     }
 
 

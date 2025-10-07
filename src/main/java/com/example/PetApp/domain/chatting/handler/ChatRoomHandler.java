@@ -1,17 +1,12 @@
 package com.example.PetApp.domain.chatting.handler;
 
-import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
-import com.example.PetApp.domain.chatting.handler.ChatRoomHandlerImp.ChatRoomAccess;
-import com.example.PetApp.domain.chatting.handler.ChatRoomHandlerImp.MemberChatRoomAccess;
+import com.example.PetApp.domain.chatting.model.dto.ChatMessageDto;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface ChatRoomHandler {
-    void handleGroupChat(ChatMessage chatMessage, Long senderId);
+    void handleGroupChat(ChatMessageDto chatMessageDto, Long senderId);
 
-    void handleOneToOneChat(ChatMessage chatMessage, Long senderId);
+    void handleOneToOneChat(ChatMessageDto chatMessageDto, Long senderId);
 
-    ChatRoomAccess verifyChatRoomAccess(Long chatRoomId, Long senderId);
-
-    MemberChatRoomAccess verifyMemberChatRoomAccess(Long chatRoomId, Long senderId);
 }

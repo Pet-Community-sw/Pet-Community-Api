@@ -22,7 +22,7 @@ public class OfflineUserServiceImpl implements OfflineUserService{
     private final StringRedisTemplate stringRedisTemplate;
 
     @Override
-    public void setOfflineProfilesAndUnreadCount(ChatMessage chatMessage, ChatRoom chatRoom) {
+    public void setOfflineUsersAndUnreadCount(ChatMessage chatMessage, ChatRoom chatRoom) {
         List<Profile> profiles = chatRoom.getProfiles();
         Set<String> onlineProfiles = stringRedisTemplate.opsForSet()
                 .members("chatRoomId:" + chatRoom.getId() + ":onlineProfiles");
@@ -34,11 +34,11 @@ public class OfflineUserServiceImpl implements OfflineUserService{
         chatMessage.setUsers(offlineProfiles);
         chatMessage.setChatUnReadCount(offlineProfiles.size());
 
-        log.info("오프라인 프로필 목록 설정 (MANY): {}", offlineProfiles);
+        log.info("메시지에 대한 안 읽은 유저 추적 : {}", offlineProfiles);
     }
 
     @Override
-    public void setOfflineMembersAndUnreadCount(ChatMessage chatMessage, MemberChatRoom memberChatRoom) {
+    public void setOfflineUsersAndUnreadCount(ChatMessage chatMessage, MemberChatRoom memberChatRoom) {
         List<Member> members = memberChatRoom.getMembers();
         Set<String> onlineMembers = stringRedisTemplate.opsForSet()
                 .members("memberChatRoomId:" + memberChatRoom.getId() + ":onlineMembers");
@@ -50,6 +50,6 @@ public class OfflineUserServiceImpl implements OfflineUserService{
         chatMessage.setUsers(offlineMembers);
         chatMessage.setChatUnReadCount(offlineMembers.size());
 
-        log.info("오프라인 멤버 목록 설정 (ONE): {}", offlineMembers);
+        log.info("메시지에 대한 안 읽은 유저 추적 : {}", offlineMembers);
     }
 }

@@ -4,7 +4,7 @@ import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
 import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
-import com.example.PetApp.domain.groupchatroom.model.dto.request.ChatMessageDto;
+import com.example.PetApp.domain.groupchatroom.model.dto.request.ChatMessageDtoMember;
 import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatRoomsResponseDto;
 import com.example.PetApp.domain.groupchatroom.model.dto.request.UpdateChatUnReadCountDto;
 import com.example.PetApp.domain.profile.model.dto.response.ChatRoomProfilesResponseDto;
@@ -49,9 +49,9 @@ public class ChatRoomMapper {
                 .build();
     }
 
-    public static List<ChatMessageDto> toChatMessageDtos(List<ChatMessage> chatMessages) {
+    public static List<ChatMessageDtoMember> toChatMessageDtos(List<ChatMessage> chatMessages) {
         return chatMessages.stream()
-                .map(chatMessage -> ChatMessageDto.builder()
+                .map(chatMessage -> ChatMessageDtoMember.builder()
                         .senderId(chatMessage.getSenderId())
                         .senderName(chatMessage.getSenderName())
                         .senderImageUrl(chatMessage.getSenderImageUrl())

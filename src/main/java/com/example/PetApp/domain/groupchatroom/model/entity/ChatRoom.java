@@ -1,5 +1,6 @@
 package com.example.PetApp.domain.groupchatroom.model.entity;
 
+import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import com.example.PetApp.common.base.superclass.BaseEntity;
@@ -39,6 +40,12 @@ public class ChatRoom extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "profile_id"))
     @Builder.Default
     private List<Profile> profiles=new ArrayList<>();
+
+    public void validateProfile(Profile profile) {
+        if (!getProfiles().contains(profile)) {
+            throw new ForbiddenException("권한이 없습니다.");
+        }
+    }
 
     public void addProfiles(Profile profile) {
         profiles.add(profile);

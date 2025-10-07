@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface OfflineUserService {
-    void setOfflineProfilesAndUnreadCount(ChatMessage chatMessage, ChatRoom chatRoom);
+    void setOfflineUsersAndUnreadCount(ChatMessage chatMessage, ChatRoom chatRoom);
 
-    void setOfflineMembersAndUnreadCount(ChatMessage chatMessage, MemberChatRoom memberChatRoom);
+    void setOfflineUsersAndUnreadCount(ChatMessage chatMessage, MemberChatRoom memberChatRoom);
 }

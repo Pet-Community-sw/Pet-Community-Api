@@ -1,5 +1,6 @@
 package com.example.PetApp.domain.memberchatRoom.model.entity;
 
+import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.common.base.superclass.BaseEntity;
 import lombok.*;
@@ -20,5 +21,11 @@ public class MemberChatRoom extends BaseEntity {
     @Setter
     @OneToMany
     private List<Member> members = new ArrayList<>();
+
+    public void validateMember(Member member) {
+        if (!(members.contains(member))) {
+            throw new ForbiddenException("권한이 없습니다.");
+        }
+    }
 
 }

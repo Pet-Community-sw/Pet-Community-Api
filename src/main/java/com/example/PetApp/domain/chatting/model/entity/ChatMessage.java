@@ -1,5 +1,7 @@
 package com.example.PetApp.domain.chatting.model.entity;
 
+import com.example.PetApp.domain.chatting.model.type.ChatRoomType;
+import com.example.PetApp.domain.chatting.model.type.MessageType;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -18,14 +20,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ChatMessage {
-
-    public enum MessageType {
-        ENTER, TALK, LEAVE
-    }
-
-    public enum ChatRoomType {
-        ONE, MANY
-    }
 
     @Id
     private String id;

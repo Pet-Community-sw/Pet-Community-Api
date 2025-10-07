@@ -37,7 +37,7 @@ public class DelegateWalkPost extends Post {
     @Min(0)
     @NotNull
     @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
-    private Long price;
+    private long price;
 
     @Setter
     @NotNull
