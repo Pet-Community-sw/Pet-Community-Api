@@ -68,7 +68,7 @@ public class JwtTokenizer {
                 .getBody();
     }
 
-    public boolean isTokenExpired(TokenType tokenType, String token) {
+    public boolean validateToken(TokenType tokenType, String token) {
         try{
             if (tokenType.equals(TokenType.REFRESH))
                 return parseToken(token, refreshKey).getExpiration().before(new Date());

@@ -1,9 +1,9 @@
 package com.example.PetApp.common.stomp.strategy.command.impl;
 
-import com.example.PetApp.common.stomp.strategy.command.StompCommandStrategy;
-import com.example.PetApp.domain.member.model.entity.Member;
-import com.example.PetApp.domain.member.MemberRepository;
 import com.example.PetApp.common.jwt.util.JwtTokenizer;
+import com.example.PetApp.common.stomp.strategy.command.StompCommandStrategy;
+import com.example.PetApp.domain.member.MemberRepository;
+import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.token.TokenType;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -27,18 +27,16 @@ public class ConnectStrategy implements StompCommandStrategy {
 
         String token = accessor.getFirstNativeHeader("Authorization");
         if (token == null || !token.startsWith("Bearer ")) {
-            log.error("[STOMP] 유효하지 않은 토큰 헤더");
             throw new IllegalArgumentException("토큰이 없거나 형식이 잘못되었습니다.");
         }
 
         String accessToken = token.split(" ")[1];
-        if (jwtTokenizer.isTokenExpired(TokenType.ACCESS, accessToken)) {
-            log.error("[STOMP] 유효하지 않는 토큰입니다.");
+        if (jwtTokenizer.validateToken(TokenType.ACCESS, accessToken)) {
             throw new IllegalArgumentException("유효하지 않는 토큰입니다.");
         }
 
         Claims claims = jwtTokenizer.parseAccessToken(accessToken);
-        Object profileId = claims.get("profileId");
+        Object profileId = claims.get("profileId");//토큰에서 꺼내는거임.
 
         Authentication authentication;
         if (profileId == null) {

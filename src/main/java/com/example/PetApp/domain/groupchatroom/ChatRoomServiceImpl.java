@@ -123,9 +123,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                 })//Member일 때도 구현해야할듯.
                 .collect(Collectors.toSet());
         return ChatRoomMapper.toChatRoomsResponseDto(chatRoom, userId, lastMessage, unReadCount, users, LocalDateTime.parse(lastMessageTime));
-
     }
-
+    
     private void deleteRedis(Long chatRoomId) {
         String kInfoOld = "chat:lastMessageInfo:" + chatRoomId;
         String kReadOld = "chatRoomId:" + chatRoomId + ":read";
