@@ -22,7 +22,7 @@ public class RefreshToken extends BaseEntity {
 
     @Setter
     @NotBlank
-    @Column(nullable = false)
+    @Column(nullable = false, length = 512)
     private String refreshToken;
 
 }
