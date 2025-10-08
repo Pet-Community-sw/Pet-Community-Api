@@ -1,7 +1,7 @@
-package com.example.PetApp.common.stomp.strategy.command.impl.subscribeStrategy.impl;
+package com.example.PetApp.common.stomp.strategy.impl.subscribeStrategy.impl;
 
 import com.example.PetApp.common.stomp.SubscribeInfo;
-import com.example.PetApp.common.stomp.strategy.command.impl.subscribeStrategy.BaseSubscribeTypeStrategy;
+import com.example.PetApp.common.stomp.strategy.impl.subscribeStrategy.BaseSubscribeTypeStrategy;
 import com.example.PetApp.domain.query.QueryService;
 import com.example.PetApp.domain.walkrecord.model.entity.WalkRecord;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +10,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+/*
+ *  todo : 다시 한 번 봐야됨.
+ *
+ * */
 @Component
 @RequiredArgsConstructor
 @Slf4j

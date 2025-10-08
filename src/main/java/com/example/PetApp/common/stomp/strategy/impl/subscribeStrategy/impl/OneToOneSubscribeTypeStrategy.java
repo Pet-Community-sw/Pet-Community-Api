@@ -1,7 +1,7 @@
-package com.example.PetApp.common.stomp.strategy.command.impl.subscribeStrategy.impl;
+package com.example.PetApp.common.stomp.strategy.impl.subscribeStrategy.impl;
 
 import com.example.PetApp.common.stomp.SubscribeInfo;
-import com.example.PetApp.common.stomp.strategy.command.impl.subscribeStrategy.BaseSubscribeTypeStrategy;
+import com.example.PetApp.common.stomp.strategy.impl.subscribeStrategy.BaseSubscribeTypeStrategy;
 import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.PetApp.domain.query.QueryService;
 import lombok.RequiredArgsConstructor;

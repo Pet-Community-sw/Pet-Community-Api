@@ -1,8 +1,8 @@
-package com.example.PetApp.common.stomp.strategy.command.impl;
+package com.example.PetApp.common.stomp.strategy.impl;
 
 import com.example.PetApp.common.stomp.SubscribeInfo;
-import com.example.PetApp.common.stomp.strategy.command.StompCommandStrategy;
-import com.example.PetApp.common.stomp.strategy.command.impl.subscribeStrategy.SubscribeTypeStrategy;
+import com.example.PetApp.common.stomp.strategy.StompCommandStrategy;
+import com.example.PetApp.common.stomp.strategy.impl.subscribeStrategy.SubscribeTypeStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -40,6 +40,6 @@ public class SubscribeStrategy implements StompCommandStrategy {
                 return;
             }
         }
-            throw new IllegalArgumentException("알 수 없는 구독 경로입니다.");
+        throw new IllegalArgumentException("알 수 없는 구독 경로입니다.");
     }
 }

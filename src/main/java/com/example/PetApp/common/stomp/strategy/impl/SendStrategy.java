@@ -1,6 +1,6 @@
-package com.example.PetApp.common.stomp.strategy.command.impl;
+package com.example.PetApp.common.stomp.strategy.impl;
 
-import com.example.PetApp.common.stomp.strategy.command.StompCommandStrategy;
+import com.example.PetApp.common.stomp.strategy.StompCommandStrategy;
 import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.PetApp.domain.query.QueryService;
 import lombok.RequiredArgsConstructor;

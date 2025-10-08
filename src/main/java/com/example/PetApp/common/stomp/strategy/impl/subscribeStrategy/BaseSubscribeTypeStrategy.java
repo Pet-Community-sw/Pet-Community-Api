@@ -1,4 +1,4 @@
-package com.example.PetApp.common.stomp.strategy.command.impl.subscribeStrategy;
+package com.example.PetApp.common.stomp.strategy.impl.subscribeStrategy;
 
 import com.example.PetApp.common.stomp.SubscribeInfo;
 import org.springframework.util.AntPathMatcher;

@@ -1,6 +1,6 @@
 package com.example.PetApp.common.stomp.interceptor;
 
-import com.example.PetApp.common.stomp.strategy.command.StompCommandStrategy;
+import com.example.PetApp.common.stomp.strategy.StompCommandStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ import java.util.Map;
 @Slf4j
 public class StompInterceptor implements ChannelInterceptor {
 
-    private final Map<StompCommand, StompCommandStrategy> strategyMap;
+    private final Map<StompCommand, StompCommandStrategy> commandStrategyMap;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -29,7 +29,7 @@ public class StompInterceptor implements ChannelInterceptor {
             return message;
         }
 
-        StompCommandStrategy strategy = strategyMap.get(accessor.getCommand());
+        StompCommandStrategy strategy = commandStrategyMap.get(accessor.getCommand());
         log.info("[STOMP] command : {}", strategy);
         if (strategy != null) {
             strategy.handle(accessor);

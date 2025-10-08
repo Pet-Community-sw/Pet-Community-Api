@@ -1,7 +1,7 @@
-package com.example.PetApp.common.stomp.strategy.command.impl;
+package com.example.PetApp.common.stomp.strategy.impl;
 
 import com.example.PetApp.common.jwt.util.JwtTokenizer;
-import com.example.PetApp.common.stomp.strategy.command.StompCommandStrategy;
+import com.example.PetApp.common.stomp.strategy.StompCommandStrategy;
 import com.example.PetApp.domain.member.MemberRepository;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.token.TokenType;

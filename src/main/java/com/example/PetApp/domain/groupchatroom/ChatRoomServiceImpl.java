@@ -79,7 +79,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
         chatRoom.validateUser(userId);
         chatRoom.deleteUser(userId);
-        redisTemplate.opsForHash().delete("chatRoomId:" + chatRoom + ":read", String.valueOf(userId));
+        redisTemplate.opsForHash().delete("chatRoomId:" + chatRoomId + ":read", String.valueOf(userId));
         if (chatRoomRepository.countByProfile(chatRoomId) <= 1) {//방 사용자 수가 1이되면 채팅방 전체 삭제.
             chatMessageRepository.deleteByChatRoomId(chatRoomId);//채팅방 메시지 삭제.
             chatRoomRepository.deleteById(chatRoomId);//todo : 삭제 되는지
@@ -124,7 +124,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                 .collect(Collectors.toSet());
         return ChatRoomMapper.toChatRoomsResponseDto(chatRoom, userId, lastMessage, unReadCount, users, LocalDateTime.parse(lastMessageTime));
     }
-    
+
     private void deleteRedis(Long chatRoomId) {
         String kInfoOld = "chat:lastMessageInfo:" + chatRoomId;
         String kReadOld = "chatRoomId:" + chatRoomId + ":read";

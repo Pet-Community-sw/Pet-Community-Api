@@ -1,9 +1,9 @@
 package com.example.PetApp.common.stomp.config;
 
-import com.example.PetApp.common.stomp.strategy.command.StompCommandStrategy;
-import com.example.PetApp.common.stomp.strategy.command.impl.ConnectStrategy;
-import com.example.PetApp.common.stomp.strategy.command.impl.SendStrategy;
-import com.example.PetApp.common.stomp.strategy.command.impl.SubscribeStrategy;
+import com.example.PetApp.common.stomp.strategy.StompCommandStrategy;
+import com.example.PetApp.common.stomp.strategy.impl.ConnectStrategy;
+import com.example.PetApp.common.stomp.strategy.impl.SendStrategy;
+import com.example.PetApp.common.stomp.strategy.impl.SubscribeStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -12,10 +12,10 @@ import java.util.EnumMap;
 import java.util.Map;
 
 @Configuration
-public class StompStrategyConfig {
+public class StompStrategyMapConfig {
 
-    @Bean("strategyMap")
-    public Map<StompCommand, StompCommandStrategy> strategyMap(
+    @Bean("commandStrategyMap")
+    public Map<StompCommand, StompCommandStrategy> commandStrategyMap(
             ConnectStrategy connectStrategy,
             SubscribeStrategy subscribeStrategy,
             SendStrategy sendStrategy) {

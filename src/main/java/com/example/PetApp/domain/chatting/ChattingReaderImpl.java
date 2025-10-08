@@ -1,6 +1,5 @@
 package com.example.PetApp.domain.chatting;
 
-import com.example.PetApp.domain.chatting.handler.ChatRoomHandler;
 import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
 import com.example.PetApp.domain.chatting.model.type.ChatRoomType;
 import com.example.PetApp.domain.groupchatroom.mapper.ChatRoomMapper;
