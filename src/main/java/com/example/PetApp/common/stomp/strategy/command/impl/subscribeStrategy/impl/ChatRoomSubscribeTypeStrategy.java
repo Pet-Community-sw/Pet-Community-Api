@@ -15,9 +15,9 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class GroupChatSubscribeTypeStrategy extends BaseSubscribeTypeStrategy {
+public class ChatRoomSubscribeTypeStrategy extends BaseSubscribeTypeStrategy {
 
-    private static final String PATTERN = "/sub/chat/{groupChatRoomId}";
+    private static final String PATTERN = "/sub/chat/{chatRoomId}";
 
     private final QueryService queryService;
     private final ChatRoomRepository chatRoomRepository;
@@ -31,16 +31,16 @@ public class GroupChatSubscribeTypeStrategy extends BaseSubscribeTypeStrategy {
     @Override
     public void handle(SubscribeInfo subscribeInfo) {
         Map<String, String> map = patternMap(PATTERN, subscribeInfo.getDestination());
-        Long groupChatRoomId = Long.valueOf(map.get("groupChatRoomId"));
-        Long profileId = principalId(subscribeInfo, "profileId");
+        Long chatroomId = Long.valueOf(map.get("chatRoomId"));
+        Long profileId = principalId(subscribeInfo);
 
         Profile profile = queryService.findByProfile(profileId);
-        if (!chatRoomRepository.existsByIdAndUsersContains(groupChatRoomId, profile.getId())) {
+        if (!chatRoomRepository.existsByIdAndUsersContains(chatroomId, profile.getId())) {
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }
 
-        redisTemplate.opsForSet().add("groupChatRoomId:" + groupChatRoomId + ":onlineProfiles", profileId.toString());
+        redisTemplate.opsForSet().add("chatRoomId:" + chatroomId + ":onlineProfiles", profileId.toString());
 
-        log.info("[STOMP] 구독 groupChatRoomId: {}, profileId: {}", groupChatRoomId, profileId);
+        log.info("[STOMP] 구독 chatroomId: {}, profileId: {}", chatroomId, profileId);
     }
 }

@@ -1,19 +1,24 @@
 package com.example.PetApp.domain.query;
 
+import com.example.PetApp.common.exception.ForbiddenException;
+import com.example.PetApp.common.exception.NotFoundException;
 import com.example.PetApp.domain.comment.CommentRepository;
+import com.example.PetApp.domain.comment.model.entity.Comment;
 import com.example.PetApp.domain.groupchatroom.ChatRoomRepository;
 import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
-import com.example.PetApp.domain.comment.model.entity.Comment;
 import com.example.PetApp.domain.member.MemberRepository;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.memberchatRoom.MemberChatRoomRepository;
-import com.example.PetApp.domain.memberchatRoom.model.entity.MemberChatRoom;
 import com.example.PetApp.domain.petbreed.PetBreedRepository;
 import com.example.PetApp.domain.petbreed.model.entity.PetBreed;
+import com.example.PetApp.domain.post.common.Post;
 import com.example.PetApp.domain.post.common.PostRepository;
 import com.example.PetApp.domain.post.delegate.DelegateWalkPostRepository;
+import com.example.PetApp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.PetApp.domain.post.normal.NormalPostRepository;
+import com.example.PetApp.domain.post.normal.model.entity.NormalPost;
 import com.example.PetApp.domain.post.recommend.RecommendRoutePostRepository;
+import com.example.PetApp.domain.post.recommend.model.entity.RecommendRoutePost;
 import com.example.PetApp.domain.profile.ProfileRepository;
 import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.domain.review.ReviewRepository;
@@ -22,18 +27,12 @@ import com.example.PetApp.domain.walkingtogethermatch.WalkingTogetherMatchReposi
 import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import com.example.PetApp.domain.walkrecord.WalkRecordRepository;
 import com.example.PetApp.domain.walkrecord.model.entity.WalkRecord;
-import com.example.PetApp.domain.post.delegate.model.entity.DelegateWalkPost;
-import com.example.PetApp.domain.post.normal.model.entity.NormalPost;
-import com.example.PetApp.domain.post.common.Post;
-import com.example.PetApp.domain.post.recommend.model.entity.RecommendRoutePost;
-import com.example.PetApp.common.exception.ForbiddenException;
-import com.example.PetApp.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class QueryServiceImpl implements QueryService{
+public class QueryServiceImpl implements QueryService {
 
     private final MemberRepository memberRepository;
     private final ChatRoomRepository chatRoomRepository;
@@ -76,12 +75,7 @@ public class QueryServiceImpl implements QueryService{
 
     @Override
     public DelegateWalkPost findByDelegateWalkPost(Long postId) {
-        return delegateWalkPostRepository.findById(postId).orElseThrow(()->new NotFoundException("해당 대리산책자 게시글은 없습니다."));
-    }
-
-    @Override
-    public MemberChatRoom findByMemberChatRoom(Long memberChatRoomId) {
-        return memberChatRoomRepository.findById(memberChatRoomId).orElseThrow(() -> new NotFoundException("해당 채팅방은 없습니다."));
+        return delegateWalkPostRepository.findById(postId).orElseThrow(() -> new NotFoundException("해당 대리산책자 게시글은 없습니다."));
     }
 
     @Override

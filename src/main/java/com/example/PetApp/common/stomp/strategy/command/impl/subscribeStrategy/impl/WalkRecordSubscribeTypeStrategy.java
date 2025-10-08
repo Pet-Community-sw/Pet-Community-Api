@@ -28,7 +28,7 @@ public class WalkRecordSubscribeTypeStrategy extends BaseSubscribeTypeStrategy {
     public void handle(SubscribeInfo subscribeInfo) {
         Map<String, String> map = patternMap(PATTERN, subscribeInfo.getDestination());
         Long walkRecordId = Long.valueOf(map.get("walkRecordId"));
-        Long memberId = principalId(subscribeInfo, "memberId");
+        Long memberId = principalId(subscribeInfo);
 
         WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
         Long ownerMemberId = walkRecord.getDelegateWalkPost().getProfile().getMember().getId();

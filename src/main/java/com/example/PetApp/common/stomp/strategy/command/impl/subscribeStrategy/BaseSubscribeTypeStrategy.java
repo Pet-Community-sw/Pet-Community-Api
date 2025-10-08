@@ -3,7 +3,6 @@ package com.example.PetApp.common.stomp.strategy.command.impl.subscribeStrategy;
 import com.example.PetApp.common.stomp.SubscribeInfo;
 import org.springframework.util.AntPathMatcher;
 
-import java.security.Principal;
 import java.util.Map;
 
 public abstract class BaseSubscribeTypeStrategy implements SubscribeTypeStrategy {
@@ -14,10 +13,8 @@ public abstract class BaseSubscribeTypeStrategy implements SubscribeTypeStrategy
         return PATH.extractUriTemplateVariables(pattern, destination);
     }
 
-    protected Long principalId(SubscribeInfo ctx, String name) {
-        Principal principal = ctx.getPrincipal();
-        return Long.valueOf(principal.getName(), Integer.parseInt(name));
+    protected Long principalId(SubscribeInfo subscribeInfo) {
+        return Long.valueOf(subscribeInfo.getPrincipal().getName());
     }
-
 }
 

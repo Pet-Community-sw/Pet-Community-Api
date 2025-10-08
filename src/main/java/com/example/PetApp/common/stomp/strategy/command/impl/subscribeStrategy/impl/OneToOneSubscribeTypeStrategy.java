@@ -2,8 +2,7 @@ package com.example.PetApp.common.stomp.strategy.command.impl.subscribeStrategy.
 
 import com.example.PetApp.common.stomp.SubscribeInfo;
 import com.example.PetApp.common.stomp.strategy.command.impl.subscribeStrategy.BaseSubscribeTypeStrategy;
-import com.example.PetApp.domain.member.model.entity.Member;
-import com.example.PetApp.domain.memberchatRoom.model.entity.MemberChatRoom;
+import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.PetApp.domain.query.QueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +16,7 @@ import java.util.Map;
 @Slf4j
 public class OneToOneSubscribeTypeStrategy extends BaseSubscribeTypeStrategy {
 
-    private static final String PATTERN = "/user/chat/{memberChatRoomId}";
+    private static final String PATTERN = "/user/chat/{chatRoomId}";
 
     private final QueryService queryService;
     private final StringRedisTemplate redisTemplate;
@@ -30,18 +29,14 @@ public class OneToOneSubscribeTypeStrategy extends BaseSubscribeTypeStrategy {
     @Override
     public void handle(SubscribeInfo subscribeInfo) {
         Map<String, String> map = patternMap(PATTERN, subscribeInfo.getDestination());
-        Long memberChatRoomId = Long.valueOf(map.get("memberChatRoomId"));
-        Long memberId = principalId(subscribeInfo, "memberId");
+        Long chatRoomId = Long.valueOf(map.get("chatRoomId"));
+        Long memberId = principalId(subscribeInfo);
 
-        Member member = queryService.findByMember(memberId);
-        MemberChatRoom memberChatRoom = queryService.findByMemberChatRoom(memberChatRoomId);
+        ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
+        chatRoom.validateUser(memberId);
 
-        if (!memberChatRoom.getMembers().contains(member)) {
-            throw new IllegalArgumentException("잘못된 접근입니다.");
-        }
+        redisTemplate.opsForSet().add("chatRoomId:" + chatRoomId + ":onlineMembers", memberId.toString());
 
-        redisTemplate.opsForSet().add("memberChatRoomId:"+memberChatRoomId+":onlineMembers", memberId.toString());
-
-        log.info("[STOMP] 구독 memberChatRoomId: {}, memberId: {}", memberChatRoomId, memberId);
+        log.info("[STOMP] 구독 chatRoomId: {}, memberId: {}", chatRoomId, memberId);
     }
 }
