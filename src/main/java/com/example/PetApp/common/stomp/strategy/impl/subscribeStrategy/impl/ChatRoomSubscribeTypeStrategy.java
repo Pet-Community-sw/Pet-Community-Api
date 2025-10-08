@@ -39,7 +39,7 @@ public class ChatRoomSubscribeTypeStrategy extends BaseSubscribeTypeStrategy {
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }
 
-        redisTemplate.opsForSet().add("chatRoomId:" + chatroomId + ":onlineProfiles", profileId.toString());
+        redisTemplate.opsForSet().add("chatRoomId:" + chatroomId + ":onlineUsers", profileId.toString());
 
         log.info("[STOMP] 구독 chatroomId: {}, profileId: {}", chatroomId, profileId);
     }

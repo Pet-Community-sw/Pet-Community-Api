@@ -7,7 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,11 +22,12 @@ public class OfflineUserServiceImpl implements OfflineUserService {
     @Override
     public void setOfflineUsersAndUnreadCount(ChatMessage chatMessage, ChatRoom chatRoom) {
         Set<Long> users = chatRoom.getUsers();
-        Set<String> onlineProfiles = stringRedisTemplate.opsForSet()
-                .members("chatRoomId:" + chatRoom.getId() + ":onlineProfiles");
-        List<Long> offlineProfiles = users.stream()
-                .filter(userId -> onlineProfiles == null || !onlineProfiles.contains(userId.toString()))
-                .collect(Collectors.toList());
+        Set<String> onlineUsers = Optional.ofNullable(stringRedisTemplate.opsForSet()
+                .members("chatRoomId:" + chatRoom.getId() + ":onlineUsers")).orElse(Collections.emptySet());
+
+        Set<Long> offlineProfiles = users.stream()
+                .filter(userId -> !onlineUsers.contains(userId.toString()))
+                .collect(Collectors.toSet());
 
         chatMessage.setUsers(offlineProfiles);
         chatMessage.setChatUnReadCount(offlineProfiles.size());

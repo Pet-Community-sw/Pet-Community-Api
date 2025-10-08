@@ -31,10 +31,10 @@ public class GroupChatHandler {
 
         saveLastMessageToRedis(message);
 
-        Set<String> onlineProfiles = redisTemplate.opsForSet()
-                .members("chatRoomId:" + chatRoom.getId() + ":onlineProfiles");
+        Set<String> onlineUsers = redisTemplate.opsForSet()
+                .members("chatRoomId:" + chatRoom.getId() + ":onlineUsers");
 
-        Map<Long, Long> unReadMap = countUnread(chatRoom, message, onlineProfiles);
+        Map<Long, Long> unReadMap = countUnread(chatRoom, message, onlineUsers);
 
         messagingTemplate.convertAndSend("/sub/chat/update",
                 ChatMessageMapper.toUpdateChatRoomList(chatRoom.getId(), message, unReadMap));
@@ -52,11 +52,11 @@ public class GroupChatHandler {
 //        redisTemplate.opsForValue().set("chat:lastMessageTime" + chatMessage.getChatRoomId(), String.valueOf(chatMessage.getMessageTime()));
     }
 
-    private Map<Long, Long> countUnread(ChatRoom chatRoom, ChatMessage message, Set<String> onlineProfiles) {
+    private Map<Long, Long> countUnread(ChatRoom chatRoom, ChatMessage message, Set<String> onlineUsers) {
         Map<Long, Long> map = new HashMap<>();
         for (Profile profile : chatRoom.getProfiles()) {
             if (!profile.getId().equals(message.getSenderId())) {
-                boolean isOnline = onlineProfiles != null && onlineProfiles.contains(profile.getId().toString());
+                boolean isOnline = onlineUsers != null && onlineUsers.contains(profile.getId().toString());
                 if (!isOnline) {
                     String key = "unReadChatCount:" + message.getChatRoomId() + ":" + profile.getId();
                     Long count = redisTemplate.opsForValue().increment(key);

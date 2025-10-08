@@ -35,15 +35,15 @@ public class TalkStrategy implements MessageTypeStrategy {
 
         ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
         Set<Long> users = chatRoom.getUsers();
-        Set<String> onlineProfiles = redisTemplate.opsForSet()
-                .members("chatRoomId:" + chatRoomId + ":onlineProfiles");
+        Set<String> onlineUsers = redisTemplate.opsForSet()
+                .members("chatRoomId:" + chatRoomId + ":onlineUsers");
 
-        if (onlineProfiles == null) {
+        if (onlineUsers == null) {
             return;
         }
 
         users.stream().filter(userId -> !userId.equals(senderId))
-                .filter(userId -> !onlineProfiles.contains(userId.toString()))
+                .filter(userId -> !onlineUsers.contains(userId.toString()))
                 .forEach(userId -> {
                     Profile profile = queryService.findByProfile(userId);
                     sendNotificationUtil.sendNotification(profile.getMember(), message);

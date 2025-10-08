@@ -11,7 +11,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Document(collection = "chat")
 @Getter
@@ -30,7 +30,7 @@ public class ChatMessage {
     private String senderName;
     private String senderImageUrl;
     private String message;
-    private List<Long> users;
+    private Set<Long> users;
     private int chatUnReadCount;
     private int seq;
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

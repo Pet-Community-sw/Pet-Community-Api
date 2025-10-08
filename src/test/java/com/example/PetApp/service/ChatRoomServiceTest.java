@@ -4,7 +4,7 @@ import com.example.PetApp.common.exception.ConflictException;
 import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.common.exception.NotFoundException;
 import com.example.PetApp.domain.chatting.ChatMessageRepository;
-import com.example.PetApp.domain.chatting.ChattingReader;
+import com.example.PetApp.domain.chatting.reader.ChattingReader;
 import com.example.PetApp.domain.groupchatroom.ChatRoomRepository;
 import com.example.PetApp.domain.groupchatroom.ChatRoomServiceImpl;
 import com.example.PetApp.domain.groupchatroom.mapper.ChatRoomMapper;

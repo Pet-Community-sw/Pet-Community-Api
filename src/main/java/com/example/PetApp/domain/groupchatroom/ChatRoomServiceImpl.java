@@ -2,8 +2,8 @@ package com.example.PetApp.domain.groupchatroom;
 
 import com.example.PetApp.common.exception.ConflictException;
 import com.example.PetApp.domain.chatting.ChatMessageRepository;
-import com.example.PetApp.domain.chatting.ChattingReader;
 import com.example.PetApp.domain.chatting.model.type.ChatRoomType;
+import com.example.PetApp.domain.chatting.reader.ChattingReader;
 import com.example.PetApp.domain.groupchatroom.mapper.ChatRoomMapper;
 import com.example.PetApp.domain.groupchatroom.model.dto.request.UpdateChatRoomDto;
 import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatMessageResponseDto;
@@ -101,7 +101,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Transactional(readOnly = true)
     @Override
     public ChatMessageResponseDto getMessages(Long chatRoomId, Long userId, int page) {
-        return chattingReader.getMessages(chatRoomId, userId, ChatRoomType.MANY, page);
+        return chattingReader.getMessages(chatRoomId, userId, page);
     }
 
     private ChatRoomResponseDto toChatRoomsResponseDtoWithRedis(ChatRoom chatRoom, Long userId) {
