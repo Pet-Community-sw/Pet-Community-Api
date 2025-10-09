@@ -1,4 +1,4 @@
-package com.example.PetApp.config.redis.chathandler;
+package com.example.PetApp.infrastructure.redis.chathandler;
 
 import com.example.PetApp.common.exception.NotFoundException;
 import com.example.PetApp.domain.chatting.mapper.ChatMessageMapper;

@@ -1,4 +1,4 @@
-package com.example.PetApp.common.stomp;
+package com.example.PetApp.infrastructure.stomp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.security.Principal;
-
-import static com.example.PetApp.domain.chatting.model.entity.ChatMessage.*;
 
 @Getter
 @Setter

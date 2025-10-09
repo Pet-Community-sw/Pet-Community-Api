@@ -1,10 +1,10 @@
-package com.example.PetApp.common.stomp.strategy.impl.subscribeStrategy.impl;
+package com.example.PetApp.infrastructure.stomp.strategy.impl.subscribeStrategy.impl;
 
-import com.example.PetApp.common.stomp.SubscribeInfo;
-import com.example.PetApp.common.stomp.strategy.impl.subscribeStrategy.BaseSubscribeTypeStrategy;
 import com.example.PetApp.domain.groupchatroom.ChatRoomRepository;
 import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.domain.query.QueryService;
+import com.example.PetApp.infrastructure.stomp.SubscribeInfo;
+import com.example.PetApp.infrastructure.stomp.strategy.impl.subscribeStrategy.BaseSubscribeTypeStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;

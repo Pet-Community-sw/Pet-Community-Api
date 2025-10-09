@@ -1,4 +1,4 @@
-package com.example.PetApp.common.stomp.strategy;
+package com.example.PetApp.infrastructure.stomp.strategy;
 
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 

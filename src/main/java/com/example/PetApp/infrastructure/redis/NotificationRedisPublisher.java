@@ -1,4 +1,4 @@
-package com.example.PetApp.config.redis;
+package com.example.PetApp.infrastructure.redis;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

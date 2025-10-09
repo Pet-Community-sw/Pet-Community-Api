@@ -1,6 +1,6 @@
-package com.example.PetApp.common.stomp.config;
+package com.example.PetApp.infrastructure.stomp.config;
 
-import com.example.PetApp.common.stomp.interceptor.StompInterceptor;
+import com.example.PetApp.infrastructure.stomp.interceptor.StompInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;

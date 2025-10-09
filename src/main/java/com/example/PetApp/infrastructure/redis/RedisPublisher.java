@@ -1,4 +1,4 @@
-package com.example.PetApp.config.redis;
+package com.example.PetApp.infrastructure.redis;
 
 import com.example.PetApp.domain.chatting.ChatMessageRepository;
 import com.example.PetApp.domain.chatting.model.entity.ChatMessage;

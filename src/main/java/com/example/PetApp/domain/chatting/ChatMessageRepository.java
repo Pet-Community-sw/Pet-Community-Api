@@ -14,6 +14,5 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage, Stri
     void deleteByChatRoomId(Long chatRoomId);
 
     Page<ChatMessage> findAllByChatRoomId(Long chatRoomId, Pageable pageable);
-
 }
 

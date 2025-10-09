@@ -1,8 +1,8 @@
-package com.example.PetApp.common.stomp.strategy.impl;
+package com.example.PetApp.infrastructure.stomp.strategy.impl;
 
-import com.example.PetApp.common.stomp.SubscribeInfo;
-import com.example.PetApp.common.stomp.strategy.StompCommandStrategy;
-import com.example.PetApp.common.stomp.strategy.impl.subscribeStrategy.SubscribeTypeStrategy;
+import com.example.PetApp.infrastructure.stomp.SubscribeInfo;
+import com.example.PetApp.infrastructure.stomp.strategy.StompCommandStrategy;
+import com.example.PetApp.infrastructure.stomp.strategy.impl.subscribeStrategy.SubscribeTypeStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -34,9 +34,9 @@ public class SubscribeStrategy implements StompCommandStrategy {
                 .principal(user)
                 .build();
 
-        for (SubscribeTypeStrategy subscribeStrategyI : handlers) {
-            if (subscribeStrategyI.isHandler(destination)) {
-                subscribeStrategyI.handle(subscribeInfo);
+        for (SubscribeTypeStrategy subscribeTypeStrategy : handlers) {
+            if (subscribeTypeStrategy.isHandler(destination)) {
+                subscribeTypeStrategy.handle(subscribeInfo);
                 return;
             }
         }

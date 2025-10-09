@@ -1,19 +1,23 @@
 package com.example.PetApp.domain.chatting.model.entity;
 
 import com.example.PetApp.domain.chatting.model.type.ChatRoomType;
-import com.example.PetApp.domain.chatting.model.type.MessageType;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Document(collection = "chat")
+@CompoundIndexes({
+        @CompoundIndex(name = "chat_room_seq_idx", def = "{'chatRoomId': 1, 'seq': 1}")
+})//복합 인덱스 1:오름차순, -1:내림차순
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,7 +27,6 @@ public class ChatMessage {
 
     @Id
     private String id;
-    private MessageType messageType;
     private ChatRoomType chatRoomType;
     private Long chatRoomId;
     private Long senderId;
@@ -31,7 +34,7 @@ public class ChatMessage {
     private String senderImageUrl;
     private String message;
     private Set<Long> users;
-    private int chatUnReadCount;
+    private int UnReadCount;
     private int seq;
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)

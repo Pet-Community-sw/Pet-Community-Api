@@ -1,8 +1,8 @@
-package com.example.PetApp.common.stomp.strategy.impl;
+package com.example.PetApp.infrastructure.stomp.strategy.impl;
 
-import com.example.PetApp.common.stomp.strategy.StompCommandStrategy;
 import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.PetApp.domain.query.QueryService;
+import com.example.PetApp.infrastructure.stomp.strategy.StompCommandStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;

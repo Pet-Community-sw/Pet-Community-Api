@@ -1,9 +1,8 @@
 package com.example.PetApp.common.base.util.notification;
 
-import com.example.PetApp.config.redis.NotificationRedisPublisher;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.sse.model.dto.NotificationListDto;
-//import com.example.PetApp.firebase.FcmService;
+import com.example.PetApp.infrastructure.redis.NotificationRedisPublisher;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -34,12 +33,12 @@ public class SendNotificationUtil {
         try {
             json = objectMapper.writeValueAsString(notificationListDto);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("알림 보내는 도중 예외 발생",e);
+            throw new RuntimeException("알림 보내는 도중 예외 발생", e);
         }
         notificationRedisTemplate.opsForValue().set(key, json, Duration.ofDays(3));
         if (Boolean.TRUE.equals(stringRedisTemplate.opsForSet().isMember("foreGroundMembers:", member.getId().toString()))) {
             notificationRedisPublisher.publish("member:" + member.getId(), message);
-        }else {
+        } else {
             log.info("backGroundMember");
 //            fcmService.sendNotification(member.getFcmToken().getFcmToken(), "명냥로드", message);
         }

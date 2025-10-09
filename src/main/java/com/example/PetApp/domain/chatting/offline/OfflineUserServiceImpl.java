@@ -30,7 +30,7 @@ public class OfflineUserServiceImpl implements OfflineUserService {
                 .collect(Collectors.toSet());
 
         chatMessage.setUsers(offlineProfiles);
-        chatMessage.setChatUnReadCount(offlineProfiles.size());
+        chatMessage.setUnReadCount(offlineProfiles.size());
 
         log.info("메시지에 대한 안 읽은 유저 추적 : {}", offlineProfiles);
     }

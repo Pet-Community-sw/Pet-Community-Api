@@ -1,4 +1,4 @@
-package com.example.PetApp.config.redis;
+package com.example.PetApp.infrastructure.redis;
 
 import com.example.PetApp.domain.sse.SseEmitterManager;
 import lombok.RequiredArgsConstructor;

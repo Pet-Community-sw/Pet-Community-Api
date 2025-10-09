@@ -1,4 +1,4 @@
-package com.example.PetApp.config.redis;
+package com.example.PetApp.infrastructure.redis;
 
 import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
 import lombok.Getter;
@@ -27,6 +27,7 @@ public class RedisConfig {
 
     @Value("${spring.redis.port}")
     private int port;
+
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory(host, port);
@@ -93,14 +94,14 @@ public class RedisConfig {
 
     @Bean//topic 설정.
     public RedisMessageListenerContainer notificationRedisMessageListenerContainer(RedisConnectionFactory redisConnectionFactory,
-                                                                            NotificationRedisSubscriber notificationRedisSubscriber) {
+                                                                                   NotificationRedisSubscriber notificationRedisSubscriber) {
         RedisMessageListenerContainer notificationRedisMessageListenerContainer = new RedisMessageListenerContainer();
         notificationRedisMessageListenerContainer.setConnectionFactory(redisConnectionFactory);
         notificationRedisMessageListenerContainer.addMessageListener((message, pattern) ->
-                    notificationRedisSubscriber.onMessage(
-                            new String(message.getChannel()),
-                            new String(message.getBody()))
-        ,new PatternTopic("member:*")
+                        notificationRedisSubscriber.onMessage(
+                                new String(message.getChannel()),
+                                new String(message.getBody()))
+                , new PatternTopic("member:*")
         );
 
         return notificationRedisMessageListenerContainer;

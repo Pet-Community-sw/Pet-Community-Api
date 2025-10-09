@@ -1,8 +1,8 @@
-package com.example.PetApp.config.redis;
+package com.example.PetApp.infrastructure.redis;
 
-import com.example.PetApp.config.redis.chathandler.GroupChatHandler;
-import com.example.PetApp.config.redis.chathandler.OneToOneChatHandler;
 import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
+import com.example.PetApp.infrastructure.redis.chathandler.GroupChatHandler;
+import com.example.PetApp.infrastructure.redis.chathandler.OneToOneChatHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
