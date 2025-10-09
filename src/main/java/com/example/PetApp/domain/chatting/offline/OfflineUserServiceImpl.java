@@ -34,5 +34,4 @@ public class OfflineUserServiceImpl implements OfflineUserService {
 
         log.info("메시지에 대한 안 읽은 유저 추적 : {}", offlineProfiles);
     }
-
 }

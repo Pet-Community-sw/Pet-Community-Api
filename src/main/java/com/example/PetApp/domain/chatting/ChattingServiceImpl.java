@@ -35,7 +35,7 @@ public class ChattingServiceImpl implements ChattingService {
         ChatRoom chatRoom = queryService.findByChatRoom(chatMessageDto.getChatRoomId());
 
         ChatMessage chatMessage = getChatMessage(chatMessageDto, senderId, chatRoom);
-        checkSeq(chatMessage, chatMessageDto);
+        chatMessageDto.checkSeq(chatMessage);
 
         MessageTypeStrategy messageTypeStrategy = messageTypeMap.get(chatMessageDto.getMessageType());
         if (messageTypeStrategy == null) {
@@ -59,11 +59,5 @@ public class ChattingServiceImpl implements ChattingService {
         ChatMessage chatMessage = ChatMessageMapper.toEntity(chatMessageDto, chatRoom, senderId, userInfo);
         offlineUserService.setOfflineUsersAndUnreadCount(chatMessage, chatRoom);
         return chatMessage;
-    }
-
-    private void checkSeq(ChatMessage chatMessage, ChatMessageDto chatMessageDto) {
-        if (chatMessageDto.getSeq() != 0) {
-            chatMessage.setSeq(chatMessageDto.getSeq());
-        }
     }
 }

@@ -19,9 +19,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,8 +42,6 @@ public class ChattingReaderImpl implements ChattingReader {
 
         Pageable pageRequest = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "seq"));
         Page<ChatMessage> messages = chatMessageRepository.findAllByChatRoomId(chatRoomId, pageRequest);
-        ChatMessage chatMessage = messages.getContent().get(0);
-        updateLastUserInfo(chatMessage);
         updateProfilesForMessages(messages.getContent(), userId);
 
         List<ChatMessageDtoMember> chatMessageDtoMembers = ChatRoomMapper.toChatMessageDtos(messages.getContent());
@@ -73,14 +69,5 @@ public class ChattingReaderImpl implements ChattingReader {
             simpMessagingTemplate.convertAndSend("/sub/chat/" + chatMessage.getChatRoomId(), updateChatUnReadCountDto);
             //이거 api명세서 작성해야됨. 안읽은 수 처리.
         }
-    }
-
-    //todo : 공통 로직 모듈화.
-    private void updateLastUserInfo(ChatMessage chatMessage) {
-        Map<String, String> lastMessageInfo = new HashMap<>();
-        lastMessageInfo.put("seq", String.valueOf(chatMessage.getSeq()));
-        lastMessageInfo.put("lastMessage", chatMessage.getMessage());
-        lastMessageInfo.put("lastMessageTime", String.valueOf(chatMessage.getMessageTime()));
-        redisTemplate.opsForHash().putAll("chat:lastMessageInfo:" + chatMessage.getChatRoomId(), lastMessageInfo);
     }
 }

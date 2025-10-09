@@ -37,4 +37,8 @@ public class ChatMessage {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime messageTime;//포맷 필요함.
 
+    public void updateSeq(int newSeq) {
+        seq = newSeq;
+    }
+
 }
