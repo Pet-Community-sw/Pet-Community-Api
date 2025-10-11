@@ -1,5 +1,6 @@
 package com.example.PetApp.common.jwt.util;
 
+import com.example.PetApp.domain.token.TokenType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -19,8 +20,8 @@ public class JwtTokenizer {
 
     private final byte[] refreshKey;
 
-    private static final Long ACCESS_TOKEN_EXPIRE_COUNT = 24*60 * 60 * 1000L;
-    private static final Long REFRESH_TOKEN_EXPIRE_COUNT = 7*24*60*60*1000L;
+    private static final Long ACCESS_TOKEN_EXPIRE_COUNT = 24 * 60 * 60 * 1000L;
+    private static final Long REFRESH_TOKEN_EXPIRE_COUNT = 7 * 24 * 60 * 60 * 1000L;
 
 
     public JwtTokenizer(@Value("${jwt.accessKey}") String accessKey, @Value("${jwt.refreshKey}") String refreshKey) {
@@ -46,12 +47,12 @@ public class JwtTokenizer {
 
     public String createResetPasswordToken(String email, List<String> roles) {//임시 토큰용
         final long RESET_TOKEN_EXPIRE_COUNT = 3 * 60 * 1000L;
-        return createToken(null, null,roles, email, RESET_TOKEN_EXPIRE_COUNT, accessKey);
+        return createToken(null, null, roles, email, RESET_TOKEN_EXPIRE_COUNT, accessKey);
     }
 
 
     public String createAccessToken(Long id, Long profileId, String email, List<String> roles) {
-        return createToken(id, profileId,roles, email, ACCESS_TOKEN_EXPIRE_COUNT, accessKey);
+        return createToken(id, profileId, roles, email, ACCESS_TOKEN_EXPIRE_COUNT, accessKey);
     }
 
     public String createRefreshToken(Long id, String email, List<String> roles) {//어차피 profile선택할 때마다 refresh안줄거임왜냐면 토큰은 회원
@@ -67,13 +68,13 @@ public class JwtTokenizer {
                 .getBody();
     }
 
-    public boolean isTokenExpired(String tokenType, String token) {
-        try{
-            if (tokenType.equals("refresh"))
+    public boolean isTokenExpired(TokenType tokenType, String token) {
+        try {
+            if (tokenType == TokenType.REFRESH)
                 return parseToken(token, refreshKey).getExpiration().before(new Date());
             else
                 return parseToken(token, accessKey).getExpiration().before(new Date());
-        }catch (ExpiredJwtException e) {
+        } catch (ExpiredJwtException e) {
             return true; // 토큰이 만료되었으면 true 반환
         } catch (Exception e) {
             return true; // 유효하지 않은 토큰도 만료된 것으로 처리
@@ -87,8 +88,9 @@ public class JwtTokenizer {
     public Claims parseRefreshToken(String token) {
         return parseToken(token, refreshKey);
     }
+
     private Key getSigningKey(byte[] key) {
         return Keys.hmacShaKeyFor(key);
     }
-    
+
 }

@@ -1,9 +1,8 @@
 package com.example.PetApp.common.jwt.filter;
 
-import com.example.PetApp.common.util.RedisUtil;
 import com.example.PetApp.common.jwt.exception.JwtExceptionCode;
 import com.example.PetApp.common.jwt.token.JwtAuthenticationToken;
-import com.example.PetApp.domain.member.model.dto.request.AccessTokenResponseDto;
+import com.example.PetApp.common.util.RedisUtil;
 import com.example.PetApp.domain.token.TokenService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -19,7 +18,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -34,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override//filter 하지않게 하려고
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return StringUtils.startsWithIgnoreCase(request.getRequestURI(), "/members/accessToken");
+        return StringUtils.startsWithIgnoreCase(request.getRequestURI(), "/token");
     }
 
     @Override
@@ -60,21 +58,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.error("Set Request Exception Code : {}", request.getAttribute("exception"));
             throw new BadCredentialsException("throw new invalid token exception");
         } catch (ExpiredJwtException e) {
-            try {
-                AccessTokenResponseDto dto = tokenService.reissueAccessToken(request);
-                response.setHeader("Authorization", "Bearer " + dto.getNewAccessToken());
-                response.setHeader("Cache-Control", "no-store");
-                response.setHeader("Pragma", "no-cache");
-
-                authenticationToken(dto.getNewAccessToken());
-
-                filterChain.doFilter(request, response);
-            }catch (Exception exception) {
-                request.setAttribute("exception", JwtExceptionCode.EXPIRED_TOKEN.getCode());
-                log.error("EXPIRED Token // token : {}", token);
-                log.error("Set Request Exception Code : {}", request.getAttribute("exception"));
-                throw new BadCredentialsException("throw new expired token exception");
-            }
+            request.setAttribute("exception", JwtExceptionCode.EXPIRED_TOKEN.getCode());
+            log.error("EXPIRED Token // token : {}", token);
+            log.error("Set Request Exception Code : {}", request.getAttribute("exception"));
+            throw new BadCredentialsException("throw new expired token exception");
         } catch (UnsupportedJwtException e) {
             request.setAttribute("exception", JwtExceptionCode.UNSUPPORTED_TOKEN.getCode());
             log.error("Unsupported Token // token : {}", token);
@@ -103,7 +90,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (redisUtil.existData(authorization)) {
             throw new BadCredentialsException("로그아웃된 토큰입니다.");
         }
-        if (StringUtils.hasText(authorization) && authorization.startsWith("Bearer")){
+        if (StringUtils.hasText(authorization) && authorization.startsWith("Bearer")) {
             String[] arr = authorization.split(" ");
             return arr[1];
         }
