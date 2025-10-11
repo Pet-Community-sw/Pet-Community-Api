@@ -48,7 +48,6 @@ public class ChattingReaderImpl implements ChattingReader {
         Pageable pageRequest = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "seq"));
         Page<ChatMessage> messages = chatMessageRepository.findAllByChatRoomId(chatRoomId, pageRequest);
         updateMessagesUnReadCount(chatRoomId, userId);
-//        updateProfilesForMessages(messages.getContent(), userId);
 
         List<ChatMessageDtoMember> chatMessageDtoMembers = ChatRoomMapper.toChatMessageDtos(messages.getContent());
         return new ChatMessageResponseDto(chatRoomId, chatMessageDtoMembers);
