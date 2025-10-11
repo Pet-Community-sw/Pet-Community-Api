@@ -1,20 +1,29 @@
 package com.example.PetApp.domain.post.recommend;
 
 import com.example.PetApp.domain.post.recommend.model.entity.RecommendRoutePost;
-import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RecommendRoutePostRepository extends JpaRepository<RecommendRoutePost, Long> {
-    @Query(value = "select * from recommend_route_post r " +
-                    "where ST_Distance_Sphere(POINT(r.location_longitude, r.location_latitude), POINT(:longitude, :latitude)) <= 1000 " +
-                    "order by r.recommend_route_time desc ",
-            countQuery = "select count(1) from recommend_route_post r " +
-                    "where ST_Distance_Sphere(POINT(r.location_longitude, r.location_latitude), POINT(:longitude, :latitude)) <= 1000",
+
+    @Query(value = """
+            SELECT p.*, r.*
+            FROM recommend_route_post r
+            LEFT JOIN post p ON p.id = r.post_id
+            WHERE ST_Distance_Sphere(POINT(r.location_longitude, r.location_latitude), POINT(:longitude, :latitude)) <= 1000
+            ORDER BY p.created_at DESC
+            """,
+            countQuery = """
+                    SELECT COUNT(1)
+                    FROM recommend_route_post r
+                    LEFT JOIN post p ON p.id = r.post_id
+                    WHERE ST_Distance_Sphere(POINT(r.location_longitude, r.location_latitude), POINT(:longitude, :latitude)) <= 1000
+                    """,
             nativeQuery = true)
     Page<RecommendRoutePost> findByRecommendRoutePostByPlace(
             @Param("longitude") Double longitude,
@@ -22,14 +31,21 @@ public interface RecommendRoutePostRepository extends JpaRepository<RecommendRou
             Pageable pageable
     );
 
-
-    @Query(value = "select * from recommend_route_post r " +
-                    "where r.location_longitude between :minLongitude and :maxLongitude " +
-                    "and r.location_latitude between :minLatitude and :maxLatitude " +
-                    "order by r.recommend_route_time desc",
-            countQuery = "select count(1) from recommend_route_post r " +
-                    "where r.location_longitude between :minLongitude and :maxLongitude " +
-                    "and r.location_latitude between :minLatitude and :maxLatitude",
+    @Query(value = """
+            SELECT p.*, r.*
+            FROM recommend_route_post r
+            LEFT JOIN post p ON p.id = r.post_id
+            WHERE r.location_longitude BETWEEN :minLongitude AND :maxLongitude
+              AND r.location_latitude  BETWEEN :minLatitude  AND :maxLatitude
+            ORDER BY p.created_at DESC
+            """,
+            countQuery = """
+                    SELECT COUNT(1)
+                    FROM recommend_route_post r
+                    LEFT JOIN post p ON p.id = r.post_id
+                    WHERE r.location_longitude BETWEEN :minLongitude AND :maxLongitude
+                      AND r.location_latitude  BETWEEN :minLatitude  AND :maxLatitude
+                    """,
             nativeQuery = true)
     Page<RecommendRoutePost> findByRecommendRoutePostByLocation(
             @Param("minLongitude") Double minLongitude,
@@ -38,5 +54,4 @@ public interface RecommendRoutePostRepository extends JpaRepository<RecommendRou
             @Param("maxLatitude") Double maxLatitude,
             Pageable pageable
     );
-
 }
