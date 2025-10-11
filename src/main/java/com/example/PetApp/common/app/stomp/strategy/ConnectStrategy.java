@@ -1,8 +1,9 @@
 package com.example.PetApp.common.app.stomp.strategy;
 
-import com.example.PetApp.domain.member.model.entity.Member;
-import com.example.PetApp.domain.member.MemberRepository;
 import com.example.PetApp.common.jwt.util.JwtTokenizer;
+import com.example.PetApp.domain.member.MemberRepository;
+import com.example.PetApp.domain.member.model.entity.Member;
+import com.example.PetApp.domain.token.TokenType;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ public class ConnectStrategy implements StompCommandStrategy {
         }
 
         String accessToken = token.split(" ")[1];
-        if (jwtTokenizer.isTokenExpired("access", accessToken)) {
+        if (jwtTokenizer.isTokenExpired(TokenType.ACCESS, accessToken)) {
             log.error("[STOMP][CONNECT] 만료된 토큰");
             throw new IllegalArgumentException("만료된 토큰입니다.");
         }

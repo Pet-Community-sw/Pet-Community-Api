@@ -1,22 +1,22 @@
 package com.example.PetApp.domain.member;
 
+import com.example.PetApp.common.exception.ConflictException;
+import com.example.PetApp.common.exception.UnAuthorizedException;
+import com.example.PetApp.common.util.imagefile.FileImageKind;
+import com.example.PetApp.common.util.imagefile.FileUploadUtil;
+import com.example.PetApp.domain.email.EmailService;
+import com.example.PetApp.domain.fcm.FcmTokenService;
+import com.example.PetApp.domain.member.mapper.MemberMapper;
 import com.example.PetApp.domain.member.model.dto.request.*;
 import com.example.PetApp.domain.member.model.dto.response.FindByIdResponseDto;
 import com.example.PetApp.domain.member.model.dto.response.GetMemberResponseDto;
-import com.example.PetApp.domain.member.model.dto.response.LoginResponseDto;
 import com.example.PetApp.domain.member.model.dto.response.MemberSignResponseDto;
+import com.example.PetApp.domain.member.model.dto.response.TokenResponseDto;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.member.model.entity.MemberRole;
 import com.example.PetApp.domain.member.model.entity.Role;
-import com.example.PetApp.common.exception.ConflictException;
-import com.example.PetApp.common.exception.UnAuthorizedException;
-import com.example.PetApp.domain.member.mapper.MemberMapper;
-import com.example.PetApp.domain.email.EmailService;
-import com.example.PetApp.domain.fcm.FcmTokenService;
 import com.example.PetApp.domain.query.QueryService;
 import com.example.PetApp.domain.token.TokenService;
-import com.example.PetApp.common.util.imagefile.FileUploadUtil;
-import com.example.PetApp.common.util.imagefile.FileImageKind;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
 
     @Value("${spring.dog.member.image.upload}")
     private String memberUploadDir;
@@ -55,9 +55,9 @@ public class MemberServiceImpl implements MemberService{
 
     @Transactional
     @Override
-    public LoginResponseDto login(LoginDto loginDto, HttpServletResponse response) {
+    public TokenResponseDto login(LoginDto loginDto, HttpServletResponse response) {
         Member member = queryService.findByMember(loginDto.getEmail());
-        if (!passwordEncoder.matches(loginDto.getPassword(),member.getPassword())) {
+        if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
             throw new UnAuthorizedException("이메일 혹은 비밀번호가 일치하지 않습니다.");
         }
         setRole(member);
@@ -125,7 +125,7 @@ public class MemberServiceImpl implements MemberService{
 
     private void setRole(Member member) {
         Role role = roleRepository.findByName("ROLE_USER").get();
-        MemberRole memberRole=MemberRole.builder()
+        MemberRole memberRole = MemberRole.builder()
                 .member(member)
                 .role(role)
                 .build();

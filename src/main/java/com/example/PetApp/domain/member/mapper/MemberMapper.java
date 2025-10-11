@@ -1,9 +1,9 @@
 package com.example.PetApp.domain.member.mapper;
 
-import com.example.PetApp.domain.member.model.entity.Member;
-import com.example.PetApp.domain.member.model.dto.response.GetMemberResponseDto;
-import com.example.PetApp.domain.member.model.dto.response.LoginResponseDto;
 import com.example.PetApp.domain.member.model.dto.request.MemberSignDto;
+import com.example.PetApp.domain.member.model.dto.response.GetMemberResponseDto;
+import com.example.PetApp.domain.member.model.dto.response.TokenResponseDto;
+import com.example.PetApp.domain.member.model.entity.Member;
 
 public class MemberMapper {
 
@@ -24,9 +24,9 @@ public class MemberMapper {
                 .build();
     }
 
-    public static LoginResponseDto toLoginResponseDto(Member member, String accessToken) {
-        return LoginResponseDto.builder()
-                .name(member.getName())
+    public static TokenResponseDto toLoginResponseDto(String refreshToken, String accessToken) {
+        return TokenResponseDto.builder()
+                .refreshToken(refreshToken)
                 .accessToken(accessToken)
                 .build();
     }

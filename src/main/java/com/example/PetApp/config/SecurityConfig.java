@@ -21,7 +21,7 @@ public class SecurityConfig {
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -40,9 +40,10 @@ public class SecurityConfig {
                         "/swagger-resources/**",
                         "/webjars/**"
                 ).permitAll()
-                .antMatchers("/image/profiles/**","/image/members/**","/image/posts/**", "/image/basic/**","/favicon.ico").permitAll()
+                .antMatchers("/image/profiles/**", "/image/members/**", "/image/posts/**", "/image/basic/**", "/favicon.ico").permitAll()
                 .mvcMatchers("/ws-stomp/**", "/pub/**", "/sub/**").permitAll()
-                .mvcMatchers("/members/signup", "/members/accessToken", "/members/login", "/members/find-id", "/members/send-email", "/members/verify-code", "/members/reset-password").permitAll()
+                .mvcMatchers("/members/signup", "/members/login", "/members/find-id", "/members/send-email", "/members/verify-code", "/members/reset-password").permitAll()
+                .mvcMatchers("/token").permitAll()
                 .mvcMatchers(GET, "/**").hasAnyRole("USER", "ADMIN")
                 .mvcMatchers(POST, "/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
