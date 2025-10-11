@@ -1,6 +1,6 @@
 package com.example.PetApp.domain.token;
 
-import com.example.PetApp.common.base.util.RedisUtil;
+import com.example.PetApp.common.base.util.RedisUtil1;
 import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.common.exception.NotFoundException;
 import com.example.PetApp.common.exception.UnAuthorizedException;
@@ -36,7 +36,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
 
     private final RefreshRepository refreshRepository;
     private final JwtTokenizer jwtTokenizer;
-    private final RedisUtil redisUtil;
+    private final RedisUtil1 redisUtil1;
     private final RoleRepository roleRepository;
 
     @Transactional
@@ -152,7 +152,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
     }
 
     private void blacklistAccessToken(String accessToken) {
-        redisUtil.createData(accessToken, "blacklist", 30 * 60L);
+        redisUtil1.createData(accessToken, "blacklist", 30 * 60L);
     }
 
     private Claims getClaimsFromToken(String token, TokenType tokenType) {

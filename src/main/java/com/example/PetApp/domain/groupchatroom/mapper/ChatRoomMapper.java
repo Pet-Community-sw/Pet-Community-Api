@@ -2,7 +2,6 @@ package com.example.PetApp.domain.groupchatroom.mapper;
 
 import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
 import com.example.PetApp.domain.groupchatroom.model.dto.request.ChatMessageDtoMember;
-import com.example.PetApp.domain.groupchatroom.model.dto.request.UpdateChatUnReadCountDto;
 import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatRoomResponseDto;
 import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.PetApp.domain.profile.model.dto.response.ChatRoomUsersResponseDto;
@@ -48,20 +47,12 @@ public class ChatRoomMapper {
                         .senderName(chatMessage.getSenderName())
                         .senderImageUrl(chatMessage.getSenderImageUrl())
                         .message(chatMessage.getMessage())
-                        .unReadCount(chatMessage.getChatUnReadCount())
+                        .unReadCount(chatMessage.getUnReadCount())
                         .messageTime(chatMessage.getMessageTime())
                         .build()
                 )
                 .collect(Collectors.toList());
 
-    }
-
-    public static UpdateChatUnReadCountDto toUpdateChatUnReadCountDto(ChatMessage chatMessage) {
-        return UpdateChatUnReadCountDto.builder()
-                .chatRoomId(chatMessage.getChatRoomId())
-                .id(chatMessage.getId())
-                .chatUnReadCount(chatMessage.getChatUnReadCount())
-                .build();
     }
 
 }

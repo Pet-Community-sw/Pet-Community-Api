@@ -1,25 +1,27 @@
 package com.example.PetApp.infrastructure.stomp.strategy.impl.subscribeStrategy.impl;
 
-import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.PetApp.domain.query.QueryService;
+import com.example.PetApp.domain.walkrecord.model.entity.WalkRecord;
 import com.example.PetApp.infrastructure.stomp.SubscribeInfo;
 import com.example.PetApp.infrastructure.stomp.strategy.impl.subscribeStrategy.BaseSubscribeTypeStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+/*
+ *  todo : 다시 한 번 봐야됨.
+ *
+ * */
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class OneToOneSubscribeTypeStrategy extends BaseSubscribeTypeStrategy {
+public class WalkRecordSubscribeStrategy extends BaseSubscribeTypeStrategy {
 
-    private static final String PATTERN = "/user/chat/{chatRoomId}";
+    private static final String PATTERN = "/sub/walk-record/location/{walkRecordId}";
 
     private final QueryService queryService;
-    private final StringRedisTemplate redisTemplate;
 
     @Override
     public boolean isHandler(String destination) {
@@ -29,14 +31,17 @@ public class OneToOneSubscribeTypeStrategy extends BaseSubscribeTypeStrategy {
     @Override
     public void handle(SubscribeInfo subscribeInfo) {
         Map<String, String> map = patternMap(PATTERN, subscribeInfo.getDestination());
-        Long chatRoomId = Long.valueOf(map.get("chatRoomId"));
+        Long walkRecordId = Long.valueOf(map.get("walkRecordId"));
         Long memberId = principalId(subscribeInfo);
 
-        ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
-        chatRoom.validateUser(memberId);
+        WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
+        Long ownerMemberId = walkRecord.getDelegateWalkPost().getProfile().getMember().getId();
 
-        redisTemplate.opsForSet().add("chatRoomId:" + chatRoomId + ":onlineMembers", memberId.toString());
+        if (!ownerMemberId.equals(memberId)) {
+            throw new IllegalArgumentException("잘못된 접근입니다.");
+        }
+        //todo : 이거 redis 없냐?
 
-        log.info("[STOMP] 구독 chatRoomId: {}, memberId: {}", chatRoomId, memberId);
+        log.info("[STOMP] 구독 walkRecordId: {}, memberId: {}", walkRecordId, memberId);
     }
 }

@@ -15,7 +15,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class ChatRoomSubscribeTypeStrategy extends BaseSubscribeTypeStrategy {
+public class ChatRoomSubscribeStrategy extends BaseSubscribeTypeStrategy {
 
     private static final String PATTERN = "/sub/chat/{chatRoomId}";
 
@@ -39,6 +39,7 @@ public class ChatRoomSubscribeTypeStrategy extends BaseSubscribeTypeStrategy {
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }
 
+        //todo : unsbuscribe했을 때 redis지워야함.
         redisTemplate.opsForSet().add("chatRoomId:" + chatroomId + ":onlineUsers", profileId.toString());
 
         log.info("[STOMP] 구독 chatroomId: {}, profileId: {}", chatroomId, profileId);

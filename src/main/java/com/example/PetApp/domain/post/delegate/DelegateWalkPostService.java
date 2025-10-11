@@ -1,13 +1,13 @@
 package com.example.PetApp.domain.post.delegate;
 
+import com.example.PetApp.common.base.embedded.Applicant;
+import com.example.PetApp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.PetApp.domain.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
 import com.example.PetApp.domain.post.delegate.model.dto.request.GetPostResponseDto;
 import com.example.PetApp.domain.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
 import com.example.PetApp.domain.post.delegate.model.dto.response.ApplyToDelegateWalkPostResponseDto;
 import com.example.PetApp.domain.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
 import com.example.PetApp.domain.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
-import com.example.PetApp.common.base.embedded.Applicant;
-import com.example.PetApp.domain.memberchatRoom.model.dto.response.CreateMemberChatRoomResponseDto;
 import com.example.PetApp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +32,7 @@ public interface DelegateWalkPostService {
 
     Set<Applicant> getApplicants(Long delegateWalkPostId, Long profileId);
 
-    CreateMemberChatRoomResponseDto selectApplicant(Long delegateWalkPostId, Long memberId, String email);
+    CreateChatRoomResponseDto selectApplicant(Long delegateWalkPostId, Long memberId, String email);
 
     CreateWalkRecordResponseDto grantAuthorize(Long delegateWalkPostId, Long profileId);
 }

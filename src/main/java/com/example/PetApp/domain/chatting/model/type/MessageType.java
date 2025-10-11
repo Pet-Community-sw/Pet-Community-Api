@@ -1,5 +1,5 @@
 package com.example.PetApp.domain.chatting.model.type;
 
 public enum MessageType {
-    ENTER, TALK, LEAVE, READ, UPDATE,
+    ENTER, TALK, LEAVE, READ, CHAT_UPDATE, LIST_UPDATE
 }

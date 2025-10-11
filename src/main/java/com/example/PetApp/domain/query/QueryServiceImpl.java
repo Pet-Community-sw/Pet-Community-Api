@@ -8,7 +8,6 @@ import com.example.PetApp.domain.groupchatroom.ChatRoomRepository;
 import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.PetApp.domain.member.MemberRepository;
 import com.example.PetApp.domain.member.model.entity.Member;
-import com.example.PetApp.domain.memberchatRoom.MemberChatRoomRepository;
 import com.example.PetApp.domain.petbreed.PetBreedRepository;
 import com.example.PetApp.domain.petbreed.model.entity.PetBreed;
 import com.example.PetApp.domain.post.common.Post;
@@ -38,7 +37,6 @@ public class QueryServiceImpl implements QueryService {
     private final ChatRoomRepository chatRoomRepository;
     private final CommentRepository commentRepository;
     private final DelegateWalkPostRepository delegateWalkPostRepository;
-    private final MemberChatRoomRepository memberChatRoomRepository;
     private final NormalPostRepository normalPostRepository;
     private final PetBreedRepository petBreedRepository;
     private final PostRepository postRepository;

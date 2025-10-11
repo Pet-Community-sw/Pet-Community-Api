@@ -27,9 +27,6 @@ public class ChatRoom extends BaseEntity {
     private String name;
 
     @Setter
-    private String lastMessage;
-
-    @Setter
     @Enumerated(EnumType.STRING)
     private ChatRoomType chatRoomType;
 

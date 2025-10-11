@@ -10,6 +10,7 @@ import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatMessageRes
 import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatRoomResponseDto;
 import com.example.PetApp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
+import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.profile.model.dto.response.ChatRoomUsersResponseDto;
 import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.domain.query.QueryService;
@@ -63,6 +64,20 @@ public class ChatRoomServiceImpl implements ChatRoomService {
             chatRoom.addUser(profile.getId());
             return new CreateChatRoomResponseDto(chatRoom.getId(), false);
         }
+    }
+
+    //todo : type잘봐보자 type별로 할건지 다시생각
+    @Override
+    public CreateChatRoomResponseDto createChatRoom(Member member, Member applicationMember) {
+        ChatRoom chatRoom = ChatRoom.builder()
+                .chatRoomType(ChatRoomType.ONE)
+                .name(member.getName() + "님의 방")
+                .limitCount(2)
+                .build();
+        chatRoom.addUser(member.getId());
+        chatRoom.addUser(applicationMember.getId());
+        ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
+        return new CreateChatRoomResponseDto(savedChatRoom.getId(), false);
     }
 
     @Transactional(readOnly = true)

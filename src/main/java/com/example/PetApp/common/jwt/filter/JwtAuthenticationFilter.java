@@ -1,6 +1,6 @@
 package com.example.PetApp.common.jwt.filter;
 
-import com.example.PetApp.common.base.util.RedisUtil;
+import com.example.PetApp.common.base.util.RedisUtil1;
 import com.example.PetApp.common.jwt.exception.JwtExceptionCode;
 import com.example.PetApp.common.jwt.token.JwtAuthenticationToken;
 import com.example.PetApp.domain.member.model.dto.request.AccessTokenResponseDto;
@@ -28,7 +28,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final RedisUtil redisUtil;
+    private final RedisUtil1 redisUtil1;
     private final TokenService tokenService;
 
     @Override//filter 하지않게 하려고
@@ -68,7 +68,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authenticationToken(dto.getNewAccessToken());
 
                 filterChain.doFilter(request, response);
-            }catch (Exception exception) {
+            } catch (Exception exception) {
                 request.setAttribute("exception", JwtExceptionCode.EXPIRED_TOKEN.getCode());
                 log.error("EXPIRED Token // token : {}", token);
                 log.error("Set Request Exception Code : {}", request.getAttribute("exception"));
@@ -99,10 +99,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public String getToken(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
-        if (redisUtil.existData(authorization)) {
+        if (redisUtil1.existData(authorization)) {
             throw new BadCredentialsException("로그아웃된 토큰입니다.");
         }
-        if (StringUtils.hasText(authorization) && authorization.startsWith("Bearer")){
+        if (StringUtils.hasText(authorization) && authorization.startsWith("Bearer")) {
             String[] arr = authorization.split(" ");
             return arr[1];
         }

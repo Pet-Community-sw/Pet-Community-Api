@@ -1,6 +1,6 @@
 package com.example.PetApp.domain.email;
 
-import com.example.PetApp.common.base.util.RedisUtil;
+import com.example.PetApp.common.base.util.RedisUtil1;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,17 +16,17 @@ import java.util.Random;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class EmailServiceImpl implements EmailService{
+public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender javaMailSender;
-    private final RedisUtil redisUtil;
+    private final RedisUtil1 redisUtil1;
 
     @Override
     public void sendMail(String toEmail) {
-        if (redisUtil.existData(toEmail)) {
-            redisUtil.deleteData(toEmail);
+        if (redisUtil1.existData(toEmail)) {
+            redisUtil1.deleteData(toEmail);
         }
-        try{
+        try {
             String emailCode = createCode();
             MimeMessage message = createEmail(toEmail, emailCode);
             javaMailSender.send(message);
@@ -51,7 +51,7 @@ public class EmailServiceImpl implements EmailService{
         message.setText(sb.toString(), "utf-8", "html");
         message.setFrom(new InternetAddress("chltjswo789@gmail.com", "멍냥로드"));
 
-        redisUtil.createData(toEmail, emailCode, 3*60L);
+        redisUtil1.createData(toEmail, emailCode, 3 * 60L);
 
         return message;
     }
@@ -69,8 +69,8 @@ public class EmailServiceImpl implements EmailService{
 
     @Override
     public void verifyCode(String email, String code) {
-        String authCode = redisUtil.getData(email);
-        log.info("email : {}, code : {}",email,code);
+        String authCode = redisUtil1.getData(email);
+        log.info("email : {}, code : {}", email, code);
         if (authCode == null) {
             throw new IllegalArgumentException("인증번호가 만료되었습니다. 다시 시도해주세요.");
         } else if (!(authCode.equals(code))) {

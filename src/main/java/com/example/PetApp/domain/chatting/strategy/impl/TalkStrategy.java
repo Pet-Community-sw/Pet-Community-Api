@@ -3,6 +3,7 @@ package com.example.PetApp.domain.chatting.strategy.impl;
 import com.example.PetApp.common.base.util.notification.SendNotificationUtil;
 import com.example.PetApp.domain.chatting.ChatMessageRepository;
 import com.example.PetApp.domain.chatting.model.dto.MessageResponseDto;
+import com.example.PetApp.domain.chatting.model.dto.UpdateListDto;
 import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
 import com.example.PetApp.domain.chatting.model.type.MessageType;
 import com.example.PetApp.domain.chatting.strategy.MessageTypeStrategy;
@@ -29,16 +30,18 @@ public class TalkStrategy implements MessageTypeStrategy {
     private final SendNotificationUtil sendNotificationUtil;
     private final QueryService queryService;
 
+    AtomicInteger seq = new AtomicInteger(0);
+
     @Override
     public void handle(ChatMessage chatMessage) {
-        AtomicInteger seq = new AtomicInteger(0);
         chatMessage.updateSeq(seq.incrementAndGet());
+        chatMessageRepository.save(chatMessage);
+
+        //메시지를 전송
         simpMessagingTemplate.convertAndSend("/sub/chat/" + chatMessage.getChatRoomId(),
                 MessageResponseDto.builder().messageType(MessageType.TALK).body(chatMessage).build());
 
-        sendChatNotification(chatMessage);
-        chatMessageRepository.save(chatMessage);
-
+        sendChatNotificationAndUpdateList(chatMessage);
         updateLastMessage(chatMessage);
     }
 
@@ -51,7 +54,8 @@ public class TalkStrategy implements MessageTypeStrategy {
         redisTemplate.opsForHash().putAll("chat:lastMessageInfo:" + chatMessage.getChatRoomId(), lastMessageInfo);
     }
 
-    private void sendChatNotification(ChatMessage chatMessage) {
+    //todo : 업데이트 로직 정리해야됨.
+    private void sendChatNotificationAndUpdateList(ChatMessage chatMessage) {
         Long chatRoomId = chatMessage.getChatRoomId();
         Long senderId = chatMessage.getSenderId();
         String message = chatMessage.getSenderName() + "님이 메시지를 보냈습니다.";
@@ -70,7 +74,12 @@ public class TalkStrategy implements MessageTypeStrategy {
                 .forEach(userId -> {
                     Profile profile = queryService.findByProfile(userId);
                     sendNotificationUtil.sendNotification(profile.getMember(), message);
+                    Object seqByProfile = redisTemplate.opsForHash().get("chatRoomId:" + chatRoomId + ":read", profile);
+                    int profileSeq = seqByProfile == null ? 0 : (Integer) seqByProfile;
+                    simpMessagingTemplate.convertAndSend("sub/list/" + profile.getId(),
+                            MessageResponseDto.builder().messageType(MessageType.LIST_UPDATE).body(new UpdateListDto(chatRoomId, (chatMessage.getSeq() - profileSeq), chatMessage.getMessage(), chatMessage.getMessageTime())));
                 });
+
 
     }
 }

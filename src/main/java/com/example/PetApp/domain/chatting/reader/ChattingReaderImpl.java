@@ -7,7 +7,6 @@ import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
 import com.example.PetApp.domain.chatting.model.type.MessageType;
 import com.example.PetApp.domain.groupchatroom.mapper.ChatRoomMapper;
 import com.example.PetApp.domain.groupchatroom.model.dto.request.ChatMessageDtoMember;
-import com.example.PetApp.domain.groupchatroom.model.dto.request.UpdateChatUnReadCountDto;
 import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatMessageResponseDto;
 import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.PetApp.domain.query.QueryService;
@@ -60,16 +59,7 @@ public class ChattingReaderImpl implements ChattingReader {
         int endSeq = (Integer) lastMessageInfo.getOrDefault("seq", null);
         mongoService.updateMessages(chatRoomId, userId, startSeq, endSeq);
         simpMessagingTemplate.convertAndSend("/sub/chat/" + chatRoomId,
-                MessageResponseDto.builder().messageType(MessageType.UPDATE).body(new UpdateMessageDto(startSeq, endSeq)).build());
-    }
-
-    //todo : 채팅방 목록 경로 보내기 해야됨.
-    private void updateProfilesForMessages(List<ChatMessage> messages, Long userId) {
-
-        UpdateChatUnReadCountDto updateChatUnReadCountDto = ChatRoomMapper.toUpdateChatUnReadCountDto(chatMessage);
-
-        simpMessagingTemplate.convertAndSend("/sub/chat/" + chatMessage.getChatRoomId(), updateChatUnReadCountDto);
-        //이거 api명세서 작성해야됨. 안읽은 수 처리.
+                MessageResponseDto.builder().messageType(MessageType.CHAT_UPDATE).body(new UpdateMessageDto(startSeq, endSeq)).build());
     }
 }
 
