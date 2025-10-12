@@ -3,7 +3,6 @@ package com.example.PetApp.config;
 import com.example.PetApp.common.base.util.RedisUtil1;
 import com.example.PetApp.common.jwt.filter.JwtAuthenticationFilter;
 import com.example.PetApp.common.jwt.provider.JwtAuthenticationProvider;
-import com.example.PetApp.domain.token.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,14 +16,13 @@ public class AuthenticationManagerConfig extends AbstractHttpConfigurer<Authenti
 
     private final JwtAuthenticationProvider authenticationProvider;
     private final RedisUtil1 redisUtil1;
-    private final TokenService tokenService;
 
     @Override
     public void configure(HttpSecurity builder) throws Exception {
         AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
         builder.addFilterBefore(
-                new JwtAuthenticationFilter(authenticationManager, redisUtil1, tokenService),
+                new JwtAuthenticationFilter(authenticationManager, redisUtil1),
                 UsernamePasswordAuthenticationFilter.class
         ).authenticationProvider(authenticationProvider);
     }
