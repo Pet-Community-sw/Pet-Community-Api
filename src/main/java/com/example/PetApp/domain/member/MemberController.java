@@ -1,14 +1,13 @@
 package com.example.PetApp.domain.member;
 
+import com.example.PetApp.common.base.dto.MessageResponse;
+import com.example.PetApp.common.base.util.AuthUtil;
 import com.example.PetApp.domain.member.model.dto.request.*;
 import com.example.PetApp.domain.member.model.dto.response.FindByIdResponseDto;
 import com.example.PetApp.domain.member.model.dto.response.GetMemberResponseDto;
-import com.example.PetApp.domain.member.model.dto.response.LoginResponseDto;
 import com.example.PetApp.domain.member.model.dto.response.MemberSignResponseDto;
-import com.example.PetApp.common.base.dto.MessageResponse;
-import com.example.PetApp.common.base.util.AuthUtil;
+import com.example.PetApp.domain.member.model.dto.response.TokenResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -39,9 +38,8 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body(memberService.createMember(memberSignDto));
     }
 
-    @ApiResponse(description = "Set-Cookie 헤더에 refreshToken 포함")
     @PostMapping("/login")
-    public LoginResponseDto login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
+    public TokenResponseDto login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
         return memberService.login(loginDto, response);
     }
 

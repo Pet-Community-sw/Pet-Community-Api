@@ -1,25 +1,25 @@
 package com.example.PetApp.domain.profile;
 
+import com.example.PetApp.common.base.util.imagefile.FileImageKind;
+import com.example.PetApp.common.base.util.imagefile.FileUploadUtil;
+import com.example.PetApp.common.exception.ConflictException;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.petbreed.model.entity.PetBreed;
+import com.example.PetApp.domain.profile.mapper.ProfileMapper;
 import com.example.PetApp.domain.profile.model.dto.request.ProfileDto;
 import com.example.PetApp.domain.profile.model.dto.response.AccessTokenByProfileIdResponseDto;
 import com.example.PetApp.domain.profile.model.dto.response.CreateProfileResponseDto;
 import com.example.PetApp.domain.profile.model.dto.response.GetProfileResponseDto;
 import com.example.PetApp.domain.profile.model.dto.response.ProfileListResponseDto;
 import com.example.PetApp.domain.profile.model.entity.Profile;
-import com.example.PetApp.common.exception.ConflictException;
-import com.example.PetApp.domain.profile.mapper.ProfileMapper;
 import com.example.PetApp.domain.query.QueryService;
 import com.example.PetApp.domain.token.TokenService;
-import com.example.PetApp.common.base.util.imagefile.FileImageKind;
-import com.example.PetApp.common.base.util.imagefile.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -94,11 +94,11 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Transactional
     @Override
-    public AccessTokenByProfileIdResponseDto accessTokenByProfile(String accessToken, String refreshToken, Long profileId, String email) {//요청했을 당시 토큰을 redis에 저장시켜서 이전 토큰으로 요청 시 인증이 안되게 끔 해야됨.
+    public AccessTokenByProfileIdResponseDto accessTokenByProfile(String accessToken, Long profileId, String email) {//요청했을 당시 토큰을 redis에 저장시켜서 이전 토큰으로 요청 시 인증이 안되게 끔 해야됨.
         Member member = queryService.findByMember(email);
         Profile profile = queryService.findByProfile(profileId);
         member.validateProfile(member, profile.getMember());
-        String newAccessToken = tokenService.newAccessTokenByProfile(accessToken, refreshToken, member, profileId);
+        String newAccessToken = tokenService.newAccessTokenByProfile(accessToken, member, profileId);
 
         return ProfileMapper.toAccessTokenToProfileIdResponseDto(profileId, newAccessToken);
     }

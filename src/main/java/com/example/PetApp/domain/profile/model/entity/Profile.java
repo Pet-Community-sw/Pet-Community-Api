@@ -1,11 +1,11 @@
 package com.example.PetApp.domain.profile.model.entity;
 
+import com.example.PetApp.common.base.superclass.BaseEntity;
 import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
-import com.example.PetApp.domain.profile.model.dto.request.ProfileDto;
-import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.petbreed.model.entity.PetBreed;
-import com.example.PetApp.common.base.superclass.BaseEntity;
+import com.example.PetApp.domain.profile.model.dto.request.ProfileDto;
+import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -55,7 +55,6 @@ public class Profile extends BaseEntity {
     private String petName;
 
     @Setter
-    @NotBlank
     @Column(nullable = false)
     private String extraInfo;
 
@@ -71,7 +70,7 @@ public class Profile extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "pet_breed_id"))
     private Set<PetBreed> avoidBreeds = new HashSet<>();
 
-    @OneToMany(mappedBy = "profile",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WalkingTogetherMatch> walkingTogetherMatches;
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})

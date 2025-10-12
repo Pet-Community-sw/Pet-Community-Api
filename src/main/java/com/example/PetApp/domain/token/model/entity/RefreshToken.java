@@ -1,6 +1,7 @@
 package com.example.PetApp.domain.token.model.entity;
 
 
+import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.common.base.superclass.BaseEntity;
 import lombok.*;
@@ -22,7 +23,12 @@ public class RefreshToken extends BaseEntity {
 
     @Setter
     @NotBlank
-    @Column(nullable = false)
+    @Column(nullable = false, length = 512)
     private String refreshToken;
 
+    public void isEqual(String refreshToken) {
+        if (!this.refreshToken.equals(refreshToken)) {
+            throw new ForbiddenException("RefreshToken이 유효하지 않습니다.");
+        }
+    }
 }
