@@ -21,5 +21,5 @@ public interface ProfileService {
 
     void deleteProfile(Long profileId, String email);
 
-    AccessTokenByProfileIdResponseDto accessTokenByProfile(String accessToken, String refreshToken, Long profileId, String email);
+    AccessTokenByProfileIdResponseDto accessTokenByProfile(String accessToken, Long profileId, String email);
 }
