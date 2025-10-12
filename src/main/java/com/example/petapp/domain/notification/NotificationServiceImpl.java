@@ -1,9 +1,10 @@
-package com.example.petapp.domain.sse;
+package com.example.petapp.domain.notification;
 
-import com.example.petapp.domain.member.model.entity.Member;
-import com.example.petapp.domain.sse.model.dto.NotificationListDto;
-import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.common.base.util.TimeAgoUtil;
+import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.notification.manager.SseEmitterManager;
+import com.example.petapp.domain.notification.model.dto.NotificationListDto;
+import com.example.petapp.domain.query.QueryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -50,5 +51,10 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public SseEmitter subscribe(String token) {
         return sseEmitterManager.subscribe(token);
+    }
+
+    @Override
+    public void sendNotification(Long memberId, String message) {
+        sseEmitterManager.sendNotification(memberId, message);
     }
 }

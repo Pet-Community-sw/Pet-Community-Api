@@ -16,6 +16,6 @@ public class MemberStatusServiceImpl implements MemberStatusService {
     @Override
     public void updateMemberStatus(String email) {
         Member member = queryService.findByMember(email);
-        stringRedisTemplate.opsForSet().add("foreGroundMembers:", member.getId().toString());
-        }
+        stringRedisTemplate.opsForSet().add("foreGroundMembers", member.getId().toString());
     }
+}

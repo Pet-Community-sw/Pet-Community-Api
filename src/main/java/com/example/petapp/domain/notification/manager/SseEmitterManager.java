@@ -1,8 +1,8 @@
-package com.example.petapp.domain.sse;
+package com.example.petapp.domain.notification.manager;
 
+import com.example.petapp.common.jwt.util.JwtTokenizer;
 import com.example.petapp.domain.member.model.entity.Member;
 import com.example.petapp.domain.query.QueryService;
-import com.example.petapp.common.jwt.util.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -65,7 +65,7 @@ public class SseEmitterManager {
 
             } catch (IOException e) {
                 sseEmitterMap.remove(memberId);
-                log.error("error sending notification to memberId:{}", memberId, e);
+                log.error("[ERROR] notification : {}", memberId, e);
             }
         } else {
             log.warn("not found sse memberId:{}", memberId);

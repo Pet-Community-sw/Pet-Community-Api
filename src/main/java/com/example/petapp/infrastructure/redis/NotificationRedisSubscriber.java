@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.redis;
 
-import com.example.petapp.domain.sse.SseEmitterManager;
+import com.example.petapp.domain.notification.manager.SseEmitterManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

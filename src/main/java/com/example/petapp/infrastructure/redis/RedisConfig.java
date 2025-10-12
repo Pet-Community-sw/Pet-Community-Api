@@ -1,5 +1,6 @@
 package com.example.petapp.infrastructure.redis;
 
+import com.example.petapp.domain.notification.model.dto.NotificationListDto;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -31,11 +32,11 @@ public class RedisConfig {
     }
 
     @Bean//알림을 위한 redisTemplate
-    public RedisTemplate<String, Object> notificationRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> notificationRedisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, NotificationListDto> notificationRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, NotificationListDto> notificationRedisTemplate = new RedisTemplate<>();
         notificationRedisTemplate.setConnectionFactory(redisConnectionFactory);
         notificationRedisTemplate.setKeySerializer(new StringRedisSerializer());
-        notificationRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(Object.class));
+        notificationRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(NotificationListDto.class));
         return notificationRedisTemplate;
     }
 
