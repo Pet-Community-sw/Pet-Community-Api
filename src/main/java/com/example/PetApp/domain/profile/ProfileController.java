@@ -1,12 +1,12 @@
 package com.example.PetApp.domain.profile;
 
+import com.example.PetApp.common.app.common.MessageResponse;
+import com.example.PetApp.common.util.AuthUtil;
 import com.example.PetApp.domain.profile.model.dto.request.ProfileDto;
 import com.example.PetApp.domain.profile.model.dto.response.AccessTokenByProfileIdResponseDto;
 import com.example.PetApp.domain.profile.model.dto.response.CreateProfileResponseDto;
 import com.example.PetApp.domain.profile.model.dto.response.GetProfileResponseDto;
 import com.example.PetApp.domain.profile.model.dto.response.ProfileListResponseDto;
-import com.example.PetApp.common.app.common.MessageResponse;
-import com.example.PetApp.common.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,8 +51,8 @@ public class ProfileController {
     }
 
     @PostMapping("/token/{profileId}")//리팩토링 시에 authentication 말고 accesstoken을 받아서 이전 토큰 무효화 처리해야됨.
-    public AccessTokenByProfileIdResponseDto accessTokenByProfileId(@RequestHeader("Authorization") String accessToken, @CookieValue("refreshToken") String refreshToken, @PathVariable Long profileId, Authentication authentication) {
-        return profileService.accessTokenByProfile(accessToken,refreshToken, profileId, AuthUtil.getEmail(authentication));
+    public AccessTokenByProfileIdResponseDto accessTokenByProfileId(@RequestHeader("Authorization") String accessToken, @PathVariable Long profileId, Authentication authentication) {
+        return profileService.accessTokenByProfile(accessToken, profileId, AuthUtil.getEmail(authentication));
     }
 
 }

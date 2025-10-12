@@ -61,7 +61,7 @@ public class MemberServiceImpl implements MemberService {
             throw new UnAuthorizedException("이메일 혹은 비밀번호가 일치하지 않습니다.");
         }
         setRole(member);
-        return tokenService.save(member, response);
+        return tokenService.save(member);
     }
 
     @Override
