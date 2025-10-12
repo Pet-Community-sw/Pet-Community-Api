@@ -1,7 +1,7 @@
 package com.example.PetApp.domain.member;
 
-import com.example.PetApp.common.app.common.MessageResponse;
-import com.example.PetApp.common.util.AuthUtil;
+import com.example.PetApp.common.base.dto.MessageResponse;
+import com.example.PetApp.common.base.util.AuthUtil;
 import com.example.PetApp.domain.member.model.dto.request.*;
 import com.example.PetApp.domain.member.model.dto.response.FindByIdResponseDto;
 import com.example.PetApp.domain.member.model.dto.response.GetMemberResponseDto;

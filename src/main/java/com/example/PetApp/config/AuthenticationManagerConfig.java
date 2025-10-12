@@ -1,6 +1,6 @@
 package com.example.PetApp.config;
 
-import com.example.PetApp.common.util.RedisUtil;
+import com.example.PetApp.common.base.util.RedisUtil1;
 import com.example.PetApp.common.jwt.filter.JwtAuthenticationFilter;
 import com.example.PetApp.common.jwt.provider.JwtAuthenticationProvider;
 import com.example.PetApp.domain.token.TokenService;
@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class AuthenticationManagerConfig extends AbstractHttpConfigurer<AuthenticationManagerConfig, HttpSecurity> {
 
     private final JwtAuthenticationProvider authenticationProvider;
-    private final RedisUtil redisUtil;
+    private final RedisUtil1 redisUtil1;
     private final TokenService tokenService;
 
     @Override
@@ -24,7 +24,7 @@ public class AuthenticationManagerConfig extends AbstractHttpConfigurer<Authenti
         AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
         builder.addFilterBefore(
-                new JwtAuthenticationFilter(authenticationManager,redisUtil, tokenService),
+                new JwtAuthenticationFilter(authenticationManager, redisUtil1, tokenService),
                 UsernamePasswordAuthenticationFilter.class
         ).authenticationProvider(authenticationProvider);
     }

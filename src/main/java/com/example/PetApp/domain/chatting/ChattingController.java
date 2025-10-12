@@ -1,6 +1,6 @@
 package com.example.PetApp.domain.chatting;
 
-import com.example.PetApp.domain.chatting.model.entity.ChatMessage;
+import com.example.PetApp.domain.chatting.model.dto.ChatMessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -13,8 +13,8 @@ import java.security.Principal;
 public class ChattingController {
     private final ChattingService chattingService;
 
-    @MessageMapping("/chat/message")
-    public void message(@Payload ChatMessage chatMessage, Principal principal) {//memberId or profileId
+    @MessageMapping("/chat")
+    public void message(@Payload ChatMessageDto chatMessage, Principal principal) {//memberId or profileId
         chattingService.sendToMessage(chatMessage, Long.valueOf(principal.getName()));
     }
 }

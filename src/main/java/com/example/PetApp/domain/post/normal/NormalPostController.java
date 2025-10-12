@@ -1,11 +1,11 @@
 package com.example.PetApp.domain.post.normal;
 
-import com.example.PetApp.common.app.common.MessageResponse;
+import com.example.PetApp.common.base.dto.MessageResponse;
 import com.example.PetApp.domain.post.normal.model.dto.response.CreatePostResponseDto;
 import com.example.PetApp.domain.post.normal.model.dto.response.GetPostResponseDto;
 import com.example.PetApp.domain.post.normal.model.dto.request.PostDto;
 import com.example.PetApp.domain.post.normal.model.dto.response.PostResponseDto;
-import com.example.PetApp.common.util.AuthUtil;
+import com.example.PetApp.common.base.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

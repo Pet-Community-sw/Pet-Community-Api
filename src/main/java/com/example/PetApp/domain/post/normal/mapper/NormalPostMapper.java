@@ -4,13 +4,13 @@ import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.comment.model.entity.Commentable;
 import com.example.PetApp.domain.post.normal.model.entity.NormalPost;
 import com.example.PetApp.domain.post.common.Post;
-import com.example.PetApp.infrastructure.database.base.embedded.Content;
+import com.example.PetApp.common.base.embedded.Content;
 import com.example.PetApp.domain.comment.model.dto.response.GetCommentsResponseDto;
 import com.example.PetApp.domain.post.normal.model.dto.response.GetPostResponseDto;
 import com.example.PetApp.domain.post.normal.model.dto.request.PostDto;
 import com.example.PetApp.domain.post.normal.model.dto.response.PostResponseDto;
 import com.example.PetApp.domain.comment.mapper.CommentMapper;
-import com.example.PetApp.common.util.TimeAgoUtil;
+import com.example.PetApp.common.base.util.TimeAgoUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;

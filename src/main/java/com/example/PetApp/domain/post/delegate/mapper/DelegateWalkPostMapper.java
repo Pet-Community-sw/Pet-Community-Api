@@ -3,12 +3,12 @@ package com.example.PetApp.domain.post.delegate.mapper;
 import com.example.PetApp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.profile.model.entity.Profile;
-import com.example.PetApp.infrastructure.database.base.embedded.Location;
-import com.example.PetApp.infrastructure.database.base.embedded.Content;
+import com.example.PetApp.common.base.embedded.Location;
+import com.example.PetApp.common.base.embedded.Content;
 import com.example.PetApp.domain.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
 import com.example.PetApp.domain.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
 import com.example.PetApp.domain.post.delegate.model.dto.request.GetPostResponseDto;
-import com.example.PetApp.common.util.TimeAgoUtil;
+import com.example.PetApp.common.base.util.TimeAgoUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;

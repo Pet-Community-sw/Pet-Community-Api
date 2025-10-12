@@ -1,7 +1,7 @@
 package com.example.PetApp.domain.profile;
 
-import com.example.PetApp.common.app.common.MessageResponse;
-import com.example.PetApp.common.util.AuthUtil;
+import com.example.PetApp.common.base.dto.MessageResponse;
+import com.example.PetApp.common.base.util.AuthUtil;
 import com.example.PetApp.domain.profile.model.dto.request.ProfileDto;
 import com.example.PetApp.domain.profile.model.dto.response.AccessTokenByProfileIdResponseDto;
 import com.example.PetApp.domain.profile.model.dto.response.CreateProfileResponseDto;

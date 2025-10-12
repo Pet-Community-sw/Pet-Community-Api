@@ -1,8 +1,8 @@
 package com.example.PetApp.domain.profile;
 
+import com.example.PetApp.common.base.util.imagefile.FileImageKind;
+import com.example.PetApp.common.base.util.imagefile.FileUploadUtil;
 import com.example.PetApp.common.exception.ConflictException;
-import com.example.PetApp.common.util.imagefile.FileImageKind;
-import com.example.PetApp.common.util.imagefile.FileUploadUtil;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.petbreed.model.entity.PetBreed;
 import com.example.PetApp.domain.profile.mapper.ProfileMapper;

@@ -4,7 +4,7 @@ import com.example.PetApp.domain.comment.model.entity.Comment;
 import com.example.PetApp.domain.comment.model.entity.Commentable;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.post.common.Post;
-import com.example.PetApp.infrastructure.database.base.embedded.Content;
+import com.example.PetApp.common.base.embedded.Content;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

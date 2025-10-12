@@ -1,7 +1,7 @@
 package com.example.PetApp.domain.sse;
 
 import com.example.PetApp.domain.sse.model.dto.NotificationListDto;
-import com.example.PetApp.common.util.AuthUtil;
+import com.example.PetApp.common.base.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;

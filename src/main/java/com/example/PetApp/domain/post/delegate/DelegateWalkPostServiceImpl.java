@@ -1,24 +1,24 @@
 package com.example.PetApp.domain.post.delegate;
 
-import com.example.PetApp.common.annotation.Notification;
-import com.example.PetApp.common.util.notification.NotificationDto;
+import com.example.PetApp.common.aop.annotation.Notification;
+import com.example.PetApp.common.base.embedded.Applicant;
+import com.example.PetApp.common.base.util.notification.NotificationDto;
+import com.example.PetApp.common.exception.ForbiddenException;
+import com.example.PetApp.domain.groupchatroom.ChatRoomService;
+import com.example.PetApp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.PetApp.domain.member.model.entity.Member;
+import com.example.PetApp.domain.post.delegate.mapper.DelegateWalkPostMapper;
 import com.example.PetApp.domain.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
 import com.example.PetApp.domain.post.delegate.model.dto.request.GetPostResponseDto;
 import com.example.PetApp.domain.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
 import com.example.PetApp.domain.post.delegate.model.dto.response.ApplyToDelegateWalkPostResponseDto;
 import com.example.PetApp.domain.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
 import com.example.PetApp.domain.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
-import com.example.PetApp.domain.profile.model.entity.Profile;
-import com.example.PetApp.infrastructure.database.base.embedded.Applicant;
 import com.example.PetApp.domain.post.delegate.model.entity.DelegateWalkPost;
-import com.example.PetApp.domain.memberchatRoom.model.dto.response.CreateMemberChatRoomResponseDto;
-import com.example.PetApp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
-import com.example.PetApp.common.exception.ForbiddenException;
-import com.example.PetApp.domain.post.delegate.mapper.DelegateWalkPostMapper;
-import com.example.PetApp.domain.memberchatRoom.MemberChatRoomService;
+import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.domain.query.QueryService;
 import com.example.PetApp.domain.walkrecord.WalkRecordService;
+import com.example.PetApp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,9 +32,9 @@ import java.util.Set;
 public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
 
     private final DelegateWalkPostRepository delegateWalkPostRepository;
-    private final MemberChatRoomService memberChatRoomService;
     private final WalkRecordService walkRecordService;
     private final QueryService queryService;
+    private final ChatRoomService chatRoomService;
 
     @Transactional
     @Override
@@ -72,16 +72,15 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         return DelegateWalkPostMapper.toGetPostResponseDto(delegateWalkPost);
     }
 
-    @Notification(recipient = "#ret.notificationDto.ownerMember", message = "대리산책자 지원에 선정되었습니다.")
     @Transactional
     @Override
-    public CreateMemberChatRoomResponseDto selectApplicant(Long delegateWalkPostId, Long memberId, String email) {
+    public CreateChatRoomResponseDto selectApplicant(Long delegateWalkPostId, Long memberId, String email) {
         Member member = queryService.findByMember(email);
         Member applicantMember = queryService.findByMember(memberId);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
         delegateWalkPost.validatedAndSelectApplicant(memberId, member);
         //켈린더에 넣는 로직필요.
-        return memberChatRoomService.createMemberChatRoom(member, applicantMember);
+        return chatRoomService.createChatRoom(member, applicantMember);
     }
 
     @Transactional//산책 허가.

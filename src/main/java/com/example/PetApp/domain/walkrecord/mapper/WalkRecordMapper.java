@@ -4,7 +4,7 @@ import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.walkrecord.model.entity.WalkRecord;
 import com.example.PetApp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.PetApp.domain.walkrecord.model.dto.response.GetWalkRecordResponseDto;
-import com.example.PetApp.common.util.CreatedAtUtil;
+import com.example.PetApp.common.base.util.CreatedAtUtil;
 
 public class WalkRecordMapper {
 

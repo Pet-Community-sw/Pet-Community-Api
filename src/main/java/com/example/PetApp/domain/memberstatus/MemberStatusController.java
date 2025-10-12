@@ -1,6 +1,6 @@
 package com.example.PetApp.domain.memberstatus;
 
-import com.example.PetApp.common.app.common.MessageResponse;
+import com.example.PetApp.common.base.dto.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

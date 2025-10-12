@@ -5,7 +5,7 @@ import com.example.PetApp.domain.post.common.Post;
 import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.domain.token.model.entity.RefreshToken;
 import com.example.PetApp.domain.fcm.model.entity.FcmToken;
-import com.example.PetApp.infrastructure.database.base.superclass.BaseEntity;
+import com.example.PetApp.common.base.superclass.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

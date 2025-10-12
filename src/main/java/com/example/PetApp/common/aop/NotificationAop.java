@@ -1,12 +1,10 @@
 package com.example.PetApp.common.aop;
 
-import com.example.PetApp.common.annotation.Notification;
-import com.example.PetApp.common.util.notification.SendNotificationUtil;
+import com.example.PetApp.common.aop.annotation.Notification;
+import com.example.PetApp.common.base.util.notification.SendNotificationUtil;
 import com.example.PetApp.domain.member.model.entity.Member;
-import com.google.api.gax.rpc.InternalException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,8 +12,6 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.CompletableFuture;
 
 
 @Aspect

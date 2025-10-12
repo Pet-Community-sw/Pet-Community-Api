@@ -1,10 +1,10 @@
 package com.example.PetApp.domain.groupchatroom;
 
-import com.example.PetApp.common.app.common.MessageResponse;
-import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatMessageResponseDto;
-import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatRoomsResponseDto;
+import com.example.PetApp.common.base.dto.MessageResponse;
+import com.example.PetApp.common.base.util.AuthUtil;
 import com.example.PetApp.domain.groupchatroom.model.dto.request.UpdateChatRoomDto;
-import com.example.PetApp.common.util.AuthUtil;
+import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatMessageResponseDto;
+import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatRoomResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,16 +14,16 @@ import javax.validation.Valid;
 import java.util.List;
 
 
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/chat-rooms")
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
+
     //변경해야됩니다. jwt토큰에 profileId집어 넣었어요
     @GetMapping()
-    private List<ChatRoomsResponseDto> chatRoomList(Authentication authentication) {
+    private List<ChatRoomResponseDto> chatRoomList(Authentication authentication) {
         return chatRoomService.getChatRooms(AuthUtil.getProfileId(authentication));
     }
 

@@ -1,18 +1,20 @@
 package com.example.PetApp.domain.groupchatroom;
 
+import com.example.PetApp.common.exception.ConflictException;
+import com.example.PetApp.domain.chatting.ChatMessageRepository;
+import com.example.PetApp.domain.chatting.model.type.ChatRoomType;
+import com.example.PetApp.domain.chatting.reader.ChattingReader;
+import com.example.PetApp.domain.groupchatroom.mapper.ChatRoomMapper;
 import com.example.PetApp.domain.groupchatroom.model.dto.request.UpdateChatRoomDto;
 import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatMessageResponseDto;
-import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatRoomsResponseDto;
-import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
-import com.example.PetApp.domain.profile.model.entity.Profile;
-import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
+import com.example.PetApp.domain.groupchatroom.model.dto.response.ChatRoomResponseDto;
 import com.example.PetApp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
-import com.example.PetApp.common.exception.ConflictException;
-import com.example.PetApp.common.exception.ForbiddenException;
-import com.example.PetApp.domain.groupchatroom.mapper.ChatRoomMapper;
-import com.example.PetApp.domain.chatting.ChatMessageRepository;
-import com.example.PetApp.domain.chatting.ChattingReader;
+import com.example.PetApp.domain.groupchatroom.model.entity.ChatRoom;
+import com.example.PetApp.domain.member.model.entity.Member;
+import com.example.PetApp.domain.profile.model.dto.response.ChatRoomUsersResponseDto;
+import com.example.PetApp.domain.profile.model.entity.Profile;
 import com.example.PetApp.domain.query.QueryService;
+import com.example.PetApp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -20,15 +22,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
-
-import static com.example.PetApp.domain.chatting.model.entity.ChatMessage.*;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+/*
+ *   todo : 지금은 profile 채팅방만 구현해놨음.
+ * */
 public class ChatRoomServiceImpl implements ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
@@ -39,14 +41,12 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<ChatRoomsResponseDto> getChatRooms(Long profileId) {
-        Profile profile = queryService.findByProfile(profileId);
-        List<ChatRoom> chatRoomList = chatRoomRepository.findAllByProfilesContains(profile);
+    public List<ChatRoomResponseDto> getChatRooms(Long profileId) {
+        List<ChatRoom> chatRoomList = chatRoomRepository.findAllByUserIdAndChatRoomType(profileId, ChatRoomType.MANY);//나중에 타입 파라미터로 방아야함
         return chatRoomList.stream()
-                .map(chatRoom -> toChatRoomsResponseDtoWithRedis(chatRoom, profile.getId()))
+                .map(chatRoom -> toChatRoomsResponseDtoWithRedis(chatRoom, profileId))
                 .collect(Collectors.toList());
     }
-
 
     @Transactional
     @Override
@@ -57,41 +57,48 @@ public class ChatRoomServiceImpl implements ChatRoomService {
             ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
             return new CreateChatRoomResponseDto(savedChatRoom.getId(), true);
         } else {
-            if (walkingTogetherMatch.getLimitCount() <= chatRoom1.get().getProfiles().size()) {
+            if (walkingTogetherMatch.getLimitCount() <= chatRoom1.get().getUsers().size()) {
                 throw new ConflictException("인원초과");//채팅방 limitCount설정.
             }
             ChatRoom chatRoom = chatRoom1.get();
-            chatRoom.addProfiles(profile);
+            chatRoom.addUser(profile.getId());
             return new CreateChatRoomResponseDto(chatRoom.getId(), false);
         }
     }
 
+    //todo : type잘봐보자 type별로 할건지 다시생각
+    @Override
+    public CreateChatRoomResponseDto createChatRoom(Member member, Member applicationMember) {
+        ChatRoom chatRoom = ChatRoom.builder()
+                .chatRoomType(ChatRoomType.ONE)
+                .name(member.getName() + "님의 방")
+                .limitCount(2)
+                .build();
+        chatRoom.addUser(member.getId());
+        chatRoom.addUser(applicationMember.getId());
+        ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
+        return new CreateChatRoomResponseDto(savedChatRoom.getId(), false);
+    }
+
     @Transactional(readOnly = true)
     @Override
-    public List<Long> getProfiles(Long chatRoomId) {
+    public List<Long> getUsers(Long chatRoomId) {
         ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
-
-        return chatRoom
-                .getProfiles()
-                .stream()
-                .map(Profile::getId)
-                .collect(Collectors.toList());
+        return new ArrayList<>(chatRoom
+                .getUsers());
     }
 
     @Transactional
     @Override
-    public void deleteChatRoom(Long chatRoomId, Long profileId) {
+    public void deleteChatRoom(Long chatRoomId, Long userId) {
         ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
-        Profile profile = queryService.findByProfile(profileId);
-        List<Profile> profiles = chatRoom.getProfiles();
-        if (!(profiles.contains(profile))) {
-            throw new ForbiddenException("권한이 없습니다.");
-        }
-        profiles.remove(profile);
-        chatRoom.setProfiles(profiles);//방 사용자 수가 1이되면 채팅방 전체 삭제.
-        if (chatRoomRepository.countByProfile(chatRoomId) <= 1) {
+        chatRoom.validateUser(userId);
+        chatRoom.deleteUser(userId);
+        redisTemplate.opsForHash().delete("chatRoomId:" + chatRoomId + ":read", String.valueOf(userId));
+        if (chatRoomRepository.countByProfile(chatRoomId) <= 1) {//방 사용자 수가 1이되면 채팅방 전체 삭제.
             chatMessageRepository.deleteByChatRoomId(chatRoomId);//채팅방 메시지 삭제.
-            chatRoomRepository.deleteById(chatRoomId);//이게 왜안되는교?
+            chatRoomRepository.deleteById(chatRoomId);//todo : 삭제 되는지
+            deleteRedis(chatRoomId);
         }
     }
 
@@ -100,9 +107,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     public void updateChatRoom(Long chatRoomId, UpdateChatRoomDto updateChatRoomDto, Long profileId) {
         ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
         Profile profile = queryService.findByProfile(profileId);
-        if (!(chatRoom.getWalkingTogetherMatch().getProfile().getId().equals(profile.getId()))) {
-            throw new ForbiddenException("권한이 없습니다.");
-        }
+        chatRoom.validateChatOwner(profile);
+
         chatRoom.setName(updateChatRoomDto.getChatRoomName());
         chatRoom.setLimitCount(updateChatRoomDto.getLimitCount());
     }
@@ -110,18 +116,35 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Transactional(readOnly = true)
     @Override
     public ChatMessageResponseDto getMessages(Long chatRoomId, Long userId, int page) {
-        return chattingReader.getMessages(chatRoomId, userId, ChatRoomType.MANY, page);
+        return chattingReader.getMessages(chatRoomId, userId, page);
     }
 
-    private ChatRoomsResponseDto toChatRoomsResponseDtoWithRedis(ChatRoom chatRoom, Long profileId) {
-        String lastMessage = redisTemplate.opsForValue().get("chat:lastMessage" + chatRoom.getId());
-        String lastMessageTime = redisTemplate.opsForValue().get("chat:lastMessageTime" + chatRoom.getId());
-        String count = redisTemplate.opsForValue().get("unRead:" + chatRoom.getId() + ":" + profileId);
-        int unReadCount = count != null ? Integer.parseInt(count) : 0;
-        LocalDateTime lastMessageLocalDateTime = null;
-        if (lastMessageTime != null) {
-            lastMessageLocalDateTime = LocalDateTime.parse(lastMessageTime);
-        }
-        return ChatRoomMapper.toChatRoomsResponseDto(chatRoom, profileId, lastMessage, unReadCount, lastMessageLocalDateTime);
+    private ChatRoomResponseDto toChatRoomsResponseDtoWithRedis(ChatRoom chatRoom, Long userId) {
+        Object seqByUser = redisTemplate.opsForHash().get("chatRoomId:" + chatRoom.getId() + ":read", String.valueOf(userId));
+        int userSeq = seqByUser == null ? 0 : (Integer) (seqByUser);
+
+        Map<Object, Object> lastMessageInfo = redisTemplate.opsForHash().entries("chat:lastMessageInfo:" + chatRoom.getId());
+        String lastMessage = (String) lastMessageInfo.getOrDefault("lastMessage", null);
+        String lastMessageTime = (String) lastMessageInfo.getOrDefault("lastMessageTime", null);
+        int lastSeq = (Integer) lastMessageInfo.getOrDefault("seq", null);
+        int unReadCount = Math.max(lastSeq - userSeq, 0);
+
+        Set<ChatRoomUsersResponseDto> users = chatRoom.getUsers().stream().map(id -> {
+                    Profile profile = queryService.findByProfile(id);
+                    return ChatRoomUsersResponseDto.builder()
+                            .userId(profile.getId())
+                            .userImageUrl(profile.getPetImageUrl())
+                            .build();
+                })//Member일 때도 구현해야할듯.
+                .collect(Collectors.toSet());
+        return ChatRoomMapper.toChatRoomsResponseDto(chatRoom, userId, lastMessage, unReadCount, users, LocalDateTime.parse(lastMessageTime));
     }
+
+    private void deleteRedis(Long chatRoomId) {
+        String kInfoOld = "chat:lastMessageInfo:" + chatRoomId;
+        String kReadOld = "chatRoomId:" + chatRoomId + ":read";
+
+        redisTemplate.delete(List.of(kInfoOld, kReadOld));
+    }
+
 }

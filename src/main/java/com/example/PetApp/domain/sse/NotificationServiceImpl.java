@@ -3,7 +3,7 @@ package com.example.PetApp.domain.sse;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.sse.model.dto.NotificationListDto;
 import com.example.PetApp.domain.query.QueryService;
-import com.example.PetApp.common.util.TimeAgoUtil;
+import com.example.PetApp.common.base.util.TimeAgoUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

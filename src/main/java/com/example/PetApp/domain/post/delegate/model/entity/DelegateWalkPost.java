@@ -5,9 +5,9 @@ import com.example.PetApp.common.exception.ForbiddenException;
 import com.example.PetApp.domain.member.model.entity.Member;
 import com.example.PetApp.domain.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
 import com.example.PetApp.domain.profile.model.entity.Profile;
-import com.example.PetApp.infrastructure.database.base.embedded.Applicant;
-import com.example.PetApp.infrastructure.database.base.embedded.Content;
-import com.example.PetApp.infrastructure.database.base.embedded.Location;
+import com.example.PetApp.common.base.embedded.Applicant;
+import com.example.PetApp.common.base.embedded.Content;
+import com.example.PetApp.common.base.embedded.Location;
 import com.example.PetApp.domain.post.common.Post;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -37,7 +37,7 @@ public class DelegateWalkPost extends Post {
     @Min(0)
     @NotNull
     @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
-    private Long price;
+    private long price;
 
     @Setter
     @NotNull

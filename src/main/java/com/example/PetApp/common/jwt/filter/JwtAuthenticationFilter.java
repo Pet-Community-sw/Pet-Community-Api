@@ -1,9 +1,8 @@
 package com.example.PetApp.common.jwt.filter;
 
+import com.example.PetApp.common.base.util.RedisUtil1;
 import com.example.PetApp.common.jwt.exception.JwtExceptionCode;
 import com.example.PetApp.common.jwt.token.JwtAuthenticationToken;
-import com.example.PetApp.common.util.RedisUtil;
-import com.example.PetApp.domain.token.TokenService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -27,8 +26,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final RedisUtil redisUtil;
-    private final TokenService tokenService;
+    private final RedisUtil1 redisUtil;
 
     @Override//filter 하지않게 하려고
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {

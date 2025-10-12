@@ -1,9 +1,9 @@
 package com.example.PetApp.domain.member;
 
+import com.example.PetApp.common.base.util.imagefile.FileImageKind;
+import com.example.PetApp.common.base.util.imagefile.FileUploadUtil;
 import com.example.PetApp.common.exception.ConflictException;
 import com.example.PetApp.common.exception.UnAuthorizedException;
-import com.example.PetApp.common.util.imagefile.FileImageKind;
-import com.example.PetApp.common.util.imagefile.FileUploadUtil;
 import com.example.PetApp.domain.email.EmailService;
 import com.example.PetApp.domain.fcm.FcmTokenService;
 import com.example.PetApp.domain.member.mapper.MemberMapper;

@@ -1,6 +1,6 @@
 package com.example.PetApp.domain.member.model.entity;
 
-import com.example.PetApp.infrastructure.database.base.superclass.BaseEntity;
+import com.example.PetApp.common.base.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

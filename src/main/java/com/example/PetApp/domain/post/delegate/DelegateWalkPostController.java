@@ -1,16 +1,16 @@
 package com.example.PetApp.domain.post.delegate;
 
+import com.example.PetApp.common.base.dto.MessageResponse;
+import com.example.PetApp.common.base.embedded.Applicant;
+import com.example.PetApp.common.base.util.AuthUtil;
+import com.example.PetApp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.PetApp.domain.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
 import com.example.PetApp.domain.post.delegate.model.dto.request.GetPostResponseDto;
 import com.example.PetApp.domain.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
 import com.example.PetApp.domain.post.delegate.model.dto.response.ApplyToDelegateWalkPostResponseDto;
 import com.example.PetApp.domain.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
 import com.example.PetApp.domain.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
-import com.example.PetApp.infrastructure.database.base.embedded.Applicant;
-import com.example.PetApp.common.app.common.MessageResponse;
-import com.example.PetApp.domain.memberchatRoom.model.dto.response.CreateMemberChatRoomResponseDto;
 import com.example.PetApp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
-import com.example.PetApp.common.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -45,7 +45,7 @@ public class DelegateWalkPostController {
                                                                                 @RequestParam Double maxLongitude,
                                                                                 @RequestParam Double maxLatitude,
                                                                                 Authentication authentication) {
-        return delegateWalkPostService.getDelegateWalkPostsByLocation(minLongitude, minLatitude, maxLongitude, maxLatitude,AuthUtil.getEmail(authentication));
+        return delegateWalkPostService.getDelegateWalkPostsByLocation(minLongitude, minLatitude, maxLongitude, maxLatitude, AuthUtil.getEmail(authentication));
     }
 
     @GetMapping("/by-place")
@@ -84,7 +84,7 @@ public class DelegateWalkPostController {
     }
 
     @PostMapping("/select-applicant/{delegateWalkPostId}")
-    public CreateMemberChatRoomResponseDto selectApplicant(@PathVariable Long delegateWalkPostId, @RequestBody Long memberId, Authentication authentication) {
+    public CreateChatRoomResponseDto selectApplicant(@PathVariable Long delegateWalkPostId, @RequestBody Long memberId, Authentication authentication) {
         return delegateWalkPostService.selectApplicant(delegateWalkPostId, memberId, AuthUtil.getEmail(authentication));
     }
 

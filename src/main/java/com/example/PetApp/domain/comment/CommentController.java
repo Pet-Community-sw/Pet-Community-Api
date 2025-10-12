@@ -1,12 +1,12 @@
 package com.example.PetApp.domain.comment;
 
 
-import com.example.PetApp.common.app.common.MessageResponse;
+import com.example.PetApp.common.base.dto.MessageResponse;
 import com.example.PetApp.domain.comment.model.dto.request.CommentDto;
 import com.example.PetApp.domain.comment.model.dto.response.CreateCommentResponseDto;
 import com.example.PetApp.domain.comment.model.dto.response.GetCommentsResponseDto;
 import com.example.PetApp.domain.comment.model.dto.request.UpdateCommentDto;
-import com.example.PetApp.common.util.AuthUtil;
+import com.example.PetApp.common.base.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

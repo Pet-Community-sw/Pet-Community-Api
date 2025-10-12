@@ -1,9 +1,9 @@
 package com.example.PetApp.domain.token;
 
+import com.example.PetApp.common.base.util.RedisUtil1;
 import com.example.PetApp.common.exception.NotFoundException;
 import com.example.PetApp.common.exception.UnAuthorizedException;
 import com.example.PetApp.common.jwt.util.JwtTokenizer;
-import com.example.PetApp.common.util.RedisUtil;
 import com.example.PetApp.domain.member.RoleRepository;
 import com.example.PetApp.domain.member.mapper.MemberMapper;
 import com.example.PetApp.domain.member.model.dto.request.AccessTokenResponseDto;
@@ -31,7 +31,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
 
     private final RefreshRepository refreshRepository;
     private final JwtTokenizer jwtTokenizer;
-    private final RedisUtil redisUtil;
+    private final RedisUtil1 redisUtil;
     private final RoleRepository roleRepository;
 
     @Transactional
