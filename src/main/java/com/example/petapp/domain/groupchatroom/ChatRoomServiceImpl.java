@@ -2,6 +2,7 @@ package com.example.petapp.domain.groupchatroom;
 
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
+import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
 import com.example.petapp.domain.chatting.model.type.ChatRoomType;
 import com.example.petapp.domain.chatting.reader.ChattingReader;
 import com.example.petapp.domain.groupchatroom.mapper.ChatRoomMapper;
@@ -15,6 +16,7 @@ import com.example.petapp.domain.profile.model.dto.response.ChatRoomUsersRespons
 import com.example.petapp.domain.profile.model.entity.Profile;
 import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
+import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -22,7 +24,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +43,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final ChattingReader chattingReader;
     private final StringRedisTemplate redisTemplate;
     private final QueryService queryService;
+    private final InMemoryService inMemoryService;
 
     @Transactional(readOnly = true)
     @Override
@@ -69,11 +75,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     //todo : type잘봐보자 type별로 할건지 다시생각
     @Override
     public CreateChatRoomResponseDto createChatRoom(Member member, Member applicationMember) {
-        ChatRoom chatRoom = ChatRoom.builder()
-                .chatRoomType(ChatRoomType.ONE)
-                .name(member.getName() + "님의 방")
-                .limitCount(2)
-                .build();
+        ChatRoom chatRoom = ChatRoomMapper.toEntity(member);
         chatRoom.addUser(member.getId());
         chatRoom.addUser(applicationMember.getId());
         ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
@@ -94,7 +96,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
         chatRoom.validateUser(userId);
         chatRoom.deleteUser(userId);
-        redisTemplate.opsForHash().delete("chatRoomId:" + chatRoomId + ":read", String.valueOf(userId));
+        inMemoryService.deleteReadData(chatRoomId, userId);
         if (chatRoomRepository.countByProfile(chatRoomId) <= 1) {//방 사용자 수가 1이되면 채팅방 전체 삭제.
             chatMessageRepository.deleteByChatRoomId(chatRoomId);//채팅방 메시지 삭제.
             chatRoomRepository.deleteById(chatRoomId);//todo : 삭제 되는지
@@ -120,24 +122,17 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     private ChatRoomResponseDto toChatRoomsResponseDtoWithRedis(ChatRoom chatRoom, Long userId) {
-        Object seqByUser = redisTemplate.opsForHash().get("chatRoomId:" + chatRoom.getId() + ":read", String.valueOf(userId));
-        int userSeq = seqByUser == null ? 0 : (Integer) (seqByUser);
+        int userSeq = inMemoryService.getReadData(chatRoom.getId(), userId);
 
-        Map<Object, Object> lastMessageInfo = redisTemplate.opsForHash().entries("chat:lastMessageInfo:" + chatRoom.getId());
-        String lastMessage = (String) lastMessageInfo.getOrDefault("lastMessage", null);
-        String lastMessageTime = (String) lastMessageInfo.getOrDefault("lastMessageTime", null);
-        int lastSeq = (Integer) lastMessageInfo.getOrDefault("seq", null);
-        int unReadCount = Math.max(lastSeq - userSeq, 0);
+        LastMessageInfoDto lastMessageInfoDto = inMemoryService.getLastMessageInfoData(chatRoom.getId());
 
-        Set<ChatRoomUsersResponseDto> users = chatRoom.getUsers().stream().map(id -> {
-                    Profile profile = queryService.findByProfile(id);
-                    return ChatRoomUsersResponseDto.builder()
-                            .userId(profile.getId())
-                            .userImageUrl(profile.getPetImageUrl())
-                            .build();
-                })//Member일 때도 구현해야할듯.
+        int unReadCount = Math.max(lastMessageInfoDto.getLastSeq() - userSeq, 0);
+
+        Set<ChatRoomUsersResponseDto> users = chatRoom.getUsers().stream().map(id ->
+                        ChatRoomMapper.toChatRoomUsersResponseDto(queryService.findByProfile(id))
+                )//Member일 때도 구현해야할듯.
                 .collect(Collectors.toSet());
-        return ChatRoomMapper.toChatRoomsResponseDto(chatRoom, userId, lastMessage, unReadCount, users, LocalDateTime.parse(lastMessageTime));
+        return ChatRoomMapper.toChatRoomsResponseDto(chatRoom, userId, lastMessageInfoDto.getLastMessage(), unReadCount, users, LocalDateTime.parse(lastMessageInfoDto.getLastMessageTime()));
     }
 
     private void deleteRedis(Long chatRoomId) {

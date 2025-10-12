@@ -1,6 +1,8 @@
 package com.example.petapp.port;
 
 
+import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
+import com.example.petapp.domain.chatting.model.entity.ChatMessage;
 import com.example.petapp.domain.notification.model.dto.NotificationListDto;
 import org.springframework.stereotype.Service;
 
@@ -50,4 +52,16 @@ public interface InMemoryService {
     Boolean existForeGroundData(Long id);
 
     void createForeGroundData(Long id);
+
+
+    void createReadData(ChatMessage chatMessage);
+
+    void deleteReadData(Long chatRoomId, Long userId);
+
+    int getReadData(Long chatRoomId, Long userId);
+
+
+    void createLastMessageInfoData(ChatMessage chatMessage);
+
+    LastMessageInfoDto getLastMessageInfoData(Long id);
 }
