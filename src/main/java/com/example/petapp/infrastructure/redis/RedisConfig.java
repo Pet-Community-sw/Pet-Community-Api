@@ -8,8 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.PatternTopic;
-import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
@@ -58,20 +56,5 @@ public class RedisConfig {
         likeRedisTemplate.setKeySerializer(new StringRedisSerializer());
         likeRedisTemplate.setValueSerializer(new GenericToStringSerializer<>(Long.class));
         return likeRedisTemplate;
-    }
-
-    @Bean//topic 설정.
-    public RedisMessageListenerContainer notificationRedisMessageListenerContainer(RedisConnectionFactory redisConnectionFactory,
-                                                                                   NotificationRedisSubscriber notificationRedisSubscriber) {
-        RedisMessageListenerContainer notificationRedisMessageListenerContainer = new RedisMessageListenerContainer();
-        notificationRedisMessageListenerContainer.setConnectionFactory(redisConnectionFactory);
-        notificationRedisMessageListenerContainer.addMessageListener((message, pattern) ->
-                        notificationRedisSubscriber.onMessage(
-                                new String(message.getChannel()),
-                                new String(message.getBody()))
-                , new PatternTopic("member:*")
-        );
-
-        return notificationRedisMessageListenerContainer;
     }
 }

@@ -1,21 +1,21 @@
 package com.example.petapp.domain.post.recommend;
 
+import com.example.petapp.common.exception.ForbiddenException;
+import com.example.petapp.domain.like.LikeRepository;
+import com.example.petapp.domain.like.LikeService;
 import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.post.recommend.mapper.RecommendRoutePostMapper;
 import com.example.petapp.domain.post.recommend.model.dto.request.CreateRecommendRoutePostDto;
 import com.example.petapp.domain.post.recommend.model.dto.request.UpdateRecommendRoutePostDto;
 import com.example.petapp.domain.post.recommend.model.dto.response.CreateRecommendRoutePostResponseDto;
 import com.example.petapp.domain.post.recommend.model.dto.response.GetRecommendPostResponseDto;
 import com.example.petapp.domain.post.recommend.model.dto.response.GetRecommendRoutePostsResponseDto;
 import com.example.petapp.domain.post.recommend.model.entity.RecommendRoutePost;
-import com.example.petapp.common.exception.ForbiddenException;
-import com.example.petapp.domain.post.recommend.mapper.RecommendRoutePostMapper;
-import com.example.petapp.domain.like.LikeRepository;
-import com.example.petapp.domain.like.LikeService;
 import com.example.petapp.domain.query.QueryService;
+import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,13 +24,13 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class RecommendRoutePostServiceImpl implements RecommendRoutePostService{
+public class RecommendRoutePostServiceImpl implements RecommendRoutePostService {
 
     private final RecommendRoutePostRepository recommendRoutePostRepository;
     private final LikeRepository likeRepository;
     private final LikeService likeService;
     private final QueryService queryService;
-    private final RedisTemplate<String, Long> likeRedisTemplate;
+    private final InMemoryService inMemoryService;
 
     @Transactional
     @Override
@@ -46,7 +46,7 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService{
     public List<GetRecommendRoutePostsResponseDto> getRecommendRoutePosts(Double minLongitude, Double minLatitude, Double maxLongitude, Double maxLatitude, int page, String email) {
         Member member = queryService.findByMember(email);
         Pageable pageable = PageRequest.of(page, 10);
-        Set<Long> memberIds = likeRedisTemplate.opsForSet().members("member:likes:" + member.getId());
+        Set<Long> memberIds = inMemoryService.getLikeData(member.getId());
         List<RecommendRoutePost> recommendRoutePosts = recommendRoutePostRepository
                 .findByRecommendRoutePostByLocation(minLongitude - 0.01, minLatitude - 0.01, maxLongitude + 0.01, maxLatitude + 0.01, pageable)
                 .getContent();
@@ -58,7 +58,7 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService{
     public List<GetRecommendRoutePostsResponseDto> getRecommendRoutePosts(Double longitude, Double latitude, int page, String email) {
         Member member = queryService.findByMember(email);
         Pageable pageable = PageRequest.of(page, 10);
-        Set<Long> memberIds = likeRedisTemplate.opsForSet().members("member:likes:" + member.getId());
+        Set<Long> memberIds = inMemoryService.getLikeData(member.getId());
         List<RecommendRoutePost> recommendRoutePosts = recommendRoutePostRepository.findByRecommendRoutePostByPlace(longitude, latitude, pageable).getContent();
 
         return RecommendRoutePostMapper.toRecommendRoutePostsList(recommendRoutePosts, likeService.getLikeCountMap(recommendRoutePosts), memberIds, member);

@@ -5,9 +5,9 @@ import com.example.petapp.domain.profile.model.entity.Profile;
 import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.infrastructure.stomp.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.impl.subscribeStrategy.BaseSubscribeTypeStrategy;
+import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -21,7 +21,7 @@ public class ChatRoomSubscribeStrategy extends BaseSubscribeTypeStrategy {
 
     private final QueryService queryService;
     private final ChatRoomRepository chatRoomRepository;
-    private final StringRedisTemplate redisTemplate;
+    private final InMemoryService inMemoryService;
 
     @Override
     public boolean isHandler(String destination) {
@@ -40,7 +40,7 @@ public class ChatRoomSubscribeStrategy extends BaseSubscribeTypeStrategy {
         }
 
         //todo : unsbuscribe했을 때 redis지워야함.
-        redisTemplate.opsForSet().add("chatRoomId:" + chatroomId + ":onlineUsers", profileId.toString());
+        inMemoryService.createOnlineData(chatroomId, profileId);
 
         log.info("[STOMP] 구독 chatroomId: {}, profileId: {}", chatroomId, profileId);
     }

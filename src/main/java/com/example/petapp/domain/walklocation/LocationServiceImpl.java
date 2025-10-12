@@ -1,16 +1,16 @@
 package com.example.petapp.domain.walklocation;
 
-import com.example.petapp.domain.walklocation.mapper.LocationMapper;
-import com.example.petapp.domain.walklocation.model.dto.request.LocationMessage;
-import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
-import com.example.petapp.domain.walkrecord.model.dto.request.SendLocationDto;
-import com.example.petapp.common.exception.ForbiddenException;
-import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.common.base.util.HaversineUtil;
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
+import com.example.petapp.common.exception.ForbiddenException;
+import com.example.petapp.domain.query.QueryService;
+import com.example.petapp.domain.walklocation.mapper.LocationMapper;
+import com.example.petapp.domain.walklocation.model.dto.request.LocationMessage;
+import com.example.petapp.domain.walkrecord.model.dto.request.SendLocationDto;
+import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
+import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +20,8 @@ import org.springframework.stereotype.Service;
 public class LocationServiceImpl implements LocationService {//예외 처리해야됨.
 
     private final SimpMessagingTemplate simpMessagingTemplate;
-    private final StringRedisTemplate stringRedisTemplate;
     private final SendNotificationUtil sendNotificationUtil;
+    private final InMemoryService inMemoryService;
     private final QueryService queryService;
 
     @Override
@@ -43,7 +43,7 @@ public class LocationServiceImpl implements LocationService {//예외 처리해�
 
     private void locationRedis(LocationMessage locationMessage, SendLocationDto sendLocationDto) {
         String location = sendLocationDto.getWalkerLongitude() + "," + sendLocationDto.getWalkerLatitude();
-        stringRedisTemplate.opsForList().rightPush("walk:path:" + locationMessage.getWalkRecordId(), location);
+        inMemoryService.createLocationData("walk:path:" + locationMessage.getWalkRecordId(), location);
 
         simpMessagingTemplate.convertAndSend(
                 "/sub/walk-record/location/" + locationMessage.getWalkRecordId(),
@@ -54,11 +54,11 @@ public class LocationServiceImpl implements LocationService {//예외 처리해�
         double distanceInMeters = HaversineUtil.calculateDistanceInMeters(sendLocationDto.getLocationLatitude(), sendLocationDto.getLocationLongitude(), sendLocationDto.getWalkerLatitude(), sendLocationDto.getWalkerLongitude());
         if (distanceInMeters >= walkRecord.getDelegateWalkPost().getAllowedRadiusMeters()) {
             log.warn("대리산책자가 산책범위에 벗어남.");
-                sendNotificationUtil.sendNotification(walkRecord.getDelegateWalkPost().getProfile().getMember(),
-                        "위험! "+ walkRecord.getMember().getName()+"님이 산책범위에 벗어났습니다. 현재 위치는 기준 지점에서 약 "
-                                +distanceInMeters+"m 떨어져있습니다.");
-                sendNotificationUtil.sendNotification(walkRecord.getMember(),
-                        "위험! 산책범위에 벗어났습니다. 산책 범위에 들어가주세요.");
+            sendNotificationUtil.sendNotification(walkRecord.getDelegateWalkPost().getProfile().getMember(),
+                    "위험! " + walkRecord.getMember().getName() + "님이 산책범위에 벗어났습니다. 현재 위치는 기준 지점에서 약 "
+                            + distanceInMeters + "m 떨어져있습니다.");
+            sendNotificationUtil.sendNotification(walkRecord.getMember(),
+                    "위험! 산책범위에 벗어났습니다. 산책 범위에 들어가주세요.");
         }
     }
 }

@@ -10,6 +10,7 @@ import com.example.petapp.domain.chatting.strategy.MessageTypeStrategy;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.petapp.domain.profile.model.entity.Profile;
 import com.example.petapp.domain.query.QueryService;
+import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -26,6 +27,7 @@ public class TalkStrategy implements MessageTypeStrategy {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatMessageRepository chatMessageRepository;
+    private final InMemoryService inMemoryService;
     private final StringRedisTemplate redisTemplate;
     private final SendNotificationUtil sendNotificationUtil;
     private final QueryService queryService;
@@ -62,12 +64,7 @@ public class TalkStrategy implements MessageTypeStrategy {
 
         ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
         Set<Long> users = chatRoom.getUsers();
-        Set<String> onlineUsers = redisTemplate.opsForSet()
-                .members("chatRoomId:" + chatRoomId + ":onlineUsers");
-
-        if (onlineUsers == null) {
-            return;
-        }
+        Set<String> onlineUsers = inMemoryService.getOnlineDatas(chatRoomId);
 
         users.stream().filter(userId -> !userId.equals(senderId))
                 .filter(userId -> !onlineUsers.contains(userId.toString()))
