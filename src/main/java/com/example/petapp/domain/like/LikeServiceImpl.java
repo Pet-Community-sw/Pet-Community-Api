@@ -1,20 +1,22 @@
 package com.example.petapp.domain.like;
 
-import com.example.petapp.domain.member.model.entity.Member;
-import com.example.petapp.domain.like.model.entity.Like;
-import com.example.petapp.domain.post.common.Post;
+import com.example.petapp.common.base.util.notification.SendNotificationUtil;
+import com.example.petapp.domain.like.mapper.LikeMapper;
 import com.example.petapp.domain.like.model.dto.request.LikeCountDto;
 import com.example.petapp.domain.like.model.dto.response.LikeResponseDto;
-import com.example.petapp.domain.like.mapper.LikeMapper;
+import com.example.petapp.domain.like.model.entity.Like;
+import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.post.common.Post;
 import com.example.petapp.domain.query.QueryService;
-import com.example.petapp.common.base.util.notification.SendNotificationUtil;
+import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -25,8 +27,8 @@ public class LikeServiceImpl implements LikeService {
 
     private final LikeRepository likeRepository;
     private final SendNotificationUtil sendNotificationUtil;
-    private final RedisTemplate<String, Long> likeRedisTemplate;
     private final QueryService queryService;
+    private final InMemoryService inMemoryService;
 
 
     @Transactional(readOnly = true)
@@ -49,14 +51,14 @@ public class LikeServiceImpl implements LikeService {
         Member member = queryService.findByMember(email);
         Post post = queryService.findByPost(postId);
         Optional<Like> existingLike = post.getLikes().stream().filter(like -> like.getMember().equals(member)).findFirst();
-        return existingLike.map(like->deleteLike(like, post)).orElseGet(() -> createLike(post, member));
+        return existingLike.map(like -> deleteLike(like, post)).orElseGet(() -> createLike(post, member));
     }
 
     private boolean deleteLike(Like like, Post post) {
         post.removeLikes(like);
         likeRepository.delete(like);
         log.info("좋아요 삭제");
-        likeRedisTemplate.opsForSet().remove("post:likes:" + like.getMember().getId(), like.getPost().getId());
+        inMemoryService.deleteLikeData(like.getMember().getId(), like.getPost().getId());
         return false;
     }
 
@@ -65,7 +67,7 @@ public class LikeServiceImpl implements LikeService {
         Like like = LikeMapper.toEntity(member, post);
         post.countUpLike(like);
         likeRepository.save(like);
-        likeRedisTemplate.opsForSet().add("post:likes:" + member.getId(), post.getId());
+        inMemoryService.createLikeData(member.getId(), post.getId());
 
         sendNotification(post, member);
 

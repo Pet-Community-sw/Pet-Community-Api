@@ -1,19 +1,19 @@
 package com.example.petapp.domain.walkrecord;
 
 import com.example.petapp.common.aop.annotation.Notification;
+import com.example.petapp.common.base.util.DistanceUtil;
 import com.example.petapp.common.base.util.notification.NotificationDto;
-import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
+import com.example.petapp.common.base.util.notification.SendNotificationUtil;
 import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
+import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.domain.walklocation.model.dto.response.GetWalkRecordLocationResponseDto;
-import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
+import com.example.petapp.domain.walkrecord.mapper.WalkRecordMapper;
 import com.example.petapp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
 import com.example.petapp.domain.walkrecord.model.dto.response.GetWalkRecordResponseDto;
-import com.example.petapp.domain.walkrecord.mapper.WalkRecordMapper;
-import com.example.petapp.domain.query.QueryService;
-import com.example.petapp.common.base.util.DistanceUtil;
-import com.example.petapp.common.base.util.notification.SendNotificationUtil;
+import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
+import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,12 +21,12 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class WalkRecordServiceImpl implements WalkRecordService{
+public class WalkRecordServiceImpl implements WalkRecordService {
 
     private final WalkRecordRepository walkRecordRepository;
-    private final StringRedisTemplate stringRedisTemplate;
     private final SendNotificationUtil sendNotificationUtil;
     private final QueryService queryService;
+    private final InMemoryService inMemoryService;
 
     @Notification(recipient = "#ret.notificationDto.ownerMember", message = "산책 권한이 부여 되었습니다.")
     @Transactional
@@ -52,8 +52,7 @@ public class WalkRecordServiceImpl implements WalkRecordService{
         WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
         walkRecord.validateMember(member);
 
-        String lastLocation = stringRedisTemplate.opsForList().index("walk:path:" + walkRecordId, -1);
-        return new GetWalkRecordLocationResponseDto(lastLocation);
+        return new GetWalkRecordLocationResponseDto(inMemoryService.getLocationData(walkRecordId));
     }
 
     @Transactional
@@ -64,7 +63,7 @@ public class WalkRecordServiceImpl implements WalkRecordService{
         walkRecord.validateMember(member.getId());
         walkRecord.updateWalkStatus(WalkRecord.WalkStatus.START);
         sendNotificationUtil.sendNotification(walkRecord.getDelegateWalkPost().getProfile().getMember(),
-                walkRecord.getMember().getName()+"님이 산책을 시작하였습니다.");
+                walkRecord.getMember().getName() + "님이 산책을 시작하였습니다.");
     }
 
     @Transactional//분리를 어떻게 시키면 졸을까
@@ -77,14 +76,14 @@ public class WalkRecordServiceImpl implements WalkRecordService{
 
         updateWalkRecordPathData(walkRecordId, walkRecord);
         sendNotificationUtil.sendNotification(walkRecord.getDelegateWalkPost().getProfile().getMember(),
-                walkRecord.getMember().getName()+"님이 산책을 마쳤습니다. 후기를 작성해주세요.");
+                walkRecord.getMember().getName() + "님이 산책을 마쳤습니다. 후기를 작성해주세요.");
     }
 
     private void updateWalkRecordPathData(Long walkRecordId, WalkRecord walkRecord) {
-        List<String> paths = stringRedisTemplate.opsForList().range("walk:path:" + walkRecordId, 0, -1);
+        List<String> paths = inMemoryService.getLocationDatas(walkRecordId);
 
         Double totalDistance = DistanceUtil.calculateTotalDistance(paths);
         walkRecord.updateRecordToPath(totalDistance, paths);
-        stringRedisTemplate.delete("walk:path:" + walkRecordId);
+        inMemoryService.deleteLocationData(walkRecordId);
     }
 }

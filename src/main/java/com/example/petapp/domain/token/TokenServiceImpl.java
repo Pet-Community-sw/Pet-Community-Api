@@ -10,7 +10,7 @@ import com.example.petapp.domain.member.model.dto.response.TokenResponseDto;
 import com.example.petapp.domain.member.model.entity.Member;
 import com.example.petapp.domain.member.model.entity.Role;
 import com.example.petapp.domain.token.model.entity.RefreshToken;
-import com.example.petapp.infrastructure.redis.RedisUtil;
+import com.example.petapp.port.InMemoryService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
 
     private final RefreshRepository refreshRepository;
     private final JwtTokenizer jwtTokenizer;
-    private final RedisUtil redisUtil;
+    private final InMemoryService inMemoryService;
     private final RoleRepository roleRepository;
 
     @Transactional
@@ -114,7 +114,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
     }
 
     private void blacklistAccessToken(String accessToken) {
-        redisUtil.createData(accessToken, "blacklist", 30 * 60L);
+        inMemoryService.createStringDataWithDuration(accessToken, "blacklist", 30 * 60L);
     }
 
     private Claims getClaimsFromToken(String token) {

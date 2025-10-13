@@ -1,9 +1,11 @@
 package com.example.petapp.domain.groupchatroom.mapper;
 
 import com.example.petapp.domain.chatting.model.entity.ChatMessage;
+import com.example.petapp.domain.chatting.model.type.ChatRoomType;
 import com.example.petapp.domain.groupchatroom.model.dto.request.ChatMessageDtoMember;
 import com.example.petapp.domain.groupchatroom.model.dto.response.ChatRoomResponseDto;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
+import com.example.petapp.domain.member.model.entity.Member;
 import com.example.petapp.domain.profile.model.dto.response.ChatRoomUsersResponseDto;
 import com.example.petapp.domain.profile.model.entity.Profile;
 import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
@@ -26,6 +28,22 @@ public class ChatRoomMapper {
         chatRoom.addUser(profile.getId());//신청하는사람.
         return chatRoom;
     }
+
+    public static ChatRoom toEntity(Member member) {
+        return ChatRoom.builder()
+                .chatRoomType(ChatRoomType.ONE)
+                .name(member.getName() + "님의 방")
+                .limitCount(2)
+                .build();
+    }
+
+    public static ChatRoomUsersResponseDto toChatRoomUsersResponseDto(Profile profile) {
+        return ChatRoomUsersResponseDto.builder()
+                .userId(profile.getId())
+                .userImageUrl(profile.getPetImageUrl())
+                .build();
+    }
+
 
     public static ChatRoomResponseDto toChatRoomsResponseDto(ChatRoom chatRoom, Long userId, String lastMessage, int unReadCount, Set<ChatRoomUsersResponseDto> users, LocalDateTime lastMessageTime) {
         return ChatRoomResponseDto.builder()

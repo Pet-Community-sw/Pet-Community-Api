@@ -1,27 +1,28 @@
 package com.example.petapp.domain.post.normal;
 
-import com.example.petapp.domain.member.model.entity.Member;
-import com.example.petapp.domain.post.normal.model.entity.NormalPost;
-import com.example.petapp.domain.post.normal.model.dto.response.CreatePostResponseDto;
-import com.example.petapp.domain.post.normal.model.dto.request.PostDto;
-import com.example.petapp.domain.post.normal.model.dto.response.GetPostResponseDto;
-import com.example.petapp.domain.post.normal.model.dto.response.PostResponseDto;
+import com.example.petapp.common.base.util.imagefile.FileImageKind;
+import com.example.petapp.common.base.util.imagefile.FileUploadUtil;
 import com.example.petapp.common.exception.ForbiddenException;
-import com.example.petapp.domain.post.normal.mapper.NormalPostMapper;
 import com.example.petapp.domain.like.LikeRepository;
 import com.example.petapp.domain.like.LikeService;
+import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.post.normal.mapper.NormalPostMapper;
+import com.example.petapp.domain.post.normal.model.dto.request.PostDto;
+import com.example.petapp.domain.post.normal.model.dto.response.CreatePostResponseDto;
+import com.example.petapp.domain.post.normal.model.dto.response.GetPostResponseDto;
+import com.example.petapp.domain.post.normal.model.dto.response.PostResponseDto;
+import com.example.petapp.domain.post.normal.model.entity.NormalPost;
 import com.example.petapp.domain.query.QueryService;
-import com.example.petapp.common.base.util.imagefile.FileUploadUtil;
-import com.example.petapp.common.base.util.imagefile.FileImageKind;
+import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 
 @Service
@@ -35,7 +36,7 @@ public class NormalPostServiceImpl implements NormalPostService {
     private final LikeRepository likeRepository;
     private final LikeService likeService;
     private final QueryService queryService;
-    private final RedisTemplate<String, Long> likeRedisTemplate;
+    private final InMemoryService inMemoryService;
 
     @Transactional(readOnly = true)
     @Override
@@ -43,8 +44,8 @@ public class NormalPostServiceImpl implements NormalPostService {
         Member member = queryService.findByMember(email);
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
         List<NormalPost> normalPosts = normalPostRepository.findAll(pageRequest).getContent();
-        Set<Long> members = likeRedisTemplate.opsForSet().members("member:likes:" + member.getId());
-        return NormalPostMapper.toPostListResponseDto(normalPosts, likeService.getLikeCountMap(normalPosts), members);
+        Set<Long> memberIds = inMemoryService.getLikeData(member.getId());
+        return NormalPostMapper.toPostListResponseDto(normalPosts, likeService.getLikeCountMap(normalPosts), memberIds);
     }
 
     @Transactional

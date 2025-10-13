@@ -37,22 +37,22 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-
-  app:
-    image: sunjaegood/petapp:test
-    container_name: pet-app
-    restart: always
-    volumes:
-      - uploads-data:/app/uploads
-    ports:
-      - "8080:8080"
-    env_file:
-      - .env
-    depends_on:
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+#
+#  app:
+#    image: sunjaegood/petapp:test
+#    container_name: pet-app
+#    restart: always
+#    volumes:
+#      - uploads-data:/app/uploads
+#    ports:
+#      - "8080:8080"
+#    env_file:
+#      - .env
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#      redis:
+#        condition: service_healthy
 volumes:
   mysql-data:
   redis-data:

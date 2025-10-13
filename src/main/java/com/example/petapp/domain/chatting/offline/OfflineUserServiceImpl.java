@@ -2,13 +2,11 @@ package com.example.petapp.domain.chatting.offline;
 
 import com.example.petapp.domain.chatting.model.entity.ChatMessage;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
+import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,13 +15,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OfflineUserServiceImpl implements OfflineUserService {
 
-    private final StringRedisTemplate stringRedisTemplate;
+    private final InMemoryService inMemoryService;
 
     @Override
     public void setOfflineUsersAndUnreadCount(ChatMessage chatMessage, ChatRoom chatRoom) {
         Set<Long> users = chatRoom.getUsers();
-        Set<String> onlineUsers = Optional.ofNullable(stringRedisTemplate.opsForSet()
-                .members("chatRoomId:" + chatRoom.getId() + ":onlineUsers")).orElse(Collections.emptySet());
+        Set<String> onlineUsers = inMemoryService.getOnlineDatas(chatRoom.getId());
 
         Set<Long> offlineProfiles = users.stream()
                 .filter(userId -> !onlineUsers.contains(userId.toString()))

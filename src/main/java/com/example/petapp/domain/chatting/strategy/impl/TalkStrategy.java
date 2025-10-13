@@ -10,13 +10,11 @@ import com.example.petapp.domain.chatting.strategy.MessageTypeStrategy;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.petapp.domain.profile.model.entity.Profile;
 import com.example.petapp.domain.query.QueryService;
+import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -26,7 +24,7 @@ public class TalkStrategy implements MessageTypeStrategy {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatMessageRepository chatMessageRepository;
-    private final StringRedisTemplate redisTemplate;
+    private final InMemoryService inMemoryService;
     private final SendNotificationUtil sendNotificationUtil;
     private final QueryService queryService;
 
@@ -42,16 +40,7 @@ public class TalkStrategy implements MessageTypeStrategy {
                 MessageResponseDto.builder().messageType(MessageType.TALK).body(chatMessage).build());
 
         sendChatNotificationAndUpdateList(chatMessage);
-        updateLastMessage(chatMessage);
-    }
-
-    private void updateLastMessage(ChatMessage chatMessage) {
-        Map<String, String> lastMessageInfo = new HashMap<>();
-        lastMessageInfo.put("seq", String.valueOf(chatMessage.getSeq()));
-        lastMessageInfo.put("lastMessage", chatMessage.getMessage());
-        lastMessageInfo.put("lastMessageTime", String.valueOf(chatMessage.getMessageTime()));
-
-        redisTemplate.opsForHash().putAll("chat:lastMessageInfo:" + chatMessage.getChatRoomId(), lastMessageInfo);
+        inMemoryService.createLastMessageInfoData(chatMessage);
     }
 
     //todo : 업데이트 로직 정리해야됨.
@@ -62,20 +51,14 @@ public class TalkStrategy implements MessageTypeStrategy {
 
         ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
         Set<Long> users = chatRoom.getUsers();
-        Set<String> onlineUsers = redisTemplate.opsForSet()
-                .members("chatRoomId:" + chatRoomId + ":onlineUsers");
-
-        if (onlineUsers == null) {
-            return;
-        }
+        Set<String> onlineUsers = inMemoryService.getOnlineDatas(chatRoomId);
 
         users.stream().filter(userId -> !userId.equals(senderId))
                 .filter(userId -> !onlineUsers.contains(userId.toString()))
                 .forEach(userId -> {
                     Profile profile = queryService.findByProfile(userId);
                     sendNotificationUtil.sendNotification(profile.getMember(), message);
-                    Object seqByProfile = redisTemplate.opsForHash().get("chatRoomId:" + chatRoomId + ":read", profile);
-                    int profileSeq = seqByProfile == null ? 0 : (Integer) seqByProfile;
+                    int profileSeq = inMemoryService.getReadData(chatRoomId, profile.getId());
                     simpMessagingTemplate.convertAndSend("sub/list/" + profile.getId(),
                             MessageResponseDto.builder().messageType(MessageType.LIST_UPDATE).body(new UpdateListDto(chatRoomId, (chatMessage.getSeq() - profileSeq), chatMessage.getMessage(), chatMessage.getMessageTime())));
                 });

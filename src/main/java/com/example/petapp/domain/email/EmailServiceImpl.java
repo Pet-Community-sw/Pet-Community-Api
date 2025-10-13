@@ -1,6 +1,6 @@
 package com.example.petapp.domain.email;
 
-import com.example.petapp.infrastructure.redis.RedisUtil;
+import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,12 +19,12 @@ import java.util.Random;
 public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender javaMailSender;
-    private final RedisUtil redisUtil1;
+    private final InMemoryService inMemoryService;
 
     @Override
     public void sendMail(String toEmail) {
-        if (redisUtil1.existData(toEmail)) {
-            redisUtil1.deleteData(toEmail);
+        if (inMemoryService.existStringData(toEmail)) {
+            inMemoryService.deleteStringData(toEmail);
         }
         try {
             String emailCode = createCode();
@@ -51,7 +51,7 @@ public class EmailServiceImpl implements EmailService {
         message.setText(sb.toString(), "utf-8", "html");
         message.setFrom(new InternetAddress("chltjswo789@gmail.com", "멍냥로드"));
 
-        redisUtil1.createData(toEmail, emailCode, 3 * 60L);
+        inMemoryService.createStringDataWithDuration(toEmail, emailCode, 3 * 60L);
 
         return message;
     }
@@ -69,7 +69,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void verifyCode(String email, String code) {
-        String authCode = redisUtil1.getData(email);
+        String authCode = inMemoryService.getStringData(email);
         log.info("email : {}, code : {}", email, code);
         if (authCode == null) {
             throw new IllegalArgumentException("인증번호가 만료되었습니다. 다시 시도해주세요.");

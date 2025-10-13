@@ -2,7 +2,7 @@ package com.example.petapp.common.jwt.filter;
 
 import com.example.petapp.common.jwt.exception.JwtExceptionCode;
 import com.example.petapp.common.jwt.token.JwtAuthenticationToken;
-import com.example.petapp.infrastructure.redis.RedisUtil;
+import com.example.petapp.port.InMemoryService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -26,7 +26,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final RedisUtil redisUtil;
+    private final InMemoryService inMemoryService;
 
     @Override//filter 하지않게 하려고
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
@@ -85,7 +85,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public String getToken(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
-        if (redisUtil.existData(authorization)) {
+        if (inMemoryService.existStringData(authorization)) {
             throw new BadCredentialsException("로그아웃된 토큰입니다.");
         }
         if (StringUtils.hasText(authorization) && authorization.startsWith("Bearer")) {
