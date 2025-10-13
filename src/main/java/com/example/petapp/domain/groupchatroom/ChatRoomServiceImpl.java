@@ -19,7 +19,6 @@ import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogeth
 import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +40,6 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ChattingReader chattingReader;
-    private final StringRedisTemplate redisTemplate;
     private final QueryService queryService;
     private final InMemoryService inMemoryService;
 
@@ -136,10 +134,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     private void deleteRedis(Long chatRoomId) {
-        String kInfoOld = "chat:lastMessageInfo:" + chatRoomId;
-        String kReadOld = "chatRoomId:" + chatRoomId + ":read";
-
-        redisTemplate.delete(List.of(kInfoOld, kReadOld));
+        inMemoryService.deleteLastMessageInfoData(chatRoomId);
+        inMemoryService.deleteReadData(chatRoomId);
     }
 
 }

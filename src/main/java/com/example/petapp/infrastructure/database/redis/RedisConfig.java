@@ -1,4 +1,4 @@
-package com.example.petapp.infrastructure.redis;
+package com.example.petapp.infrastructure.database.redis;
 
 import com.example.petapp.domain.notification.model.dto.NotificationListDto;
 import lombok.Getter;

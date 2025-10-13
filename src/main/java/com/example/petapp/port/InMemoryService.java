@@ -64,4 +64,8 @@ public interface InMemoryService {
     void createLastMessageInfoData(ChatMessage chatMessage);
 
     LastMessageInfoDto getLastMessageInfoData(Long id);
+
+    void deleteLastMessageInfoData(Long chatRoomId);
+
+    void deleteReadData(Long chatRoomId);
 }

@@ -1,5 +1,4 @@
-package com.example.petapp.infrastructure.redis;
-
+package com.example.petapp.infrastructure.database.redis;
 
 import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
 import com.example.petapp.domain.chatting.model.entity.ChatMessage;
@@ -51,35 +50,33 @@ public class InMemoryServiceImpl implements InMemoryService {
 
     @Override
     public Set<Long> getLikeData(Long key) {
-        return likeRedisTemplate.opsForSet().members("post:likes:" + key);
+        return likeRedisTemplate.opsForSet().members(RedisKeys.postLikes(key));
     }
 
     @Override
     public void createLikeData(Long key, Long value) {
-        likeRedisTemplate.opsForSet().add("post:likes:" + key, value);
+        likeRedisTemplate.opsForSet().add(RedisKeys.postLikes(key), value);
     }
 
     @Override
     public void deleteLikeData(Long key, Long value) {
-        likeRedisTemplate.opsForSet().remove("post:likes:" + key, value);
+        likeRedisTemplate.opsForSet().remove(RedisKeys.postLikes(key), value);
     }
-
 
     //-------------------------------------------------------------------------------------
 
     @Override
     public void createNotificationData(Long memberId, NotificationListDto notificationListDto, int day) {
-        String key = "notification:" + memberId;
+        String key = RedisKeys.notifications(memberId);
         notificationRedisTemplate.opsForList().rightPush(key, notificationListDto);
         notificationRedisTemplate.expire(key, Duration.ofDays(day));
     }
 
     @Override
     public List<NotificationListDto> getNotifications(Long memberId) {
-        String key = "notification:" + memberId;
+        String key = RedisKeys.notifications(memberId);
         return notificationRedisTemplate.opsForList().range(key, 0, -1);
     }
-
 
     //-------------------------------------------------------------------------------------
 
@@ -90,30 +87,29 @@ public class InMemoryServiceImpl implements InMemoryService {
 
     @Override
     public String getLocationData(Long id) {
-        return redisTemplate.opsForList().index("walk:path:" + id, -1);
+        return redisTemplate.opsForList().index(RedisKeys.walkPath(id), -1);
     }
 
     @Override
     public List<String> getLocationDatas(Long id) {
-        return redisTemplate.opsForList().range("walk:path:" + id, 0, -1);
+        return redisTemplate.opsForList().range(RedisKeys.walkPath(id), 0, -1);
     }
 
     @Override
     public void deleteLocationData(Long id) {
-        redisTemplate.delete("walk:path:" + id);
+        redisTemplate.delete(RedisKeys.walkPath(id));
     }
-
 
     //-------------------------------------------------------------------------------------
 
     @Override
     public void createOnlineData(Long chatroomId, Long profileId) {
-        redisTemplate.opsForSet().add("chatRoomId:" + chatroomId + ":onlineUsers", profileId.toString());
+        redisTemplate.opsForSet().add(RedisKeys.onlineUsers(chatroomId), profileId.toString());
     }
 
     @Override
     public Set<String> getOnlineDatas(Long id) {
-        return Optional.ofNullable(redisTemplate.opsForSet().members("chatRoomId:" + id + ":onlineUsers"))
+        return Optional.ofNullable(redisTemplate.opsForSet().members(RedisKeys.onlineUsers(id)))
                 .orElse(Collections.emptySet());
     }
 
@@ -121,33 +117,40 @@ public class InMemoryServiceImpl implements InMemoryService {
 
     @Override
     public void createForeGroundData(Long id) {
-        redisTemplate.opsForSet().add("foreGroundMembers", id.toString());
+        redisTemplate.opsForSet().add(RedisKeys.foregroundMembers(), id.toString());
     }
 
     @Override
     public Boolean existForeGroundData(Long id) {
-        return redisTemplate.opsForSet().isMember("foreGroundMembers", id.toString());
+        return redisTemplate.opsForSet().isMember(RedisKeys.foregroundMembers(), id.toString());
     }
 
     //-------------------------------------------------------------------------------------
 
     @Override
     public void createReadData(ChatMessage chatMessage) {
-        redisTemplate.opsForHash().put("chatRoomId:" + chatMessage.getChatRoomId() + ":read", String.valueOf(chatMessage.getSenderId()),
-                String.valueOf(chatMessage.getSeq()));
+        redisTemplate.opsForHash().put(
+                RedisKeys.readHash(chatMessage.getChatRoomId()),
+                String.valueOf(chatMessage.getSenderId()),
+                String.valueOf(chatMessage.getSeq())
+        );
     }
 
     @Override
     public void deleteReadData(Long chatRoomId, Long userId) {
-        redisTemplate.opsForHash().delete("chatRoomId:" + chatRoomId + ":read", String.valueOf(userId));
+        redisTemplate.opsForHash().delete(RedisKeys.readHash(chatRoomId), String.valueOf(userId));
     }
 
     @Override
     public int getReadData(Long chatRoomId, Long userId) {
-        Object seq = redisTemplate.opsForHash().get("chatRoomId:" + chatRoomId + ":read", String.valueOf(userId));
+        Object seq = redisTemplate.opsForHash().get(RedisKeys.readHash(chatRoomId), String.valueOf(userId));
         return seq == null ? 0 : (Integer) seq;
     }
 
+    @Override
+    public void deleteReadData(Long chatRoomId) {
+        redisTemplate.delete(RedisKeys.readHash(chatRoomId));
+    }
 
     //-------------------------------------------------------------------------------------
 
@@ -158,13 +161,12 @@ public class InMemoryServiceImpl implements InMemoryService {
         lastMessageInfo.put("lastMessage", chatMessage.getMessage());
         lastMessageInfo.put("lastMessageTime", String.valueOf(chatMessage.getMessageTime()));
 
-        redisTemplate.opsForHash().putAll("chat:lastMessageInfo:" + chatMessage.getChatRoomId(), lastMessageInfo);
-
+        redisTemplate.opsForHash().putAll(RedisKeys.lastMessageInfo(chatMessage.getChatRoomId()), lastMessageInfo);
     }
 
     @Override
     public LastMessageInfoDto getLastMessageInfoData(Long id) {
-        Map<Object, Object> lastMessageInfo = redisTemplate.opsForHash().entries("chat:lastMessageInfo:" + id);
+        Map<Object, Object> lastMessageInfo = redisTemplate.opsForHash().entries(RedisKeys.lastMessageInfo(id));
         String lastMessage = (String) lastMessageInfo.getOrDefault("lastMessage", null);
         String lastMessageTime = (String) lastMessageInfo.getOrDefault("lastMessageTime", null);
         int lastSeq = (Integer) lastMessageInfo.getOrDefault("seq", null);
@@ -175,5 +177,9 @@ public class InMemoryServiceImpl implements InMemoryService {
                 .lastMessageTime(lastMessageTime)
                 .build();
     }
-}
 
+    @Override
+    public void deleteLastMessageInfoData(Long chatRoomId) {
+        redisTemplate.delete(RedisKeys.lastMessageInfo(chatRoomId));
+    }
+}
