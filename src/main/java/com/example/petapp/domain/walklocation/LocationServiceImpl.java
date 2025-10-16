@@ -2,7 +2,6 @@ package com.example.petapp.domain.walklocation;
 
 import com.example.petapp.common.base.util.HaversineUtil;
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
-import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.domain.walklocation.mapper.LocationMapper;
 import com.example.petapp.domain.walklocation.model.dto.request.LocationMessage;
@@ -27,12 +26,8 @@ public class LocationServiceImpl implements LocationService {//예외 처리해�
     @Override
     public void sendLocation(LocationMessage locationMessage, String memberId) {
         WalkRecord walkRecord = queryService.findByWalkRecord(locationMessage.getWalkRecordId());
-
-        if (!(walkRecord.getDelegateWalkPost().getSelectedApplicantMemberId().equals(Long.valueOf(memberId)))) {
-            throw new ForbiddenException("접근 권한 없음.");
-        } else if (walkRecord.getWalkStatus() != WalkRecord.WalkStatus.START) {
-            throw new ForbiddenException("start 권한 없음.");
-        }
+        walkRecord.validateMember(Long.valueOf(memberId));
+        walkRecord.validateStart();
 
         SendLocationDto sendLocationDto = LocationMapper.toSendLocationDto(walkRecord, locationMessage);
 
