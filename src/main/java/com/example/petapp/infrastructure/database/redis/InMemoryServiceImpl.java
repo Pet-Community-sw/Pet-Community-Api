@@ -38,6 +38,9 @@ public class InMemoryServiceImpl implements InMemoryService {
 
     @Override
     public Boolean existStringData(String key) {
+        if (key == null) {
+            return false;
+        }
         return redisTemplate.hasKey(key);
     }
 
