@@ -14,7 +14,6 @@ public class LocationController {
 
     @MessageMapping("/location/send")
     public void sendLocation(LocationMessage locationMessage, Principal principal) {
-        String memberId = principal.getName();
-        locationService.sendLocation(locationMessage, memberId);
+        locationService.sendLocation(locationMessage, principal.getName());
     }
 }

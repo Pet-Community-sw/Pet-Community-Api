@@ -2,8 +2,6 @@ package com.example.petapp.domain.walkrecord;
 
 import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.common.base.util.DistanceUtil;
-import com.example.petapp.common.base.util.notification.NotificationDto;
-import com.example.petapp.common.base.util.notification.SendNotificationUtil;
 import com.example.petapp.domain.member.model.entity.Member;
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.petapp.domain.query.QueryService;
@@ -24,18 +22,17 @@ import java.util.List;
 public class WalkRecordServiceImpl implements WalkRecordService {
 
     private final WalkRecordRepository walkRecordRepository;
-    private final SendNotificationUtil sendNotificationUtil;
     private final QueryService queryService;
     private final InMemoryService inMemoryService;
 
-    @Notification(recipient = "#ret.notificationDto.ownerMember", message = "산책 권한이 부여 되었습니다.")
+    @Notification(recipient = "@queryService.findByMember(#p0.selectedApplicantMemberId).member", message = "산책 권한이 부여 되었습니다.")
     @Transactional
     @Override
     public CreateWalkRecordResponseDto createWalkRecord(DelegateWalkPost delegateWalkPost) {
         Member member = queryService.findByMember(delegateWalkPost.getSelectedApplicantMemberId());
         WalkRecord walkRecord = WalkRecordMapper.toEntity(delegateWalkPost, member);
         WalkRecord savedWalkRecord = walkRecordRepository.save(walkRecord);
-        return new CreateWalkRecordResponseDto(savedWalkRecord.getId(), new NotificationDto(member, null));
+        return new CreateWalkRecordResponseDto(savedWalkRecord.getId());
     }
 
     @Transactional(readOnly = true)
@@ -55,6 +52,8 @@ public class WalkRecordServiceImpl implements WalkRecordService {
         return new GetWalkRecordLocationResponseDto(inMemoryService.getLocationData(walkRecordId));
     }
 
+    @Notification(recipient = "@queryServiceImpl.findByWalkRecord(#p0).delegateWalkPost.profile.member",
+            message = "@queryServiceImpl.findByWalkRecord(#p0).member.name+'님이 산책을 시작하였습니다.'")
     @Transactional
     @Override
     public void updateStartWalkRecord(Long walkRecordId, String email) {
@@ -62,10 +61,10 @@ public class WalkRecordServiceImpl implements WalkRecordService {
         WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
         walkRecord.validateMember(member.getId());
         walkRecord.updateWalkStatus(WalkRecord.WalkStatus.START);
-        sendNotificationUtil.sendNotification(walkRecord.getDelegateWalkPost().getProfile().getMember(),
-                walkRecord.getMember().getName() + "님이 산책을 시작하였습니다.");
     }
 
+    @Notification(recipient = "@queryServiceImpl.findByWalkRecord(#p0).delegateWalkPost.profile.member",
+            message = "@queryServiceImpl.findByWalkRecord(#p0).member.name+'님이 산책을 마쳤습니다. 후기를 작성해주세요.'")
     @Transactional//분리를 어떻게 시키면 졸을까
     @Override
     public void FinishWalkRecord(Long walkRecordId, String email) {
@@ -75,8 +74,6 @@ public class WalkRecordServiceImpl implements WalkRecordService {
         walkRecord.updateWalkStatus(WalkRecord.WalkStatus.FINISH);
 
         updateWalkRecordPathData(walkRecordId, walkRecord);
-        sendNotificationUtil.sendNotification(walkRecord.getDelegateWalkPost().getProfile().getMember(),
-                walkRecord.getMember().getName() + "님이 산책을 마쳤습니다. 후기를 작성해주세요.");
     }
 
     private void updateWalkRecordPathData(Long walkRecordId, WalkRecord walkRecord) {

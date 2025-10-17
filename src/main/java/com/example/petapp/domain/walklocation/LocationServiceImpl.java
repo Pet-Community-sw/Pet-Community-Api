@@ -2,7 +2,6 @@ package com.example.petapp.domain.walklocation;
 
 import com.example.petapp.common.base.util.HaversineUtil;
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
-import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.domain.walklocation.mapper.LocationMapper;
 import com.example.petapp.domain.walklocation.model.dto.request.LocationMessage;
@@ -27,18 +26,14 @@ public class LocationServiceImpl implements LocationService {//예외 처리해�
     @Override
     public void sendLocation(LocationMessage locationMessage, String memberId) {
         WalkRecord walkRecord = queryService.findByWalkRecord(locationMessage.getWalkRecordId());
-
-        if (!(walkRecord.getDelegateWalkPost().getSelectedApplicantMemberId().equals(Long.valueOf(memberId)))) {
-            throw new ForbiddenException("접근 권한 없음.");
-        } else if (walkRecord.getWalkStatus() != WalkRecord.WalkStatus.START) {
-            throw new ForbiddenException("start 권한 없음.");
-        }
+        walkRecord.validateMember(Long.valueOf(memberId));
+        walkRecord.validateStart();
 
         SendLocationDto sendLocationDto = LocationMapper.toSendLocationDto(walkRecord, locationMessage);
 
-        sendLocationAndNotification(walkRecord, sendLocationDto);
-
         locationRedis(locationMessage, sendLocationDto);
+
+        sendLocationAndNotification(walkRecord, sendLocationDto);
     }
 
     private void locationRedis(LocationMessage locationMessage, SendLocationDto sendLocationDto) {
@@ -56,7 +51,7 @@ public class LocationServiceImpl implements LocationService {//예외 처리해�
             log.warn("대리산책자가 산책범위에 벗어남.");
             sendNotificationUtil.sendNotification(walkRecord.getDelegateWalkPost().getProfile().getMember(),
                     "위험! " + walkRecord.getMember().getName() + "님이 산책범위에 벗어났습니다. 현재 위치는 기준 지점에서 약 "
-                            + distanceInMeters + "m 떨어져있습니다.");
+                            + distanceInMeters + "m 떨어져있습니다.");//distanceInMeters는 AOP당시 못받음.
             sendNotificationUtil.sendNotification(walkRecord.getMember(),
                     "위험! 산책범위에 벗어났습니다. 산책 범위에 들어가주세요.");
         }

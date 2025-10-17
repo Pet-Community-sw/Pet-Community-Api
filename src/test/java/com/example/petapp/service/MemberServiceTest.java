@@ -1,22 +1,22 @@
 package com.example.petapp.service;
 
 
-import com.example.petapp.common.aop.LogAop;
+import com.example.petapp.common.aop.LogAspect;
+import com.example.petapp.common.base.util.imagefile.FileImageKind;
+import com.example.petapp.common.base.util.imagefile.FileUploadUtil;
+import com.example.petapp.common.exception.NotFoundException;
+import com.example.petapp.domain.email.EmailService;
+import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.MemberServiceImpl;
+import com.example.petapp.domain.member.RoleRepository;
 import com.example.petapp.domain.member.model.dto.request.LoginDto;
 import com.example.petapp.domain.member.model.dto.request.MemberSignDto;
 import com.example.petapp.domain.member.model.dto.request.ResetPasswordDto;
 import com.example.petapp.domain.member.model.dto.request.SendEmailDto;
 import com.example.petapp.domain.member.model.dto.response.MemberSignResponseDto;
 import com.example.petapp.domain.member.model.entity.Member;
-import com.example.petapp.common.exception.NotFoundException;
-import com.example.petapp.domain.member.MemberRepository;
-import com.example.petapp.domain.member.RoleRepository;
-import com.example.petapp.domain.email.EmailService;
 import com.example.petapp.domain.token.TokenService;
 import com.example.petapp.util.Mapper;
-import com.example.petapp.common.base.util.imagefile.FileImageKind;
-import com.example.petapp.common.base.util.imagefile.FileUploadUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,8 +24,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -34,12 +34,13 @@ import javax.validation.ValidatorFactory;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@Import(LogAop.class)
+@Import(LogAspect.class)
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
 
@@ -187,8 +188,6 @@ class MemberServiceTest {
 //        //then
 //        assertThat(result.getName()).isEqualTo(member.getName());
 //    }
-
-
 
 
     @Test
