@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Aspect
 @Slf4j
-public class LogAop {
+public class LogAspect {
     @Around("execution(* com.example.petapp.domain..*Impl.*(..))")
     public Object logTrace(ProceedingJoinPoint joinPoint) throws Throwable {
         log.info("[LOG] Method : {}", joinPoint.getSignature().toShortString());

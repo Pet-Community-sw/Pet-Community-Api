@@ -1,6 +1,9 @@
 package com.example.petapp.infrastructure.database.redis;
 
 import com.example.petapp.domain.notification.model.dto.NotificationListDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -29,12 +32,30 @@ public class RedisConfig {
         return new LettuceConnectionFactory(host, port);
     }
 
+    /**
+     * 공통 ObjectMapper: JavaTimeModule 등록 + 타임스탬프 비활성화
+     */
+    private ObjectMapper jacksonMapper() {
+        ObjectMapper om = new ObjectMapper();
+        om.registerModule(new JavaTimeModule());
+        om.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        return om;
+    }
+
     @Bean//알림을 위한 redisTemplate
     public RedisTemplate<String, NotificationListDto> notificationRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        //LocalDateTime 지원하도록 ObjectMapper 주입
+        Jackson2JsonRedisSerializer<NotificationListDto> valSer =
+                new Jackson2JsonRedisSerializer<>(NotificationListDto.class);
+        valSer.setObjectMapper(jacksonMapper());
+
         RedisTemplate<String, NotificationListDto> notificationRedisTemplate = new RedisTemplate<>();
         notificationRedisTemplate.setConnectionFactory(redisConnectionFactory);
         notificationRedisTemplate.setKeySerializer(new StringRedisSerializer());
-        notificationRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(NotificationListDto.class));
+        notificationRedisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        notificationRedisTemplate.setValueSerializer(valSer);
+        notificationRedisTemplate.setHashValueSerializer(valSer);
+        notificationRedisTemplate.afterPropertiesSet();
         return notificationRedisTemplate;
     }
 

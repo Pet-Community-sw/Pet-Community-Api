@@ -61,6 +61,7 @@ public class SseEmitterManager {
         SseEmitter sseEmitter = sseEmitterMap.get(memberId);
         if (sseEmitter != null) {
             try {
+                log.info("알림 전송.");
                 sseEmitter.send(SseEmitter.event().name("notification").data(message));
 
             } catch (IOException e) {

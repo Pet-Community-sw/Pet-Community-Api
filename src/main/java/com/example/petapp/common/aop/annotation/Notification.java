@@ -11,4 +11,6 @@ public @interface Notification {
     String recipient();
 
     String message();
+
+    String condition() default "";
 }

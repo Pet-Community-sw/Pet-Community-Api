@@ -1,16 +1,15 @@
 package com.example.petapp.domain.comment;
 
 import com.example.petapp.common.aop.annotation.Notification;
-import com.example.petapp.common.base.util.notification.NotificationDto;
+import com.example.petapp.domain.comment.mapper.CommentMapper;
 import com.example.petapp.domain.comment.model.dto.request.CommentDto;
 import com.example.petapp.domain.comment.model.dto.request.UpdateCommentDto;
 import com.example.petapp.domain.comment.model.dto.response.CreateCommentResponseDto;
 import com.example.petapp.domain.comment.model.dto.response.GetCommentsResponseDto;
 import com.example.petapp.domain.comment.model.entity.Comment;
+import com.example.petapp.domain.comment.model.entity.Commentable;
 import com.example.petapp.domain.member.model.entity.Member;
 import com.example.petapp.domain.post.common.Post;
-import com.example.petapp.domain.comment.model.entity.Commentable;
-import com.example.petapp.domain.comment.mapper.CommentMapper;
 import com.example.petapp.domain.query.QueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,7 @@ public class CommentServiceImpl implements CommentService {
         return CommentMapper.toGetCommentsResponseDtos((Commentable) post, member);
     }
 
-    @Notification(recipient = "#ret.notificationDto.ownerMember", message = "#ret.notification.member.name + '님이 회원님의 게시물에 댓글을 남겼습니다.'")
+    @Notification(recipient = "@queryService.findByPost(#p0.postId).member", message = "@queryService.findByMember(#1).name + '님이 회원님의 게시물에 댓글을 남겼습니다.'")
     @Transactional
     @Override
     public CreateCommentResponseDto createComment(CommentDto commentDto, String email) {
@@ -43,7 +42,7 @@ public class CommentServiceImpl implements CommentService {
 
         Comment comment = CommentMapper.toEntity(commentDto, post, member);
         commentRepository.save(comment);
-        return new CreateCommentResponseDto(comment.getId(), new NotificationDto(post.getMember(), member));
+        return new CreateCommentResponseDto(comment.getId());
     }
 
 

@@ -1,6 +1,6 @@
 package com.example.petapp.domain.like;
 
-import com.example.petapp.common.base.util.notification.SendNotificationUtil;
+import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.domain.like.mapper.LikeMapper;
 import com.example.petapp.domain.like.model.dto.request.LikeCountDto;
 import com.example.petapp.domain.like.model.dto.response.LikeResponseDto;
@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 public class LikeServiceImpl implements LikeService {
 
     private final LikeRepository likeRepository;
-    private final SendNotificationUtil sendNotificationUtil;
     private final QueryService queryService;
     private final InMemoryService inMemoryService;
 
@@ -45,6 +44,7 @@ public class LikeServiceImpl implements LikeService {
         return likeCountDtos.stream().collect(Collectors.toMap(LikeCountDto::getPostId, LikeCountDto::getLikeCount));
     }
 
+    @Notification(recipient = "@queryServiceImpl.findByPost(#p0).member", message = "@queryServiceImpl.findByMember(#p1).name + '님이 회원님의 게시물을 좋아합니다.'", condition = "#result == true")
     @Transactional
     @Override
     public boolean createAndDeleteLike(Long postId, String email) {
@@ -62,20 +62,13 @@ public class LikeServiceImpl implements LikeService {
         return false;
     }
 
-    private boolean createLike(Post post, Member member) {
+    public boolean createLike(Post post, Member member) {
         log.info("좋아요 생성");
         Like like = LikeMapper.toEntity(member, post);
         post.countUpLike(like);
         likeRepository.save(like);
         inMemoryService.createLikeData(member.getId(), post.getId());
 
-        sendNotification(post, member);
-
         return true;
-    }
-
-    private void sendNotification(Post post, Member member) {
-        String message = member.getName() + "님이 회원님의 게시물을 좋아합니다.";
-        sendNotificationUtil.sendNotification(post.getMember(), message);
     }
 }

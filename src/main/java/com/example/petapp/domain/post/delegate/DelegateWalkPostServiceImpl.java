@@ -2,7 +2,6 @@ package com.example.petapp.domain.post.delegate;
 
 import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.common.base.embedded.Applicant;
-import com.example.petapp.common.base.util.notification.NotificationDto;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.groupchatroom.ChatRoomService;
 import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
@@ -119,7 +118,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         return delegateWalkPost.validatedAndGetApplicants(profileId);
     }
 
-    @Notification(recipient = "#ret.notificationDto.ownerMember", message = "#ret.notificationDto.member.name + '님이 회원님의 대리산책자 게시글에 지원했습니다.'")
+    @Notification(recipient = "@queryService.findByDelegateWalkPost(#p0).profile.member", message = "@queryService.findByMember(#p2).name + '님이 회원님의 대리산책자 게시글에 지원했습니다.'")
     @Transactional
     @Override
     public ApplyToDelegateWalkPostResponseDto applyToDelegateWalkPost(Long delegateWalkPostId, String content, String email) {
@@ -127,7 +126,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
 
         delegateWalkPost.apply(member, content);
-        return new ApplyToDelegateWalkPostResponseDto(member.getId(), new NotificationDto(delegateWalkPost.getProfile().getMember(), member));
+        return new ApplyToDelegateWalkPostResponseDto(member.getId());
     }
 }
 

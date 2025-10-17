@@ -1,10 +1,10 @@
 package com.example.petapp.domain.walkrecord.model.entity;
 
+import com.example.petapp.common.base.superclass.BaseEntity;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.ForbiddenException;
-import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.petapp.domain.member.model.entity.Member;
-import com.example.petapp.common.base.superclass.BaseEntity;
+import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -90,5 +90,11 @@ public class WalkRecord extends BaseEntity {
     public void updateWalkStatus(WalkStatus walkStatus) {
         setWalkStatus(walkStatus);
         setStartTime(LocalDateTime.now());
+    }
+
+    public void validateStart() {
+        if (getWalkStatus() != WalkRecord.WalkStatus.START) {
+            throw new ForbiddenException("start 권한 없음.");
+        }
     }
 }
