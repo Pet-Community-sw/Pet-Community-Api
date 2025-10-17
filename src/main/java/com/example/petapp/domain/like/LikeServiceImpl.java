@@ -44,6 +44,10 @@ public class LikeServiceImpl implements LikeService {
         return likeCountDtos.stream().collect(Collectors.toMap(LikeCountDto::getPostId, LikeCountDto::getLikeCount));
     }
 
+    /*
+     *  조회 ->분기 ->저장 : 동시성 이슈 발생할 수 있음. 분기 처리중 저장했다면?
+     * redis에서 꺼내서 비교하는게 좋을 듯
+     * */
     @Notification(recipient = "@queryServiceImpl.findByPost(#p0).member", message = "@queryServiceImpl.findByMember(#p1).name + '님이 회원님의 게시물을 좋아합니다.'", condition = "#result == true")
     @Transactional
     @Override
