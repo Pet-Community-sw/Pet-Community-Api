@@ -1,9 +1,10 @@
 package com.example.petapp.domain.post.common;
 
-import com.example.petapp.domain.member.model.entity.Member;
 import com.example.petapp.common.base.embedded.Content;
-import com.example.petapp.domain.like.model.entity.Like;
 import com.example.petapp.common.base.superclass.BaseEntity;
+import com.example.petapp.common.exception.ForbiddenException;
+import com.example.petapp.domain.like.model.entity.Like;
+import com.example.petapp.domain.member.model.entity.Member;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.BatchSize;
@@ -55,6 +56,12 @@ public abstract class Post extends BaseEntity {
 
     public void countUpLike(Like like) {
         getLikes().add(like);
+    }
+
+    public void validateMember(Member member) {
+        if (!(this.member.equals(member))) {
+            throw new ForbiddenException("권한 없음.");
+        }
     }
 
 }

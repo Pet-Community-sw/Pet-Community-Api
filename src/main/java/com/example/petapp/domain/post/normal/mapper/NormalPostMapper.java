@@ -1,18 +1,20 @@
 package com.example.petapp.domain.post.normal.mapper;
 
-import com.example.petapp.domain.member.model.entity.Member;
-import com.example.petapp.domain.comment.model.entity.Commentable;
-import com.example.petapp.domain.post.normal.model.entity.NormalPost;
-import com.example.petapp.domain.post.common.Post;
 import com.example.petapp.common.base.embedded.Content;
-import com.example.petapp.domain.comment.model.dto.response.GetCommentsResponseDto;
-import com.example.petapp.domain.post.normal.model.dto.response.GetPostResponseDto;
-import com.example.petapp.domain.post.normal.model.dto.request.PostDto;
-import com.example.petapp.domain.post.normal.model.dto.response.PostResponseDto;
-import com.example.petapp.domain.comment.mapper.CommentMapper;
 import com.example.petapp.common.base.util.TimeAgoUtil;
+import com.example.petapp.domain.comment.mapper.CommentMapper;
+import com.example.petapp.domain.comment.model.dto.response.GetCommentsResponseDto;
+import com.example.petapp.domain.comment.model.entity.Commentable;
+import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.post.common.Post;
+import com.example.petapp.domain.post.normal.model.dto.request.PostDto;
+import com.example.petapp.domain.post.normal.model.dto.response.GetPostResponseDto;
+import com.example.petapp.domain.post.normal.model.dto.response.PostResponseDto;
+import com.example.petapp.domain.post.normal.model.entity.NormalPost;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class NormalPostMapper {
@@ -25,7 +27,7 @@ public class NormalPostMapper {
                 .build();
     }
 
-    public static <T extends Post> List<PostResponseDto> toPostListResponseDto(List<T> posts, Map<Long, Long> likeCountMap, Collection<Long> likedPostIds) {
+    public static <T extends Post> List<PostResponseDto> toPostListResponseDto(List<T> posts, Map<Long, Long> likeCountMap, Set<Long> likedPostIds) {
         return posts.stream()
                 .map(post -> PostResponseDto.builder()
                         .postId(post.getId())
@@ -47,7 +49,7 @@ public class NormalPostMapper {
                                                           Member member,
                                                           Long likeCount,
                                                           boolean isLike) {
-        PostResponseDto postResponseDto=PostResponseDto.builder()
+        PostResponseDto postResponseDto = PostResponseDto.builder()
                 .postId(post.getId())
                 .title(post.getContent().getTitle())
                 .postImageUrl(post.getPostImageUrl())
@@ -59,7 +61,7 @@ public class NormalPostMapper {
                 .createdAt(TimeAgoUtil.getTimeAgo(post.getCreatedAt()))
                 .like(isLike)
                 .build();
-        List<GetCommentsResponseDto> commentsResponseDtos = CommentMapper.toGetCommentsResponseDtos((Commentable)post, member);
+        List<GetCommentsResponseDto> commentsResponseDtos = CommentMapper.toGetCommentsResponseDtos((Commentable) post, member);
 
         return GetPostResponseDto.builder()
                 .content(post.getContent().getContent())

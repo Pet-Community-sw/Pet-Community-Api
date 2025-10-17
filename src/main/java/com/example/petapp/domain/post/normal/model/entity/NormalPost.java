@@ -1,11 +1,14 @@
 package com.example.petapp.domain.post.normal.model.entity;
 
+import com.example.petapp.common.base.embedded.Content;
 import com.example.petapp.domain.comment.model.entity.Comment;
 import com.example.petapp.domain.comment.model.entity.Commentable;
 import com.example.petapp.domain.member.model.entity.Member;
 import com.example.petapp.domain.post.common.Post;
-import com.example.petapp.common.base.embedded.Content;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
@@ -32,14 +35,12 @@ public class NormalPost extends Post implements Commentable {
 
     public void updateNormalPost(String newPostImageUrl, String newTitle, String newContent) {
         this.setPostImageUrl(newPostImageUrl);
-        this.setContent(new Content(newTitle,newContent));
+        this.setContent(new Content(newTitle, newContent));
     }
 
     public void updateViewCount(Member member) {
         if (!this.getMember().equals(member)) {
-            this.setViewCount(this.getViewCount()+1);
+            this.setViewCount(this.getViewCount() + 1);
         }
-
     }
-
 }

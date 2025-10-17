@@ -2,7 +2,6 @@ package com.example.petapp.domain.post.normal;
 
 import com.example.petapp.common.base.util.imagefile.FileImageKind;
 import com.example.petapp.common.base.util.imagefile.FileUploadUtil;
-import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.like.LikeRepository;
 import com.example.petapp.domain.like.LikeService;
 import com.example.petapp.domain.member.model.entity.Member;
@@ -44,8 +43,8 @@ public class NormalPostServiceImpl implements NormalPostService {
         Member member = queryService.findByMember(email);
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
         List<NormalPost> normalPosts = normalPostRepository.findAll(pageRequest).getContent();
-        Set<Long> memberIds = inMemoryService.getLikeData(member.getId());
-        return NormalPostMapper.toPostListResponseDto(normalPosts, likeService.getLikeCountMap(normalPosts), memberIds);
+        Set<Long> postIdsByMember = inMemoryService.getLikeData(member.getId());
+        return NormalPostMapper.toPostListResponseDto(normalPosts, likeService.getLikeCountMap(normalPosts), postIdsByMember);
     }
 
     @Transactional
@@ -73,7 +72,7 @@ public class NormalPostServiceImpl implements NormalPostService {
     public void deletePost(Long postId, String email) {
         Member member = queryService.findByMember(email);
         NormalPost normalPost = queryService.findByNormalPost(postId);
-        validateMember(normalPost, member);
+        normalPost.validateMember(member);
         normalPostRepository.deleteById(postId);
     }
 
@@ -82,15 +81,9 @@ public class NormalPostServiceImpl implements NormalPostService {
     public void updatePost(Long postId, PostDto updatePostDto, String email) {
         Member member = queryService.findByMember(email);
         NormalPost normalPost = queryService.findByNormalPost(postId);
-        validateMember(normalPost, member);
+        normalPost.validateMember(member);
 
         normalPost.updateNormalPost(FileUploadUtil.fileUpload(updatePostDto.getPostImageFile(), postUploadDir, FileImageKind.POST), updatePostDto.getTitle(), updatePostDto.getContent());
-    }
-
-    private static void validateMember(NormalPost normalPost, Member member) {
-        if (!(normalPost.getMember().equals(member))) {
-            throw new ForbiddenException("권한 없음.");
-        }
     }
 
 }
