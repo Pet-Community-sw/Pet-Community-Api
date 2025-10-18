@@ -1,6 +1,5 @@
 package com.example.petapp.domain.groupchatroom;
 
-import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
 import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
 import com.example.petapp.domain.chatting.model.type.ChatRoomType;
@@ -54,18 +53,17 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Transactional
     @Override
     public CreateChatRoomResponseDto createChatRoom(WalkingTogetherMatch walkingTogetherMatch, Profile profile) {
-        Optional<ChatRoom> chatRoom1 = chatRoomRepository.findByWalkingTogetherMatch(walkingTogetherMatch);
-        if (chatRoom1.isEmpty()) {//채팅방이 없으면 새로운생성 있으면 profiles에 신청자 Profile 추가
-            ChatRoom chatRoom = ChatRoomMapper.toEntity(walkingTogetherMatch, profile);
-            ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
+        Optional<ChatRoom> chatRoom = chatRoomRepository.findByWalkingTogetherMatch(walkingTogetherMatch);
+        if (chatRoom.isEmpty()) {//채팅방이 없으면 새로운생성 있으면 profiles에 신청자 Profile 추가
+            ChatRoom savedChatRoom = chatRoomRepository.save(ChatRoomMapper.toEntity(walkingTogetherMatch, profile));
             return new CreateChatRoomResponseDto(savedChatRoom.getId(), true);
         } else {
-            if (walkingTogetherMatch.getLimitCount() <= chatRoom1.get().getUsers().size()) {
-                throw new ConflictException("인원초과");//채팅방 limitCount설정.
-            }
-            ChatRoom chatRoom = chatRoom1.get();
-            chatRoom.addUser(profile.getId());
-            return new CreateChatRoomResponseDto(chatRoom.getId(), false);
+            ChatRoom realChatRoom = chatRoom.get();
+            realChatRoom.checkUser(profile.getId());
+            walkingTogetherMatch.checkLimitCount(realChatRoom);
+
+            realChatRoom.addUser(profile.getId());
+            return new CreateChatRoomResponseDto(realChatRoom.getId(), false);
         }
     }
 

@@ -121,6 +121,7 @@ public class InMemoryServiceImpl implements InMemoryService {
     @Override
     public void createForeGroundData(Long id) {
         redisTemplate.opsForSet().add(RedisKeys.foregroundMembers(), id.toString());
+        //todo : 이것도 사용자가 많을 때 어떻게 되는건지?
     }
 
     @Override

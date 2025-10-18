@@ -8,6 +8,7 @@ import com.example.petapp.domain.member.model.dto.response.GetMemberResponseDto;
 import com.example.petapp.domain.member.model.dto.response.MemberSignResponseDto;
 import com.example.petapp.domain.member.model.dto.response.TokenResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+@Tag(name = "Member")
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
@@ -38,50 +40,77 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body(memberService.createMember(memberSignDto));
     }
 
+    @Operation(
+            summary = "로그인"
+    )
     @PostMapping("/login")
     public TokenResponseDto login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
         return memberService.login(loginDto, response);
     }
 
+    @Operation(
+            summary = "유저 상세 조회"
+    )
     @GetMapping("/{memberId}")
     public GetMemberResponseDto getMember(@PathVariable Long memberId, Authentication authentication) {
         return memberService.getMember(memberId, AuthUtil.getEmail(authentication));
     }
 
+    @Operation(
+            summary = "로그아웃"
+    )
     @DeleteMapping("/logout")
     public ResponseEntity<MessageResponse> logout(@RequestHeader("Authorization") String accessToken) {
         memberService.logout(accessToken);
         return ResponseEntity.ok(new MessageResponse("로그아웃 되었습니다."));
     }
 
+    @Operation(
+            summary = "아이디 찾기"
+    )
     @GetMapping("/find-id")
     public FindByIdResponseDto findById(@RequestParam String phoneNumber) {
         return memberService.findById(phoneNumber);
     }
 
+    @Operation(
+            summary = "이메일 인증코드 요청"
+    )
     @PostMapping("/send-email")
     public ResponseEntity<MessageResponse> sendEmail(@RequestBody @Valid SendEmailDto sendEmailDto) {
         memberService.sendEmail(sendEmailDto);
         return ResponseEntity.ok(new MessageResponse("인증번호가 이메일로 전송되었습니다."));
     }
 
+    @Operation(
+            summary = "인증코드 검증"
+    )
     @PostMapping("/verify-code")
     public AccessTokenResponseDto verifyCode(@RequestBody @Valid AuthCodeDto authCodeDto) {
         return memberService.verifyCode(authCodeDto.getEmail(), authCodeDto.getCode());
     }
 
+    @Operation(
+            summary = "비밀번호 재설정"
+    )
     @PutMapping("/reset-password")//수정 필요 토큰 있을 때와 없을 때
     public ResponseEntity<MessageResponse> resetPassword(@RequestBody @Valid ResetPasswordDto resetPasswordDto, Authentication authentication) {
         memberService.resetPassword(resetPasswordDto, AuthUtil.getEmail(authentication));
         return ResponseEntity.ok(new MessageResponse("비밀번호가 성공적으로 변경되었습나다."));
     }
 
+    @Operation(
+            summary = "회원탈퇴"
+    )
     @DeleteMapping()
     public ResponseEntity<MessageResponse> deleteMember(Authentication authentication) {
         memberService.deleteMember(AuthUtil.getEmail(authentication));
         return ResponseEntity.ok(new MessageResponse("탈퇴 되었습니다."));
     }
 
+    @Operation(
+            summary = "fcm토큰 생성"
+    )
     @PostMapping("/fcm-token")
     public ResponseEntity<MessageResponse> createFcmToken(@RequestBody @Valid FcmTokenDto fcmTokenDto) {
         memberService.createFcmToken(fcmTokenDto);

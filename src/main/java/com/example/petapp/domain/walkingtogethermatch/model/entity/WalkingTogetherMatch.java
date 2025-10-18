@@ -1,12 +1,13 @@
 package com.example.petapp.domain.walkingtogethermatch.model.entity;
 
+import com.example.petapp.common.base.superclass.BaseEntity;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.ForbiddenException;
+import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.petapp.domain.petbreed.model.entity.PetBreed;
 import com.example.petapp.domain.post.recommend.model.entity.RecommendRoutePost;
 import com.example.petapp.domain.profile.model.entity.Profile;
 import com.example.petapp.domain.walkingtogethermatch.model.dto.request.UpdateWalkingTogetherMatchDto;
-import com.example.petapp.common.base.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Cascade;
@@ -46,13 +47,13 @@ public class WalkingTogetherMatch extends BaseEntity {
     @CollectionTable(name = "walking_together_post_profiles")
     @Cascade(org.hibernate.annotations.CascadeType.DELETE)
     @Builder.Default
-    private Set<Long> profiles=new HashSet<>();
+    private Set<Long> profiles = new HashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "walking_together_post_avoid_Breeds")
     @Cascade(org.hibernate.annotations.CascadeType.DELETE)
     @Builder.Default
-    private Set<Long> avoidBreeds=new HashSet<>();
+    private Set<Long> avoidBreeds = new HashSet<>();
 
     public void checkInMatch(Long profileId, PetBreed petBreed) {
         if (getProfiles().contains(profileId)) {
@@ -84,6 +85,12 @@ public class WalkingTogetherMatch extends BaseEntity {
 
     public void addAvoidBreeds(Profile profile) {
         profile.getAvoidBreeds().forEach(avoidBreeds -> this.avoidBreeds.add(avoidBreeds.getId()));
+    }
+
+    public void checkLimitCount(ChatRoom chatRoom) {
+        if (limitCount <= chatRoom.getUsers().size()) {
+            throw new ConflictException("인원초과");
+        }
     }
 }
 

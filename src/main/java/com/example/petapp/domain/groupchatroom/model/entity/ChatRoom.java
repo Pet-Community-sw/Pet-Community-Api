@@ -1,6 +1,7 @@
 package com.example.petapp.domain.groupchatroom.model.entity;
 
 import com.example.petapp.common.base.superclass.BaseEntity;
+import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.chatting.model.type.ChatRoomType;
 import com.example.petapp.domain.profile.model.entity.Profile;
@@ -67,5 +68,11 @@ public class ChatRoom extends BaseEntity {
 
     public void addUser(Long userId) {
         users.add(userId);
+    }
+
+    public void checkUser(Long userId) {
+        if (users.contains(userId)) {
+            throw new ConflictException("이미 채팅방이있습니다.");
+        }
     }
 }

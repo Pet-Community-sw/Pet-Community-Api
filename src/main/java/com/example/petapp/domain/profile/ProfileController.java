@@ -7,6 +7,8 @@ import com.example.petapp.domain.profile.model.dto.response.AccessTokenByProfile
 import com.example.petapp.domain.profile.model.dto.response.CreateProfileResponseDto;
 import com.example.petapp.domain.profile.model.dto.response.GetProfileResponseDto;
 import com.example.petapp.domain.profile.model.dto.response.ProfileListResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Profile")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/profiles")
@@ -23,33 +26,51 @@ public class ProfileController {
 
     private final ProfileService profileService;
 
+    @Operation(
+            summary = "자신이 생성한 프로필 목록 조회"
+    )
     @GetMapping
     public List<ProfileListResponseDto> getProfiles(Authentication authentication) {//dogBreed를 안내보내도 될듯? 효빈이랑 얘기해봐야됨.
         return profileService.getProfiles(AuthUtil.getEmail(authentication));
     }
 
+    @Operation(
+            summary = "프로필 상세 조회"
+    )
     @GetMapping("/{profileId}")
     public GetProfileResponseDto getProfile(@PathVariable Long profileId, Authentication authentication) {
         return profileService.getProfile(profileId, AuthUtil.getEmail(authentication));
     }
 
+    @Operation(
+            summary = "프로필 생성"
+    )
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CreateProfileResponseDto createProfile(@ModelAttribute @Validated ProfileDto profileDto, Authentication authentication) {
         return profileService.createProfile(profileDto, AuthUtil.getEmail(authentication));
     }
 
+    @Operation(
+            summary = "프로필 수정"
+    )
     @PutMapping(value = "/{profileId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MessageResponse> updateProfile(@PathVariable Long profileId, @ModelAttribute @Validated ProfileDto addProfileDto, Authentication authentication) {
         profileService.updateProfile(profileId, addProfileDto, AuthUtil.getEmail(authentication));
         return ResponseEntity.ok(new MessageResponse("수정 되었습니다."));
     }
 
+    @Operation(
+            summary = "프로필 삭제"
+    )
     @DeleteMapping("/{profileId}")//삭제 수정도 authentication에 profileId가 추가되어있어야함.
     public ResponseEntity<MessageResponse> deleteProfile(@PathVariable Long profileId, Authentication authentication) {
         profileService.deleteProfile(profileId, AuthUtil.getEmail(authentication));
         return ResponseEntity.ok(new MessageResponse("삭제 되었습니다."));
     }
 
+    @Operation(
+            summary = "프로필 전용 토큰"
+    )
     @PostMapping("/token/{profileId}")//리팩토링 시에 authentication 말고 accesstoken을 받아서 이전 토큰 무효화 처리해야됨.
     public AccessTokenByProfileIdResponseDto accessTokenByProfileId(@RequestHeader("Authorization") String accessToken, @PathVariable Long profileId, Authentication authentication) {
         return profileService.accessTokenByProfile(accessToken, profileId, AuthUtil.getEmail(authentication));
