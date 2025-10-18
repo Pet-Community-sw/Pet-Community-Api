@@ -170,9 +170,9 @@ public class InMemoryServiceImpl implements InMemoryService {
     @Override
     public LastMessageInfoDto getLastMessageInfoData(Long id) {
         Map<Object, Object> lastMessageInfo = redisTemplate.opsForHash().entries(RedisKeys.lastMessageInfo(id));
-        String lastMessage = (String) lastMessageInfo.getOrDefault("lastMessage", null);
-        String lastMessageTime = (String) lastMessageInfo.getOrDefault("lastMessageTime", null);
-        int lastSeq = (Integer) lastMessageInfo.getOrDefault("seq", null);
+        String lastMessage = (String) lastMessageInfo.getOrDefault("lastMessage", "");
+        String lastMessageTime = (String) lastMessageInfo.getOrDefault("lastMessageTime", "");
+        int lastSeq = (Integer) lastMessageInfo.getOrDefault("seq", 0);
 
         return LastMessageInfoDto.builder()
                 .lastSeq(lastSeq)

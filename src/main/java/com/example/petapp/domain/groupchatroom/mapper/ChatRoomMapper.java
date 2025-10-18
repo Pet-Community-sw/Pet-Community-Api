@@ -1,5 +1,6 @@
 package com.example.petapp.domain.groupchatroom.mapper;
 
+import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
 import com.example.petapp.domain.chatting.model.entity.ChatMessage;
 import com.example.petapp.domain.chatting.model.type.ChatRoomType;
 import com.example.petapp.domain.groupchatroom.model.dto.request.ChatMessageDtoMember;
@@ -22,6 +23,7 @@ public class ChatRoomMapper {
                 .name(walkingTogetherMatch.getProfile().getPetName() + "님의 방")
                 .limitCount(walkingTogetherMatch.getLimitCount())//나중에 게시물에서 인원 수를 고정.
                 .walkingTogetherMatch(walkingTogetherMatch)
+                .chatRoomType(ChatRoomType.MANY)//todo : 다시봐야함.
                 //이게 수정에서 가능하려나?
                 .build();
         chatRoom.addUser(walkingTogetherMatch.getProfile().getId());//글 작성자.
@@ -45,15 +47,15 @@ public class ChatRoomMapper {
     }
 
 
-    public static ChatRoomResponseDto toChatRoomsResponseDto(ChatRoom chatRoom, Long userId, String lastMessage, int unReadCount, Set<ChatRoomUsersResponseDto> users, LocalDateTime lastMessageTime) {
+    public static ChatRoomResponseDto toChatRoomsResponseDto(ChatRoom chatRoom, Long userId, LastMessageInfoDto lastMessageInfoDto, int unReadCount, Set<ChatRoomUsersResponseDto> users) {
         return ChatRoomResponseDto.builder()
                 .chatRoomId(chatRoom.getId())
                 .chatName(chatRoom.getName())
                 .userSize(chatRoom.getUsers().size())
                 .users(users)
-                .lastMessage(lastMessage)
+                .lastMessage(lastMessageInfoDto.getLastMessage())
                 .unReadCount(unReadCount)
-                .lastMessageTime(lastMessageTime)
+                .lastMessageTime(lastMessageInfoDto.getLastMessageTime().isBlank() ? null : LocalDateTime.parse(lastMessageInfoDto.getLastMessageTime()))
                 .isOwner(chatRoom.getWalkingTogetherMatch().getProfile().getId().equals(userId))
                 .build();
     }
