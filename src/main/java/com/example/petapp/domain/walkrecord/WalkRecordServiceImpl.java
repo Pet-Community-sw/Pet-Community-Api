@@ -48,7 +48,6 @@ public class WalkRecordServiceImpl implements WalkRecordService {
         Member member = queryService.findByMember(email);
         WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
         walkRecord.validateMember(member);
-
         return new GetWalkRecordLocationResponseDto(inMemoryService.getLocationData(walkRecordId));
     }
 

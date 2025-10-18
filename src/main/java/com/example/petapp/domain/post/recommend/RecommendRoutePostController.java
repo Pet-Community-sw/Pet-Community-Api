@@ -42,7 +42,7 @@ public class RecommendRoutePostController {
                                                                            @RequestParam Double minLatitude,
                                                                            @RequestParam Double maxLongitude,
                                                                            @RequestParam Double maxLatitude,
-                                                                           @RequestParam int page,
+                                                                           @RequestParam(required = false, defaultValue = "1") int page,
                                                                            Authentication authentication) {
         return recommendRoutePostService.getRecommendRoutePosts(minLongitude, minLatitude, maxLongitude, maxLatitude, page, AuthUtil.getEmail(authentication));
     }
@@ -53,7 +53,7 @@ public class RecommendRoutePostController {
     @GetMapping("/by-place")
     private List<GetRecommendRoutePostsResponseDto> getRecommendRoutePosts(@RequestParam Double longitude,
                                                                            @RequestParam Double latitude,
-                                                                           @RequestParam int page,
+                                                                           @RequestParam(required = false, defaultValue = "1") int page,
                                                                            Authentication authentication) {
         return recommendRoutePostService.getRecommendRoutePosts(longitude, latitude, page, AuthUtil.getEmail(authentication));
     }
