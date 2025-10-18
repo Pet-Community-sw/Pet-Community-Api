@@ -7,11 +7,17 @@ RUN ./gradlew dependencies --no-daemon || true
 COPY . .
 RUN ./gradlew clean bootJar -x test --no-daemon
 
-FROM eclipse-temurin:17-jdk
+FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
+# 컨터에너는 기본적으로 관리자 권한으로 실행
+# 악성공격자를 막기위한 유저권한으로(app)으로 컨테이너를 실행 ->보안강화
+RUN addgroup --system app && adduser --system --ingroup app app
+USER app
+
 COPY --from=builder /app/build/libs/*.jar app.jar
 ENV SPRING_PROFILES_ACTIVE=prod \
-    TZ=Asia/Seoul \
-    JAVA_OPTS="-Xms512m -Xmx1024m"
+        JAVA_TOOL_OPTIONS="-Duser.timezone=Asia/Seoul -XX:MaxRAMPercentage=75"
+#JAVA_TOOL_OPTIONS JVM이 자동으로 읽은 환경 변수 timezone 설정 및 컨테이너 메모리중 75퍼센트만 힙으로 사용 나머지는 os운영, 스레드, GC ->OOM 방지
+
 EXPOSE 8080
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
