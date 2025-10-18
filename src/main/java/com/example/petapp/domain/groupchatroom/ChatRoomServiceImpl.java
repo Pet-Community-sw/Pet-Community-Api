@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -130,7 +129,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                         ChatRoomMapper.toChatRoomUsersResponseDto(queryService.findByProfile(id))
                 )//Member일 때도 구현해야할듯.
                 .collect(Collectors.toSet());
-        return ChatRoomMapper.toChatRoomsResponseDto(chatRoom, userId, lastMessageInfoDto.getLastMessage(), unReadCount, users, LocalDateTime.parse(lastMessageInfoDto.getLastMessageTime()));
+
+        return ChatRoomMapper.toChatRoomsResponseDto(chatRoom, userId, lastMessageInfoDto, unReadCount, users);
     }
 
     private void deleteRedis(Long chatRoomId) {
