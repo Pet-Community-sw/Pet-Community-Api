@@ -125,6 +125,11 @@ public class InMemoryServiceImpl implements InMemoryService {
     }
 
     @Override
+    public void deleteForeGroundData(Long id) {
+        redisTemplate.opsForSet().remove(RedisKeys.foregroundMembers(), id.toString());
+    }
+
+    @Override
     public Boolean existForeGroundData(Long id) {
         return redisTemplate.opsForSet().isMember(RedisKeys.foregroundMembers(), id.toString());
     }

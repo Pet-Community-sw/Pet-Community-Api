@@ -68,4 +68,6 @@ public interface InMemoryService {
     void deleteLastMessageInfoData(Long chatRoomId);
 
     void deleteReadData(Long chatRoomId);
+
+    void deleteForeGroundData(Long id);
 }

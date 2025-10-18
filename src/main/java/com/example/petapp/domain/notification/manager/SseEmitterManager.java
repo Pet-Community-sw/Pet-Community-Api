@@ -3,6 +3,7 @@ package com.example.petapp.domain.notification.manager;
 import com.example.petapp.common.jwt.util.JwtTokenizer;
 import com.example.petapp.domain.member.model.entity.Member;
 import com.example.petapp.domain.query.QueryService;
+import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,8 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SseEmitterManager {
 
     private final QueryService queryService;
-
     private final JwtTokenizer jwtTokenizer;
+    private final InMemoryService inMemoryService;
 
     private final static Long DEFAULT_TIMEOUT = 60 * 60 * 1000L;
 
@@ -39,21 +40,22 @@ public class SseEmitterManager {
 
         sseEmitter.onTimeout(() -> {
             sseEmitterMap.remove(member.getId());
-            log.info("timeout memberId:{}", member.getId());
+            log.info("[SSE] timeout memberId:{}", member.getId());
         });
 
         sseEmitter.onError(e -> {
             sseEmitterMap.remove(member.getId());
-            log.error("sse 오류 발생 memberId:{}", member.getId(), e);
+            log.error("[SSE] 오류 memberId:{}", member.getId(), e);
         });
 
         try {
             sseEmitter.send(SseEmitter.event().name("connect").data("connected"));//503에러를 막고자 더미코드를 보냄.
         } catch (IOException e) {
             sseEmitterMap.remove(member.getId());
-            log.error("sse connect 오류 발생 ", e);
+            log.error("[SSE] 더미 코드 보내는 중 오류 발생 ", e);
         }
 
+        inMemoryService.createForeGroundData(member.getId());
         return sseEmitter;
     }
 
@@ -66,10 +68,9 @@ public class SseEmitterManager {
 
             } catch (IOException e) {
                 sseEmitterMap.remove(memberId);
-                log.error("[ERROR] notification : {}", memberId, e);
+                inMemoryService.deleteForeGroundData(memberId);//todo : sse 연결 관리(하트비트)
+                log.error("[SSE] 오류 notification memberId : {}", memberId, e);
             }
-        } else {
-            log.warn("not found sse memberId:{}", memberId);
         }
     }
 }

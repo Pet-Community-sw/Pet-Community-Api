@@ -22,8 +22,7 @@ public class MemberStatusController {
             summary = "유저 상태 변경(foreground or background)"
     )
     @PostMapping
-    private ResponseEntity<MessageResponse> MemberStatus(Authentication authentication) {
-        memberStatusService.updateMemberStatus(authentication.getPrincipal().toString());
-        return ResponseEntity.ok(new MessageResponse("foreGround"));
+    public ResponseEntity<MessageResponse> MemberStatus(Authentication authentication) {
+        return ResponseEntity.ok(memberStatusService.updateMemberStatus(authentication.getPrincipal().toString()));
     }
 }
