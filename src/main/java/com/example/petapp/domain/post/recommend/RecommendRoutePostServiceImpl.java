@@ -45,7 +45,7 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
     @Override
     public List<GetRecommendRoutePostsResponseDto> getRecommendRoutePosts(Double minLongitude, Double minLatitude, Double maxLongitude, Double maxLatitude, int page, String email) {
         Member member = queryService.findByMember(email);
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page - 1, 10);
         Set<Long> memberIds = inMemoryService.getLikeData(member.getId());
         List<RecommendRoutePost> recommendRoutePosts = recommendRoutePostRepository
                 .findByRecommendRoutePostByLocation(minLongitude - 0.01, minLatitude - 0.01, maxLongitude + 0.01, maxLatitude + 0.01, pageable)
@@ -57,7 +57,7 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
     @Override
     public List<GetRecommendRoutePostsResponseDto> getRecommendRoutePosts(Double longitude, Double latitude, int page, String email) {
         Member member = queryService.findByMember(email);
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page - 1, 10);
         Set<Long> memberIds = inMemoryService.getLikeData(member.getId());
         List<RecommendRoutePost> recommendRoutePosts = recommendRoutePostRepository.findByRecommendRoutePostByPlace(longitude, latitude, pageable).getContent();
 

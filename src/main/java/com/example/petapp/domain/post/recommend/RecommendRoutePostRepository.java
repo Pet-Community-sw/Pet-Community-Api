@@ -11,42 +11,29 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RecommendRoutePostRepository extends JpaRepository<RecommendRoutePost, Long> {
 
+    /*
+     * JPA가 기본적으로 value 쿼리를 기반으로 COUNT 쿼리를 자동 생성하려고 시도함.
+     * JOIN, DISTINCT, GROUP BY 또는 거리 계산 함수 같은 게 들어가면 정확한 COUNT 쿼리를 자동 생성하지 못함 → 성능 저하 or 에러 발생 가능.
+     * 그래서 명시적으로 Count 전용 쿼리를 지정해주는 게 안정적이고 빠름.
+     * */
     @Query(value = """
-            SELECT p.*, r.*
-            FROM recommend_route_post r
-            LEFT JOIN post p ON p.id = r.post_id
-            WHERE ST_Distance_Sphere(POINT(r.location_longitude, r.location_latitude), POINT(:longitude, :latitude)) <= 1000
-            ORDER BY p.created_at DESC
+            select r.*, p.* from recommend_route_post r left join post p on p.id = r.post_id 
+            where st_distance_sphere(point(r.location_longitude, r.location_latitude), point(:longitude, :latitude)) <= 1000
+            order by p.created_at desc 
             """,
             countQuery = """
-                    SELECT COUNT(1)
-                    FROM recommend_route_post r
-                    LEFT JOIN post p ON p.id = r.post_id
-                    WHERE ST_Distance_Sphere(POINT(r.location_longitude, r.location_latitude), POINT(:longitude, :latitude)) <= 1000
-                    """,
-            nativeQuery = true)
-    Page<RecommendRoutePost> findByRecommendRoutePostByPlace(
-            @Param("longitude") Double longitude,
-            @Param("latitude") Double latitude,
-            Pageable pageable
-    );
+                    select count(1)
+                    from recommend_route_post r
+                    left join  post p on p.id = r.post_id
+                    where st_distance_sphere(point(r.location_longitude, r.location_latitude), point(:longitude, :latitude)) <= 1000
+                    """, nativeQuery = true)
+    Page<RecommendRoutePost> findByRecommendRoutePostByPlace(@Param("longitude") Double longitude,
+                                                             @Param("latitude") Double latitude,
+                                                             Pageable pageable);
 
-    @Query(value = """
-            SELECT p.*, r.*
-            FROM recommend_route_post r
-            LEFT JOIN post p ON p.id = r.post_id
-            WHERE r.location_longitude BETWEEN :minLongitude AND :maxLongitude
-              AND r.location_latitude  BETWEEN :minLatitude  AND :maxLatitude
-            ORDER BY p.created_at DESC
-            """,
-            countQuery = """
-                    SELECT COUNT(1)
-                    FROM recommend_route_post r
-                    LEFT JOIN post p ON p.id = r.post_id
-                    WHERE r.location_longitude BETWEEN :minLongitude AND :maxLongitude
-                      AND r.location_latitude  BETWEEN :minLatitude  AND :maxLatitude
-                    """,
-            nativeQuery = true)
+    @Query("select r from RecommendRoutePost r where r.location.locationLongitude between :minLongitude and :maxLongitude " +
+            "and r.location.locationLatitude between :minLatitude and :maxLatitude " +
+            "order by r.createdAt desc ")
     Page<RecommendRoutePost> findByRecommendRoutePostByLocation(
             @Param("minLongitude") Double minLongitude,
             @Param("minLatitude") Double minLatitude,
@@ -54,4 +41,5 @@ public interface RecommendRoutePostRepository extends JpaRepository<RecommendRou
             @Param("maxLatitude") Double maxLatitude,
             Pageable pageable
     );
+
 }
