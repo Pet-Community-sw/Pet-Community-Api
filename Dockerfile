@@ -9,10 +9,6 @@ RUN ./gradlew bootJar -x test --no-daemon
 
 FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
-# 컨터에너는 기본적으로 관리자 권한으로 실행
-# 악성공격자를 막기위한 유저권한으로(app)으로 컨테이너를 실행 ->보안강화
-RUN addgroup --system app && adduser --system --ingroup app app
-USER app
 
 COPY --from=builder /app/build/libs/*.jar app.jar
 ENV SPRING_PROFILES_ACTIVE=prod \
