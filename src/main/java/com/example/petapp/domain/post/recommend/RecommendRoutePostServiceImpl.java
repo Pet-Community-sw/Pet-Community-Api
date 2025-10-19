@@ -60,7 +60,6 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
         Pageable pageable = PageRequest.of(page - 1, 10);
         Set<Long> memberIds = inMemoryService.getLikeData(member.getId());
         List<RecommendRoutePost> recommendRoutePosts = recommendRoutePostRepository.findByRecommendRoutePostByPlace(longitude, latitude, pageable).getContent();
-
         return RecommendRoutePostMapper.toRecommendRoutePostsList(recommendRoutePosts, likeService.getLikeCountMap(recommendRoutePosts), memberIds, member);
     }
 

@@ -20,6 +20,8 @@ public interface InMemoryService {
 
     void deleteStringData(String key);
 
+    Set<String> getStringSetData(String userId);
+
 
     void createLikeData(Long key, Long value);
 
@@ -46,6 +48,8 @@ public interface InMemoryService {
 
     void createOnlineData(Long chatroomId, Long profileId);
 
+    void deleteOnlineDate(Long chatRoomId, Long profileId);
+
     Set<String> getOnlineDatas(Long id);
 
 
@@ -70,4 +74,5 @@ public interface InMemoryService {
     void deleteReadData(Long chatRoomId);
 
     void deleteForeGroundData(Long id);
+
 }

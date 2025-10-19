@@ -17,9 +17,9 @@ public interface RecommendRoutePostRepository extends JpaRepository<RecommendRou
      * 그래서 명시적으로 Count 전용 쿼리를 지정해주는 게 안정적이고 빠름.
      * */
     @Query(value = """
-            select r.*, p.* from recommend_route_post r left join post p on p.id = r.post_id 
+            select r.*, p.* from recommend_route_post r left join post p on p.id = r.post_id
             where st_distance_sphere(point(r.location_longitude, r.location_latitude), point(:longitude, :latitude)) <= 1000
-            order by p.created_at desc 
+            order by p.created_at desc
             """,
             countQuery = """
                     select count(1)

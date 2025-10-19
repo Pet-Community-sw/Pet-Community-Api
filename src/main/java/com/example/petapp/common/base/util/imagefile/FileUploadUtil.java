@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 @Slf4j
-//todo : 기본이미지 설정해야함.
 public class FileUploadUtil {
     public static String fileUpload(MultipartFile imageUrl, String uploadDir, FileImageKind fileImageKind) {
         UUID uuid = UUID.randomUUID();//기본 이미지를 넣어야할듯.

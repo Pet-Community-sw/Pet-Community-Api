@@ -36,6 +36,10 @@ public class InMemoryServiceImpl implements InMemoryService {
         return redisTemplate.opsForValue().get(key);
     }
 
+    public Set<String> getStringSetData(String key) {
+        return redisTemplate.opsForSet().members(key);
+    }
+
     @Override
     public Boolean existStringData(String key) {
         if (key == null) {
@@ -106,14 +110,20 @@ public class InMemoryServiceImpl implements InMemoryService {
     //-------------------------------------------------------------------------------------
 
     @Override
-    public void createOnlineData(Long chatroomId, Long profileId) {
-        redisTemplate.opsForSet().add(RedisKeys.onlineUsers(chatroomId), profileId.toString());
+    public void createOnlineData(Long chatRoomId, Long profileId) {
+        redisTemplate.opsForSet().add(RedisKeys.onlineUsers(chatRoomId), profileId.toString());
+    }
+
+    @Override
+    public void deleteOnlineDate(Long chatRoomId, Long profileId) {
+        redisTemplate.opsForSet().remove(RedisKeys.onlineUsers(chatRoomId), profileId);
     }
 
     @Override
     public Set<String> getOnlineDatas(Long id) {
         return Optional.ofNullable(redisTemplate.opsForSet().members(RedisKeys.onlineUsers(id)))
                 .orElse(Collections.emptySet());
+
     }
 
     //-------------------------------------------------------------------------------------

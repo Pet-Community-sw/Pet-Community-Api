@@ -13,6 +13,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+/*
+ * CONNECTED
+ * version:1.2
+ * heart-beat:0,0
+ * session:ws-123456
+ * Spring이 알아서 CONNECTED 프레임을 보내며, 이때 sessionId가 할당됨.
+ * */
 @Component
 @RequiredArgsConstructor
 @Slf4j
