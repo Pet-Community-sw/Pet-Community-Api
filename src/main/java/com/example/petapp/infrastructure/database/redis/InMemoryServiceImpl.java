@@ -36,6 +36,7 @@ public class InMemoryServiceImpl implements InMemoryService {
         return redisTemplate.opsForValue().get(key);
     }
 
+    @Override
     public Set<String> getStringSetData(String key) {
         return redisTemplate.opsForSet().members(key);
     }
@@ -52,7 +53,6 @@ public class InMemoryServiceImpl implements InMemoryService {
     public void deleteStringData(String key) {
         redisTemplate.delete(key);
     }
-
     //-------------------------------------------------------------------------------------
 
     @Override
@@ -69,7 +69,6 @@ public class InMemoryServiceImpl implements InMemoryService {
     public void deleteLikeData(Long key, Long value) {
         likeRedisTemplate.opsForSet().remove(RedisKeys.postLikes(key), value);
     }
-
     //-------------------------------------------------------------------------------------
 
     @Override
@@ -84,7 +83,6 @@ public class InMemoryServiceImpl implements InMemoryService {
         String key = RedisKeys.notifications(memberId);
         return notificationRedisTemplate.opsForList().range(key, 0, -1);
     }
-
     //-------------------------------------------------------------------------------------
 
     @Override
@@ -106,7 +104,6 @@ public class InMemoryServiceImpl implements InMemoryService {
     public void deleteLocationData(Long id) {
         redisTemplate.delete(RedisKeys.walkPath(id));
     }
-
     //-------------------------------------------------------------------------------------
 
     @Override
@@ -123,9 +120,7 @@ public class InMemoryServiceImpl implements InMemoryService {
     public Set<String> getOnlineDatas(Long id) {
         return Optional.ofNullable(redisTemplate.opsForSet().members(RedisKeys.onlineUsers(id)))
                 .orElse(Collections.emptySet());
-
     }
-
     //-------------------------------------------------------------------------------------
 
     @Override
@@ -143,7 +138,6 @@ public class InMemoryServiceImpl implements InMemoryService {
     public Boolean existForeGroundData(Long id) {
         return redisTemplate.opsForSet().isMember(RedisKeys.foregroundMembers(), id.toString());
     }
-
     //-------------------------------------------------------------------------------------
 
     @Override
@@ -170,7 +164,6 @@ public class InMemoryServiceImpl implements InMemoryService {
     public void deleteReadData(Long chatRoomId) {
         redisTemplate.delete(RedisKeys.readHash(chatRoomId));
     }
-
     //-------------------------------------------------------------------------------------
 
     @Override
@@ -179,7 +172,6 @@ public class InMemoryServiceImpl implements InMemoryService {
         lastMessageInfo.put("seq", String.valueOf(chatMessage.getSeq()));
         lastMessageInfo.put("lastMessage", chatMessage.getMessage());
         lastMessageInfo.put("lastMessageTime", String.valueOf(chatMessage.getMessageTime()));
-
         redisTemplate.opsForHash().putAll(RedisKeys.lastMessageInfo(chatMessage.getChatRoomId()), lastMessageInfo);
     }
 
@@ -189,7 +181,6 @@ public class InMemoryServiceImpl implements InMemoryService {
         String lastMessage = (String) lastMessageInfo.getOrDefault("lastMessage", "");
         String lastMessageTime = (String) lastMessageInfo.getOrDefault("lastMessageTime", "");
         int lastSeq = (Integer) lastMessageInfo.getOrDefault("seq", 0);
-
         return LastMessageInfoDto.builder()
                 .lastSeq(lastSeq)
                 .lastMessage(lastMessage)

@@ -43,7 +43,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<ChatRoomResponseDto> getChatRooms(Long profileId) {
+    public List<ChatRoomResponseDto> getChatRooms(Long profileId) {//todo : 나중에 One으로도 같이 내보내면 될듯?
         List<ChatRoom> chatRoomList = chatRoomRepository.findAllByUserIdAndChatRoomType(profileId, ChatRoomType.MANY);//나중에 타입 파라미터로 방아야함
         return chatRoomList.stream()
                 .map(chatRoom -> toChatRoomsResponseDtoWithRedis(chatRoom, profileId))
@@ -61,7 +61,6 @@ public class ChatRoomServiceImpl implements ChatRoomService {
             ChatRoom realChatRoom = chatRoom.get();
             realChatRoom.checkUser(profile.getId());
             walkingTogetherMatch.checkLimitCount(realChatRoom);
-
             realChatRoom.addUser(profile.getId());
             return new CreateChatRoomResponseDto(realChatRoom.getId(), false);
         }
@@ -105,7 +104,6 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
         Profile profile = queryService.findByProfile(profileId);
         chatRoom.validateChatOwner(profile);
-
         chatRoom.setName(updateChatRoomDto.getChatRoomName());
         chatRoom.setLimitCount(updateChatRoomDto.getLimitCount());
     }
@@ -118,16 +116,12 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     private ChatRoomResponseDto toChatRoomsResponseDtoWithRedis(ChatRoom chatRoom, Long userId) {
         int userSeq = inMemoryService.getReadData(chatRoom.getId(), userId);
-
         LastMessageInfoDto lastMessageInfoDto = inMemoryService.getLastMessageInfoData(chatRoom.getId());
-
         int unReadCount = Math.max(lastMessageInfoDto.getLastSeq() - userSeq, 0);
-
         Set<ChatRoomUsersResponseDto> users = chatRoom.getUsers().stream().map(id ->
                         ChatRoomMapper.toChatRoomUsersResponseDto(queryService.findByProfile(id))
                 )//Member일 때도 구현해야할듯.
                 .collect(Collectors.toSet());
-
         return ChatRoomMapper.toChatRoomsResponseDto(chatRoom, userId, lastMessageInfoDto, unReadCount, users);
     }
 
@@ -135,5 +129,4 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         inMemoryService.deleteLastMessageInfoData(chatRoomId);
         inMemoryService.deleteReadData(chatRoomId);
     }
-
 }

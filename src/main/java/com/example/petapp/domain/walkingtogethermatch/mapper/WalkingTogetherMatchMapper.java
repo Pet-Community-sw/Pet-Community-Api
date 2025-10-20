@@ -1,12 +1,12 @@
 package com.example.petapp.domain.walkingtogethermatch.mapper;
 
+import com.example.petapp.common.base.util.TimeUtil;
 import com.example.petapp.domain.petbreed.model.entity.PetBreed;
-import com.example.petapp.domain.profile.model.entity.Profile;
 import com.example.petapp.domain.post.recommend.model.entity.RecommendRoutePost;
-import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
+import com.example.petapp.domain.profile.model.entity.Profile;
 import com.example.petapp.domain.walkingtogethermatch.model.dto.request.CreateWalkingTogetherMatchDto;
 import com.example.petapp.domain.walkingtogethermatch.model.dto.response.GetWalkingTogetherMatchResponseDto;
-import com.example.petapp.common.base.util.TimeAgoUtil;
+import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,6 +33,7 @@ public class WalkingTogetherMatchMapper {
                                 petBreed
                         )).collect(Collectors.toList());
     }
+
     public static GetWalkingTogetherMatchResponseDto toGetWalkingTogetherPostResponseDto(Long walkingTogetherPostId,
                                                                                          WalkingTogetherMatch walkingTogetherMatch,
                                                                                          Profile profile,
@@ -44,10 +45,9 @@ public class WalkingTogetherMatchMapper {
                 .scheduledTime(walkingTogetherMatch.getScheduledTime())
                 .currentCount(walkingTogetherMatch.getProfiles().size())
                 .limitCount(walkingTogetherMatch.getLimitCount())
-                .createdAt(TimeAgoUtil.getTimeAgo(walkingTogetherMatch.getCreatedAt()))
+                .createdAt(TimeUtil.getTimeAgo(walkingTogetherMatch.getCreatedAt()))
                 .isOwner(walkingTogetherMatch.getProfile().equals(profile))
                 .filtering(walkingTogetherMatch.getAvoidBreeds().contains(petBreed.getId()))//true이면 신청불가
                 .build();
-
     }
 }

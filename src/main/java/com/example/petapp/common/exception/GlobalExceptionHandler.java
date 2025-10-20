@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleBindException(BindException ex) {
         return buildValidationErrorResponse(ex.getBindingResult());
     }
-
+    
     private ResponseEntity<?> buildValidationErrorResponse(BindingResult bindingResult) {
         Map<String, String> errors = bindingResult.getFieldErrors().stream()
                 .collect(Collectors.toMap(
@@ -75,5 +75,4 @@ public class GlobalExceptionHandler {
                 ));
         return ResponseEntity.badRequest().body(errors);
     }
-
 }

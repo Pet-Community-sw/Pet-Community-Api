@@ -56,8 +56,9 @@ public class DelegateWalkPostController {
                                                                                 @RequestParam Double minLatitude,
                                                                                 @RequestParam Double maxLongitude,
                                                                                 @RequestParam Double maxLatitude,
+                                                                                @RequestParam(defaultValue = "1", required = false) int page,
                                                                                 Authentication authentication) {
-        return delegateWalkPostService.getDelegateWalkPostsByLocation(minLongitude, minLatitude, maxLongitude, maxLatitude, AuthUtil.getEmail(authentication));
+        return delegateWalkPostService.getDelegateWalkPostsByLocation(minLongitude, minLatitude, maxLongitude, maxLatitude, page, AuthUtil.getEmail(authentication));
     }
 
     @Operation(
@@ -66,8 +67,9 @@ public class DelegateWalkPostController {
     @GetMapping("/by-place")
     public List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByPlace(@RequestParam Double longitude,
                                                                              @RequestParam Double latitude,
+                                                                             @RequestParam(defaultValue = "1", required = false) int page,
                                                                              Authentication authentication) {
-        return delegateWalkPostService.getDelegateWalkPostsByPlace(longitude, latitude, AuthUtil.getEmail(authentication));
+        return delegateWalkPostService.getDelegateWalkPostsByPlace(longitude, latitude, page, AuthUtil.getEmail(authentication));
     }
 
     @Operation(
@@ -120,5 +122,4 @@ public class DelegateWalkPostController {
     public CreateChatRoomResponseDto selectApplicant(@PathVariable Long delegateWalkPostId, @RequestBody Long memberId, Authentication authentication) {
         return delegateWalkPostService.selectApplicant(delegateWalkPostId, memberId, AuthUtil.getEmail(authentication));
     }
-
 }

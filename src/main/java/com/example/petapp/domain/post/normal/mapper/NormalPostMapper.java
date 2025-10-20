@@ -1,7 +1,7 @@
 package com.example.petapp.domain.post.normal.mapper;
 
 import com.example.petapp.common.base.embedded.Content;
-import com.example.petapp.common.base.util.TimeAgoUtil;
+import com.example.petapp.common.base.util.TimeUtil;
 import com.example.petapp.domain.comment.mapper.CommentMapper;
 import com.example.petapp.domain.comment.model.dto.response.GetCommentsResponseDto;
 import com.example.petapp.domain.comment.model.entity.Commentable;
@@ -35,7 +35,7 @@ public class NormalPostMapper {
                         .memberId(post.getMember().getId())
                         .memberName(post.getMember().getName())
                         .memberImageUrl(post.getMember().getMemberImageUrl())
-                        .createdAt(TimeAgoUtil.getTimeAgo(post.getCreatedAt()))
+                        .createdAt(TimeUtil.getTimeAgo(post.getCreatedAt()))
                         .viewCount(post.getViewCount())
                         .likeCount(likeCountMap.getOrDefault(post.getId(), 0L))
                         .title(post.getContent().getTitle())
@@ -58,18 +58,15 @@ public class NormalPostMapper {
                 .memberId(post.getMember().getId())
                 .memberName(post.getMember().getName())
                 .memberImageUrl(post.getMember().getMemberImageUrl())
-                .createdAt(TimeAgoUtil.getTimeAgo(post.getCreatedAt()))
+                .createdAt(TimeUtil.getTimeAgo(post.getCreatedAt()))
                 .like(isLike)
                 .build();
         List<GetCommentsResponseDto> commentsResponseDtos = CommentMapper.toGetCommentsResponseDtos((Commentable) post, member);
-
         return GetPostResponseDto.builder()
                 .content(post.getContent().getContent())
                 .isOwner(post.getMember().equals(member))
                 .postResponseDto(postResponseDto)
                 .comments(commentsResponseDtos)
                 .build();
-
     }
-
 }

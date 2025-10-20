@@ -1,20 +1,19 @@
 package com.example.petapp.domain.post.delegate.model.entity;
 
-import com.example.petapp.common.exception.ConflictException;
-import com.example.petapp.common.exception.ForbiddenException;
-import com.example.petapp.domain.member.model.entity.Member;
-import com.example.petapp.domain.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
-import com.example.petapp.domain.profile.model.entity.Profile;
 import com.example.petapp.common.base.embedded.Applicant;
 import com.example.petapp.common.base.embedded.Content;
 import com.example.petapp.common.base.embedded.Location;
+import com.example.petapp.common.exception.ConflictException;
+import com.example.petapp.common.exception.ForbiddenException;
+import com.example.petapp.domain.member.model.entity.Member;
 import com.example.petapp.domain.post.common.Post;
+import com.example.petapp.domain.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
+import com.example.petapp.domain.profile.model.entity.Profile;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -45,8 +44,7 @@ public class DelegateWalkPost extends Post {
     private Integer allowedRadiusMeters;
 
     @Setter
-    @NotEmpty
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long selectedApplicantMemberId;
 
     @Setter
@@ -60,7 +58,6 @@ public class DelegateWalkPost extends Post {
     private boolean startAuthorized;// start권한 부여
 
     @Setter
-    @NotEmpty
     @Column(nullable = false)
     private LocalDateTime scheduledTime;
 
@@ -80,7 +77,7 @@ public class DelegateWalkPost extends Post {
     private Set<Applicant> applicants = new HashSet<>();
 
     public boolean filtering(Member member) {
-        if (this.isRequireProfile()) {
+        if (isRequireProfile()) {
             return member.getProfiles().isEmpty();
         } else
             return false;
@@ -133,7 +130,7 @@ public class DelegateWalkPost extends Post {
         } else if (getStatus() == DelegateWalkStatus.COMPLETED) {
             throw new ConflictException("모집 완료 게시글입니다.");
         } else {
-            this.addApplicant(member, content);
+            addApplicant(member, content);
         }
     }
 

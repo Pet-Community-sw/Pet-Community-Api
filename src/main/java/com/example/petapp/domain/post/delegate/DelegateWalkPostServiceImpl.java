@@ -19,6 +19,8 @@ import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.domain.walkrecord.WalkRecordService;
 import com.example.petapp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,18 +47,19 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByLocation(Double minLongitude, Double minLatitude, Double maxLongitude, Double maxLatitude, String email) {
+    public List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByLocation(Double minLongitude, Double minLatitude, Double maxLongitude, Double maxLatitude, int page, String email) {
         Member member = queryService.findByMember(email);
-        List<DelegateWalkPost> delegateWalkPosts = delegateWalkPostRepository.findByDelegateWalkPostByLocation(minLongitude - 0.01, minLatitude - 0.01, maxLongitude + 0.01, maxLatitude + 0.01);
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        List<DelegateWalkPost> delegateWalkPosts = delegateWalkPostRepository.findByDelegateWalkPostByLocation(minLongitude - 0.01, minLatitude - 0.01, maxLongitude + 0.01, maxLatitude + 0.01, pageable).getContent();
         return DelegateWalkPostMapper.toGetDelegateWalkPostsResponseDtos(member, delegateWalkPosts);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByPlace(Double longitude, Double latitude, String email) {
+    public List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByPlace(Double longitude, Double latitude, int page, String email) {
         Member member = queryService.findByMember(email);
-        List<DelegateWalkPost> delegateWalkPosts = delegateWalkPostRepository.findByDelegateWalkPostByPlace(longitude, latitude);
-
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        List<DelegateWalkPost> delegateWalkPosts = delegateWalkPostRepository.findByDelegateWalkPostByPlace(longitude, latitude, pageable).getContent();
         return DelegateWalkPostMapper.toGetDelegateWalkPostsResponseDtos(member, delegateWalkPosts);
     }
 
@@ -96,7 +99,6 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     public void updateDelegateWalkPost(Long delegateWalkPostId, UpdateDelegateWalkPostDto updateDelegateWalkPostDto, String email) {
         Member member = queryService.findByMember(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
-
         delegateWalkPost.validatedUser(member);
         delegateWalkPost.updateDelegateWalkPost(updateDelegateWalkPostDto);
     }
@@ -106,7 +108,6 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     public void deleteDelegateWalkPost(Long delegateWalkPostId, String email) {
         Member member = queryService.findByMember(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
-
         delegateWalkPost.validatedUser(member);
         delegateWalkPostRepository.deleteById(delegateWalkPostId);
     }
@@ -124,7 +125,6 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     public ApplyToDelegateWalkPostResponseDto applyToDelegateWalkPost(Long delegateWalkPostId, String content, String email) {
         Member member = queryService.findByMember(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
-
         delegateWalkPost.apply(member, content);
         return new ApplyToDelegateWalkPostResponseDto(member.getId());
     }
