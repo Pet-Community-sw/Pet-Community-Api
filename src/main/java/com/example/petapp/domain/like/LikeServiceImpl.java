@@ -40,7 +40,7 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public <T extends Post> Map<Long, Long> getLikeCountMap(List<T> posts) {
         List<Long> postIds = posts.stream().map(Post::getId).toList();
-        List<LikeCountDto> likeCountDtos = likeRepository.countByPostIds(postIds);
+        List<LikeCountDto> likeCountDtos = likeRepository.countByPostIds(postIds);//todo : 추후 redis로 변경해야할듯?
         return likeCountDtos.stream().collect(Collectors.toMap(LikeCountDto::getPostId, LikeCountDto::getLikeCount));
     }
 
@@ -72,7 +72,6 @@ public class LikeServiceImpl implements LikeService {
         post.countUpLike(like);
         likeRepository.save(like);
         inMemoryService.createLikeData(member.getId(), post.getId());
-
         return true;
     }
 }

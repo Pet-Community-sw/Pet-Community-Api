@@ -128,5 +128,6 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         delegateWalkPost.apply(member, content);
         return new ApplyToDelegateWalkPostResponseDto(member.getId());
     }
+    //todo : 자신의 글에 대리산책 지원을 하지못하게 해야됨.
 }
 

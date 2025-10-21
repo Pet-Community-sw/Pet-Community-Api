@@ -40,10 +40,9 @@ public abstract class Post extends BaseEntity {
     private Member member;
 
     @Builder.Default
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @BatchSize(size = 100)
     private List<Like> likes = new ArrayList<>();
-
 //    public abstract Like createLike(Member member);//게시글에서 Like생성 책임 위임
 
     public void removeLikes(Like like) {
@@ -51,7 +50,7 @@ public abstract class Post extends BaseEntity {
     }
 
     public void updateContent(String newTitle, String newContent) {
-        this.content = new Content(newTitle, newContent);
+        content = new Content(newTitle, newContent);
     }
 
     public void countUpLike(Like like) {
@@ -63,5 +62,4 @@ public abstract class Post extends BaseEntity {
             throw new ForbiddenException("권한 없음.");
         }
     }
-
 }

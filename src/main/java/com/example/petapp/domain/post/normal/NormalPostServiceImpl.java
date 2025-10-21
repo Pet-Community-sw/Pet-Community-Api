@@ -12,7 +12,6 @@ import com.example.petapp.domain.post.normal.model.dto.response.GetPostResponseD
 import com.example.petapp.domain.post.normal.model.dto.response.PostResponseDto;
 import com.example.petapp.domain.post.normal.model.entity.NormalPost;
 import com.example.petapp.domain.query.QueryService;
-import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -21,30 +20,26 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 
 
 @Service
 @RequiredArgsConstructor
 public class NormalPostServiceImpl implements NormalPostService {
 
-    @Value("${spring.dog.post.image.upload}")
-    private String postUploadDir;
-
     private final NormalPostRepository normalPostRepository;
     private final LikeRepository likeRepository;
     private final LikeService likeService;
     private final QueryService queryService;
-    private final InMemoryService inMemoryService;
+    @Value("${spring.dog.post.image.upload}")
+    private String postUploadDir;
 
     @Transactional(readOnly = true)
     @Override
     public List<PostResponseDto> getPosts(int page, String email) {
         Member member = queryService.findByMember(email);
-        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
+        PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "id"));
         List<NormalPost> normalPosts = normalPostRepository.findAll(pageRequest).getContent();
-        Set<Long> postIdsByMember = inMemoryService.getLikeData(member.getId());
-        return NormalPostMapper.toPostListResponseDto(normalPosts, likeService.getLikeCountMap(normalPosts), postIdsByMember);
+        return NormalPostMapper.toPostListResponseDto(normalPosts, likeService.getLikeCountMap(normalPosts), member);
     }
 
     @Transactional
@@ -53,7 +48,6 @@ public class NormalPostServiceImpl implements NormalPostService {
         Member member = queryService.findByMember(email);
         NormalPost normalPost = queryService.findByNormalPost(postId);
         normalPost.updateViewCount(member);
-
         return NormalPostMapper.toGetPostResponseDto(normalPost, member, likeRepository.countByPost(normalPost), likeRepository.existsByPostAndMember(normalPost, member));
     }
 
@@ -82,9 +76,7 @@ public class NormalPostServiceImpl implements NormalPostService {
         Member member = queryService.findByMember(email);
         NormalPost normalPost = queryService.findByNormalPost(postId);
         normalPost.validateMember(member);
-
         normalPost.updateNormalPost(FileUploadUtil.fileUpload(updatePostDto.getPostImageFile(), postUploadDir, FileImageKind.POST), updatePostDto.getTitle(), updatePostDto.getContent());
     }
-
 }
 

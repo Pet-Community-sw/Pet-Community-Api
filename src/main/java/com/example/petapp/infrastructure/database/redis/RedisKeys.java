@@ -3,8 +3,8 @@ package com.example.petapp.infrastructure.database.redis;
 public final class RedisKeys {
 
     // Likes
-    public static String postLikes(long postId) {
-        return "post:likes:" + postId;
+    public static String postLikes(Long memberId) {
+        return "post:likes:" + memberId;
     }
 
     // Notifications

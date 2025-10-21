@@ -14,7 +14,6 @@ import com.example.petapp.domain.post.normal.model.entity.NormalPost;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class NormalPostMapper {
@@ -27,7 +26,7 @@ public class NormalPostMapper {
                 .build();
     }
 
-    public static <T extends Post> List<PostResponseDto> toPostListResponseDto(List<T> posts, Map<Long, Long> likeCountMap, Set<Long> likedPostIds) {
+    public static <T extends Post> List<PostResponseDto> toPostListResponseDto(List<T> posts, Map<Long, Long> likeCountMap, Member member) {
         return posts.stream()
                 .map(post -> PostResponseDto.builder()
                         .postId(post.getId())
@@ -39,7 +38,7 @@ public class NormalPostMapper {
                         .viewCount(post.getViewCount())
                         .likeCount(likeCountMap.getOrDefault(post.getId(), 0L))
                         .title(post.getContent().getTitle())
-                        .like(likedPostIds.contains(post.getId()))
+                        .like(post.getLikes().stream().anyMatch(like -> like.getMember().getId().equals(member.getId())))
                         .build()
                 )
                 .collect(Collectors.toList());

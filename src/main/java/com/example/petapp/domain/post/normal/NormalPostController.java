@@ -29,7 +29,7 @@ public class NormalPostController {
             summary = "게시물 목록 조회"
     )
     @GetMapping()
-    public List<PostResponseDto> getPosts(@RequestParam(defaultValue = "0") int page, Authentication authentication) {
+    public List<PostResponseDto> getPosts(@RequestParam(defaultValue = "1") int page, Authentication authentication) {
         return normalPostService.getPosts(page, AuthUtil.getEmail(authentication));
     }
 
