@@ -22,7 +22,7 @@ public class DelegateWalkPostMapper {
                 .price(createDelegateWalkPostDto.getPrice())
                 .location(new Location(createDelegateWalkPostDto.getLocationLongitude(), createDelegateWalkPostDto.getLocationLatitude()))
                 .allowedRadiusMeters(createDelegateWalkPostDto.getAllowedRadiusMeters())
-                .scheduledTime(TimeUtil.convert(createDelegateWalkPostDto.getScheduledTime()))
+                .scheduledTime(createDelegateWalkPostDto.getScheduledTime())
                 .profile(profile)
                 .requireProfile(createDelegateWalkPostDto.isRequireProfile())
                 .build();
