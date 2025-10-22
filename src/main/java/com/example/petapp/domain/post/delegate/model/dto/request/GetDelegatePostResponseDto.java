@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GetPostResponseDto { //후기 추가해야됨.
+public class GetDelegatePostResponseDto { //후기 추가해야됨.
 
     private Long delegateWalkPostId;
 
@@ -39,4 +39,5 @@ public class GetPostResponseDto { //후기 추가해야됨.
 
     private int applicantCount;
 
+    private boolean isApply;
 }

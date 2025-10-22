@@ -5,7 +5,7 @@ import com.example.petapp.common.base.embedded.Location;
 import com.example.petapp.common.base.util.TimeUtil;
 import com.example.petapp.domain.member.model.entity.Member;
 import com.example.petapp.domain.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
-import com.example.petapp.domain.post.delegate.model.dto.request.GetPostResponseDto;
+import com.example.petapp.domain.post.delegate.model.dto.request.GetDelegatePostResponseDto;
 import com.example.petapp.domain.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.petapp.domain.profile.model.entity.Profile;
@@ -41,14 +41,15 @@ public class DelegateWalkPostMapper {
                         .locationLatitude(delegateWalkPost.getLocation().getLocationLatitude())
                         .scheduledTime(delegateWalkPost.getScheduledTime())
                         .filtering(delegateWalkPost.filtering(member))
+                        .isApply(delegateWalkPost.getProfile().getMember().equals(member) || delegateWalkPost.getApplicants().stream().anyMatch(applicant -> applicant.getMemberId().equals(member.getId()))) //지원 여부
                         .applicantCount(delegateWalkPost.getApplicants().size())
                         .createdAt(TimeUtil.getTimeAgo(delegateWalkPost.getCreatedAt()))
                         .build())
                 .collect(Collectors.toList());
     }
 
-    public static GetPostResponseDto toGetPostResponseDto(DelegateWalkPost delegateWalkPost) {
-        return GetPostResponseDto.builder()
+    public static GetDelegatePostResponseDto toGetPostResponseDto(DelegateWalkPost delegateWalkPost, Member member) {
+        return GetDelegatePostResponseDto.builder()
                 .delegateWalkPostId(delegateWalkPost.getId())
                 .title(delegateWalkPost.getContent().getTitle())
                 .content(delegateWalkPost.getContent().getContent())
@@ -61,6 +62,7 @@ public class DelegateWalkPostMapper {
                 .petImageUrl(delegateWalkPost.getProfile().getPetImageUrl())
                 .petBreed(String.valueOf(delegateWalkPost.getProfile().getPetBreed()))
                 .extraInfo(delegateWalkPost.getProfile().getExtraInfo())
+                .isApply(delegateWalkPost.getProfile().getMember().equals(member) || delegateWalkPost.getApplicants().stream().anyMatch(applicant -> applicant.getMemberId().equals(member.getId()))) //지원 여부
                 .applicantCount(delegateWalkPost.getApplicants().size())
                 .createdAt(TimeUtil.getTimeAgo(delegateWalkPost.getCreatedAt()))
                 .build();

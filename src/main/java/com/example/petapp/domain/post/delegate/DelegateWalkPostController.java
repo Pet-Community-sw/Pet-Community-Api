@@ -5,7 +5,7 @@ import com.example.petapp.common.base.embedded.Applicant;
 import com.example.petapp.common.base.util.AuthUtil;
 import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.domain.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
-import com.example.petapp.domain.post.delegate.model.dto.request.GetPostResponseDto;
+import com.example.petapp.domain.post.delegate.model.dto.request.GetDelegatePostResponseDto;
 import com.example.petapp.domain.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
 import com.example.petapp.domain.post.delegate.model.dto.response.ApplyToDelegateWalkPostResponseDto;
 import com.example.petapp.domain.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
@@ -76,7 +76,7 @@ public class DelegateWalkPostController {
             summary = "대리 산책 게시글 상세 조회"
     )
     @GetMapping("/{delegateWalkPostId}")
-    public GetPostResponseDto getDelegateWalkPost(@PathVariable Long delegateWalkPostId, Authentication authentication) {
+    public GetDelegatePostResponseDto getDelegateWalkPost(@PathVariable Long delegateWalkPostId, Authentication authentication) {
         return delegateWalkPostService.getDelegateWalkPost(delegateWalkPostId, AuthUtil.getEmail(authentication));
     }
 

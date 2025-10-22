@@ -8,7 +8,7 @@ import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoom
 import com.example.petapp.domain.member.model.entity.Member;
 import com.example.petapp.domain.post.delegate.mapper.DelegateWalkPostMapper;
 import com.example.petapp.domain.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
-import com.example.petapp.domain.post.delegate.model.dto.request.GetPostResponseDto;
+import com.example.petapp.domain.post.delegate.model.dto.request.GetDelegatePostResponseDto;
 import com.example.petapp.domain.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
 import com.example.petapp.domain.post.delegate.model.dto.response.ApplyToDelegateWalkPostResponseDto;
 import com.example.petapp.domain.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
@@ -65,13 +65,13 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
 
     @Transactional(readOnly = true)
     @Override
-    public GetPostResponseDto getDelegateWalkPost(Long delegateWalkPostId, String email) {
+    public GetDelegatePostResponseDto getDelegateWalkPost(Long delegateWalkPostId, String email) {
         Member member = queryService.findByMember(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
         if (delegateWalkPost.filtering(member)) {
             throw new ForbiddenException("프로필 등록해주세요.");
         }
-        return DelegateWalkPostMapper.toGetPostResponseDto(delegateWalkPost);
+        return DelegateWalkPostMapper.toGetPostResponseDto(delegateWalkPost, member);
     }
 
     @Transactional

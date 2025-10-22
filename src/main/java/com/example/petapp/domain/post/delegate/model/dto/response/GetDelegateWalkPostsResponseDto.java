@@ -34,4 +34,6 @@ public class GetDelegateWalkPostsResponseDto {
     private int applicantCount;
 
     private boolean filtering;
+
+    private boolean isApply;
 }
