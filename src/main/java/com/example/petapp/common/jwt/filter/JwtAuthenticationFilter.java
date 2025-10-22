@@ -4,6 +4,7 @@ import com.example.petapp.common.jwt.exception.JwtExceptionCode;
 import com.example.petapp.common.jwt.token.JwtAuthenticationToken;
 import com.example.petapp.port.InMemoryService;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.RequiredArgsConstructor;
@@ -35,52 +36,42 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-
                                     FilterChain filterChain) throws ServletException, IOException {
-        String token = "";
-        try {
-            token = getToken(request);
-            if (StringUtils.hasText(token)) {
-                log.info("token : {}", token);
+        String token = getToken(request);
+        if (StringUtils.hasText(token)) {
+            try {
                 authenticationToken(token);
+            } catch (ExpiredJwtException e) {
+                request.setAttribute("exception", JwtExceptionCode.EXPIRED_TOKEN.getCode());
+                log.warn("[JWT] Expired token. token: {}", token);
+                throw new BadCredentialsException("expired token", e);
+            } catch (UnsupportedJwtException e) {
+                request.setAttribute("exception", JwtExceptionCode.UNSUPPORTED_TOKEN.getCode());
+                log.warn("[JWT] Unsupported token. token: {}", token);
+                throw new BadCredentialsException("unsupported token", e);
+            } catch (MalformedJwtException | SecurityException e) {
+                request.setAttribute("exception", JwtExceptionCode.INVALID_TOKEN.getCode());
+                log.warn("[JWT] Invalid token. token: {}", token);
+                throw new BadCredentialsException("invalid token", e);
+            } catch (IllegalStateException | NullPointerException e) {
+                request.setAttribute("exception", JwtExceptionCode.NOT_FOUND_TOKEN.getCode());
+                log.warn("[JWT] Token not found or illegal state.");
+                throw new BadCredentialsException("not found token", e);
+            } catch (JwtException e) { // 기타 JWT 예외
+                request.setAttribute("exception", JwtExceptionCode.INVALID_TOKEN.getCode());
+                log.warn("[JWT] JwtException occurred. token: {}, msg: {}", token, e.getMessage());
+                throw new BadCredentialsException("jwt exception", e);
             }
-            filterChain.doFilter(request, response);
-        } catch (NullPointerException | IllegalStateException e) {
-            request.setAttribute("exception", JwtExceptionCode.NOT_FOUND_TOKEN.getCode());
-            log.error("Not found Token // token : {}", token);
-            log.error("Set Request Exception Code : {}", request.getAttribute("exception"));
-            throw new BadCredentialsException("throw new not found token exception");
-        } catch (SecurityException | MalformedJwtException e) {
-            request.setAttribute("exception", JwtExceptionCode.INVALID_TOKEN.getCode());
-            log.error("Invalid Token // token : {}", token);
-            log.error("Set Request Exception Code : {}", request.getAttribute("exception"));
-            throw new BadCredentialsException("throw new invalid token exception");
-        } catch (ExpiredJwtException e) {
-            request.setAttribute("exception", JwtExceptionCode.EXPIRED_TOKEN.getCode());
-            log.error("EXPIRED Token // token : {}", token);
-            log.error("Set Request Exception Code : {}", request.getAttribute("exception"));
-            throw new BadCredentialsException("throw new expired token exception");
-        } catch (UnsupportedJwtException e) {
-            request.setAttribute("exception", JwtExceptionCode.UNSUPPORTED_TOKEN.getCode());
-            log.error("Unsupported Token // token : {}", token);
-            log.error("Set Request Exception Code : {}", request.getAttribute("exception"));
-            throw new BadCredentialsException("throw new unsupported token exception");
-        } catch (Exception e) {
-            log.error("====================================================");
-            log.error("JwtFilter - doFilterInternal() 오류 발생");
-            log.error("token : {}", token);
-            log.error("Exception Message : {}", e.getMessage());
-            log.error("====================================================");
-            throw new BadCredentialsException("throw new exception");
         }
+        filterChain.doFilter(request, response);
     }
+
 
     private void authenticationToken(String token) {
         JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(token);
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         SecurityContextHolder.getContext()
                 .setAuthentication(authenticate);
-
     }
 
     public String getToken(HttpServletRequest request) {
