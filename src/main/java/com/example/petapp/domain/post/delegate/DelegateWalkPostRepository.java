@@ -1,10 +1,10 @@
 package com.example.petapp.domain.post.delegate;
 
+import com.example.petapp.domain.post.common.PostRepository;
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface DelegateWalkPostRepository extends JpaRepository<DelegateWalkPost, Long> {
+public interface DelegateWalkPostRepository extends PostRepository<DelegateWalkPost> {
     @Query(value = """
             select d.*, p.* from delegate_walk_post d left join post p on p.id = d.post_id
             where st_distance_sphere(point(d.location_longitude, d.location_latitude), point(:longitude, :latitude)) <= 1000

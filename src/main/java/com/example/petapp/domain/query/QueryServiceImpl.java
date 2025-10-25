@@ -39,7 +39,7 @@ public class QueryServiceImpl implements QueryService {
     private final DelegateWalkPostRepository delegateWalkPostRepository;
     private final NormalPostRepository normalPostRepository;
     private final PetBreedRepository petBreedRepository;
-    private final PostRepository postRepository;
+    private final PostRepository<Post> postRepository;
     private final ProfileRepository profileRepository;
     private final RecommendRoutePostRepository recommendRoutePostRepository;
     private final ReviewRepository reviewRepository;

@@ -31,6 +31,8 @@ public class GetDelegateWalkPostsResponseDto {
 
     private String createdAt;
 
+    private Long viewCount;
+
     private int applicantCount;
 
     private boolean filtering;

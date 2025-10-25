@@ -30,17 +30,17 @@ public class NormalPost extends Post implements Commentable {
 
     @Override
     public List<Comment> getComments() {
-        return this.comments;
+        return comments;
     }
 
     public void updateNormalPost(String newPostImageUrl, String newTitle, String newContent) {
-        this.setPostImageUrl(newPostImageUrl);
-        this.setContent(new Content(newTitle, newContent));
+        setPostImageUrl(newPostImageUrl);
+        setContent(new Content(newTitle, newContent));
     }
 
-    public void updateViewCount(Member member) {
-        if (!this.getMember().equals(member)) {
-            this.setViewCount(this.getViewCount() + 1);
+    public void updateViewCount(Member member) {//todo : 동시성 이슈 가능.
+        if (!getMember().equals(member)) {
+            setViewCount(getViewCount() + 1);
         }
     }
 }

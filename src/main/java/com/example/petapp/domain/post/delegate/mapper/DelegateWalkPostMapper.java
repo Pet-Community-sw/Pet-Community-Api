@@ -42,6 +42,7 @@ public class DelegateWalkPostMapper {
                         .scheduledTime(delegateWalkPost.getScheduledTime())
                         .filtering(delegateWalkPost.filtering(member))
                         .isApply(delegateWalkPost.getProfile().getMember().equals(member) || delegateWalkPost.getApplicants().stream().anyMatch(applicant -> applicant.getMemberId().equals(member.getId()))) //지원 여부
+                        .viewCount(delegateWalkPost.getViewCount())
                         .applicantCount(delegateWalkPost.getApplicants().size())
                         .createdAt(TimeUtil.getTimeAgo(delegateWalkPost.getCreatedAt()))
                         .build())
@@ -63,6 +64,7 @@ public class DelegateWalkPostMapper {
                 .petBreed(String.valueOf(delegateWalkPost.getProfile().getPetBreed()))
                 .extraInfo(delegateWalkPost.getProfile().getExtraInfo())
                 .isApply(delegateWalkPost.getProfile().getMember().equals(member) || delegateWalkPost.getApplicants().stream().anyMatch(applicant -> applicant.getMemberId().equals(member.getId()))) //지원 여부
+                .viewCount(delegateWalkPost.getViewCount())
                 .applicantCount(delegateWalkPost.getApplicants().size())
                 .createdAt(TimeUtil.getTimeAgo(delegateWalkPost.getCreatedAt()))
                 .build();

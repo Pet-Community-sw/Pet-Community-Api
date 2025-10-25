@@ -37,6 +37,8 @@ public class GetDelegatePostResponseDto { //후기 추가해야됨.
 
     private String createdAt;
 
+    private Long viewCount;
+
     private int applicantCount;
 
     private boolean isApply;

@@ -32,6 +32,12 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
     private final QueryService queryService;
     private final InMemoryService inMemoryService;
 
+    private static void validateMember(RecommendRoutePost recommendRoutePost, Member member) {
+        if (!(recommendRoutePost.getMember().equals(member))) {
+            throw new ForbiddenException("권한이 없습니다.");
+        }
+    }
+
     @Transactional
     @Override
     public CreateRecommendRoutePostResponseDto createRecommendRoutePost(CreateRecommendRoutePostDto createRecommendRoutePostDto, String email) {
@@ -63,11 +69,12 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
         return RecommendRoutePostMapper.toRecommendRoutePostsList(recommendRoutePosts, likeService.getLikeCountMap(recommendRoutePosts), memberIds, member);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     @Override
     public GetRecommendPostResponseDto getRecommendRoutePost(Long recommendRoutePostId, String email) {
         Member member = queryService.findByMember(email);
         RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(recommendRoutePostId);
+        recommendRoutePostRepository.incrementViewCount(recommendRoutePostId);
         return RecommendRoutePostMapper.toGetRecommendPostResponseDto(member, recommendRoutePost, likeRepository.countByPost(recommendRoutePost), likeRepository.existsByPostAndMember(recommendRoutePost, member));
     }
 
@@ -88,11 +95,4 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
         validateMember(recommendRoutePost, member);
         recommendRoutePostRepository.deleteById(recommendRoutePostId);
     }
-
-    private static void validateMember(RecommendRoutePost recommendRoutePost, Member member) {
-        if (!(recommendRoutePost.getMember().equals(member))) {
-            throw new ForbiddenException("권한이 없습니다.");
-        }
-    }
-
 }

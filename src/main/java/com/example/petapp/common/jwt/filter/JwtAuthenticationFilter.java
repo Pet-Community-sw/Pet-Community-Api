@@ -31,7 +31,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override//filter 하지않게 하려고
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return StringUtils.startsWithIgnoreCase(request.getRequestURI(), "/token");
+        String uri = request.getRequestURI();
+        if (StringUtils.startsWithIgnoreCase(uri, "/token")) return true;
+        if (StringUtils.startsWithIgnoreCase(uri, "/swagger-ui")) return true;
+        if (StringUtils.startsWithIgnoreCase(uri, "/v3/api-docs")) return true;
+        if (StringUtils.startsWithIgnoreCase(uri, "/swagger-resources")) return true;
+        return StringUtils.startsWithIgnoreCase(uri, "/webjars");
     }
 
     @Override
