@@ -23,14 +23,12 @@ public class StompInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-
         if (accessor == null) {
             log.warn("[STOMP] accessor is null");
             return message;
         }
-
+        log.info("[STOMP] command : {}, destination : {}", accessor.getCommand(), accessor.getDestination());
         StompCommandStrategy strategy = commandStrategyMap.get(accessor.getCommand());
-        log.info("[STOMP] command : {}", strategy);
         if (strategy != null) {
             strategy.handle(accessor);
         } else {
