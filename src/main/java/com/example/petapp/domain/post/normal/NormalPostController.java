@@ -34,6 +34,14 @@ public class NormalPostController {
     }
 
     @Operation(
+            summary = "게시글 목록 조회 by-member"
+    )
+    @GetMapping("/{memberId}/by-member")
+    public List<PostResponseDto> getPostsByMember(@PathVariable Long memberId, @RequestParam(defaultValue = "1") int page, Authentication authentication) {
+        return normalPostService.getPostsByMember(memberId, page, AuthUtil.getEmail(authentication));
+    }
+
+    @Operation(
             summary = "게시물 생성"
     )
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

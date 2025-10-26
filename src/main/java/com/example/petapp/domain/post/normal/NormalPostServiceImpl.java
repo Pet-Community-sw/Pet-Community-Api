@@ -42,6 +42,15 @@ public class NormalPostServiceImpl implements NormalPostService {
         return NormalPostMapper.toPostListResponseDto(normalPosts, likeService.getLikeCountMap(normalPosts), member);
     }
 
+    @Override
+    public List<PostResponseDto> getPostsByMember(Long memberId, int page, String email) {
+        queryService.findByMember(memberId);
+        Member member = queryService.findByMember(email);
+        PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "id"));
+        List<NormalPost> normalPosts = normalPostRepository.findAllByMemberId(memberId, pageRequest).getContent();
+        return NormalPostMapper.toPostListResponseDto(normalPosts, likeService.getLikeCountMap(normalPosts), member);
+    }
+
     @Transactional
     @Override
     public GetPostResponseDto getPost(Long postId, String email) {

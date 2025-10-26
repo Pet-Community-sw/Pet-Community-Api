@@ -1,8 +1,8 @@
 package com.example.petapp.domain.post.normal;
 
+import com.example.petapp.domain.post.normal.model.dto.request.PostDto;
 import com.example.petapp.domain.post.normal.model.dto.response.CreatePostResponseDto;
 import com.example.petapp.domain.post.normal.model.dto.response.GetPostResponseDto;
-import com.example.petapp.domain.post.normal.model.dto.request.PostDto;
 import com.example.petapp.domain.post.normal.model.dto.response.PostResponseDto;
 import org.springframework.stereotype.Service;
 
@@ -20,4 +20,6 @@ public interface NormalPostService {
     void deletePost(Long postId, String email);
 
     void updatePost(Long postId, PostDto postDto, String email);
+
+    List<PostResponseDto> getPostsByMember(Long memberId, int page, String email);
 }

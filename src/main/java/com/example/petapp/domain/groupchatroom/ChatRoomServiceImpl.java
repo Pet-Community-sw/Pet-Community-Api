@@ -93,7 +93,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         inMemoryService.deleteReadData(chatRoomId, userId);
         if (chatRoomRepository.countByProfile(chatRoomId) <= 1) {//방 사용자 수가 1이되면 채팅방 전체 삭제.
             chatMessageRepository.deleteByChatRoomId(chatRoomId);//채팅방 메시지 삭제.
-            chatRoomRepository.deleteById(chatRoomId);//todo : 삭제 되는지
+            chatRoomRepository.deleteById(chatRoomId);
             deleteRedis(chatRoomId);
         }
     }
