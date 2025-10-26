@@ -33,15 +33,11 @@ public class ChatRoomSubscribeStrategy extends BaseSubscribeTypeStrategy {
         Map<String, String> map = patternMap(PATTERN, subscribeInfo.getDestination());
         Long chatroomId = Long.valueOf(map.get("chatRoomId"));
         Long profileId = principalId(subscribeInfo);
-
         Profile profile = queryService.findByProfile(profileId);
         if (!chatRoomRepository.existsByIdAndUsersContains(chatroomId, profile.getId())) {
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }
-
-        //todo : unsbuscribe했을 때 redis지워야함.
         inMemoryService.createOnlineData(chatroomId, profileId);
-
         log.info("[STOMP] 구독 chatroomId: {}, profileId: {}", chatroomId, profileId);
     }
 }

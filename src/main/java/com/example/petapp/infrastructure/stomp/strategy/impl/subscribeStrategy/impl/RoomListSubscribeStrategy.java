@@ -7,14 +7,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class RoomListSubscribeStrategy extends BaseSubscribeTypeStrategy {
 
-    private static final String PATTERN = "/sub/list/{userId}";
+    private static final String PATTERN = "/sub/list";
 
     private final QueryService queryService;
 
@@ -25,10 +23,7 @@ public class RoomListSubscribeStrategy extends BaseSubscribeTypeStrategy {
 
     @Override
     public void handle(SubscribeInfo subscribeInfo) {
-        Map<String, String> map = patternMap(PATTERN, subscribeInfo.getDestination());
-        Long userId = Long.valueOf(map.get("userId"));
-
-        //todo : 방에 0개이면 연결 x getList먼저하고 그담에 구독하는게 좋을듯
+        Long userId = principalId(subscribeInfo);
         queryService.findByProfile(userId);
     }
 }
