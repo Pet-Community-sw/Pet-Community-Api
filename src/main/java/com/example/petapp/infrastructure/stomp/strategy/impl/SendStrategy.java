@@ -1,7 +1,5 @@
 package com.example.petapp.infrastructure.stomp.strategy.impl;
 
-import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
-import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.infrastructure.stomp.strategy.StompCommandStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,23 +12,14 @@ import java.security.Principal;
 @RequiredArgsConstructor
 @Slf4j
 public class SendStrategy implements StompCommandStrategy {
-
-    private final QueryService queryService;
-
+    
     @Override
     public void handle(StompHeaderAccessor accessor) {
         log.info("[STOMP] send 전략 시작");
-
         String destination = accessor.getDestination();
         Principal user = accessor.getUser();
-
         if (destination == null || user == null) {
             throw new IllegalArgumentException("destination 또는 user 정보가 없습니다.");
         }
-
-        String chatRoomId = destination.substring("/pub/chat/".length());
-        ChatRoom chatRoom = queryService.findByChatRoom(Long.valueOf(chatRoomId));
-        chatRoom.validateUser(Long.valueOf(user.getName()));
-
     }
 }
