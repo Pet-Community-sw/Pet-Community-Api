@@ -31,12 +31,10 @@ public class ChattingServiceImpl implements ChattingService {
     @Override
     public void sendToMessage(ChatMessageDto chatMessageDto, Long senderId) {
         log.info("[STOMP] messageMapping 시작 chatRoomId: {}, messageType: {}", chatMessageDto.getChatRoomId(), chatMessageDto.getMessageType());
-
         ChatRoom chatRoom = queryService.findByChatRoom(chatMessageDto.getChatRoomId());
-
+        chatRoom.validateUser(senderId);
         ChatMessage chatMessage = getChatMessage(chatMessageDto, senderId, chatRoom);
         chatMessageDto.checkSeq(chatMessage);
-
         MessageTypeStrategy messageTypeStrategy = messageTypeMap.get(chatMessageDto.getMessageType());
         if (messageTypeStrategy == null) {
             throw new IllegalArgumentException("[ERROR] : messageType 외 요청");
