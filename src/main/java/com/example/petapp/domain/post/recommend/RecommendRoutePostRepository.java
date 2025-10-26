@@ -1,15 +1,15 @@
 package com.example.petapp.domain.post.recommend;
 
+import com.example.petapp.domain.post.common.PostRepository;
 import com.example.petapp.domain.post.recommend.model.entity.RecommendRoutePost;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RecommendRoutePostRepository extends JpaRepository<RecommendRoutePost, Long> {
+public interface RecommendRoutePostRepository extends PostRepository<RecommendRoutePost> {
 
     /*
      * JPA가 기본적으로 value 쿼리를 기반으로 COUNT 쿼리를 자동 생성하려고 시도함.
@@ -41,5 +41,4 @@ public interface RecommendRoutePostRepository extends JpaRepository<RecommendRou
             @Param("maxLatitude") Double maxLatitude,
             Pageable pageable
     );
-
 }

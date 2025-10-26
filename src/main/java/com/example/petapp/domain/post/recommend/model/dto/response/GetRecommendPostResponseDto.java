@@ -25,6 +25,8 @@ public class GetRecommendPostResponseDto {
 
     private Long likeCount;
 
+    private Long viewCount;
+
     private boolean isOwner;
 
     private boolean isLike;

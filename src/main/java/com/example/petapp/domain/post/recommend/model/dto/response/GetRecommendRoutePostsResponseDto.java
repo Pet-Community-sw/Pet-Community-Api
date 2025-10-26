@@ -21,6 +21,8 @@ public class GetRecommendRoutePostsResponseDto {
 
     private Long likeCount;
 
+    private Long viewCount;
+
     private Double locationLongitude;
 
     private Double locationLatitude;

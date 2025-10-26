@@ -63,7 +63,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         return DelegateWalkPostMapper.toGetDelegateWalkPostsResponseDtos(member, delegateWalkPosts);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     @Override
     public GetDelegatePostResponseDto getDelegateWalkPost(Long delegateWalkPostId, String email) {
         Member member = queryService.findByMember(email);
@@ -71,6 +71,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         if (delegateWalkPost.filtering(member)) {
             throw new ForbiddenException("프로필 등록해주세요.");
         }
+        delegateWalkPostRepository.incrementViewCount(delegateWalkPostId);
         return DelegateWalkPostMapper.toGetPostResponseDto(delegateWalkPost, member);
     }
 

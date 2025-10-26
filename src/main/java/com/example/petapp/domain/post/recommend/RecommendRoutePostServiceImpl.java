@@ -1,6 +1,5 @@
 package com.example.petapp.domain.post.recommend;
 
-import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.like.LikeRepository;
 import com.example.petapp.domain.like.LikeService;
 import com.example.petapp.domain.member.model.entity.Member;
@@ -63,11 +62,12 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
         return RecommendRoutePostMapper.toRecommendRoutePostsList(recommendRoutePosts, likeService.getLikeCountMap(recommendRoutePosts), memberIds, member);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     @Override
     public GetRecommendPostResponseDto getRecommendRoutePost(Long recommendRoutePostId, String email) {
         Member member = queryService.findByMember(email);
         RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(recommendRoutePostId);
+        recommendRoutePostRepository.incrementViewCount(recommendRoutePostId);
         return RecommendRoutePostMapper.toGetRecommendPostResponseDto(member, recommendRoutePost, likeRepository.countByPost(recommendRoutePost), likeRepository.existsByPostAndMember(recommendRoutePost, member));
     }
 
@@ -76,7 +76,7 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
     public void updateRecommendRoutePost(Long recommendRoutePostId, UpdateRecommendRoutePostDto updateRecommendRoutePostDto, String email) {
         Member member = queryService.findByMember(email);
         RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(recommendRoutePostId);
-        validateMember(recommendRoutePost, member);
+        recommendRoutePost.validateMember(member);
         recommendRoutePost.updateContent(updateRecommendRoutePostDto.getTitle(), updateRecommendRoutePostDto.getContent());
     }
 
@@ -85,14 +85,7 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
     public void deleteRecommendRoutePost(Long recommendRoutePostId, String email) {
         Member member = queryService.findByMember(email);
         RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(recommendRoutePostId);
-        validateMember(recommendRoutePost, member);
+        recommendRoutePost.validateMember(member);
         recommendRoutePostRepository.deleteById(recommendRoutePostId);
     }
-
-    private static void validateMember(RecommendRoutePost recommendRoutePost, Member member) {
-        if (!(recommendRoutePost.getMember().equals(member))) {
-            throw new ForbiddenException("권한이 없습니다.");
-        }
-    }
-
 }

@@ -47,7 +47,7 @@ public class NormalPostServiceImpl implements NormalPostService {
     public GetPostResponseDto getPost(Long postId, String email) {
         Member member = queryService.findByMember(email);
         NormalPost normalPost = queryService.findByNormalPost(postId);
-        normalPost.updateViewCount(member);
+        normalPostRepository.incrementViewCount(normalPost.getId());
         return NormalPostMapper.toGetPostResponseDto(normalPost, member, likeRepository.countByPost(normalPost), likeRepository.existsByPostAndMember(normalPost, member));
     }
 

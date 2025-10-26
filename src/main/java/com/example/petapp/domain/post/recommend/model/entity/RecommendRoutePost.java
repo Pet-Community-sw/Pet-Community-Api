@@ -1,11 +1,14 @@
 package com.example.petapp.domain.post.recommend.model.entity;
 
-import com.example.petapp.domain.comment.model.entity.Comment;
-import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import com.example.petapp.common.base.embedded.Location;
+import com.example.petapp.domain.comment.model.entity.Comment;
 import com.example.petapp.domain.comment.model.entity.Commentable;
 import com.example.petapp.domain.post.common.Post;
-import lombok.*;
+import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
@@ -23,7 +26,7 @@ public class RecommendRoutePost extends Post implements Commentable {
     @Embedded
     private Location location;
 
-    @OneToMany(mappedBy = "recommendRoutePost",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "recommendRoutePost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WalkingTogetherMatch> walkingTogetherMatches;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -31,9 +34,8 @@ public class RecommendRoutePost extends Post implements Commentable {
 
     @Override
     public List<Comment> getComments() {
-        return this.comments;
+        return comments;
     }
-
 //    @Override
 //    public Like createLike(Member member) {
 //        return new RecommendRoutePostLike(member, this);
