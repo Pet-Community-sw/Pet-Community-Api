@@ -34,7 +34,6 @@ public class CreateDelegateWalkPostDto {
 
     @Setter
     private LocalDateTime scheduledTime;
-    //todo : 이거 왜 전역 예외가 안되는거지?
 
     @NotNull(message = "프로필 여부는 필수입니다.")
     private boolean requireProfile;
