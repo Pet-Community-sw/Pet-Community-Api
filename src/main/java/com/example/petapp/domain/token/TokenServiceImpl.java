@@ -6,6 +6,7 @@ import com.example.petapp.common.jwt.util.JwtTokenizer;
 import com.example.petapp.domain.member.RoleRepository;
 import com.example.petapp.domain.member.mapper.MemberMapper;
 import com.example.petapp.domain.member.model.dto.request.AccessTokenResponseDto;
+import com.example.petapp.domain.member.model.dto.response.LoginResponseDto;
 import com.example.petapp.domain.member.model.dto.response.TokenResponseDto;
 import com.example.petapp.domain.member.model.entity.Member;
 import com.example.petapp.domain.member.model.entity.Role;
@@ -34,16 +35,25 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
     private final InMemoryService inMemoryService;
     private final RoleRepository roleRepository;
 
+    @NotNull
+    private static List<String> getRoles(Member member) {
+        return member
+                .getMemberRoles()
+                .stream()
+                .map(memberRole -> memberRole.getRole().getName())
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     @Override
-    public TokenResponseDto save(Member member) {
+    public LoginResponseDto save(Member member) {
         List<String> roles = member.getMemberRoles().stream().map(memberRole -> memberRole.getRole().getName()).collect(Collectors.toList());
 
         String accessToken = jwtTokenizer.createAccessToken(member.getId(), null, member.getEmail(), roles);
         String refreshToken = jwtTokenizer.createRefreshToken(member.getId(), member.getEmail(), roles);
 
         log.info("로그인 요청 성공");
-        return MemberMapper.toLoginResponseDto(refreshToken, accessToken);
+        return MemberMapper.toLoginResponseDto(member, refreshToken, accessToken);
     }
 
     @Transactional
@@ -124,14 +134,4 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
             return e.getClaims();
         }
     }
-
-    @NotNull
-    private static List<String> getRoles(Member member) {
-        return member
-                .getMemberRoles()
-                .stream()
-                .map(memberRole -> memberRole.getRole().getName())
-                .collect(Collectors.toList());
-    }
-
 }

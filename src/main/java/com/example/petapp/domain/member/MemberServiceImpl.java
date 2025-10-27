@@ -10,8 +10,8 @@ import com.example.petapp.domain.member.mapper.MemberMapper;
 import com.example.petapp.domain.member.model.dto.request.*;
 import com.example.petapp.domain.member.model.dto.response.FindByIdResponseDto;
 import com.example.petapp.domain.member.model.dto.response.GetMemberResponseDto;
+import com.example.petapp.domain.member.model.dto.response.LoginResponseDto;
 import com.example.petapp.domain.member.model.dto.response.MemberSignResponseDto;
-import com.example.petapp.domain.member.model.dto.response.TokenResponseDto;
 import com.example.petapp.domain.member.model.entity.Member;
 import com.example.petapp.domain.member.model.entity.MemberRole;
 import com.example.petapp.domain.member.model.entity.Role;
@@ -30,9 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
-    @Value("${spring.dog.member.image.upload}")
-    private String memberUploadDir;
-
     private final QueryService queryService;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
@@ -40,6 +37,8 @@ public class MemberServiceImpl implements MemberService {
     private final EmailService emailService;
     private final FcmTokenService fcmTokenService;
     private final RoleRepository roleRepository;
+    @Value("${spring.dog.member.image.upload}")
+    private String memberUploadDir;
 
     @Transactional
     @Override
@@ -55,7 +54,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public TokenResponseDto login(LoginDto loginDto, HttpServletResponse response) {
+    public LoginResponseDto login(LoginDto loginDto, HttpServletResponse response) {
         Member member = queryService.findByMember(loginDto.getEmail());
         if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
             throw new UnAuthorizedException("이메일 혹은 비밀번호가 일치하지 않습니다.");

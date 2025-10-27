@@ -3,8 +3,8 @@ package com.example.petapp.domain.member;
 import com.example.petapp.domain.member.model.dto.request.*;
 import com.example.petapp.domain.member.model.dto.response.FindByIdResponseDto;
 import com.example.petapp.domain.member.model.dto.response.GetMemberResponseDto;
+import com.example.petapp.domain.member.model.dto.response.LoginResponseDto;
 import com.example.petapp.domain.member.model.dto.response.MemberSignResponseDto;
-import com.example.petapp.domain.member.model.dto.response.TokenResponseDto;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 public interface MemberService {
     MemberSignResponseDto createMember(MemberSignDto memberSignDto);
 
-    TokenResponseDto login(LoginDto loginDto, HttpServletResponse response);
+    LoginResponseDto login(LoginDto loginDto, HttpServletResponse response);
 
     FindByIdResponseDto findById(String phoneNumber);
 

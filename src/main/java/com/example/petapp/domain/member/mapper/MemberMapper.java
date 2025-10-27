@@ -2,7 +2,7 @@ package com.example.petapp.domain.member.mapper;
 
 import com.example.petapp.domain.member.model.dto.request.MemberSignDto;
 import com.example.petapp.domain.member.model.dto.response.GetMemberResponseDto;
-import com.example.petapp.domain.member.model.dto.response.TokenResponseDto;
+import com.example.petapp.domain.member.model.dto.response.LoginResponseDto;
 import com.example.petapp.domain.member.model.entity.Member;
 
 public class MemberMapper {
@@ -24,11 +24,11 @@ public class MemberMapper {
                 .build();
     }
 
-    public static TokenResponseDto toLoginResponseDto(String refreshToken, String accessToken) {
-        return TokenResponseDto.builder()
+    public static LoginResponseDto toLoginResponseDto(Member member, String refreshToken, String accessToken) {
+        return LoginResponseDto.builder()
+                .memberId(member.getId())
                 .refreshToken(refreshToken)
                 .accessToken(accessToken)
                 .build();
     }
-
 }
