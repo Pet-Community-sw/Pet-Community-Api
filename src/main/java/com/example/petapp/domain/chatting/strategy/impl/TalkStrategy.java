@@ -59,10 +59,8 @@ public class TalkStrategy implements MessageTypeStrategy {
                     Profile profile = queryService.findByProfile(userId);
                     sendNotificationUtil.sendNotification(profile.getMember(), message);
                     int profileSeq = inMemoryService.getReadData(chatRoomId, profile.getId());
-                    simpMessagingTemplate.convertAndSend("sub/list/" + profile.getId(),
+                    simpMessagingTemplate.convertAndSend("sub/list/" + profile.getMember().getId(),//todo : member와 profile 다르게 해야함.
                             MessageResponseDto.builder().messageType(MessageType.LIST_UPDATE).body(new UpdateListDto(chatRoomId, (chatMessage.getSeq() - profileSeq), chatMessage.getMessage(), chatMessage.getMessageTime())));
                 });
-
-
     }
 }

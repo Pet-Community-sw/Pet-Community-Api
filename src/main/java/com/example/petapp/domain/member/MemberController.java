@@ -5,8 +5,8 @@ import com.example.petapp.common.base.util.AuthUtil;
 import com.example.petapp.domain.member.model.dto.request.*;
 import com.example.petapp.domain.member.model.dto.response.FindByIdResponseDto;
 import com.example.petapp.domain.member.model.dto.response.GetMemberResponseDto;
+import com.example.petapp.domain.member.model.dto.response.LoginResponseDto;
 import com.example.petapp.domain.member.model.dto.response.MemberSignResponseDto;
-import com.example.petapp.domain.member.model.dto.response.TokenResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +44,7 @@ public class MemberController {
             summary = "로그인"
     )
     @PostMapping("/login")
-    public TokenResponseDto login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
+    public LoginResponseDto login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
         return memberService.login(loginDto, response);
     }
 

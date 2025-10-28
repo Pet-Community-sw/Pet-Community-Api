@@ -119,6 +119,8 @@ public class DelegateWalkPost extends Post {
     public void addApplicant(Member member, String content) {
         getApplicants().add(Applicant.builder()
                 .memberId(member.getId())
+                .memberName(member.getName())
+                .memberImageUrl(member.getMemberImageUrl())
                 .content(content)
                 .build());
     }
