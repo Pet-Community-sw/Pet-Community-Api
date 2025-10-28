@@ -14,8 +14,11 @@ public class Applicant {
 
     private Long memberId;
 
-    private String content;
+    private String memberName;
 
+    private String memberImageUrl;
+
+    private String content;
 }
 
 
