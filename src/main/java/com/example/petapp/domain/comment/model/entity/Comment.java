@@ -1,9 +1,9 @@
 package com.example.petapp.domain.comment.model.entity;
 
+import com.example.petapp.common.base.superclass.BaseEntity;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.member.model.entity.Member;
 import com.example.petapp.domain.post.common.Post;
-import com.example.petapp.common.base.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
-@NoArgsConstructor(access=AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @SuperBuilder//좋아요 어떻게할까
 //따로 db에 리스틑 저장안할거임 누른 후 인식만하고 어떤 요청이 있을 때 좋아요 올리기 요청을 보냄?
@@ -30,7 +30,7 @@ public class Comment extends BaseEntity {
     @Setter
     @NotNull
     @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
-    private Long likeCount;
+    private long likeCount;
 
     @ManyToOne
     @JoinColumn(name = "post_id")
@@ -46,7 +46,7 @@ public class Comment extends BaseEntity {
         }
     }
 
-    public void update( String content) {
+    public void update(String content) {
         setContent(content);
     }
 }
