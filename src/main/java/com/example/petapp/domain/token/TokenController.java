@@ -6,10 +6,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Token")
 @RestController
@@ -24,7 +21,7 @@ public class TokenController {
     )
     @ApiResponse(description = "상단 Authorization에 refreshToken넣고 요청.")
     @PostMapping
-    public TokenResponseDto reissueToken(@Parameter(hidden = true) @RequestHeader("Authorization") String refreshToken) {
-        return tokenService.reissueToken(refreshToken);
+    public TokenResponseDto reissueToken(@Parameter(hidden = true) @RequestHeader("Authorization") String refreshToken, @RequestBody() String accessToken) {
+        return tokenService.reissueToken(refreshToken, accessToken);
     }
 }

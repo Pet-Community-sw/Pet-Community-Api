@@ -51,14 +51,19 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
 
         String accessToken = jwtTokenizer.createAccessToken(member.getId(), null, member.getEmail(), roles);
         String refreshToken = jwtTokenizer.createRefreshToken(member.getId(), member.getEmail(), roles);
-
+        Optional<RefreshToken> savedRefreshToken = refreshRepository.findByMemberId(member.getId());
+        if (savedRefreshToken.isPresent()) {
+            savedRefreshToken.get().updateRefreshToken(refreshToken);
+        } else {
+            refreshRepository.save(new RefreshToken(member, refreshToken));
+        }
         log.info("로그인 요청 성공");
         return MemberMapper.toLoginResponseDto(member, refreshToken, accessToken);
     }
 
     @Transactional
     @Override
-    public TokenResponseDto reissueToken(String header) {
+    public TokenResponseDto reissueToken(String header, String accessToken) {
         log.info("토큰 재요청.");
 
         if (header == null || !header.startsWith("Bearer ")) {
@@ -67,12 +72,14 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
         String[] str = header.split(" ");
         String refreshToken = str[1];
 
+        log.info("이게안되는듯");
         Claims claims = getClaimsFromToken(refreshToken);
         Long memberId = Long.valueOf((Integer) claims.get("memberId"));
         RefreshToken savedRefreshToken = refreshRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new NotFoundException("refreshToken이 없음. 다시 로그인."));
 
         savedRefreshToken.isEqual(refreshToken);
+        blacklistAccessToken(accessToken);
 
         return createNewToken(claims, memberId, savedRefreshToken);
     }
@@ -129,7 +136,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
 
     private Claims getClaimsFromToken(String token) {
         try {
-            return jwtTokenizer.parseRefreshToken(token);
+            return jwtTokenizer.parseAccessToken(token);
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }

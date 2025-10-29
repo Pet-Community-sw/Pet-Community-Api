@@ -16,5 +16,5 @@ public interface TokenService {
 
     String newAccessTokenByProfile(String accessToken, Member member, Long profileId);
 
-    TokenResponseDto reissueToken(String refreshToken);
+    TokenResponseDto reissueToken(String refreshToken, String accessToken);
 }

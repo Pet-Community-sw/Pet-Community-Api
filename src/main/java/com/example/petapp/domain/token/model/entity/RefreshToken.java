@@ -1,9 +1,9 @@
 package com.example.petapp.domain.token.model.entity;
 
 
+import com.example.petapp.common.base.superclass.BaseEntity;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.member.model.entity.Member;
-import com.example.petapp.common.base.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -30,5 +30,9 @@ public class RefreshToken extends BaseEntity {
         if (!this.refreshToken.equals(refreshToken)) {
             throw new ForbiddenException("RefreshToken이 유효하지 않습니다.");
         }
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

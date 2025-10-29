@@ -8,6 +8,7 @@ import com.example.petapp.domain.member.model.dto.response.GetMemberResponseDto;
 import com.example.petapp.domain.member.model.dto.response.LoginResponseDto;
 import com.example.petapp.domain.member.model.dto.response.MemberSignResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -60,7 +61,7 @@ public class MemberController {
             summary = "로그아웃"
     )
     @DeleteMapping("/logout")
-    public ResponseEntity<MessageResponse> logout(@RequestHeader("Authorization") String accessToken) {
+    public ResponseEntity<MessageResponse> logout(@Parameter(hidden = true) @RequestHeader("Authorization") String accessToken) {
         memberService.logout(accessToken);
         return ResponseEntity.ok(new MessageResponse("로그아웃 되었습니다."));
     }
