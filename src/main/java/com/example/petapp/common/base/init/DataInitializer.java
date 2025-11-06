@@ -29,14 +29,17 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void seedBreeds() {
-        if (petBreedRepository.count()==0) {
-            List<String> breeds = List.of("푸들", "불독", "리트리버", "웰시코기", "도베르만");
+        if (petBreedRepository.count() == 0) {
+            List<String> breeds = List.of("푸들", "불독", "리트리버", "웰시코기", "도베르만", "시바이누", "말티즈", "치와와", "비글", "골든리트리버",
+                    "보더콜리", "시츄", "요크셔테리어", "삽살개", "진돗개",
+                    "그레이하운드", "허스키", "로트와일러", "달마시안", "페키니즈",
+                    "비숑프리제", "샤페이");
             breeds.forEach(this::addBreedIfMissing);
         }
     }
 
     private void addRoleIfMissing() {
-        if (roleRepository.count()==0) {
+        if (roleRepository.count() == 0) {
             roleRepository.save(Role.builder().name("ROLE_USER").build());
             roleRepository.save(Role.builder().name("ROLE_ADMIN").build());
         }
