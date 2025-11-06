@@ -32,11 +32,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override//filter 하지않게 하려고
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String uri = request.getRequestURI();
-        if (StringUtils.startsWithIgnoreCase(uri, "/token")) return true;
-        if (StringUtils.startsWithIgnoreCase(uri, "/swagger-ui")) return true;
-        if (StringUtils.startsWithIgnoreCase(uri, "/v3/api-docs")) return true;
-        if (StringUtils.startsWithIgnoreCase(uri, "/swagger-resources")) return true;
-        return StringUtils.startsWithIgnoreCase(uri, "/webjars");
+        return uri.startsWith("/token")
+                || uri.startsWith("/swagger-ui")
+                || uri.startsWith("/v3/api-docs")
+                || uri.startsWith("/swagger-resources")
+                || uri.startsWith("/webjars")
+                || uri.startsWith("/error");
     }
 
     @Override
@@ -81,11 +82,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public String getToken(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
-        if (inMemoryService.existStringData(authorization)) {
-            throw new BadCredentialsException("로그아웃된 토큰입니다.");
-        }
         if (StringUtils.hasText(authorization) && authorization.startsWith("Bearer")) {
             String[] arr = authorization.split(" ");
+            if (inMemoryService.existStringData(arr[1])) {
+                throw new BadCredentialsException("로그아웃된 토큰입니다.");
+            }
             return arr[1];
         }
         return null;

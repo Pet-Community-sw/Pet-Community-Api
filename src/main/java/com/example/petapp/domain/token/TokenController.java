@@ -1,6 +1,7 @@
 package com.example.petapp.domain.token;
 
 import com.example.petapp.domain.member.model.dto.response.TokenResponseDto;
+import com.example.petapp.domain.token.model.dto.request.ReissueTokenRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,9 +20,9 @@ public class TokenController {
     @Operation(
             summary = "토큰 재발급"
     )
-    @ApiResponse(description = "상단 Authorization에 refreshToken넣고 요청.")
+    @ApiResponse(description = "상단 Authorization에 accessToken넣고 요청.")
     @PostMapping
-    public TokenResponseDto reissueToken(@Parameter(hidden = true) @RequestHeader("Authorization") String refreshToken, @RequestBody() String accessToken) {
-        return tokenService.reissueToken(refreshToken, accessToken);
+    public TokenResponseDto reissueToken(@Parameter(hidden = true) @RequestHeader("Authorization") String accessToken, @RequestBody() ReissueTokenRequestDto reissueTokenRequestDto) {
+        return tokenService.reissueToken(accessToken, reissueTokenRequestDto);
     }
 }

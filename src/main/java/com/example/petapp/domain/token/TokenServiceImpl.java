@@ -10,6 +10,7 @@ import com.example.petapp.domain.member.model.dto.response.LoginResponseDto;
 import com.example.petapp.domain.member.model.dto.response.TokenResponseDto;
 import com.example.petapp.domain.member.model.entity.Member;
 import com.example.petapp.domain.member.model.entity.Role;
+import com.example.petapp.domain.token.model.dto.request.ReissueTokenRequestDto;
 import com.example.petapp.domain.token.model.entity.RefreshToken;
 import com.example.petapp.port.InMemoryService;
 import io.jsonwebtoken.Claims;
@@ -63,22 +64,22 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
 
     @Transactional
     @Override
-    public TokenResponseDto reissueToken(String header, String accessToken) {
+    public TokenResponseDto reissueToken(String header, ReissueTokenRequestDto reissueTokenRequestDto) {
         log.info("토큰 재요청.");
 
         if (header == null || !header.startsWith("Bearer ")) {
             throw new UnAuthorizedException("헤더가 null이거나 Bearer로 시작하지않음");
         }
         String[] str = header.split(" ");
-        String refreshToken = str[1];
+        String accessToken = str[1];
 
         log.info("이게안되는듯");
-        Claims claims = getClaimsFromToken(refreshToken);
+        Claims claims = getClaimsFromToken(accessToken);
         Long memberId = Long.valueOf((Integer) claims.get("memberId"));
         RefreshToken savedRefreshToken = refreshRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new NotFoundException("refreshToken이 없음. 다시 로그인."));
 
-        savedRefreshToken.isEqual(refreshToken);
+        savedRefreshToken.isEqual(reissueTokenRequestDto.getRefreshToken());
         blacklistAccessToken(accessToken);
 
         return createNewToken(claims, memberId, savedRefreshToken);

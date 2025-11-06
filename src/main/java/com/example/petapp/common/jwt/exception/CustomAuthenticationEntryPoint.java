@@ -22,23 +22,19 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         String exception = (String) request.getAttribute("exception");
         log.error("Commence Get Exception : {}", exception);
 
-        if(exception.equals(JwtExceptionCode.NOT_FOUND_TOKEN.getCode())) {
+        if (exception.equals(JwtExceptionCode.NOT_FOUND_TOKEN.getCode())) {
             log.error("entry point >> not found null");
             setResponse(response, JwtExceptionCode.NOT_FOUND_TOKEN);
-        }
-        else if(exception.equals(JwtExceptionCode.INVALID_TOKEN.getCode())) {
+        } else if (exception.equals(JwtExceptionCode.INVALID_TOKEN.getCode())) {
             log.error("entry point >> invalid token");
             setResponse(response, JwtExceptionCode.INVALID_TOKEN);
-        }
-        else if(exception.equals(JwtExceptionCode.EXPIRED_TOKEN.getCode())) {
+        } else if (exception.equals(JwtExceptionCode.EXPIRED_TOKEN.getCode())) {
             log.error("entry point >> expired token");
             setResponse(response, JwtExceptionCode.EXPIRED_TOKEN);
-        }
-        else if(exception.equals(JwtExceptionCode.UNSUPPORTED_TOKEN.getCode())) {
+        } else if (exception.equals(JwtExceptionCode.UNSUPPORTED_TOKEN.getCode())) {
             log.error("entry point >> unsupported token");
             setResponse(response, JwtExceptionCode.UNSUPPORTED_TOKEN);
-        }
-        else {
+        } else {
             setResponse(response, JwtExceptionCode.UNKNOWN_ERROR);
         }
     }

@@ -4,6 +4,7 @@ import com.example.petapp.domain.member.model.dto.request.AccessTokenResponseDto
 import com.example.petapp.domain.member.model.dto.response.LoginResponseDto;
 import com.example.petapp.domain.member.model.dto.response.TokenResponseDto;
 import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.token.model.dto.request.ReissueTokenRequestDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,5 +17,5 @@ public interface TokenService {
 
     String newAccessTokenByProfile(String accessToken, Member member, Long profileId);
 
-    TokenResponseDto reissueToken(String refreshToken, String accessToken);
+    TokenResponseDto reissueToken(String accessToken, ReissueTokenRequestDto reissueTokenRequestDto);
 }
