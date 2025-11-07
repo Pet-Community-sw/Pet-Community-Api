@@ -4,7 +4,7 @@ import com.example.petapp.domain.chatting.mapper.ChatMessageMapper;
 import com.example.petapp.domain.chatting.model.dto.ChatMessageDto;
 import com.example.petapp.domain.chatting.model.dto.UserInfo;
 import com.example.petapp.domain.chatting.model.entity.ChatMessage;
-import com.example.petapp.domain.chatting.model.type.MessageType;
+import com.example.petapp.domain.chatting.model.type.CommandType;
 import com.example.petapp.domain.chatting.offline.OfflineUserService;
 import com.example.petapp.domain.chatting.strategy.MessageTypeStrategy;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
@@ -23,19 +23,19 @@ import java.util.Map;
 @Slf4j
 public class ChattingServiceImpl implements ChattingService {
 
-    private final Map<MessageType, MessageTypeStrategy> messageTypeMap;
+    private final Map<CommandType, MessageTypeStrategy> messageTypeMap;
     private final QueryService queryService;
     private final OfflineUserService offlineUserService;
 
     @Transactional
     @Override
     public void sendToMessage(ChatMessageDto chatMessageDto, Long senderId) {
-        log.info("[STOMP] messageMapping 시작 chatRoomId: {}, messageType: {}", chatMessageDto.getChatRoomId(), chatMessageDto.getMessageType());
+        log.info("[STOMP] messageMapping 시작 chatRoomId: {}, messageType: {}", chatMessageDto.getChatRoomId(), chatMessageDto.getCommandType());
         ChatRoom chatRoom = queryService.findByChatRoom(chatMessageDto.getChatRoomId());
         chatRoom.validateUser(senderId);
         ChatMessage chatMessage = getChatMessage(chatMessageDto, senderId, chatRoom);
         chatMessageDto.checkSeq(chatMessage);
-        MessageTypeStrategy messageTypeStrategy = messageTypeMap.get(chatMessageDto.getMessageType());
+        MessageTypeStrategy messageTypeStrategy = messageTypeMap.get(chatMessageDto.getCommandType());
         if (messageTypeStrategy == null) {
             throw new IllegalArgumentException("[ERROR] : messageType 외 요청");
         }

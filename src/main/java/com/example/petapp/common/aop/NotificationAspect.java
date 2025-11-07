@@ -13,6 +13,7 @@ import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 @Aspect
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class NotificationAspect {
     private final SendNotificationUtil notificationUtil; // send(Member, String)
+
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     private final ExpressionParser parser = new SpelExpressionParser();
 
@@ -58,10 +61,8 @@ public class NotificationAspect {
                 return;
             }
             notificationUtil.sendNotification(member, message);
-
         } catch (Exception e) {
             log.error("[Notification] 실패", e);
         }
-
     }
 }

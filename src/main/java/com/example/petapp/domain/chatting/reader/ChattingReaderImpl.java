@@ -2,10 +2,10 @@ package com.example.petapp.domain.chatting.reader;
 
 import com.example.petapp.domain.chatting.ChatMessageRepository;
 import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
-import com.example.petapp.domain.chatting.model.dto.MessageResponseDto;
+import com.example.petapp.domain.chatting.model.dto.StompResponseDto;
 import com.example.petapp.domain.chatting.model.dto.UpdateMessageDto;
 import com.example.petapp.domain.chatting.model.entity.ChatMessage;
-import com.example.petapp.domain.chatting.model.type.MessageType;
+import com.example.petapp.domain.chatting.model.type.CommandType;
 import com.example.petapp.domain.groupchatroom.mapper.ChatRoomMapper;
 import com.example.petapp.domain.groupchatroom.model.dto.request.ChatMessageDtoMember;
 import com.example.petapp.domain.groupchatroom.model.dto.response.ChatMessageResponseDto;
@@ -58,7 +58,7 @@ public class ChattingReaderImpl implements ChattingReader {
         int endSeq = lastMessageInfoDto.getLastSeq();
         mongoService.updateMessages(chatRoomId, userId, startSeq, endSeq);
         simpMessagingTemplate.convertAndSend("/sub/chat/" + chatRoomId,
-                MessageResponseDto.builder().messageType(MessageType.CHAT_UPDATE).body(new UpdateMessageDto(startSeq, endSeq)).build());
+                StompResponseDto.builder().commandType(CommandType.CHAT_UPDATE).body(new UpdateMessageDto(startSeq, endSeq)).build());
     }
 }
 

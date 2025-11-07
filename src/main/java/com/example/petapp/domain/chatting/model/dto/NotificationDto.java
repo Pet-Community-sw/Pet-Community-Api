@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class EventMessageDto {
+public class NotificationDto {
     private Long userId;
     private String message;
 }

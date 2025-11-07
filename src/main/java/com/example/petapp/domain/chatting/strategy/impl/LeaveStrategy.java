@@ -1,9 +1,9 @@
 package com.example.petapp.domain.chatting.strategy.impl;
 
-import com.example.petapp.domain.chatting.model.dto.EventMessageDto;
-import com.example.petapp.domain.chatting.model.dto.MessageResponseDto;
+import com.example.petapp.domain.chatting.model.dto.NotificationDto;
+import com.example.petapp.domain.chatting.model.dto.StompResponseDto;
 import com.example.petapp.domain.chatting.model.entity.ChatMessage;
-import com.example.petapp.domain.chatting.model.type.MessageType;
+import com.example.petapp.domain.chatting.model.type.CommandType;
 import com.example.petapp.domain.chatting.strategy.MessageTypeStrategy;
 import com.example.petapp.domain.groupchatroom.ChatRoomService;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +20,9 @@ public class LeaveStrategy implements MessageTypeStrategy {
     @Override
     public void handle(ChatMessage chatMessage) {
         String message = chatMessage.getSenderName() + "님이 나가셨습니다.";
-        EventMessageDto eventMessageDto = new EventMessageDto(chatMessage.getSenderId(), message);
+        NotificationDto notificationDto = new NotificationDto(chatMessage.getSenderId(), message);
         simpMessagingTemplate.convertAndSend("/sub/chat/" + chatMessage.getChatRoomId(),
-                MessageResponseDto.builder().messageType(MessageType.LEAVE).body(eventMessageDto).build());
+                StompResponseDto.builder().commandType(CommandType.LEAVE).body(notificationDto).build());
         chatRoomService.deleteChatRoom(chatMessage.getChatRoomId(), chatMessage.getSenderId());
     }
 }

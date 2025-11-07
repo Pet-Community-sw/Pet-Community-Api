@@ -2,10 +2,10 @@ package com.example.petapp.domain.chatting.strategy.impl;
 
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
-import com.example.petapp.domain.chatting.model.dto.MessageResponseDto;
+import com.example.petapp.domain.chatting.model.dto.StompResponseDto;
 import com.example.petapp.domain.chatting.model.dto.UpdateListDto;
 import com.example.petapp.domain.chatting.model.entity.ChatMessage;
-import com.example.petapp.domain.chatting.model.type.MessageType;
+import com.example.petapp.domain.chatting.model.type.CommandType;
 import com.example.petapp.domain.chatting.strategy.MessageTypeStrategy;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.petapp.domain.profile.model.entity.Profile;
@@ -37,7 +37,7 @@ public class TalkStrategy implements MessageTypeStrategy {
 
         //메시지를 전송
         simpMessagingTemplate.convertAndSend("/sub/chat/" + chatMessage.getChatRoomId(),
-                MessageResponseDto.builder().messageType(MessageType.TALK).body(chatMessage).build());
+                StompResponseDto.builder().commandType(CommandType.TALK).body(chatMessage).build());
 
         sendChatNotificationAndUpdateList(chatMessage);
         inMemoryService.createLastMessageInfoData(chatMessage);
@@ -60,7 +60,7 @@ public class TalkStrategy implements MessageTypeStrategy {
                     sendNotificationUtil.sendNotification(profile.getMember(), message);
                     int profileSeq = inMemoryService.getReadData(chatRoomId, profile.getId());
                     simpMessagingTemplate.convertAndSend("sub/list/" + profile.getMember().getId(),//todo : member와 profile 다르게 해야함.
-                            MessageResponseDto.builder().messageType(MessageType.LIST_UPDATE).body(new UpdateListDto(chatRoomId, (chatMessage.getSeq() - profileSeq), chatMessage.getMessage(), chatMessage.getMessageTime())));
+                            StompResponseDto.builder().commandType(CommandType.LIST_UPDATE).body(new UpdateListDto(chatRoomId, (chatMessage.getSeq() - profileSeq), chatMessage.getMessage(), chatMessage.getMessageTime())));
                 });
     }
 }
