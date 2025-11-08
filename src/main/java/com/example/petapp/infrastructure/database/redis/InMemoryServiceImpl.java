@@ -134,6 +134,7 @@ public class InMemoryServiceImpl implements InMemoryService {
         redisTemplate.opsForSet().remove(RedisKeys.foregroundMembers(), id.toString());
     }
 
+
     @Override
     public Boolean existForeGroundData(Long id) {
         return redisTemplate.opsForSet().isMember(RedisKeys.foregroundMembers(), id.toString());
@@ -155,9 +156,9 @@ public class InMemoryServiceImpl implements InMemoryService {
     }
 
     @Override
-    public int getReadData(Long chatRoomId, Long userId) {
+    public Long getReadData(Long chatRoomId, Long userId) {
         Object seq = redisTemplate.opsForHash().get(RedisKeys.readHash(chatRoomId), String.valueOf(userId));
-        return seq == null ? 0 : (Integer) seq;
+        return seq == null ? 0 : (Long) seq;
     }
 
     @Override
@@ -180,7 +181,7 @@ public class InMemoryServiceImpl implements InMemoryService {
         Map<Object, Object> lastMessageInfo = redisTemplate.opsForHash().entries(RedisKeys.lastMessageInfo(id));
         String lastMessage = (String) lastMessageInfo.getOrDefault("lastMessage", "");
         String lastMessageTime = (String) lastMessageInfo.getOrDefault("lastMessageTime", "");
-        int lastSeq = (Integer) lastMessageInfo.getOrDefault("seq", 0);
+        Long lastSeq = (Long) lastMessageInfo.getOrDefault("seq", 0);
         return LastMessageInfoDto.builder()
                 .lastSeq(lastSeq)
                 .lastMessage(lastMessage)
@@ -191,5 +192,21 @@ public class InMemoryServiceImpl implements InMemoryService {
     @Override
     public void deleteLastMessageInfoData(Long chatRoomId) {
         redisTemplate.delete(RedisKeys.lastMessageInfo(chatRoomId));
+    }
+    //-------------------------------------------------------------------------------------
+
+    @Override
+    public boolean existRoomSeq(Long chatRoomId) {
+        return redisTemplate.hasKey(RedisKeys.seqByRoomId(chatRoomId));
+    }
+
+    @Override
+    public Long incrementSeq(Long chatRoomId) {
+        return redisTemplate.opsForValue().increment(RedisKeys.seqByRoomId(chatRoomId));
+    }
+
+    @Override
+    public void createRoomSeq(Long chatRoomId, Long seq) {
+        redisTemplate.opsForValue().setIfAbsent(RedisKeys.seqByRoomId(chatRoomId), String.valueOf(seq));
     }
 }

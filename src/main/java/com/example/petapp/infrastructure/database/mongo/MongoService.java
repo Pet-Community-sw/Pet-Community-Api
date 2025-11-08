@@ -20,7 +20,7 @@ public class MongoService {
      * users 에서 userId를 제거하고, chatUnReadCount 를 1 감소시킨다.
      * 동시성 안전
      */
-    public void updateMessages(Long chatRoomId, Long userId, int startSeq, int endSeq) {
+    public void updateMessages(Long chatRoomId, Long userId, Long startSeq, Long endSeq) {
         if (endSeq <= startSeq) return;
 
         Query query = new Query(

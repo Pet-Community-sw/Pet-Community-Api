@@ -62,7 +62,7 @@ public interface InMemoryService {
 
     void deleteReadData(Long chatRoomId, Long userId);
 
-    int getReadData(Long chatRoomId, Long userId);
+    Long getReadData(Long chatRoomId, Long userId);
 
 
     void createLastMessageInfoData(ChatMessage chatMessage);
@@ -75,4 +75,10 @@ public interface InMemoryService {
 
     void deleteForeGroundData(Long id);
 
+
+    boolean existRoomSeq(Long chatRoomId);
+
+    Long incrementSeq(Long chatRoomId);
+
+    void createRoomSeq(Long chatRoomId, Long seq);
 }

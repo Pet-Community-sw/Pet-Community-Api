@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class UpdateListDto {
 
     private Long chatRoomId;
-    private int unReadCount;
+    private Long unReadCount;
     private String lastMessage;
     private LocalDateTime lastMessageTime;
 }

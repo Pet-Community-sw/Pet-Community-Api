@@ -9,7 +9,7 @@ import lombok.Setter;
 @Builder
 public class LastMessageInfoDto {
 
-    private int lastSeq;
+    private Long lastSeq;
     private String lastMessage;
     private String lastMessageTime;
 }

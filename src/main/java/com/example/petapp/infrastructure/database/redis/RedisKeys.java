@@ -36,4 +36,9 @@ public final class RedisKeys {
     public static String lastMessageInfo(long chatRoomId) {
         return "chat:lastMessageInfo:" + chatRoomId;
     }
+
+    // Room Seq
+    public static String seqByRoomId(Long roomId) {
+        return "chatRoom:" + roomId + ":seq";
+    }
 }
