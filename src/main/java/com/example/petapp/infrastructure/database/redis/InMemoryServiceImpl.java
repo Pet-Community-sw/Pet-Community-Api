@@ -209,4 +209,9 @@ public class InMemoryServiceImpl implements InMemoryService {
     public void createRoomSeq(Long chatRoomId, Long seq) {
         redisTemplate.opsForValue().setIfAbsent(RedisKeys.seqByRoomId(chatRoomId), String.valueOf(seq));
     }
+
+    @Override
+    public void deleteRoomSeq(Long chatRoomId) {
+        redisTemplate.delete(RedisKeys.seqByRoomId(chatRoomId));
+    }
 }

@@ -126,6 +126,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     private void deleteRedis(Long chatRoomId) {
+        inMemoryService.deleteRoomSeq(chatRoomId);
         inMemoryService.deleteLastMessageInfoData(chatRoomId);
         inMemoryService.deleteReadData(chatRoomId);
     }
