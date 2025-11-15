@@ -14,7 +14,6 @@ import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.infrastructure.database.mongo.MongoService;
 import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +26,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ChattingReaderImpl implements ChattingReader {
 
     private final QueryService queryService;
@@ -39,8 +37,6 @@ public class ChattingReaderImpl implements ChattingReader {
     @Transactional
     @Override
     public ChatMessageResponseDto getMessages(Long chatRoomId, Long userId, int page) {
-        log.info("getMessages 요청 chatRoomId : {}, userId :{}", chatRoomId, userId);
-
         ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
         chatRoom.validateUser(userId);
 
@@ -52,6 +48,24 @@ public class ChattingReaderImpl implements ChattingReader {
         return new ChatMessageResponseDto(chatRoomId, chatMessageDtoMembers);
     }
 
+    /**
+     * 유저의 웹소켓이 disconnect되고 다시 connect되는 사이에 유실되는 메세지 응답
+     */
+    @Transactional
+    @Override
+    public ChatMessageResponseDto getAfterMessages(Long chatRoomId, Long lastSeq, Long userId) {
+        ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
+        chatRoom.validateUser(userId);
+
+        List<ChatMessage> afterMessages = chatMessageRepository.findAllByChatRoomIdAndSeqGreaterThanOrderBySeqAsc(chatRoomId, lastSeq);
+        updateMessagesUnReadCount(chatRoomId, userId);
+
+        return new ChatMessageResponseDto(chatRoomId, ChatRoomMapper.toChatMessageDtos(afterMessages));
+    }
+
+    /**
+     * 채팅 내역 조회시 채팅 메세지의 안읽은 수 업데이트
+     */
     private void updateMessagesUnReadCount(Long chatRoomId, Long userId) {
         LastMessageInfoDto lastMessageInfoDto = inMemoryService.getLastMessageInfoData(userId);
         Long startSeq = inMemoryService.getReadData(chatRoomId, userId);

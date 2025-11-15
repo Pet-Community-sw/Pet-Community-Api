@@ -8,4 +8,5 @@ public interface ChattingReader {
 
     ChatMessageResponseDto getMessages(Long chatRoomId, Long userId, int page);
 
+    ChatMessageResponseDto getAfterMessages(Long chatRoomId, Long lastSeq, Long userId);
 }

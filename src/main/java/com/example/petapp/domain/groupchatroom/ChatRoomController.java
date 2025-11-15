@@ -27,7 +27,7 @@ public class ChatRoomController {
             summary = "채팅방 목록 조회"
     )
     @GetMapping()
-    private List<ChatRoomResponseDto> chatRoomList(Authentication authentication) {
+    public List<ChatRoomResponseDto> chatRoomList(Authentication authentication) {
         return chatRoomService.getChatRooms(AuthUtil.getProfileId(authentication));
     }
 
@@ -35,15 +35,23 @@ public class ChatRoomController {
             summary = "채팅방 채팅 내역 조회"
     )
     @GetMapping("/{chatRoomId}")
-    private ChatMessageResponseDto getMessages(@PathVariable Long chatRoomId, @RequestParam(defaultValue = "0") int page, Authentication authentication) {
+    public ChatMessageResponseDto getMessages(@PathVariable Long chatRoomId, @RequestParam(defaultValue = "0") int page, Authentication authentication) {
         return chatRoomService.getMessages(chatRoomId, AuthUtil.getProfileId(authentication), page);
+    }
+
+    @Operation(
+            summary = "유저가 마지막으로 읽은 메세지 이후 메시지 조회"
+    )
+    @GetMapping("/{chatRoomId}/after-messages")
+    public ChatMessageResponseDto getAfterMessages(@PathVariable Long chatRoomId, @RequestParam Long lastSeq, Authentication authentication) {
+        return chatRoomService.getAfterMessages(chatRoomId, lastSeq, AuthUtil.getProfileId(authentication));
     }
 
     @Operation(
             summary = "채팅방 수정"
     )
     @PutMapping("/{chatRoomId}")
-    private ResponseEntity<MessageResponse> updateChatRoom(@PathVariable Long chatRoomId, @RequestBody @Valid UpdateChatRoomDto updateChatRoomDto, Authentication authentication) {
+    public ResponseEntity<MessageResponse> updateChatRoom(@PathVariable Long chatRoomId, @RequestBody @Valid UpdateChatRoomDto updateChatRoomDto, Authentication authentication) {
         chatRoomService.updateChatRoom(chatRoomId, updateChatRoomDto, AuthUtil.getProfileId(authentication));
         return ResponseEntity.ok(new MessageResponse("수정 되었습니다."));
     }
@@ -52,7 +60,7 @@ public class ChatRoomController {
             summary = "채팅방 목록 삭제"
     )
     @DeleteMapping("/{chatRoomId}")
-    private ResponseEntity<MessageResponse> deleteChatRoom(@PathVariable Long chatRoomId, Authentication authentication) {
+    public ResponseEntity<MessageResponse> deleteChatRoom(@PathVariable Long chatRoomId, Authentication authentication) {
         chatRoomService.deleteChatRoom(chatRoomId, AuthUtil.getProfileId(authentication));
         return ResponseEntity.ok(new MessageResponse("삭제 되었습니다."));
     }

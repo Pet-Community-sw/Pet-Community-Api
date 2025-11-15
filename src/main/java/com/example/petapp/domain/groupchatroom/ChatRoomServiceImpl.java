@@ -114,6 +114,12 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         return chattingReader.getMessages(chatRoomId, userId, page);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public ChatMessageResponseDto getAfterMessages(Long chatRoomId, Long lastSeq, Long userId) {
+        return chattingReader.getAfterMessages(chatRoomId, lastSeq, userId);
+    }
+
     private ChatRoomResponseDto toChatRoomsResponseDtoWithRedis(ChatRoom chatRoom, Long userId) {
         Long userSeq = inMemoryService.getReadData(chatRoom.getId(), userId);
         LastMessageInfoDto lastMessageInfoDto = inMemoryService.getLastMessageInfoData(chatRoom.getId());

@@ -27,4 +27,6 @@ public interface ChatRoomService {
     void deleteChatRoom(Long chatRoomId, Long profileId);
 
     List<Long> getUsers(Long chatRoomId);
+
+    ChatMessageResponseDto getAfterMessages(Long chatRoomId, Long lastSeq, Long profileId);
 }
