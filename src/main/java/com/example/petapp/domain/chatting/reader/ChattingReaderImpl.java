@@ -54,11 +54,10 @@ public class ChattingReaderImpl implements ChattingReader {
 
     private void updateMessagesUnReadCount(Long chatRoomId, Long userId) {
         LastMessageInfoDto lastMessageInfoDto = inMemoryService.getLastMessageInfoData(userId);
-        int startSeq = inMemoryService.getReadData(chatRoomId, userId);
-        int endSeq = lastMessageInfoDto.getLastSeq();
+        Long startSeq = inMemoryService.getReadData(chatRoomId, userId);
+        Long endSeq = lastMessageInfoDto.getLastSeq();
         mongoService.updateMessages(chatRoomId, userId, startSeq, endSeq);
         simpMessagingTemplate.convertAndSend("/sub/chat/" + chatRoomId,
                 StompResponseDto.builder().commandType(CommandType.CHAT_UPDATE).body(new UpdateMessageDto(startSeq, endSeq)).build());
     }
 }
-

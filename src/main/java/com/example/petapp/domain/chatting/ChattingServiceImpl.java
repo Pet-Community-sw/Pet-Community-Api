@@ -34,7 +34,7 @@ public class ChattingServiceImpl implements ChattingService {
         ChatRoom chatRoom = queryService.findByChatRoom(chatMessageDto.getChatRoomId());
         chatRoom.validateUser(senderId);
         ChatMessage chatMessage = getChatMessage(chatMessageDto, senderId, chatRoom);
-        chatMessageDto.checkSeq(chatMessage);
+//        chatMessage.checkSeq();//?
         MessageTypeStrategy messageTypeStrategy = messageTypeMap.get(chatMessageDto.getCommandType());
         if (messageTypeStrategy == null) {
             throw new IllegalArgumentException("[ERROR] : messageType 외 요청");

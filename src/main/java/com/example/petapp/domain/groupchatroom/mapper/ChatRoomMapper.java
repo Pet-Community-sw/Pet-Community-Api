@@ -47,7 +47,7 @@ public class ChatRoomMapper {
     }
 
 
-    public static ChatRoomResponseDto toChatRoomsResponseDto(ChatRoom chatRoom, Long userId, LastMessageInfoDto lastMessageInfoDto, int unReadCount, Set<ChatRoomUsersResponseDto> users) {
+    public static ChatRoomResponseDto toChatRoomsResponseDto(ChatRoom chatRoom, Long userId, LastMessageInfoDto lastMessageInfoDto, long unReadCount, Set<ChatRoomUsersResponseDto> users) {
         return ChatRoomResponseDto.builder()
                 .chatRoomId(chatRoom.getId())
                 .chatName(chatRoom.getName())

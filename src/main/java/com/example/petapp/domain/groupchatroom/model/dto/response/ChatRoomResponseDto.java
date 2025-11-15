@@ -23,7 +23,7 @@ public class ChatRoomResponseDto {
 
     private int userSize;
 
-    private int unReadCount;
+    private long unReadCount;
 
     private String lastMessage;
 

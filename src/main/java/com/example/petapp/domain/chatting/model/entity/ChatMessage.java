@@ -35,13 +35,12 @@ public class ChatMessage {
     private String message;
     private Set<Long> users;
     private int UnReadCount;
-    private int seq;
+    private Long seq;
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime messageTime;//포맷 필요함.
 
-    public void updateSeq(int newSeq) {
+    public void updateSeq(Long newSeq) {
         seq = newSeq;
     }
-
 }

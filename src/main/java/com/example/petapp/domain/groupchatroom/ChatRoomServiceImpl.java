@@ -115,9 +115,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     private ChatRoomResponseDto toChatRoomsResponseDtoWithRedis(ChatRoom chatRoom, Long userId) {
-        int userSeq = inMemoryService.getReadData(chatRoom.getId(), userId);
+        Long userSeq = inMemoryService.getReadData(chatRoom.getId(), userId);
         LastMessageInfoDto lastMessageInfoDto = inMemoryService.getLastMessageInfoData(chatRoom.getId());
-        int unReadCount = Math.max(lastMessageInfoDto.getLastSeq() - userSeq, 0);
+        long unReadCount = Math.max(lastMessageInfoDto.getLastSeq() - userSeq, 0);
         Set<ChatRoomUsersResponseDto> users = chatRoom.getUsers().stream().map(id ->
                         ChatRoomMapper.toChatRoomUsersResponseDto(queryService.findByProfile(id))
                 )//Member일 때도 구현해야할듯.
@@ -126,6 +126,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     private void deleteRedis(Long chatRoomId) {
+        inMemoryService.deleteRoomSeq(chatRoomId);
         inMemoryService.deleteLastMessageInfoData(chatRoomId);
         inMemoryService.deleteReadData(chatRoomId);
     }

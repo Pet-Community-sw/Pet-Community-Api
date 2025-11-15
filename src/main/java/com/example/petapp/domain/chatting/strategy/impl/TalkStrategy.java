@@ -16,7 +16,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 @RequiredArgsConstructor
@@ -28,11 +27,17 @@ public class TalkStrategy implements MessageTypeStrategy {
     private final SendNotificationUtil sendNotificationUtil;
     private final QueryService queryService;
 
-    AtomicInteger seq = new AtomicInteger(0);
-
     @Override
     public void handle(ChatMessage chatMessage) {
-        chatMessage.updateSeq(seq.incrementAndGet());
+        boolean isExist = inMemoryService.existRoomSeq(chatMessage.getChatRoomId());
+        if (!isExist) {
+            Long LastMessageSeq = chatMessageRepository.findFirstByChatRoomIdOrderBySeqDesc(chatMessage.getChatRoomId())
+                    .map(ChatMessage::getSeq).orElse(0L);
+
+            inMemoryService.createRoomSeq(chatMessage.getChatRoomId(), LastMessageSeq);//seq가 0일수도있고 아닐수도있음.
+        }
+        Long seq = inMemoryService.incrementSeq(chatMessage.getChatRoomId());
+        chatMessage.updateSeq(seq);
         chatMessageRepository.save(chatMessage);
 
         //메시지를 전송
@@ -58,7 +63,7 @@ public class TalkStrategy implements MessageTypeStrategy {
                 .forEach(userId -> {
                     Profile profile = queryService.findByProfile(userId);
                     sendNotificationUtil.sendNotification(profile.getMember(), message);
-                    int profileSeq = inMemoryService.getReadData(chatRoomId, profile.getId());
+                    Long profileSeq = inMemoryService.getReadData(chatRoomId, profile.getId());
                     simpMessagingTemplate.convertAndSend("sub/list/" + profile.getMember().getId(),//todo : member와 profile 다르게 해야함.
                             StompResponseDto.builder().commandType(CommandType.LIST_UPDATE).body(new UpdateListDto(chatRoomId, (chatMessage.getSeq() - profileSeq), chatMessage.getMessage(), chatMessage.getMessageTime())));
                 });

@@ -9,6 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UpdateMessageDto {
 
-    private int startSeq;
-    private int endSeq;
+    private Long startSeq;
+    private Long endSeq;
 }
