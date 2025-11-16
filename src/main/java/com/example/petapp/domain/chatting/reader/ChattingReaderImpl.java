@@ -41,7 +41,7 @@ public class ChattingReaderImpl implements ChattingReader {
         chatRoom.validateUser(userId);
 
         Pageable pageRequest = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "seq"));
-        Page<ChatMessage> messages = chatMessageRepository.findAllByChatRoomId(chatRoomId, pageRequest);
+        Page<ChatMessage> messages = chatMessageRepository.findAllByChatRoomIdOrderBySeqAsc(chatRoomId, pageRequest);//seq로 정렬 redis원자적연산인 seq로 정렬 순서 보장
         updateMessagesUnReadCount(chatRoomId, userId);
 
         List<ChatMessageDtoMember> chatMessageDtoMembers = ChatRoomMapper.toChatMessageDtos(messages.getContent());
