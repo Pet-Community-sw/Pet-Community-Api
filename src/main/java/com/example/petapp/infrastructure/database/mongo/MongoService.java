@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.database.mongo;
 
-import com.example.petapp.domain.chatting.model.entity.ChatMessage;
+import com.example.petapp.domain.chatting.model.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

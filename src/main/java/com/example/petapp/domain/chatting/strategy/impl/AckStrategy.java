@@ -1,19 +1,19 @@
 package com.example.petapp.domain.chatting.strategy.impl;
 
+import com.example.petapp.domain.chatting.AckInfoRepository;
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.chatting.strategy.MessageTypeStrategy;
-import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ReadStrategy implements MessageTypeStrategy {
+public class AckStrategy implements MessageTypeStrategy {
 
-    private final InMemoryService inMemoryService;
+    private final AckInfoRepository ackInfoRepository;
 
     @Override
     public void handle(ChatMessage chatMessage) {
-        inMemoryService.createReadData(chatMessage);
+        ackInfoRepository.deleteUser(chatMessage.getClientMessageId(), chatMessage.getSenderId());
     }
 }

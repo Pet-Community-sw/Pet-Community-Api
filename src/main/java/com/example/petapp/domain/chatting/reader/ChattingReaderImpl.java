@@ -1,10 +1,10 @@
 package com.example.petapp.domain.chatting.reader;
 
 import com.example.petapp.domain.chatting.ChatMessageRepository;
+import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
 import com.example.petapp.domain.chatting.model.dto.StompResponseDto;
 import com.example.petapp.domain.chatting.model.dto.UpdateMessageDto;
-import com.example.petapp.domain.chatting.model.entity.ChatMessage;
 import com.example.petapp.domain.chatting.model.type.CommandType;
 import com.example.petapp.domain.groupchatroom.mapper.ChatRoomMapper;
 import com.example.petapp.domain.groupchatroom.model.dto.request.ChatMessageDtoMember;

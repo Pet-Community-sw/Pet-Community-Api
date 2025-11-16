@@ -14,7 +14,7 @@ public class ChattingController {
     private final ChattingService chattingService;
 
     @MessageMapping("/chat")
-    public void message(@Payload ChatMessageDto chatMessage, Principal principal) {//memberId or profileId
+    public void sendToMessage(@Payload ChatMessageDto chatMessage, Principal principal) {//memberId or profileId
         chattingService.sendToMessage(chatMessage, Long.valueOf(principal.getName()));
     }
 }

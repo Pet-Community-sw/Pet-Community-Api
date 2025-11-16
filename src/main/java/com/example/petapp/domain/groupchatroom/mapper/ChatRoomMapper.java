@@ -1,7 +1,7 @@
 package com.example.petapp.domain.groupchatroom.mapper;
 
+import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
-import com.example.petapp.domain.chatting.model.entity.ChatMessage;
 import com.example.petapp.domain.chatting.model.type.ChatRoomType;
 import com.example.petapp.domain.groupchatroom.model.dto.request.ChatMessageDtoMember;
 import com.example.petapp.domain.groupchatroom.model.dto.response.ChatRoomResponseDto;

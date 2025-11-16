@@ -1,7 +1,7 @@
 package com.example.petapp.domain.chatting;
 
 
-import com.example.petapp.domain.chatting.model.entity.ChatMessage;
+import com.example.petapp.domain.chatting.model.ChatMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;

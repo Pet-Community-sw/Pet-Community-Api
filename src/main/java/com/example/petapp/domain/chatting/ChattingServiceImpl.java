@@ -1,9 +1,9 @@
 package com.example.petapp.domain.chatting;
 
 import com.example.petapp.domain.chatting.mapper.ChatMessageMapper;
+import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.chatting.model.dto.ChatMessageDto;
 import com.example.petapp.domain.chatting.model.dto.UserInfo;
-import com.example.petapp.domain.chatting.model.entity.ChatMessage;
 import com.example.petapp.domain.chatting.model.type.CommandType;
 import com.example.petapp.domain.chatting.offline.OfflineUserService;
 import com.example.petapp.domain.chatting.strategy.MessageTypeStrategy;
@@ -41,6 +41,7 @@ public class ChattingServiceImpl implements ChattingService {
         }
         messageTypeStrategy.handle(chatMessage);
     }
+
 
     private ChatMessage getChatMessage(ChatMessageDto chatMessageDto, Long senderId, ChatRoom chatRoom) {
         UserInfo userInfo = null;

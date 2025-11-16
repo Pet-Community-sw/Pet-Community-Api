@@ -1,8 +1,8 @@
 package com.example.petapp.port;
 
 
+import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
-import com.example.petapp.domain.chatting.model.entity.ChatMessage;
 import com.example.petapp.domain.notification.model.dto.NotificationListDto;
 import org.springframework.stereotype.Service;
 

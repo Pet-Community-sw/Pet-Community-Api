@@ -1,6 +1,6 @@
 package com.example.petapp.domain.chatting.offline;
 
-import com.example.petapp.domain.chatting.model.entity.ChatMessage;
+import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,8 @@
 package com.example.petapp.domain.chatting.strategy.impl;
 
+import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.chatting.model.dto.NotificationDto;
 import com.example.petapp.domain.chatting.model.dto.StompResponseDto;
-import com.example.petapp.domain.chatting.model.entity.ChatMessage;
 import com.example.petapp.domain.chatting.model.type.CommandType;
 import com.example.petapp.domain.chatting.strategy.MessageTypeStrategy;
 import lombok.RequiredArgsConstructor;
