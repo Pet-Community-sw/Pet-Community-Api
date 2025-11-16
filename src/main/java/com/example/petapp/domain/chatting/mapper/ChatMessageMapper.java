@@ -17,6 +17,7 @@ public class ChatMessageMapper {
                 .senderName(userInfo.getUserName())
                 .senderImageUrl(userInfo.getImageUrl())
                 .message(chatMessageDto.getMessage())
+                .clientMessageId(chatMessageDto.getClientMessageId())
                 .messageTime(LocalDateTime.now())
                 .build();
     }
