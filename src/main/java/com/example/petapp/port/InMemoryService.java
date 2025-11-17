@@ -4,12 +4,10 @@ package com.example.petapp.port;
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
 import com.example.petapp.domain.notification.model.dto.NotificationListDto;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
 
-@Service
 public interface InMemoryService {
 
     void createStringDataWithDuration(String key, String value, long duration);

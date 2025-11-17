@@ -7,12 +7,12 @@ import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.*;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class InMemoryServiceImpl implements InMemoryService {
 
@@ -113,7 +113,7 @@ public class InMemoryServiceImpl implements InMemoryService {
 
     @Override
     public void deleteOnlineDate(Long chatRoomId, Long profileId) {
-        redisTemplate.opsForSet().remove(RedisKeys.onlineUsers(chatRoomId), profileId);
+        redisTemplate.opsForSet().remove(RedisKeys.onlineUsers(chatRoomId), profileId.toString());
     }
 
     @Override
