@@ -26,6 +26,9 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    /**
+     * OncePerRequestFilter는 http요청당 한 번 씩 실행되는 filter
+     */
     private final AuthenticationManager authenticationManager;
     private final InMemoryService inMemoryService;
 
@@ -69,7 +72,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 throw new BadCredentialsException("jwt exception", e);
             }
         }
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response); //다음 filterChain을 호출
     }
 
 
