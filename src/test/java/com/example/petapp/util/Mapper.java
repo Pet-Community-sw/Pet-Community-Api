@@ -1,6 +1,6 @@
 package com.example.petapp.util;
 
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.normal.model.dto.request.PostDto;
 
 public class Mapper {

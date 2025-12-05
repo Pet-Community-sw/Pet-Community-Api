@@ -1,11 +1,11 @@
-package com.example.petapp.domain.member.model.entity;
+package com.example.petapp.domain.member.model;
 
+import com.example.petapp.common.base.superclass.BaseEntity;
 import com.example.petapp.common.exception.ForbiddenException;
+import com.example.petapp.domain.fcm.model.entity.FcmToken;
 import com.example.petapp.domain.post.common.Post;
 import com.example.petapp.domain.profile.model.entity.Profile;
 import com.example.petapp.domain.token.model.entity.RefreshToken;
-import com.example.petapp.domain.fcm.model.entity.FcmToken;
-import com.example.petapp.common.base.superclass.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -62,11 +62,11 @@ public class Member extends BaseEntity {//수정 필요
     private FcmToken fcmToken;
 
     @Builder.Default
-    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Post> posts=new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Profile> profiles = new ArrayList<>();
 
     @Builder.Default
@@ -78,11 +78,11 @@ public class Member extends BaseEntity {//수정 필요
     }
 
     public boolean isSamePassword(PasswordEncoder passwordEncoder, String newPassword) {
-        return passwordEncoder.matches(newPassword, this.password);
+        return passwordEncoder.matches(newPassword, password);
     }
 
     public void updatePassword(String newPassword) {
-        this.password = newPassword;
+        password = newPassword;
     }
 
     public void validateProfile(Member member, Member profileMember) {

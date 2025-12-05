@@ -5,7 +5,7 @@ import com.example.petapp.common.base.embedded.Content;
 import com.example.petapp.common.base.embedded.Location;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.ForbiddenException;
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.common.Post;
 import com.example.petapp.domain.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
 import com.example.petapp.domain.profile.model.entity.Profile;

@@ -2,7 +2,6 @@ package com.example.petapp.domain.query;
 
 import com.example.petapp.domain.comment.model.entity.Comment;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
-import com.example.petapp.domain.member.model.entity.Member;
 import com.example.petapp.domain.petbreed.model.entity.PetBreed;
 import com.example.petapp.domain.post.common.Post;
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
@@ -14,18 +13,13 @@ import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogeth
 import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
 
 public interface QueryService {
-    Member findByMember(String email);
-
-    Member findByMember(Long memberId);
-
-    Member findByMemberToPhoneNumber(String phoneNumber);
 
     ChatRoom findByChatRoom(Long chatRoomId);
 
     Comment findByComment(Long commentId);
 
     DelegateWalkPost findByDelegateWalkPost(Long postId);
-    
+
     NormalPost findByNormalPost(Long postId);
 
     PetBreed findByPetBreed(String petBreed);

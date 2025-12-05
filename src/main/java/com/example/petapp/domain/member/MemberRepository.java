@@ -1,16 +1,19 @@
 package com.example.petapp.domain.member;
 
 
-import com.example.petapp.domain.member.model.entity.Member;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.example.petapp.domain.member.model.Member;
 
 import java.util.Optional;
 
-@Repository
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository {
 
-    boolean existsByEmail(String email);
+    void delete(Member member);
+
+    Member save(Member member);
+
+    boolean exist(String email);
+
+    Optional<Member> find(Long id);
 
     Optional<Member> findByEmail(String email);
 

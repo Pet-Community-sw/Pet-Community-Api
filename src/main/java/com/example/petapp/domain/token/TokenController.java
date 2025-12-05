@@ -1,6 +1,6 @@
 package com.example.petapp.domain.token;
 
-import com.example.petapp.domain.member.model.dto.response.TokenResponseDto;
+import com.example.petapp.application.in.member.dto.response.TokenResponseDto;
 import com.example.petapp.domain.token.model.dto.request.ReissueTokenRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

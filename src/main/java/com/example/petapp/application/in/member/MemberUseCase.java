@@ -1,16 +1,16 @@
-package com.example.petapp.domain.member;
+package com.example.petapp.application.in.member;
 
-import com.example.petapp.domain.member.model.dto.request.*;
-import com.example.petapp.domain.member.model.dto.response.FindByIdResponseDto;
-import com.example.petapp.domain.member.model.dto.response.GetMemberResponseDto;
-import com.example.petapp.domain.member.model.dto.response.LoginResponseDto;
-import com.example.petapp.domain.member.model.dto.response.MemberSignResponseDto;
+import com.example.petapp.application.in.member.dto.request.*;
+import com.example.petapp.application.in.member.dto.response.FindByIdResponseDto;
+import com.example.petapp.application.in.member.dto.response.GetMemberResponseDto;
+import com.example.petapp.application.in.member.dto.response.LoginResponseDto;
+import com.example.petapp.application.in.member.dto.response.MemberSignResponseDto;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 
 @Service
-public interface MemberService {
+public interface MemberUseCase {
     MemberSignResponseDto createMember(MemberSignDto memberSignDto);
 
     LoginResponseDto login(LoginDto loginDto, HttpServletResponse response);

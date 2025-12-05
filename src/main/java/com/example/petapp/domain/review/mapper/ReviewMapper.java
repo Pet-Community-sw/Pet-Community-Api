@@ -1,6 +1,6 @@
 package com.example.petapp.domain.review.mapper;
 
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.review.model.entity.Review;
 import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
 import com.example.petapp.common.base.embedded.Content;

@@ -1,15 +1,15 @@
 package com.example.petapp.domain.token;
 
+import com.example.petapp.application.in.member.dto.request.AccessTokenResponseDto;
+import com.example.petapp.application.in.member.dto.response.LoginResponseDto;
+import com.example.petapp.application.in.member.dto.response.TokenResponseDto;
+import com.example.petapp.application.in.member.mapper.MemberMapper;
 import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.common.exception.UnAuthorizedException;
 import com.example.petapp.common.jwt.util.JwtTokenizer;
 import com.example.petapp.domain.member.RoleRepository;
-import com.example.petapp.domain.member.mapper.MemberMapper;
-import com.example.petapp.domain.member.model.dto.request.AccessTokenResponseDto;
-import com.example.petapp.domain.member.model.dto.response.LoginResponseDto;
-import com.example.petapp.domain.member.model.dto.response.TokenResponseDto;
-import com.example.petapp.domain.member.model.entity.Member;
-import com.example.petapp.domain.member.model.entity.Role;
+import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.member.model.Role;
 import com.example.petapp.domain.token.model.dto.request.ReissueTokenRequestDto;
 import com.example.petapp.domain.token.model.entity.RefreshToken;
 import com.example.petapp.port.InMemoryService;
@@ -107,7 +107,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
     @Override
     public AccessTokenResponseDto createResetPasswordJwt(String email) {
         List<Role> roles = new ArrayList<>();
-        Role role = roleRepository.findByName("ROLE_USER").get();
+        Role role = roleRepository.find("ROLE_USER").get();
         roles.add(role);
         String resetPasswordToken = jwtTokenizer.createResetPasswordToken(email, roles.stream().map(Role::getName).collect(Collectors.toList()));
         return new AccessTokenResponseDto(resetPasswordToken);

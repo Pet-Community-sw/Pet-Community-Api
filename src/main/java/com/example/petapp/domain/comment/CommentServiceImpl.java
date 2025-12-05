@@ -1,5 +1,6 @@
 package com.example.petapp.domain.comment;
 
+import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.domain.comment.mapper.CommentMapper;
 import com.example.petapp.domain.comment.model.dto.request.CommentDto;
@@ -8,7 +9,7 @@ import com.example.petapp.domain.comment.model.dto.response.CreateCommentRespons
 import com.example.petapp.domain.comment.model.dto.response.GetCommentsResponseDto;
 import com.example.petapp.domain.comment.model.entity.Comment;
 import com.example.petapp.domain.comment.model.entity.Commentable;
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.common.Post;
 import com.example.petapp.domain.query.QueryService;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +24,12 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final QueryService queryService;
+    private final MemberQueryUseCase memberQueryUseCase;
 
     @Transactional(readOnly = true)
     @Override
     public List<GetCommentsResponseDto> getComments(Long postId, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         Post post = queryService.findByPost(postId);
 
         return CommentMapper.toGetCommentsResponseDtos((Commentable) post, member);
@@ -37,7 +39,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public CreateCommentResponseDto createComment(CommentDto commentDto, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         Post post = queryService.findByPost(commentDto.getPostId());
 
         Comment comment = CommentMapper.toEntity(commentDto, post, member);
@@ -49,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public void deleteComment(Long commentId, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         Comment comment = queryService.findByComment(commentId);
 
         comment.validated(member);
@@ -59,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public void updateComment(Long commentId, UpdateCommentDto updateCommentDto, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         Comment comment = queryService.findByComment(commentId);
 
         comment.validated(member);

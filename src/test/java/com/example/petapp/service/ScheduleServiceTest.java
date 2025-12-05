@@ -1,17 +1,17 @@
 package com.example.petapp.service;
 
 
+import com.example.petapp.domain.member.MemberRepository;
+import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.post.delegate.DelegateWalkPostRepository;
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.entity.Profile;
-import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
+import com.example.petapp.domain.schedule.ScheduleServiceImpl;
 import com.example.petapp.domain.schedule.model.dto.response.GetSchedulesResponseDto;
 import com.example.petapp.domain.schedule.model.dto.response.ScheduleType;
-import com.example.petapp.domain.post.delegate.DelegateWalkPostRepository;
-import com.example.petapp.domain.member.MemberRepository;
-import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.walkingtogethermatch.WalkingTogetherMatchRepository;
-import com.example.petapp.domain.schedule.ScheduleServiceImpl;
+import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -67,7 +67,7 @@ public class ScheduleServiceTest {
         when(profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
         when(walkingTogetherMatchRepository.findAllByProfileContainsAndScheduledTimeBetween(profile, startDateTime, endDateTime))
                 .thenReturn(List.of(walkPost));
-        when(memberRepository.findById(member.getMemberId())).thenReturn(Optional.of(member));
+        when(memberRepository.find(member.getMemberId())).thenReturn(Optional.of(member));
         when(delegateWalkPostRepository.findAllBySelectedApplicantMemberIdAndScheduledTimeBetween(member.getMemberId(), startDateTime, endDateTime))
                 .thenReturn(List.of(delegatePost));
 
@@ -90,7 +90,7 @@ public class ScheduleServiceTest {
         // Verify
         verify(profileRepository).findById(profileId);
         verify(walkingTogetherMatchRepository).findAllByProfileContainsAndScheduledTimeBetween(profile, startDateTime, endDateTime);
-        verify(memberRepository).findById(member.getMemberId());
+        verify(memberRepository).find(member.getMemberId());
         verify(delegateWalkPostRepository).findAllBySelectedApplicantMemberIdAndScheduledTimeBetween(member.getMemberId(), startDateTime, endDateTime);
     }
 

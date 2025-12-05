@@ -1,13 +1,14 @@
 package com.example.petapp.domain.member;
 
-import com.example.petapp.domain.member.model.entity.Role;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.example.petapp.domain.member.model.Role;
 
 import java.util.Optional;
 
-@Repository
-public interface RoleRepository extends JpaRepository<Role, Long> {
+public interface RoleRepository {
 
-    Optional<Role> findByName(String name);
+    Optional<Role> find(String name);
+
+    Long count();
+
+    void save(Role role);
 }

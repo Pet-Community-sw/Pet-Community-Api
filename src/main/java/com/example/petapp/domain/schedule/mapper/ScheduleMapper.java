@@ -1,7 +1,7 @@
 package com.example.petapp.domain.schedule.mapper;
 
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.entity.Profile;
 import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import com.example.petapp.domain.schedule.model.dto.response.GetSchedulesResponseDto;
@@ -16,10 +16,12 @@ public class ScheduleMapper {
                 .scheduleType(ScheduleType.WALKING_TOGETHER)
                 .build();
     }
+
     public static GetSchedulesResponseDto toGetSchedulesResponseDto(Member member, DelegateWalkPost delegateWalkPost) {
         return GetSchedulesResponseDto.builder()
                 .memberId(member.getId())
                 .scheduleDate(delegateWalkPost.getScheduledTime())
                 .scheduleType(ScheduleType.DELEGATE_WALK)
                 .build();
-    }}
+    }
+}

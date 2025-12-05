@@ -1,7 +1,7 @@
 package com.example.petapp.common.base.init;
 
 import com.example.petapp.domain.member.RoleRepository;
-import com.example.petapp.domain.member.model.entity.Role;
+import com.example.petapp.domain.member.model.Role;
 import com.example.petapp.domain.petbreed.PetBreedRepository;
 import com.example.petapp.domain.petbreed.model.entity.PetBreed;
 import lombok.RequiredArgsConstructor;

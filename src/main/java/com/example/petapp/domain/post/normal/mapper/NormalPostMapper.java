@@ -5,7 +5,7 @@ import com.example.petapp.common.base.util.TimeUtil;
 import com.example.petapp.domain.comment.mapper.CommentMapper;
 import com.example.petapp.domain.comment.model.dto.response.GetCommentsResponseDto;
 import com.example.petapp.domain.comment.model.entity.Commentable;
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.common.Post;
 import com.example.petapp.domain.post.normal.model.dto.request.PostDto;
 import com.example.petapp.domain.post.normal.model.dto.response.GetPostResponseDto;

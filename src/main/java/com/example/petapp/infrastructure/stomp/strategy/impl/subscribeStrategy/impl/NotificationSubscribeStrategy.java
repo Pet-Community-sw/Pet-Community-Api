@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.stomp.strategy.impl.subscribeStrategy.impl;
 
-import com.example.petapp.domain.query.QueryService;
+import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.infrastructure.stomp.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.impl.subscribeStrategy.BaseSubscribeTypeStrategy;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class NotificationSubscribeStrategy extends BaseSubscribeTypeStrategy {
 
     private static final String PATTEN = "/sub/notification/{memberId}";
 
-    private final QueryService queryService;
+    private final MemberQueryUseCase useCase;
 
     @Override
     public boolean isHandler(String destination) {
@@ -27,7 +27,7 @@ public class NotificationSubscribeStrategy extends BaseSubscribeTypeStrategy {
     public void handle(SubscribeInfo subscribeInfo) {
         Map<String, String> map = patternMap(PATTEN, subscribeInfo.getDestination());
         Long memberId = Long.valueOf(map.get("memberId"));
-        queryService.findByMember(memberId);
+        useCase.findOrThrow(memberId);
         log.info("[STOMP] notification 구독 memberId : {}", memberId);
     }
 }

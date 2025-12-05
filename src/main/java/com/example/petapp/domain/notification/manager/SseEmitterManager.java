@@ -1,7 +1,8 @@
 package com.example.petapp.domain.notification.manager;
 
+import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.common.jwt.util.JwtTokenizer;
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
@@ -19,18 +20,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class SseEmitterManager {
 
+    private final static Long DEFAULT_TIMEOUT = 60 * 60 * 1000L;
     private final QueryService queryService;
+    private final MemberQueryUseCase memberQueryUseCase;
     private final JwtTokenizer jwtTokenizer;
     private final InMemoryService inMemoryService;
-
-    private final static Long DEFAULT_TIMEOUT = 60 * 60 * 1000L;
-
     private final Map<Long, SseEmitter> sseEmitterMap = new ConcurrentHashMap<>();//스레드 중복 방지
 
     @Transactional(readOnly = true)
     public SseEmitter subscribe(String token) {
         String email = jwtTokenizer.parseAccessToken(token).getSubject();
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
 
         SseEmitter sseEmitter = new SseEmitter(DEFAULT_TIMEOUT);
 

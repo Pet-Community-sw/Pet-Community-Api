@@ -3,7 +3,7 @@ package com.example.petapp.domain.post.recommend.mapper;
 import com.example.petapp.common.base.embedded.Content;
 import com.example.petapp.common.base.embedded.Location;
 import com.example.petapp.common.base.util.TimeUtil;
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.recommend.model.dto.request.CreateRecommendRoutePostDto;
 import com.example.petapp.domain.post.recommend.model.dto.response.GetRecommendPostResponseDto;
 import com.example.petapp.domain.post.recommend.model.dto.response.GetRecommendRoutePostsResponseDto;

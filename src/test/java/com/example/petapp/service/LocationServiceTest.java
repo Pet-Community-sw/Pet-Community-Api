@@ -1,16 +1,16 @@
 package com.example.petapp.service;
 
-import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
-import com.example.petapp.domain.member.model.entity.Member;
-import com.example.petapp.domain.profile.model.entity.Profile;
-import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
-import com.example.petapp.domain.walkrecord.model.dto.request.SendLocationDto;
-import com.example.petapp.common.exception.ForbiddenException;
-import com.example.petapp.common.exception.NotFoundException;
-import com.example.petapp.domain.walkrecord.WalkRecordRepository;
-import com.example.petapp.domain.walklocation.LocationServiceImpl;
 import com.example.petapp.common.base.util.HaversineUtil;
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
+import com.example.petapp.common.exception.ForbiddenException;
+import com.example.petapp.common.exception.NotFoundException;
+import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
+import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.walklocation.LocationServiceImpl;
+import com.example.petapp.domain.walkrecord.WalkRecordRepository;
+import com.example.petapp.domain.walkrecord.model.dto.request.SendLocationDto;
+import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +24,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -195,7 +195,7 @@ public class LocationServiceTest {
                 .selectedApplicantMemberId(1L)
                 .build();
 
-        WalkRecord walkRecord=WalkRecord.builder()
+        WalkRecord walkRecord = WalkRecord.builder()
                 .delegateWalkPost(delegateWalkPost)
                 .build();
 

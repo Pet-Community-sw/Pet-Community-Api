@@ -1,5 +1,6 @@
 package com.example.petapp.domain.chatting;
 
+import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.domain.chatting.mapper.ChatMessageMapper;
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.chatting.model.dto.ChatMessageDto;
@@ -8,7 +9,7 @@ import com.example.petapp.domain.chatting.model.type.CommandType;
 import com.example.petapp.domain.chatting.offline.OfflineUserService;
 import com.example.petapp.domain.chatting.strategy.MessageTypeStrategy;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.entity.Profile;
 import com.example.petapp.domain.query.QueryService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class ChattingServiceImpl implements ChattingService {
 
     private final Map<CommandType, MessageTypeStrategy> messageTypeMap;
     private final QueryService queryService;
+    private final MemberQueryUseCase memberQueryUseCase;
     private final OfflineUserService offlineUserService;
 
     @Transactional
@@ -51,7 +53,7 @@ public class ChattingServiceImpl implements ChattingService {
                 userInfo = new UserInfo(profile.getPetName(), profile.getPetImageUrl());
             }
             case ONE -> {
-                Member member = queryService.findByMember(senderId);
+                Member member = memberQueryUseCase.findOrThrow(senderId);
                 userInfo = new UserInfo(member.getName(), member.getMemberImageUrl());
             }
         }

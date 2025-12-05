@@ -1,6 +1,6 @@
 package com.example.petapp.domain.profile.mapper;
 
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.petbreed.model.entity.PetBreed;
 import com.example.petapp.domain.profile.model.entity.Profile;
 import com.example.petapp.domain.profile.model.dto.response.AccessTokenByProfileIdResponseDto;
@@ -20,7 +20,7 @@ public class ProfileMapper {
                 .petBirthDate(profileDto.getPetBirthDate())
                 .extraInfo(profileDto.getExtraInfo())
                 .petBreed(petBreed)
-                .petAge(AgeUtil.CalculateAge(profileDto.getPetBirthDate())+"살")
+                .petAge(AgeUtil.CalculateAge(profileDto.getPetBirthDate()) + "살")
                 .petName(profileDto.getPetName())
                 .build();
     }

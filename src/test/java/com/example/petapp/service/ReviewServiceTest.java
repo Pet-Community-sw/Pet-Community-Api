@@ -1,7 +1,17 @@
 package com.example.petapp.service;
 
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.common.base.embedded.Content;
+import com.example.petapp.common.exception.ConflictException;
+import com.example.petapp.common.exception.ForbiddenException;
+import com.example.petapp.common.exception.NotFoundException;
+import com.example.petapp.domain.member.MemberRepository;
+import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
+import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.review.ReviewRepository;
+import com.example.petapp.domain.review.ReviewServiceImpl;
+import com.example.petapp.domain.review.mapper.ReviewMapper;
 import com.example.petapp.domain.review.model.dto.request.CreateReviewDto;
 import com.example.petapp.domain.review.model.dto.request.GetReviewList;
 import com.example.petapp.domain.review.model.dto.request.UpdateReviewDto;
@@ -9,18 +19,8 @@ import com.example.petapp.domain.review.model.dto.response.CreateReviewResponseD
 import com.example.petapp.domain.review.model.dto.response.GetReviewListResponseDto;
 import com.example.petapp.domain.review.model.dto.response.GetReviewResponseDto;
 import com.example.petapp.domain.review.model.entity.Review;
-import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
-import com.example.petapp.common.base.embedded.Content;
-import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
-import com.example.petapp.common.exception.ConflictException;
-import com.example.petapp.common.exception.ForbiddenException;
-import com.example.petapp.common.exception.NotFoundException;
-import com.example.petapp.domain.review.mapper.ReviewMapper;
-import com.example.petapp.domain.member.MemberRepository;
-import com.example.petapp.domain.profile.ProfileRepository;
-import com.example.petapp.domain.review.ReviewRepository;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;
-import com.example.petapp.domain.review.ReviewServiceImpl;
+import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +32,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -56,7 +57,7 @@ public class ReviewServiceTest {
         //given
         String email = "test";
 
-        CreateReviewDto createReviewDto=CreateReviewDto.builder()
+        CreateReviewDto createReviewDto = CreateReviewDto.builder()
                 .walkRecordId(1L)
                 .build();
 
@@ -82,7 +83,7 @@ public class ReviewServiceTest {
         when(walkRecordRepository.findById(createReviewDto.getWalkRecordId())).thenReturn(Optional.of(walkRecord));
         when(memberRepository.findByEmail(email)).thenReturn(Optional.of(member));
 
-        try(MockedStatic<ReviewMapper> mockedStatic = mockStatic(ReviewMapper.class)) {
+        try (MockedStatic<ReviewMapper> mockedStatic = mockStatic(ReviewMapper.class)) {
             mockedStatic.when(() -> ReviewMapper.toEntity(walkRecord, createReviewDto)).thenReturn(Review.builder().reviewId(1L).build());
             when(reviewRepository.save(any(Review.class))).thenReturn(Review.builder().reviewId(1L).build());
 
@@ -207,7 +208,7 @@ public class ReviewServiceTest {
                 .build();
 
         when(memberRepository.findByEmail(email)).thenReturn(Optional.of(loginMember));
-        when(memberRepository.findById(targetMember.getMemberId())).thenReturn(Optional.of(targetMember));
+        when(memberRepository.find(targetMember.getMemberId())).thenReturn(Optional.of(targetMember));
         when(reviewRepository.findAllByMemberAndReviewType(eq(loginMember), eq(Review.ReviewType.PROFILE_TO_MEMBER)))
                 .thenReturn(reviewList);
 
@@ -238,7 +239,7 @@ public class ReviewServiceTest {
     void test7() {
         //given
         when(memberRepository.findByEmail(anyString())).thenReturn(Optional.of(Member.builder().build()));
-        when(memberRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(memberRepository.find(anyLong())).thenReturn(Optional.empty());
 
         //when & then
         assertThatThrownBy(() -> reviewServiceImpl.getReviewListByMember(1L, "test"))

@@ -1,24 +1,24 @@
 package com.example.petapp.service;
 
-import com.example.petapp.domain.member.model.entity.Member;
-import com.example.petapp.domain.petbreed.PetBreedRepository;
-import com.example.petapp.domain.petbreed.model.entity.PetBreed;
-import com.example.petapp.domain.post.recommend.RecommendRoutePostRepository;
-import com.example.petapp.domain.profile.ProfileRepository;
-import com.example.petapp.domain.profile.model.entity.Profile;
-import com.example.petapp.domain.walkingtogethermatch.WalkingTogetherMatchRepository;
-import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import com.example.petapp.common.base.embedded.Content;
-import com.example.petapp.domain.post.recommend.model.entity.RecommendRoutePost;
-import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
-import com.example.petapp.domain.walkingtogethermatch.model.dto.request.CreateWalkingTogetherMatchDto;
-import com.example.petapp.domain.walkingtogethermatch.model.dto.response.CreateWalkingTogetherMatchResponseDto;
-import com.example.petapp.domain.walkingtogethermatch.model.dto.response.GetWalkingTogetherMatchResponseDto;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.domain.groupchatroom.ChatRoomService;
+import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
+import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.petbreed.PetBreedRepository;
+import com.example.petapp.domain.petbreed.model.entity.PetBreed;
+import com.example.petapp.domain.post.recommend.RecommendRoutePostRepository;
+import com.example.petapp.domain.post.recommend.model.entity.RecommendRoutePost;
+import com.example.petapp.domain.profile.ProfileRepository;
+import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.walkingtogethermatch.WalkingTogetherMatchRepository;
 import com.example.petapp.domain.walkingtogethermatch.WalkingTogetherMatchServiceImpl;
+import com.example.petapp.domain.walkingtogethermatch.model.dto.request.CreateWalkingTogetherMatchDto;
+import com.example.petapp.domain.walkingtogethermatch.model.dto.response.CreateWalkingTogetherMatchResponseDto;
+import com.example.petapp.domain.walkingtogethermatch.model.dto.response.GetWalkingTogetherMatchResponseDto;
+import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,10 +29,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

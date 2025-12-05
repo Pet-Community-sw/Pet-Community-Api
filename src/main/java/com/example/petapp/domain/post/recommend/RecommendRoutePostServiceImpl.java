@@ -1,8 +1,9 @@
 package com.example.petapp.domain.post.recommend;
 
+import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.domain.like.LikeRepository;
 import com.example.petapp.domain.like.LikeService;
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.recommend.mapper.RecommendRoutePostMapper;
 import com.example.petapp.domain.post.recommend.model.dto.request.CreateRecommendRoutePostDto;
 import com.example.petapp.domain.post.recommend.model.dto.request.UpdateRecommendRoutePostDto;
@@ -29,12 +30,13 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
     private final LikeRepository likeRepository;
     private final LikeService likeService;
     private final QueryService queryService;
+    private final MemberQueryUseCase memberQueryUseCase;
     private final InMemoryService inMemoryService;
 
     @Transactional
     @Override
     public CreateRecommendRoutePostResponseDto createRecommendRoutePost(CreateRecommendRoutePostDto createRecommendRoutePostDto, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         RecommendRoutePost recommendRoutePost = RecommendRoutePostMapper.toEntity(createRecommendRoutePostDto, member);
         RecommendRoutePost savedRecommendRoutePost = recommendRoutePostRepository.save(recommendRoutePost);
         return new CreateRecommendRoutePostResponseDto(savedRecommendRoutePost.getId());
@@ -43,7 +45,7 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
     @Transactional(readOnly = true)//페이징 처리를 해야됨. 40개 정도 내보내면 프론트가 페이지 처리할 수 있으려나?
     @Override
     public List<GetRecommendRoutePostsResponseDto> getRecommendRoutePosts(Double minLongitude, Double minLatitude, Double maxLongitude, Double maxLatitude, int page, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         Pageable pageable = PageRequest.of(page - 1, 10);
         Set<Long> memberIds = inMemoryService.getLikeData(member.getId());
         List<RecommendRoutePost> recommendRoutePosts = recommendRoutePostRepository
@@ -55,7 +57,7 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
     @Transactional(readOnly = true)
     @Override
     public List<GetRecommendRoutePostsResponseDto> getRecommendRoutePosts(Double longitude, Double latitude, int page, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         Pageable pageable = PageRequest.of(page - 1, 10);
         Set<Long> memberIds = inMemoryService.getLikeData(member.getId());
         List<RecommendRoutePost> recommendRoutePosts = recommendRoutePostRepository.findByRecommendRoutePostByPlace(longitude, latitude, pageable).getContent();
@@ -65,7 +67,7 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
     @Transactional()
     @Override
     public GetRecommendPostResponseDto getRecommendRoutePost(Long recommendRoutePostId, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(recommendRoutePostId);
         recommendRoutePostRepository.incrementViewCount(recommendRoutePostId);
         return RecommendRoutePostMapper.toGetRecommendPostResponseDto(member, recommendRoutePost, likeRepository.countByPost(recommendRoutePost), likeRepository.existsByPostAndMember(recommendRoutePost, member));
@@ -74,7 +76,7 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
     @Transactional
     @Override
     public void updateRecommendRoutePost(Long recommendRoutePostId, UpdateRecommendRoutePostDto updateRecommendRoutePostDto, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(recommendRoutePostId);
         recommendRoutePost.validateMember(member);
         recommendRoutePost.updateContent(updateRecommendRoutePostDto.getTitle(), updateRecommendRoutePostDto.getContent());
@@ -83,7 +85,7 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
     @Transactional
     @Override
     public void deleteRecommendRoutePost(Long recommendRoutePostId, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(recommendRoutePostId);
         recommendRoutePost.validateMember(member);
         recommendRoutePostRepository.deleteById(recommendRoutePostId);

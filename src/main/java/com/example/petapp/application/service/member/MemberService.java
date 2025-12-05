@@ -1,21 +1,24 @@
-package com.example.petapp.domain.member;
+package com.example.petapp.application.service.member;
 
+import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.member.MemberUseCase;
+import com.example.petapp.application.in.member.dto.request.*;
+import com.example.petapp.application.in.member.dto.response.FindByIdResponseDto;
+import com.example.petapp.application.in.member.dto.response.GetMemberResponseDto;
+import com.example.petapp.application.in.member.dto.response.LoginResponseDto;
+import com.example.petapp.application.in.member.dto.response.MemberSignResponseDto;
+import com.example.petapp.application.in.member.mapper.MemberMapper;
 import com.example.petapp.common.base.util.imagefile.FileImageKind;
 import com.example.petapp.common.base.util.imagefile.FileUploadUtil;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.UnAuthorizedException;
 import com.example.petapp.domain.email.EmailService;
 import com.example.petapp.domain.fcm.FcmTokenService;
-import com.example.petapp.domain.member.mapper.MemberMapper;
-import com.example.petapp.domain.member.model.dto.request.*;
-import com.example.petapp.domain.member.model.dto.response.FindByIdResponseDto;
-import com.example.petapp.domain.member.model.dto.response.GetMemberResponseDto;
-import com.example.petapp.domain.member.model.dto.response.LoginResponseDto;
-import com.example.petapp.domain.member.model.dto.response.MemberSignResponseDto;
-import com.example.petapp.domain.member.model.entity.Member;
-import com.example.petapp.domain.member.model.entity.MemberRole;
-import com.example.petapp.domain.member.model.entity.Role;
-import com.example.petapp.domain.query.QueryService;
+import com.example.petapp.domain.member.MemberRepository;
+import com.example.petapp.domain.member.RoleRepository;
+import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.member.model.MemberRole;
+import com.example.petapp.domain.member.model.Role;
 import com.example.petapp.domain.token.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,9 +31,9 @@ import javax.servlet.http.HttpServletResponse;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService {
+public class MemberService implements MemberUseCase {
 
-    private final QueryService queryService;
+    private final MemberQueryUseCase memberQueryUseCase;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
@@ -43,7 +46,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public MemberSignResponseDto createMember(MemberSignDto memberSignDto) {
-        if (memberRepository.existsByEmail(memberSignDto.getEmail())) {
+        if (memberRepository.exist(memberSignDto.getEmail())) {
             throw new ConflictException("이미 가입된 회원입니다.");
         }
         String imageFileName = FileUploadUtil.fileUpload(memberSignDto.getMemberImageUrl(), memberUploadDir, FileImageKind.MEMBER);
@@ -55,7 +58,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public LoginResponseDto login(LoginDto loginDto, HttpServletResponse response) {
-        Member member = queryService.findByMember(loginDto.getEmail());
+        Member member = memberQueryUseCase.findOrThrow(loginDto.getEmail());
         if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
             throw new UnAuthorizedException("이메일 혹은 비밀번호가 일치하지 않습니다.");
         }
@@ -72,14 +75,14 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     @Override
     public FindByIdResponseDto findById(String phoneNumber) {
-        Member member = queryService.findByMemberToPhoneNumber(phoneNumber);
+        Member member = memberQueryUseCase.findOrThrowByPhoneNumber(phoneNumber);
         return new FindByIdResponseDto(member.getEmail());
     }
 
     @Transactional(readOnly = true)
     @Override
     public void sendEmail(SendEmailDto sendEmailDto) {
-        Member member = queryService.findByMember(sendEmailDto.getEmail());
+        Member member = memberQueryUseCase.findOrThrow(sendEmailDto.getEmail());
         emailService.sendMail(member.getEmail());
     }
 
@@ -93,7 +96,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public void resetPassword(ResetPasswordDto resetPasswordDto, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         if (member.isSamePassword(passwordEncoder, resetPasswordDto.getNewPassword())) {
             throw new IllegalArgumentException("전 비밀번호와 다르게 설정해야합니다.");
         } else {
@@ -104,26 +107,26 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)//상세 멤버 프로필 추가랑 어떤거 해야할지 해야됨. 여기에 자기가 쓴 게시물, 산책길 추천, 후기 추가해야할듯.
     @Override
     public GetMemberResponseDto getMember(Long memberId, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         return MemberMapper.toGetMemberResponseDto(member);
     }
 
     @Transactional
     @Override
     public void deleteMember(String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         memberRepository.delete(member);
     }
 
     @Transactional
     @Override
     public void createFcmToken(FcmTokenDto fcmTokenDto) {
-        Member member = queryService.findByMember(fcmTokenDto.getMemberId());
+        Member member = memberQueryUseCase.findOrThrow(fcmTokenDto.getMemberId());
         fcmTokenService.createFcmToken(member, fcmTokenDto.getFcmToken());
     }
 
     private void setRole(Member member) {
-        Role role = roleRepository.findByName("ROLE_USER").get();
+        Role role = roleRepository.find("ROLE_USER").get();
         MemberRole memberRole = MemberRole.builder()
                 .member(member)
                 .role(role)

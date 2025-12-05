@@ -1,7 +1,7 @@
 package com.example.petapp.domain.walklocation.mapper;
 
 import com.example.petapp.common.base.util.CreatedAtUtil;
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.petapp.domain.walkrecord.model.dto.response.GetWalkRecordResponseDto;
 import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
@@ -21,7 +21,7 @@ public class WalkRecordMapper {
                 .walkRecordId(walkRecord.getId())
                 .startTime(walkRecord.getStartTime())
                 .finishTime(walkRecord.getFinishTime())
-                .walkTime(CreatedAtUtil.createdAt(walkRecord.getStartTime(),walkRecord.getFinishTime()))
+                .walkTime(CreatedAtUtil.createdAt(walkRecord.getStartTime(), walkRecord.getFinishTime()))
                 .walkDistance(walkRecord.getWalkDistance())
                 .pathPoints(walkRecord.getPathPoints())
                 .build();

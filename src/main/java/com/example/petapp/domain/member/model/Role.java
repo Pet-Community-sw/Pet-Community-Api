@@ -1,11 +1,14 @@
-package com.example.petapp.domain.member.model.entity;
+package com.example.petapp.domain.member.model;
 
 
 import com.example.petapp.common.base.superclass.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,5 +26,5 @@ public class Role extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MemberRole> memberRoles=new ArrayList<>();
+    private List<MemberRole> memberRoles = new ArrayList<>();
 }

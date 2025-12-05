@@ -1,20 +1,20 @@
 package com.example.petapp.service;
 
 
+import com.example.petapp.application.in.member.dto.request.LoginDto;
+import com.example.petapp.application.in.member.dto.request.MemberSignDto;
+import com.example.petapp.application.in.member.dto.request.ResetPasswordDto;
+import com.example.petapp.application.in.member.dto.request.SendEmailDto;
+import com.example.petapp.application.in.member.dto.response.MemberSignResponseDto;
+import com.example.petapp.application.service.member.MemberService;
 import com.example.petapp.common.aop.LogAspect;
 import com.example.petapp.common.base.util.imagefile.FileImageKind;
 import com.example.petapp.common.base.util.imagefile.FileUploadUtil;
 import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.domain.email.EmailService;
 import com.example.petapp.domain.member.MemberRepository;
-import com.example.petapp.domain.member.MemberServiceImpl;
 import com.example.petapp.domain.member.RoleRepository;
-import com.example.petapp.domain.member.model.dto.request.LoginDto;
-import com.example.petapp.domain.member.model.dto.request.MemberSignDto;
-import com.example.petapp.domain.member.model.dto.request.ResetPasswordDto;
-import com.example.petapp.domain.member.model.dto.request.SendEmailDto;
-import com.example.petapp.domain.member.model.dto.response.MemberSignResponseDto;
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.token.TokenService;
 import com.example.petapp.util.Mapper;
 import org.junit.jupiter.api.DisplayName;
@@ -42,10 +42,11 @@ import static org.mockito.Mockito.when;
 
 @Import(LogAspect.class)
 @ExtendWith(MockitoExtension.class)
-class MemberServiceTest {
+class MemberUseCaseTest {
 
+    Member member = Mapper.createFakeMember();
     @InjectMocks
-    private MemberServiceImpl memberServiceImp;
+    private MemberService memberServiceImp;
     @Mock
     private MemberRepository memberRepository;
     @Mock
@@ -56,8 +57,6 @@ class MemberServiceTest {
     private EmailService emailService;
     @Mock
     private RoleRepository roleRepository;
-
-    Member member = Mapper.createFakeMember();
 
     @Test
     @DisplayName("signup_성공")
@@ -71,7 +70,7 @@ class MemberServiceTest {
                 .memberImageUrl(null)
                 .build();
 
-        when(memberRepository.existsByEmail(memberSignDto.getEmail())).thenReturn(false);
+        when(memberRepository.exist(memberSignDto.getEmail())).thenReturn(false);
         when(memberRepository.save(any(Member.class))).thenReturn(Member.builder().memberId(100L).build());
 //        when(memberRepository.save(any(Member.class))).thenAnswer(invocation -> {
 //            Member fakeMember = invocation.getArgument(0);

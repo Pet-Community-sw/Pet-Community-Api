@@ -2,7 +2,7 @@ package com.example.petapp.common.aop;
 
 import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;

@@ -1,19 +1,19 @@
 package com.example.petapp.service;
 
-import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
-import com.example.petapp.domain.member.model.entity.Member;
-import com.example.petapp.domain.profile.model.entity.Profile;
-import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
-import com.example.petapp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
-import com.example.petapp.domain.walkrecord.model.dto.response.GetWalkRecordResponseDto;
-import com.example.petapp.common.exception.ForbiddenException;
-import com.example.petapp.common.exception.NotFoundException;
-import com.example.petapp.domain.walkrecord.mapper.WalkRecordMapper;
-import com.example.petapp.domain.member.MemberRepository;
-import com.example.petapp.domain.walkrecord.WalkRecordRepository;
-import com.example.petapp.domain.walkrecord.WalkRecordServiceImpl;
 import com.example.petapp.common.base.util.DistanceUtil;
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
+import com.example.petapp.common.exception.ForbiddenException;
+import com.example.petapp.common.exception.NotFoundException;
+import com.example.petapp.domain.member.MemberRepository;
+import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
+import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.walkrecord.WalkRecordRepository;
+import com.example.petapp.domain.walkrecord.WalkRecordServiceImpl;
+import com.example.petapp.domain.walkrecord.mapper.WalkRecordMapper;
+import com.example.petapp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
+import com.example.petapp.domain.walkrecord.model.dto.response.GetWalkRecordResponseDto;
+import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -71,8 +72,8 @@ public class WalkRecordServiceTest {
                 .member(member)
                 .build();
 
-        when(memberRepository.findById(delegateWalkPost.getSelectedApplicantMemberId())).thenReturn(Optional.of(Member.builder().memberId(1L).build()));
-        try(MockedStatic<WalkRecordMapper> mockedStatic = mockStatic(WalkRecordMapper.class)) {
+        when(memberRepository.find(delegateWalkPost.getSelectedApplicantMemberId())).thenReturn(Optional.of(Member.builder().memberId(1L).build()));
+        try (MockedStatic<WalkRecordMapper> mockedStatic = mockStatic(WalkRecordMapper.class)) {
             mockedStatic.when(() -> WalkRecordMapper.toEntity(delegateWalkPost, member)).thenReturn(walkRecord);
             when(walkRecordRepository.save(any(WalkRecord.class))).thenReturn(WalkRecord.builder().walkRecordId(100L).build());
 
@@ -93,7 +94,7 @@ public class WalkRecordServiceTest {
                 .selectedApplicantMemberId(1L)
                 .build();
 
-        when(memberRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(memberRepository.find(anyLong())).thenReturn(Optional.empty());
 
         //when & then
         assertThatThrownBy(() -> walkRecordServiceImpl.createWalkRecord(delegateWalkPost))
@@ -177,7 +178,7 @@ public class WalkRecordServiceTest {
                 .profile(profile)
                 .build();
 
-        WalkRecord walkRecord=WalkRecord.builder()
+        WalkRecord walkRecord = WalkRecord.builder()
                 .delegateWalkPost(delegateWalkPost)
                 .build();
 
@@ -228,7 +229,7 @@ public class WalkRecordServiceTest {
                 .profile(profile)
                 .build();
 
-        WalkRecord walkRecord=WalkRecord.builder()
+        WalkRecord walkRecord = WalkRecord.builder()
                 .delegateWalkPost(delegateWalkPost)
                 .build();
 
@@ -373,7 +374,7 @@ public class WalkRecordServiceTest {
         when(walkRecordRepository.findById(walkRecordId)).thenReturn(Optional.of(walkRecord));
         when(stringRedisTemplate.opsForList()).thenReturn(listOperations);//opsForList가 null이기 때문에 ListOperations<String, String>선언
         when(listOperations.range("walk:path:" + walkRecordId, 0, -1)).thenReturn(paths);
-        try(MockedStatic<DistanceUtil> mockedStatic = mockStatic(DistanceUtil.class)) {
+        try (MockedStatic<DistanceUtil> mockedStatic = mockStatic(DistanceUtil.class)) {
             mockedStatic.when(() -> DistanceUtil.calculateTotalDistance(paths)).thenReturn(1.2);
 
             // when
@@ -432,10 +433,6 @@ public class WalkRecordServiceTest {
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("권한 없음.");
     }
-
-
-
-
 
 
 }

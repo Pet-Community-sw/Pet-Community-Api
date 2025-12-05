@@ -1,6 +1,6 @@
 package com.example.petapp.domain.token;
 
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.token.model.entity.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 

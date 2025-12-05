@@ -3,7 +3,7 @@ package com.example.petapp.common.base.util.notification;
 import com.example.petapp.domain.chatting.model.dto.NotificationDto;
 import com.example.petapp.domain.chatting.model.dto.StompResponseDto;
 import com.example.petapp.domain.chatting.model.type.CommandType;
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.notification.model.dto.NotificationListDto;
 import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;

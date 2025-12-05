@@ -7,7 +7,6 @@ import com.example.petapp.domain.comment.model.entity.Comment;
 import com.example.petapp.domain.groupchatroom.ChatRoomRepository;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.petapp.domain.member.MemberRepository;
-import com.example.petapp.domain.member.model.entity.Member;
 import com.example.petapp.domain.petbreed.PetBreedRepository;
 import com.example.petapp.domain.petbreed.model.entity.PetBreed;
 import com.example.petapp.domain.post.common.Post;
@@ -45,21 +44,6 @@ public class QueryServiceImpl implements QueryService {
     private final ReviewRepository reviewRepository;
     private final WalkingTogetherMatchRepository walkingTogetherMatchRepository;
     private final WalkRecordRepository walkRecordRepository;
-
-    @Override
-    public Member findByMember(String email) {
-        return memberRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("해당 유저는 없습니다."));
-    }
-
-    @Override
-    public Member findByMember(Long memberId) {
-        return memberRepository.findById(memberId).orElseThrow(() -> new NotFoundException("해당 유저는 없습니다."));
-    }
-
-    @Override
-    public Member findByMemberToPhoneNumber(String phoneNumber) {
-        return memberRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new NotFoundException("해당 유저는 없는 유저입니다. 회원가입 해주세요."));
-    }
 
     @Override
     public ChatRoom findByChatRoom(Long chatRoomId) {

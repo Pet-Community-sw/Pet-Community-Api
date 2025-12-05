@@ -1,6 +1,6 @@
 package com.example.petapp.domain.fcm;
 
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import org.springframework.stereotype.Service;
 
 @Service

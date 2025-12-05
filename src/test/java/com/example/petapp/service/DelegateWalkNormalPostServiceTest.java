@@ -8,7 +8,7 @@ import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.domain.member.MemberRepository;
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.memberchatRoom.MemberChatRoomService;
 import com.example.petapp.domain.memberchatRoom.model.dto.response.CreateMemberChatRoomResponseDto;
 import com.example.petapp.domain.post.delegate.DelegateWalkPostRepository;
@@ -492,7 +492,7 @@ DelegateWalkNormalPostServiceTest {
                 .build();
         CreateMemberChatRoomResponseDto chatRoomDto = new CreateMemberChatRoomResponseDto(1L);
         when(memberRepository.findByEmail(email)).thenReturn(Optional.of(member));
-        when(memberRepository.findById(applicantMemberId)).thenReturn(Optional.of(fakeMember));
+        when(memberRepository.find(applicantMemberId)).thenReturn(Optional.of(fakeMember));
         when(delegateWalkPostRepository.findById(delegateWalkPostId)).thenReturn(Optional.of(post));
         when(memberChatRoomService.createMemberChatRoom(member, fakeMember)).thenReturn(chatRoomDto);
         // when
@@ -510,7 +510,7 @@ DelegateWalkNormalPostServiceTest {
         //given
         Long applicantMemberId = 2L;
         when(memberRepository.findByEmail("test")).thenReturn(Optional.ofNullable(Member.builder().build()));
-        when(memberRepository.findById(applicantMemberId)).thenReturn(Optional.empty());
+        when(memberRepository.find(applicantMemberId)).thenReturn(Optional.empty());
         //when & then
         assertThatThrownBy(() -> delegateWalkPostServiceImpl.selectApplicant(anyLong(), applicantMemberId, "test"))
                 .isInstanceOf(NotFoundException.class)
@@ -529,7 +529,7 @@ DelegateWalkNormalPostServiceTest {
                 .email(email)
                 .build();
         when(memberRepository.findByEmail(email)).thenReturn(Optional.of(member));
-        when(memberRepository.findById(applicantMemberId)).thenReturn(Optional.of(Member.builder().build()));
+        when(memberRepository.find(applicantMemberId)).thenReturn(Optional.of(Member.builder().build()));
         when(delegateWalkPostRepository.findById(delegateWalkPostId)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> delegateWalkPostServiceImpl.selectApplicant(delegateWalkPostId, applicantMemberId, email))
                 .isInstanceOf(NotFoundException.class)
@@ -566,7 +566,7 @@ DelegateWalkNormalPostServiceTest {
                 )))
                 .build();
         when(memberRepository.findByEmail(email)).thenReturn(Optional.of(member));
-        when(memberRepository.findById(applicantMemberId)).thenReturn(Optional.of(applicantMember));
+        when(memberRepository.find(applicantMemberId)).thenReturn(Optional.of(applicantMember));
         when(delegateWalkPostRepository.findById(delegateWalkPostId)).thenReturn(Optional.of(delegateWalkPost));
         assertThatThrownBy(() -> delegateWalkPostServiceImpl.selectApplicant(delegateWalkPostId, applicantMemberId, email))
                 .isInstanceOf(ForbiddenException.class)
@@ -597,7 +597,7 @@ DelegateWalkNormalPostServiceTest {
                 .applicants(new HashSet<>())
                 .build();
         when(memberRepository.findByEmail(email)).thenReturn(Optional.of(member));
-        when(memberRepository.findById(applicantMemberId)).thenReturn(Optional.of(applicantMember));
+        when(memberRepository.find(applicantMemberId)).thenReturn(Optional.of(applicantMember));
         when(delegateWalkPostRepository.findById(delegateWalkPostId)).thenReturn(Optional.of(delegateWalkPost));
         assertThatThrownBy(() -> delegateWalkPostServiceImpl.selectApplicant(delegateWalkPostId, applicantMemberId, email))
                 .isInstanceOf(ConflictException.class)

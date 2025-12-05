@@ -1,11 +1,12 @@
 package com.example.petapp.domain.post.delegate;
 
+import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.common.base.embedded.Applicant;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.groupchatroom.ChatRoomService;
 import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.delegate.mapper.DelegateWalkPostMapper;
 import com.example.petapp.domain.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
 import com.example.petapp.domain.post.delegate.model.dto.request.GetDelegatePostResponseDto;
@@ -35,6 +36,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     private final DelegateWalkPostRepository delegateWalkPostRepository;
     private final WalkRecordService walkRecordService;
     private final QueryService queryService;
+    private final MemberQueryUseCase memberQueryUseCase;
     private final ChatRoomService chatRoomService;
 
     @Transactional
@@ -48,7 +50,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Transactional(readOnly = true)
     @Override
     public List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByLocation(Double minLongitude, Double minLatitude, Double maxLongitude, Double maxLatitude, int page, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         Pageable pageable = PageRequest.of(page - 1, 10);
         List<DelegateWalkPost> delegateWalkPosts = delegateWalkPostRepository.findByDelegateWalkPostByLocation(minLongitude - 0.01, minLatitude - 0.01, maxLongitude + 0.01, maxLatitude + 0.01, pageable).getContent();
         return DelegateWalkPostMapper.toGetDelegateWalkPostsResponseDtos(member, delegateWalkPosts);
@@ -57,7 +59,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Transactional(readOnly = true)
     @Override
     public List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByPlace(Double longitude, Double latitude, int page, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         Pageable pageable = PageRequest.of(page - 1, 10);
         List<DelegateWalkPost> delegateWalkPosts = delegateWalkPostRepository.findByDelegateWalkPostByPlace(longitude, latitude, pageable).getContent();
         return DelegateWalkPostMapper.toGetDelegateWalkPostsResponseDtos(member, delegateWalkPosts);
@@ -66,7 +68,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Transactional()
     @Override
     public GetDelegatePostResponseDto getDelegateWalkPost(Long delegateWalkPostId, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
         if (delegateWalkPost.filtering(member)) {
             throw new ForbiddenException("프로필 등록해주세요.");
@@ -78,8 +80,8 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Transactional
     @Override
     public CreateChatRoomResponseDto selectApplicant(Long delegateWalkPostId, Long memberId, String email) {
-        Member member = queryService.findByMember(email);
-        Member applicantMember = queryService.findByMember(memberId);
+        Member member = memberQueryUseCase.findOrThrow(email);
+        Member applicantMember = memberQueryUseCase.findOrThrow(memberId);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
         delegateWalkPost.validatedAndSelectApplicant(memberId, member);
         //켈린더에 넣는 로직필요.
@@ -98,7 +100,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Transactional
     @Override
     public void updateDelegateWalkPost(Long delegateWalkPostId, UpdateDelegateWalkPostDto updateDelegateWalkPostDto, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
         delegateWalkPost.validatedUser(member);
         delegateWalkPost.updateDelegateWalkPost(updateDelegateWalkPostDto);
@@ -107,7 +109,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Transactional
     @Override
     public void deleteDelegateWalkPost(Long delegateWalkPostId, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
         delegateWalkPost.validatedUser(member);
         delegateWalkPostRepository.deleteById(delegateWalkPostId);
@@ -124,7 +126,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Transactional
     @Override
     public ApplyToDelegateWalkPostResponseDto applyToDelegateWalkPost(Long delegateWalkPostId, String content, String email) {
-        Member member = queryService.findByMember(email);
+        Member member = memberQueryUseCase.findOrThrow(email);
         DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
         delegateWalkPost.apply(member, content);
         return new ApplyToDelegateWalkPostResponseDto(member.getId());

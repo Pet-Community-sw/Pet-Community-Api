@@ -3,7 +3,7 @@ package com.example.petapp.domain.walkrecord.model.entity;
 import com.example.petapp.common.base.superclass.BaseEntity;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.ForbiddenException;
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -21,39 +21,29 @@ import java.util.List;
 @SuperBuilder
 public class WalkRecord extends BaseEntity {
 
-    public enum WalkStatus {
-        READY, START, FINISH, CANCELED
-    }
-
     @Setter
     @NotNull
     @Column(nullable = false)
     private LocalDateTime startTime;
-
     @Setter
     @NotNull
     @Column(nullable = false)
     private LocalDateTime finishTime;
-
     @Setter
     @NotNull
     @Column(nullable = false)
     private Double walkDistance;
-
     @Setter
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private WalkStatus walkStatus = WalkStatus.READY;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "delegate_walk_post")
     private DelegateWalkPost delegateWalkPost;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-
     @Setter
     @Builder.Default
     @ElementCollection
@@ -96,5 +86,9 @@ public class WalkRecord extends BaseEntity {
         if (getWalkStatus() != WalkRecord.WalkStatus.START) {
             throw new ForbiddenException("start 권한 없음.");
         }
+    }
+
+    public enum WalkStatus {
+        READY, START, FINISH, CANCELED
     }
 }

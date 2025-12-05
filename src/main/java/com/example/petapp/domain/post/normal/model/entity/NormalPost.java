@@ -3,7 +3,7 @@ package com.example.petapp.domain.post.normal.model.entity;
 import com.example.petapp.common.base.embedded.Content;
 import com.example.petapp.domain.comment.model.entity.Comment;
 import com.example.petapp.domain.comment.model.entity.Commentable;
-import com.example.petapp.domain.member.model.entity.Member;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.common.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
