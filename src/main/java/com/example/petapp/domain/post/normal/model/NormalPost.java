@@ -1,10 +1,10 @@
-package com.example.petapp.domain.post.normal.model.entity;
+package com.example.petapp.domain.post.normal.model;
 
 import com.example.petapp.common.base.embedded.Content;
 import com.example.petapp.domain.comment.model.entity.Comment;
 import com.example.petapp.domain.comment.model.entity.Commentable;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.common.Post;
+import com.example.petapp.domain.post.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

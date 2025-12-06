@@ -1,6 +1,6 @@
 package com.example.petapp.domain.post.delegate;
 
-import com.example.petapp.domain.post.common.PostRepository;
+import com.example.petapp.domain.post.PostRepository;
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;

@@ -1,10 +1,10 @@
 package com.example.petapp.domain.like.mapper;
 
-import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.like.model.entity.Like;
-import com.example.petapp.domain.post.common.Post;
 import com.example.petapp.domain.like.model.dto.request.LikeListDto;
 import com.example.petapp.domain.like.model.dto.response.LikeResponseDto;
+import com.example.petapp.domain.like.model.entity.Like;
+import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.post.Post;
 
 import java.util.List;
 import java.util.stream.Collectors;

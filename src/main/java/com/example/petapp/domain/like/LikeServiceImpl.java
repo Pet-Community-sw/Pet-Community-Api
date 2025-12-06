@@ -7,7 +7,7 @@ import com.example.petapp.domain.like.model.dto.request.LikeCountDto;
 import com.example.petapp.domain.like.model.dto.response.LikeResponseDto;
 import com.example.petapp.domain.like.model.entity.Like;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.common.Post;
+import com.example.petapp.domain.post.Post;
 import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;

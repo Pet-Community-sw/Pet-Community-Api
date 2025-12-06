@@ -3,7 +3,7 @@ package com.example.petapp.domain.member.model;
 import com.example.petapp.common.base.superclass.BaseEntity;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.fcm.model.entity.FcmToken;
-import com.example.petapp.domain.post.common.Post;
+import com.example.petapp.domain.post.Post;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.token.model.entity.RefreshToken;
 import com.fasterxml.jackson.annotation.JsonIgnore;

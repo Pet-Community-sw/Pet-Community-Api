@@ -47,7 +47,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class
-DelegateWalkNormalPostServiceTest {
+DelegateWalkNormalPostUseCaseTest {
 
     @InjectMocks
     private DelegateWalkPostServiceImpl delegateWalkPostServiceImpl;

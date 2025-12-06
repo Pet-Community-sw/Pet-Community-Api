@@ -1,4 +1,4 @@
-package com.example.petapp.domain.post.normal.model.dto.response;
+package com.example.petapp.application.in.post.normal.dto.response;
 
 import lombok.*;
 

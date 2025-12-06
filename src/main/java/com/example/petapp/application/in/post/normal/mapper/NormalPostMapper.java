@@ -1,16 +1,16 @@
-package com.example.petapp.domain.post.normal.mapper;
+package com.example.petapp.application.in.post.normal.mapper;
 
+import com.example.petapp.application.in.post.normal.dto.request.PostDto;
+import com.example.petapp.application.in.post.normal.dto.response.GetPostResponseDto;
+import com.example.petapp.application.in.post.normal.dto.response.PostResponseDto;
 import com.example.petapp.common.base.embedded.Content;
 import com.example.petapp.common.base.util.TimeUtil;
 import com.example.petapp.domain.comment.mapper.CommentMapper;
 import com.example.petapp.domain.comment.model.dto.response.GetCommentsResponseDto;
 import com.example.petapp.domain.comment.model.entity.Commentable;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.common.Post;
-import com.example.petapp.domain.post.normal.model.dto.request.PostDto;
-import com.example.petapp.domain.post.normal.model.dto.response.GetPostResponseDto;
-import com.example.petapp.domain.post.normal.model.dto.response.PostResponseDto;
-import com.example.petapp.domain.post.normal.model.entity.NormalPost;
+import com.example.petapp.domain.post.Post;
+import com.example.petapp.domain.post.normal.model.NormalPost;
 
 import java.util.List;
 import java.util.Map;

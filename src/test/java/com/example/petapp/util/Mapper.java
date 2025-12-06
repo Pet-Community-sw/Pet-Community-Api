@@ -1,7 +1,7 @@
 package com.example.petapp.util;
 
+import com.example.petapp.application.in.post.normal.dto.request.PostDto;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.normal.model.dto.request.PostDto;
 
 public class Mapper {
     public static Member createFakeMember() {

@@ -3,7 +3,7 @@ package com.example.petapp.domain.post.recommend.model.entity;
 import com.example.petapp.common.base.embedded.Location;
 import com.example.petapp.domain.comment.model.entity.Comment;
 import com.example.petapp.domain.comment.model.entity.Commentable;
-import com.example.petapp.domain.post.common.Post;
+import com.example.petapp.domain.post.Post;
 import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

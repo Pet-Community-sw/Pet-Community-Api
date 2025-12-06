@@ -1,6 +1,6 @@
 package com.example.petapp.domain.post.recommend;
 
-import com.example.petapp.domain.post.common.PostRepository;
+import com.example.petapp.domain.post.PostRepository;
 import com.example.petapp.domain.post.recommend.model.entity.RecommendRoutePost;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

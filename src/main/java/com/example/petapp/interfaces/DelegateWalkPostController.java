@@ -1,9 +1,10 @@
-package com.example.petapp.domain.post.delegate;
+package com.example.petapp.interfaces;
 
 import com.example.petapp.common.base.dto.MessageResponse;
 import com.example.petapp.common.base.embedded.Applicant;
 import com.example.petapp.common.base.util.AuthUtil;
 import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
+import com.example.petapp.domain.post.delegate.DelegateWalkPostService;
 import com.example.petapp.domain.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
 import com.example.petapp.domain.post.delegate.model.dto.request.GetDelegatePostResponseDto;
 import com.example.petapp.domain.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;

@@ -1,17 +1,19 @@
-package com.example.petapp.domain.post.normal;
+package com.example.petapp.application.service.post.normal;
 
 import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.post.normal.NormalPostUseCase;
+import com.example.petapp.application.in.post.normal.dto.request.PostDto;
+import com.example.petapp.application.in.post.normal.dto.response.CreatePostResponseDto;
+import com.example.petapp.application.in.post.normal.dto.response.GetPostResponseDto;
+import com.example.petapp.application.in.post.normal.dto.response.PostResponseDto;
+import com.example.petapp.application.in.post.normal.mapper.NormalPostMapper;
 import com.example.petapp.common.base.util.imagefile.FileImageKind;
 import com.example.petapp.common.base.util.imagefile.FileUploadUtil;
 import com.example.petapp.domain.like.LikeRepository;
 import com.example.petapp.domain.like.LikeService;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.normal.mapper.NormalPostMapper;
-import com.example.petapp.domain.post.normal.model.dto.request.PostDto;
-import com.example.petapp.domain.post.normal.model.dto.response.CreatePostResponseDto;
-import com.example.petapp.domain.post.normal.model.dto.response.GetPostResponseDto;
-import com.example.petapp.domain.post.normal.model.dto.response.PostResponseDto;
-import com.example.petapp.domain.post.normal.model.entity.NormalPost;
+import com.example.petapp.domain.post.normal.NormalPostRepository;
+import com.example.petapp.domain.post.normal.model.NormalPost;
 import com.example.petapp.domain.query.QueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +27,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class NormalPostServiceImpl implements NormalPostService {
+public class NormalPostService implements NormalPostUseCase {
 
     private final NormalPostRepository normalPostRepository;
     private final LikeRepository likeRepository;

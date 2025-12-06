@@ -1,7 +1,8 @@
-package com.example.petapp.domain.post.recommend;
+package com.example.petapp.interfaces;
 
 import com.example.petapp.common.base.dto.MessageResponse;
 import com.example.petapp.common.base.util.AuthUtil;
+import com.example.petapp.domain.post.recommend.RecommendRoutePostService;
 import com.example.petapp.domain.post.recommend.model.dto.request.CreateRecommendRoutePostDto;
 import com.example.petapp.domain.post.recommend.model.dto.request.UpdateRecommendRoutePostDto;
 import com.example.petapp.domain.post.recommend.model.dto.response.CreateRecommendRoutePostResponseDto;

@@ -10,7 +10,7 @@ import com.example.petapp.domain.comment.model.dto.response.GetCommentsResponseD
 import com.example.petapp.domain.comment.model.entity.Comment;
 import com.example.petapp.domain.comment.model.entity.Commentable;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.common.Post;
+import com.example.petapp.domain.post.Post;
 import com.example.petapp.domain.query.QueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
