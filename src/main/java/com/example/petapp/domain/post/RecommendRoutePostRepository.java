@@ -1,15 +1,12 @@
-package com.example.petapp.domain.post.recommend;
+package com.example.petapp.domain.post;
 
-import com.example.petapp.domain.post.PostRepository;
-import com.example.petapp.domain.post.recommend.model.entity.RecommendRoutePost;
+import com.example.petapp.domain.post.model.RecommendRoutePost;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface RecommendRoutePostRepository extends PostRepository<RecommendRoutePost> {
+public interface RecommendRoutePostRepository {
 
     /*
      * JPA가 기본적으로 value 쿼리를 기반으로 COUNT 쿼리를 자동 생성하려고 시도함.
@@ -27,14 +24,14 @@ public interface RecommendRoutePostRepository extends PostRepository<RecommendRo
                     left join  post p on p.id = r.post_id
                     where st_distance_sphere(point(r.location_longitude, r.location_latitude), point(:longitude, :latitude)) <= 1000
                     """, nativeQuery = true)
-    Page<RecommendRoutePost> findByRecommendRoutePostByPlace(@Param("longitude") Double longitude,
-                                                             @Param("latitude") Double latitude,
-                                                             Pageable pageable);
+    Page<RecommendRoutePost> findList(@Param("longitude") Double longitude,
+                                      @Param("latitude") Double latitude,
+                                      Pageable pageable);
 
     @Query("select r from RecommendRoutePost r where r.location.locationLongitude between :minLongitude and :maxLongitude " +
             "and r.location.locationLatitude between :minLatitude and :maxLatitude " +
             "order by r.createdAt desc ")
-    Page<RecommendRoutePost> findByRecommendRoutePostByLocation(
+    Page<RecommendRoutePost> findList(
             @Param("minLongitude") Double minLongitude,
             @Param("minLatitude") Double minLatitude,
             @Param("maxLongitude") Double maxLongitude,

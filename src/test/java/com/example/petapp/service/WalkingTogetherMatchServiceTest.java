@@ -9,8 +9,8 @@ import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoom
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.petbreed.PetBreedRepository;
 import com.example.petapp.domain.petbreed.model.entity.PetBreed;
-import com.example.petapp.domain.post.recommend.RecommendRoutePostRepository;
-import com.example.petapp.domain.post.recommend.model.entity.RecommendRoutePost;
+import com.example.petapp.domain.post.RecommendRoutePostRepository;
+import com.example.petapp.domain.post.model.RecommendRoutePost;
 import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogethermatch.WalkingTogetherMatchRepository;

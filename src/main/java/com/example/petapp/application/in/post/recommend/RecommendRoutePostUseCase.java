@@ -1,16 +1,14 @@
-package com.example.petapp.domain.post.recommend;
+package com.example.petapp.application.in.post.recommend;
 
-import com.example.petapp.domain.post.recommend.model.dto.request.CreateRecommendRoutePostDto;
-import com.example.petapp.domain.post.recommend.model.dto.request.UpdateRecommendRoutePostDto;
-import com.example.petapp.domain.post.recommend.model.dto.response.CreateRecommendRoutePostResponseDto;
-import com.example.petapp.domain.post.recommend.model.dto.response.GetRecommendPostResponseDto;
-import com.example.petapp.domain.post.recommend.model.dto.response.GetRecommendRoutePostsResponseDto;
-import org.springframework.stereotype.Service;
+import com.example.petapp.application.in.post.recommend.dto.request.CreateRecommendRoutePostDto;
+import com.example.petapp.application.in.post.recommend.dto.request.UpdateRecommendRoutePostDto;
+import com.example.petapp.application.in.post.recommend.dto.response.CreateRecommendRoutePostResponseDto;
+import com.example.petapp.application.in.post.recommend.dto.response.GetRecommendPostResponseDto;
+import com.example.petapp.application.in.post.recommend.dto.response.GetRecommendRoutePostsResponseDto;
 
 import java.util.List;
 
-@Service
-public interface RecommendRoutePostService {
+public interface RecommendRoutePostUseCase {
     CreateRecommendRoutePostResponseDto createRecommendRoutePost(CreateRecommendRoutePostDto createRecommendRoutePostDto, String email);
 
     List<GetRecommendRoutePostsResponseDto> getRecommendRoutePosts(Double minLongitude, Double minLatitude, Double maxLongitude, Double maxLatitude, int page, String email);

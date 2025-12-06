@@ -1,13 +1,13 @@
 package com.example.petapp.interfaces;
 
+import com.example.petapp.application.in.post.recommend.RecommendRoutePostUseCase;
+import com.example.petapp.application.in.post.recommend.dto.request.CreateRecommendRoutePostDto;
+import com.example.petapp.application.in.post.recommend.dto.request.UpdateRecommendRoutePostDto;
+import com.example.petapp.application.in.post.recommend.dto.response.CreateRecommendRoutePostResponseDto;
+import com.example.petapp.application.in.post.recommend.dto.response.GetRecommendPostResponseDto;
+import com.example.petapp.application.in.post.recommend.dto.response.GetRecommendRoutePostsResponseDto;
 import com.example.petapp.common.base.dto.MessageResponse;
 import com.example.petapp.common.base.util.AuthUtil;
-import com.example.petapp.domain.post.recommend.RecommendRoutePostService;
-import com.example.petapp.domain.post.recommend.model.dto.request.CreateRecommendRoutePostDto;
-import com.example.petapp.domain.post.recommend.model.dto.request.UpdateRecommendRoutePostDto;
-import com.example.petapp.domain.post.recommend.model.dto.response.CreateRecommendRoutePostResponseDto;
-import com.example.petapp.domain.post.recommend.model.dto.response.GetRecommendPostResponseDto;
-import com.example.petapp.domain.post.recommend.model.dto.response.GetRecommendRoutePostsResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RecommendRoutePostController {
 
-    private final RecommendRoutePostService recommendRoutePostService;
+    private final RecommendRoutePostUseCase recommendRoutePostUseCase;
 
     @Operation(
             summary = "산책길 추천 게시글 생성"
@@ -32,7 +32,7 @@ public class RecommendRoutePostController {
     @PostMapping
     private CreateRecommendRoutePostResponseDto createRecommendRoutePost(@RequestBody @Valid CreateRecommendRoutePostDto createRecommendRoutePostDto,
                                                                          Authentication authentication) {
-        return recommendRoutePostService.createRecommendRoutePost(createRecommendRoutePostDto, AuthUtil.getEmail(authentication));
+        return recommendRoutePostUseCase.createRecommendRoutePost(createRecommendRoutePostDto, AuthUtil.getEmail(authentication));
     }
 
     @Operation(
@@ -45,7 +45,7 @@ public class RecommendRoutePostController {
                                                                            @RequestParam Double maxLatitude,
                                                                            @RequestParam(required = false, defaultValue = "1") int page,
                                                                            Authentication authentication) {
-        return recommendRoutePostService.getRecommendRoutePosts(minLongitude, minLatitude, maxLongitude, maxLatitude, page, AuthUtil.getEmail(authentication));
+        return recommendRoutePostUseCase.getRecommendRoutePosts(minLongitude, minLatitude, maxLongitude, maxLatitude, page, AuthUtil.getEmail(authentication));
     }
 
     @Operation(
@@ -56,7 +56,7 @@ public class RecommendRoutePostController {
                                                                            @RequestParam Double latitude,
                                                                            @RequestParam(required = false, defaultValue = "1") int page,
                                                                            Authentication authentication) {
-        return recommendRoutePostService.getRecommendRoutePosts(longitude, latitude, page, AuthUtil.getEmail(authentication));
+        return recommendRoutePostUseCase.getRecommendRoutePosts(longitude, latitude, page, AuthUtil.getEmail(authentication));
     }
 
     @Operation(
@@ -64,7 +64,7 @@ public class RecommendRoutePostController {
     )
     @GetMapping("/{recommendRoutePostId}")
     private GetRecommendPostResponseDto getRecommendRoutePost(@PathVariable Long recommendRoutePostId, Authentication authentication) {
-        return recommendRoutePostService.getRecommendRoutePost(recommendRoutePostId, AuthUtil.getEmail(authentication));
+        return recommendRoutePostUseCase.getRecommendRoutePost(recommendRoutePostId, AuthUtil.getEmail(authentication));
     }
 
     @Operation(
@@ -74,7 +74,7 @@ public class RecommendRoutePostController {
     private ResponseEntity<MessageResponse> updateRecommendRoutePost(@PathVariable Long recommendRoutePostId,
                                                                      @RequestBody @Valid UpdateRecommendRoutePostDto updateRecommendRoutePostDto,
                                                                      Authentication authentication) {
-        recommendRoutePostService.updateRecommendRoutePost(recommendRoutePostId, updateRecommendRoutePostDto, AuthUtil.getEmail(authentication));
+        recommendRoutePostUseCase.updateRecommendRoutePost(recommendRoutePostId, updateRecommendRoutePostDto, AuthUtil.getEmail(authentication));
         return ResponseEntity.ok(new MessageResponse("수정 되었습니다."));
     }
 
@@ -83,7 +83,7 @@ public class RecommendRoutePostController {
     )
     @DeleteMapping("/{recommendRoutePostId}")
     private ResponseEntity<MessageResponse> deleteRecommendRoutePost(@PathVariable Long recommendRoutePostId, Authentication authentication) {
-        recommendRoutePostService.deleteRecommendRoutePost(recommendRoutePostId, AuthUtil.getEmail(authentication));
+        recommendRoutePostUseCase.deleteRecommendRoutePost(recommendRoutePostId, AuthUtil.getEmail(authentication));
         return ResponseEntity.ok(new MessageResponse("삭제 되었습니다."));
     }
 }

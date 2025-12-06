@@ -1,17 +1,19 @@
-package com.example.petapp.domain.post.recommend.model.dto.response;
+package com.example.petapp.application.in.post.recommend.dto.response;
 
 import lombok.*;
+
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GetRecommendRoutePostsResponseDto {
-
+public class GetRecommendPostResponseDto {
     private Long recommendRoutePostId;
 
     private String title;
+
+    private String content;
 
     private Long memberId;
 
@@ -19,15 +21,11 @@ public class GetRecommendRoutePostsResponseDto {
 
     private String memberImageUrl;
 
+    private String createdAt;
+
     private Long likeCount;
 
     private Long viewCount;
-
-    private Double locationLongitude;
-
-    private Double locationLatitude;
-
-    private String createdAt;
 
     private boolean isOwner;
 

@@ -6,7 +6,7 @@ import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.domain.groupchatroom.ChatRoomService;
 import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.domain.petbreed.model.entity.PetBreed;
-import com.example.petapp.domain.post.recommend.model.entity.RecommendRoutePost;
+import com.example.petapp.domain.post.model.RecommendRoutePost;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.domain.walkingtogethermatch.mapper.WalkingTogetherMatchMapper;
