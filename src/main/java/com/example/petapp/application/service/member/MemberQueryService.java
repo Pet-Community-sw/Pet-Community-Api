@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class MemberQuery implements MemberQueryUseCase {
+public class MemberQueryService implements MemberQueryUseCase {
 
     private final MemberRepository repository;
 

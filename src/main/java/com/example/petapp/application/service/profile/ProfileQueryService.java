@@ -6,9 +6,11 @@ import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class ProfileQueryService implements ProfileQueryUseCase {
