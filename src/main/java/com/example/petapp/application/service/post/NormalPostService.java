@@ -1,6 +1,7 @@
-package com.example.petapp.application.service.post.normal;
+package com.example.petapp.application.service.post;
 
 import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.post.PostQueryUseCase;
 import com.example.petapp.application.in.post.normal.NormalPostUseCase;
 import com.example.petapp.application.in.post.normal.dto.request.PostDto;
 import com.example.petapp.application.in.post.normal.dto.response.CreatePostResponseDto;
@@ -12,9 +13,8 @@ import com.example.petapp.common.base.util.imagefile.FileUploadUtil;
 import com.example.petapp.domain.like.LikeRepository;
 import com.example.petapp.domain.like.LikeService;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.normal.NormalPostRepository;
-import com.example.petapp.domain.post.normal.model.NormalPost;
-import com.example.petapp.domain.query.QueryService;
+import com.example.petapp.domain.post.PostRepository;
+import com.example.petapp.domain.post.model.NormalPost;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -29,10 +29,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NormalPostService implements NormalPostUseCase {
 
-    private final NormalPostRepository normalPostRepository;
     private final LikeRepository likeRepository;
     private final LikeService likeService;
-    private final QueryService queryService;
+    private final PostQueryUseCase<NormalPost> postQueryUseCase;
+    private final PostRepository<NormalPost> postRepository;
     private final MemberQueryUseCase memberQueryUseCase;
 
     @Value("${spring.dog.post.image.upload}")
@@ -43,7 +43,7 @@ public class NormalPostService implements NormalPostUseCase {
     public List<PostResponseDto> getPosts(int page, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "id"));
-        List<NormalPost> normalPosts = normalPostRepository.findAll(pageRequest).getContent();
+        List<NormalPost> normalPosts = postQueryUseCase.findList(pageRequest).getContent();
         return NormalPostMapper.toPostListResponseDto(normalPosts, likeService.getLikeCountMap(normalPosts), member);
     }
 
@@ -52,7 +52,7 @@ public class NormalPostService implements NormalPostUseCase {
         memberQueryUseCase.findOrThrow(memberId);
         Member member = memberQueryUseCase.findOrThrow(email);
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "id"));
-        List<NormalPost> normalPosts = normalPostRepository.findAllByMemberId(memberId, pageRequest).getContent();
+        List<NormalPost> normalPosts = postQueryUseCase.findList(memberId, pageRequest).getContent();
         return NormalPostMapper.toPostListResponseDto(normalPosts, likeService.getLikeCountMap(normalPosts), member);
     }
 
@@ -60,8 +60,8 @@ public class NormalPostService implements NormalPostUseCase {
     @Override
     public GetPostResponseDto getPost(Long postId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        NormalPost normalPost = queryService.findByNormalPost(postId);
-        normalPostRepository.incrementViewCount(normalPost.getId());
+        NormalPost normalPost = postQueryUseCase.findOrThrow(postId);
+        postRepository.incrementViewCount(normalPost.getId());
         return NormalPostMapper.toGetPostResponseDto(normalPost, member, likeRepository.countByPost(normalPost), likeRepository.existsByPostAndMember(normalPost, member));
     }
 
@@ -71,7 +71,7 @@ public class NormalPostService implements NormalPostUseCase {
         Member member = memberQueryUseCase.findOrThrow(email);
         String imageFileName = FileUploadUtil.fileUpload(createPostDto.getPostImageFile(), postUploadDir, FileImageKind.POST);
         NormalPost normalPost = NormalPostMapper.toEntity(createPostDto, imageFileName, member);
-        NormalPost savedPost = normalPostRepository.save(normalPost);
+        NormalPost savedPost = postRepository.save(normalPost);
         return new CreatePostResponseDto(savedPost.getId());
     }
 
@@ -79,16 +79,16 @@ public class NormalPostService implements NormalPostUseCase {
     @Override
     public void deletePost(Long postId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        NormalPost normalPost = queryService.findByNormalPost(postId);
+        NormalPost normalPost = postQueryUseCase.findOrThrow(postId);
         normalPost.validateMember(member);
-        normalPostRepository.deleteById(postId);
+        postRepository.delete(postId);
     }
 
     @Transactional
     @Override
     public void updatePost(Long postId, PostDto updatePostDto, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        NormalPost normalPost = queryService.findByNormalPost(postId);
+        NormalPost normalPost = postQueryUseCase.findOrThrow(postId);
         normalPost.validateMember(member);
         normalPost.updateNormalPost(FileUploadUtil.fileUpload(updatePostDto.getPostImageFile(), postUploadDir, FileImageKind.POST), updatePostDto.getTitle(), updatePostDto.getContent());
     }

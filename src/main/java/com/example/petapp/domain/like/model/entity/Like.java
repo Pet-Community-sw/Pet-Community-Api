@@ -2,7 +2,7 @@ package com.example.petapp.domain.like.model.entity;
 
 import com.example.petapp.common.base.superclass.BaseEntity;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.Post;
+import com.example.petapp.domain.post.model.Post;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

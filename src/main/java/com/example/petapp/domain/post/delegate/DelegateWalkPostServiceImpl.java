@@ -1,6 +1,7 @@
 package com.example.petapp.domain.post.delegate;
 
 import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.post.PostQueryUseCase;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.common.base.embedded.Applicant;
@@ -8,6 +9,7 @@ import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.groupchatroom.ChatRoomService;
 import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.post.PostRepository;
 import com.example.petapp.domain.post.delegate.mapper.DelegateWalkPostMapper;
 import com.example.petapp.domain.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
 import com.example.petapp.domain.post.delegate.model.dto.request.GetDelegatePostResponseDto;
@@ -17,7 +19,6 @@ import com.example.petapp.domain.post.delegate.model.dto.response.CreateDelegate
 import com.example.petapp.domain.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.domain.walkrecord.WalkRecordService;
 import com.example.petapp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -36,10 +37,11 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
 
     private final DelegateWalkPostRepository delegateWalkPostRepository;
     private final WalkRecordService walkRecordService;
-    private final QueryService queryService;
     private final ProfileQueryUseCase profileQueryUseCase;
     private final MemberQueryUseCase memberQueryUseCase;
     private final ChatRoomService chatRoomService;
+    private final PostQueryUseCase<DelegateWalkPost> postQueryUseCase;
+    private final PostRepository<DelegateWalkPost> postRepository;
 
     @Transactional
     @Override
@@ -71,7 +73,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Override
     public GetDelegatePostResponseDto getDelegateWalkPost(Long delegateWalkPostId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
+        DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
         if (delegateWalkPost.filtering(member)) {
             throw new ForbiddenException("프로필 등록해주세요.");
         }
@@ -84,7 +86,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     public CreateChatRoomResponseDto selectApplicant(Long delegateWalkPostId, Long memberId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
         Member applicantMember = memberQueryUseCase.findOrThrow(memberId);
-        DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
+        DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
         delegateWalkPost.validatedAndSelectApplicant(memberId, member);
         //켈린더에 넣는 로직필요.
         return chatRoomService.createChatRoom(member, applicantMember);
@@ -93,7 +95,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Transactional//산책 허가.
     @Override
     public CreateWalkRecordResponseDto grantAuthorize(Long delegateWalkPostId, Long profileId) {
-        DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
+        DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
         delegateWalkPost.validatedUser(profileId);
         delegateWalkPost.grantAuthorize();//산책 start 허가.
         return walkRecordService.createWalkRecord(delegateWalkPost);
@@ -103,7 +105,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Override
     public void updateDelegateWalkPost(Long delegateWalkPostId, UpdateDelegateWalkPostDto updateDelegateWalkPostDto, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
+        DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
         delegateWalkPost.validatedUser(member);
         delegateWalkPost.updateDelegateWalkPost(updateDelegateWalkPostDto);
     }
@@ -112,15 +114,15 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Override
     public void deleteDelegateWalkPost(Long delegateWalkPostId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
+        DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
         delegateWalkPost.validatedUser(member);
-        delegateWalkPostRepository.deleteById(delegateWalkPostId);
+        postRepository.delete(delegateWalkPostId);
     }
 
     @Transactional(readOnly = true)
     @Override
     public Set<Applicant> getApplicants(Long delegateWalkPostId, Long profileId) {
-        DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
+        DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
         return delegateWalkPost.validatedAndGetApplicants(profileId);
     }
 
@@ -129,7 +131,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Override
     public ApplyToDelegateWalkPostResponseDto applyToDelegateWalkPost(Long delegateWalkPostId, String content, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        DelegateWalkPost delegateWalkPost = queryService.findByDelegateWalkPost(delegateWalkPostId);
+        DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
         delegateWalkPost.apply(member, content);
         return new ApplyToDelegateWalkPostResponseDto(member.getId());
     }

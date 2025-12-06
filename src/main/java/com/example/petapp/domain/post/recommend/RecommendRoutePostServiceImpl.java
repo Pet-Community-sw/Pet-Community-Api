@@ -1,9 +1,11 @@
 package com.example.petapp.domain.post.recommend;
 
 import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.post.PostQueryUseCase;
 import com.example.petapp.domain.like.LikeRepository;
 import com.example.petapp.domain.like.LikeService;
 import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.post.PostRepository;
 import com.example.petapp.domain.post.recommend.mapper.RecommendRoutePostMapper;
 import com.example.petapp.domain.post.recommend.model.dto.request.CreateRecommendRoutePostDto;
 import com.example.petapp.domain.post.recommend.model.dto.request.UpdateRecommendRoutePostDto;
@@ -11,7 +13,6 @@ import com.example.petapp.domain.post.recommend.model.dto.response.CreateRecomme
 import com.example.petapp.domain.post.recommend.model.dto.response.GetRecommendPostResponseDto;
 import com.example.petapp.domain.post.recommend.model.dto.response.GetRecommendRoutePostsResponseDto;
 import com.example.petapp.domain.post.recommend.model.entity.RecommendRoutePost;
-import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -29,9 +30,10 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
     private final RecommendRoutePostRepository recommendRoutePostRepository;
     private final LikeRepository likeRepository;
     private final LikeService likeService;
-    private final QueryService queryService;
     private final MemberQueryUseCase memberQueryUseCase;
     private final InMemoryService inMemoryService;
+    private final PostQueryUseCase<RecommendRoutePost> postQueryUseCase;
+    private final PostRepository<RecommendRoutePost> postRepository;
 
     @Transactional
     @Override
@@ -68,7 +70,7 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
     @Override
     public GetRecommendPostResponseDto getRecommendRoutePost(Long recommendRoutePostId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(recommendRoutePostId);
+        RecommendRoutePost recommendRoutePost = postQueryUseCase.findOrThrow(recommendRoutePostId);
         recommendRoutePostRepository.incrementViewCount(recommendRoutePostId);
         return RecommendRoutePostMapper.toGetRecommendPostResponseDto(member, recommendRoutePost, likeRepository.countByPost(recommendRoutePost), likeRepository.existsByPostAndMember(recommendRoutePost, member));
     }
@@ -77,7 +79,7 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
     @Override
     public void updateRecommendRoutePost(Long recommendRoutePostId, UpdateRecommendRoutePostDto updateRecommendRoutePostDto, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(recommendRoutePostId);
+        RecommendRoutePost recommendRoutePost = postQueryUseCase.findOrThrow(recommendRoutePostId);
         recommendRoutePost.validateMember(member);
         recommendRoutePost.updateContent(updateRecommendRoutePostDto.getTitle(), updateRecommendRoutePostDto.getContent());
     }
@@ -86,8 +88,8 @@ public class RecommendRoutePostServiceImpl implements RecommendRoutePostService 
     @Override
     public void deleteRecommendRoutePost(Long recommendRoutePostId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(recommendRoutePostId);
+        RecommendRoutePost recommendRoutePost = postQueryUseCase.findOrThrow(recommendRoutePostId);
         recommendRoutePost.validateMember(member);
-        recommendRoutePostRepository.deleteById(recommendRoutePostId);
+        postRepository.delete(recommendRoutePostId);
     }
 }

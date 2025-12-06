@@ -3,7 +3,7 @@ package com.example.petapp.domain.comment.model.entity;
 import com.example.petapp.common.base.superclass.BaseEntity;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.Post;
+import com.example.petapp.domain.post.model.Post;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

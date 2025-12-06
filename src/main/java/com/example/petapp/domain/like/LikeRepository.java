@@ -3,7 +3,7 @@ package com.example.petapp.domain.like;
 import com.example.petapp.domain.like.model.dto.request.LikeCountDto;
 import com.example.petapp.domain.like.model.entity.Like;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.Post;
+import com.example.petapp.domain.post.model.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

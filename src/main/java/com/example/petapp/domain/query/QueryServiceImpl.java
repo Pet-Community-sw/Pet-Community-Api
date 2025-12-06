@@ -7,14 +7,6 @@ import com.example.petapp.domain.groupchatroom.ChatRoomRepository;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.petapp.domain.petbreed.PetBreedRepository;
 import com.example.petapp.domain.petbreed.model.entity.PetBreed;
-import com.example.petapp.domain.post.Post;
-import com.example.petapp.domain.post.PostRepository;
-import com.example.petapp.domain.post.delegate.DelegateWalkPostRepository;
-import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
-import com.example.petapp.domain.post.normal.NormalPostRepository;
-import com.example.petapp.domain.post.normal.model.NormalPost;
-import com.example.petapp.domain.post.recommend.RecommendRoutePostRepository;
-import com.example.petapp.domain.post.recommend.model.entity.RecommendRoutePost;
 import com.example.petapp.domain.review.ReviewRepository;
 import com.example.petapp.domain.review.model.entity.Review;
 import com.example.petapp.domain.walkingtogethermatch.WalkingTogetherMatchRepository;
@@ -30,11 +22,7 @@ public class QueryServiceImpl implements QueryService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final CommentRepository commentRepository;
-    private final DelegateWalkPostRepository delegateWalkPostRepository;
-    private final NormalPostRepository normalPostRepository;
     private final PetBreedRepository petBreedRepository;
-    private final PostRepository<Post> postRepository;
-    private final RecommendRoutePostRepository recommendRoutePostRepository;
     private final ReviewRepository reviewRepository;
     private final WalkingTogetherMatchRepository walkingTogetherMatchRepository;
     private final WalkRecordRepository walkRecordRepository;
@@ -50,16 +38,6 @@ public class QueryServiceImpl implements QueryService {
     }
 
     @Override
-    public DelegateWalkPost findByDelegateWalkPost(Long postId) {
-        return delegateWalkPostRepository.findById(postId).orElseThrow(() -> new NotFoundException("해당 대리산책자 게시글은 없습니다."));
-    }
-
-    @Override
-    public NormalPost findByNormalPost(Long postId) {
-        return normalPostRepository.findById(postId).orElseThrow(() -> new NotFoundException("해당 자유 게시물은 없습니다."));
-    }
-
-    @Override
     public PetBreed findByPetBreed(String petBreed) {
         return petBreedRepository.findByName(petBreed).orElseThrow(() -> new NotFoundException("종을 다시 입력해주세요."));
     }
@@ -67,16 +45,6 @@ public class QueryServiceImpl implements QueryService {
     @Override
     public PetBreed findByPetBreed(Long petBreedId) {
         return petBreedRepository.findById(petBreedId).orElseThrow(() -> new NotFoundException("종을 다시 입력해주세요."));
-    }
-
-    @Override
-    public Post findByPost(Long postId) {
-        return postRepository.findById(postId).orElseThrow(() -> new NotFoundException("해당 게시물은 없습니다."));
-    }
-
-    @Override
-    public RecommendRoutePost findByRecommendRoutePost(Long recommendRoutePostId) {
-        return recommendRoutePostRepository.findById(recommendRoutePostId).orElseThrow(() -> new NotFoundException("해당 산책길 추천 게시글은 없습니다."));
     }
 
     @Override

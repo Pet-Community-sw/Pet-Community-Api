@@ -1,6 +1,7 @@
 package com.example.petapp.domain.comment;
 
 import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.post.PostQueryUseCase;
 import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.domain.comment.mapper.CommentMapper;
 import com.example.petapp.domain.comment.model.dto.request.CommentDto;
@@ -10,7 +11,7 @@ import com.example.petapp.domain.comment.model.dto.response.GetCommentsResponseD
 import com.example.petapp.domain.comment.model.entity.Comment;
 import com.example.petapp.domain.comment.model.entity.Commentable;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.Post;
+import com.example.petapp.domain.post.model.Post;
 import com.example.petapp.domain.query.QueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,12 +26,13 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final QueryService queryService;
     private final MemberQueryUseCase memberQueryUseCase;
+    private final PostQueryUseCase<Post> postQueryUseCase;
 
     @Transactional(readOnly = true)
     @Override
     public List<GetCommentsResponseDto> getComments(Long postId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        Post post = queryService.findByPost(postId);
+        Post post = postQueryUseCase.findOrThrow(postId);
 
         return CommentMapper.toGetCommentsResponseDtos((Commentable) post, member);
     }
@@ -40,7 +42,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CreateCommentResponseDto createComment(CommentDto commentDto, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        Post post = queryService.findByPost(commentDto.getPostId());
+        Post post = postQueryUseCase.findOrThrow(commentDto.getPostId());
 
         Comment comment = CommentMapper.toEntity(commentDto, post, member);
         commentRepository.save(comment);

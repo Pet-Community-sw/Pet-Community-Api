@@ -9,8 +9,8 @@ import com.example.petapp.domain.comment.mapper.CommentMapper;
 import com.example.petapp.domain.comment.model.dto.response.GetCommentsResponseDto;
 import com.example.petapp.domain.comment.model.entity.Commentable;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.Post;
-import com.example.petapp.domain.post.normal.model.NormalPost;
+import com.example.petapp.domain.post.model.NormalPost;
+import com.example.petapp.domain.post.model.Post;
 
 import java.util.List;
 import java.util.Map;

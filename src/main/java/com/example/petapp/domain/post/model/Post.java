@@ -1,4 +1,4 @@
-package com.example.petapp.domain.post;
+package com.example.petapp.domain.post.model;
 
 import com.example.petapp.common.base.embedded.Content;
 import com.example.petapp.common.base.superclass.BaseEntity;

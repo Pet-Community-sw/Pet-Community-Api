@@ -1,14 +1,14 @@
 package com.example.petapp.domain.like;
 
 import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.post.PostQueryUseCase;
 import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.domain.like.mapper.LikeMapper;
 import com.example.petapp.domain.like.model.dto.request.LikeCountDto;
 import com.example.petapp.domain.like.model.dto.response.LikeResponseDto;
 import com.example.petapp.domain.like.model.entity.Like;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.Post;
-import com.example.petapp.domain.query.QueryService;
+import com.example.petapp.domain.post.model.Post;
 import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,15 +27,15 @@ import java.util.stream.Collectors;
 public class LikeServiceImpl implements LikeService {
 
     private final LikeRepository likeRepository;
-    private final QueryService queryService;
     private final MemberQueryUseCase memberQueryUseCase;
     private final InMemoryService inMemoryService;
+    private final PostQueryUseCase<Post> postQueryUseCase;
 
 
     @Transactional(readOnly = true)
     @Override
     public LikeResponseDto getLikes(Long postId) {
-        return LikeMapper.toLikeResponseDto(queryService.findByPost(postId).getLikes());
+        return LikeMapper.toLikeResponseDto(postQueryUseCase.findOrThrow(postId).getLikes());
     }
 
     @Transactional(readOnly = true)
@@ -55,7 +55,7 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public boolean createAndDeleteLike(Long postId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        Post post = queryService.findByPost(postId);
+        Post post = postQueryUseCase.findOrThrow(postId);
         Optional<Like> existingLike = post.getLikes().stream().filter(like -> like.getMember().equals(member)).findFirst();
         return existingLike.map(like -> deleteLike(like, post)).orElseGet(() -> createLike(post, member));
     }

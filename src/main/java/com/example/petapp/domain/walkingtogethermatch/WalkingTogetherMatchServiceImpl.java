@@ -1,6 +1,7 @@
 package com.example.petapp.domain.walkingtogethermatch;
 
 
+import com.example.petapp.application.in.post.PostQueryUseCase;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.domain.groupchatroom.ChatRoomService;
 import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
@@ -28,6 +29,7 @@ public class WalkingTogetherMatchServiceImpl implements WalkingTogetherMatchServ
     private final WalkingTogetherMatchRepository walkingTogetherMatchRepository;
     private final QueryService queryService;
     private final ProfileQueryUseCase profileQueryUseCase;
+    private final PostQueryUseCase<RecommendRoutePost> postQueryUseCase;
 
     @Transactional(readOnly = true)
     @Override//피해야하는종을 여기서 필터링 하면될듯 피해야하는종에 자신의 종이 포함되어있으면 true를 반환
@@ -44,7 +46,7 @@ public class WalkingTogetherMatchServiceImpl implements WalkingTogetherMatchServ
     @Override
     public List<GetWalkingTogetherMatchResponseDto> getWalkingTogetherPosts(Long recommendRoutePostId, Long profileId) {
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
-        RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(recommendRoutePostId);
+        RecommendRoutePost recommendRoutePost = postQueryUseCase.findOrThrow(recommendRoutePostId);
         PetBreed petBreed = queryService.findByPetBreed(profile.getPetBreed().getName());
         List<WalkingTogetherMatch> walkingTogetherMatches = walkingTogetherMatchRepository.findAllByRecommendRoutePost(recommendRoutePost);
         return WalkingTogetherMatchMapper.toGetWalkingTogetherPostResponseDtos(walkingTogetherMatches, petBreed);
@@ -54,7 +56,7 @@ public class WalkingTogetherMatchServiceImpl implements WalkingTogetherMatchServ
     @Override
     public CreateWalkingTogetherMatchResponseDto createWalkingTogetherPost(CreateWalkingTogetherMatchDto createWalkingTogetherMatchDto, Long profileId) {
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
-        RecommendRoutePost recommendRoutePost = queryService.findByRecommendRoutePost(createWalkingTogetherMatchDto.getRecommendRoutePostId());
+        RecommendRoutePost recommendRoutePost = postQueryUseCase.findOrThrow(createWalkingTogetherMatchDto.getRecommendRoutePostId());
         WalkingTogetherMatch walkingTogetherMatch = WalkingTogetherMatchMapper.toEntity(profile, recommendRoutePost, createWalkingTogetherMatchDto);
         walkingTogetherMatch.matchingStart(profileId, profile);
         WalkingTogetherMatch savedWalkingTogetherMatch = walkingTogetherMatchRepository.save(walkingTogetherMatch);

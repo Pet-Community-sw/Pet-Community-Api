@@ -1,7 +1,7 @@
 package com.example.petapp.domain.like;
 
 import com.example.petapp.domain.like.model.dto.response.LikeResponseDto;
-import com.example.petapp.domain.post.Post;
+import com.example.petapp.domain.post.model.Post;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
