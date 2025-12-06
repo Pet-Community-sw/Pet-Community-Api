@@ -8,7 +8,7 @@ import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.common.Post;
 import com.example.petapp.domain.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.model.Profile;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

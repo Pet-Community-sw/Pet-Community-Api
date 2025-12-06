@@ -8,7 +8,7 @@ import com.example.petapp.domain.post.delegate.model.dto.request.CreateDelegateW
 import com.example.petapp.domain.post.delegate.model.dto.request.GetDelegatePostResponseDto;
 import com.example.petapp.domain.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.model.Profile;
 
 import java.util.List;
 import java.util.stream.Collectors;

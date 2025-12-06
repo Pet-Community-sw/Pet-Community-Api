@@ -1,12 +1,10 @@
 package com.example.petapp.domain.query;
 
-import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.domain.comment.CommentRepository;
 import com.example.petapp.domain.comment.model.entity.Comment;
 import com.example.petapp.domain.groupchatroom.ChatRoomRepository;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
-import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.petbreed.PetBreedRepository;
 import com.example.petapp.domain.petbreed.model.entity.PetBreed;
 import com.example.petapp.domain.post.common.Post;
@@ -17,8 +15,6 @@ import com.example.petapp.domain.post.normal.NormalPostRepository;
 import com.example.petapp.domain.post.normal.model.entity.NormalPost;
 import com.example.petapp.domain.post.recommend.RecommendRoutePostRepository;
 import com.example.petapp.domain.post.recommend.model.entity.RecommendRoutePost;
-import com.example.petapp.domain.profile.ProfileRepository;
-import com.example.petapp.domain.profile.model.entity.Profile;
 import com.example.petapp.domain.review.ReviewRepository;
 import com.example.petapp.domain.review.model.entity.Review;
 import com.example.petapp.domain.walkingtogethermatch.WalkingTogetherMatchRepository;
@@ -32,14 +28,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class QueryServiceImpl implements QueryService {
 
-    private final MemberRepository memberRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final CommentRepository commentRepository;
     private final DelegateWalkPostRepository delegateWalkPostRepository;
     private final NormalPostRepository normalPostRepository;
     private final PetBreedRepository petBreedRepository;
     private final PostRepository<Post> postRepository;
-    private final ProfileRepository profileRepository;
     private final RecommendRoutePostRepository recommendRoutePostRepository;
     private final ReviewRepository reviewRepository;
     private final WalkingTogetherMatchRepository walkingTogetherMatchRepository;
@@ -78,11 +72,6 @@ public class QueryServiceImpl implements QueryService {
     @Override
     public Post findByPost(Long postId) {
         return postRepository.findById(postId).orElseThrow(() -> new NotFoundException("해당 게시물은 없습니다."));
-    }
-
-    @Override
-    public Profile findByProfile(Long profileId) {
-        return profileRepository.findById(profileId).orElseThrow(() -> new ForbiddenException("프로필을 등록해주세요."));
     }
 
     @Override

@@ -1,13 +1,13 @@
-package com.example.petapp.domain.profile.mapper;
+package com.example.petapp.application.in.profile.mapper;
 
+import com.example.petapp.application.in.profile.dto.request.ProfileDto;
+import com.example.petapp.application.in.profile.dto.response.AccessTokenByProfileIdResponseDto;
+import com.example.petapp.application.in.profile.dto.response.GetProfileResponseDto;
+import com.example.petapp.application.in.profile.dto.response.ProfileListResponseDto;
+import com.example.petapp.common.base.util.AgeUtil;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.petbreed.model.entity.PetBreed;
-import com.example.petapp.domain.profile.model.entity.Profile;
-import com.example.petapp.domain.profile.model.dto.response.AccessTokenByProfileIdResponseDto;
-import com.example.petapp.domain.profile.model.dto.response.GetProfileResponseDto;
-import com.example.petapp.domain.profile.model.dto.request.ProfileDto;
-import com.example.petapp.domain.profile.model.dto.response.ProfileListResponseDto;
-import com.example.petapp.common.base.util.AgeUtil;
+import com.example.petapp.domain.profile.model.Profile;
 
 import java.time.LocalDate;
 import java.time.MonthDay;

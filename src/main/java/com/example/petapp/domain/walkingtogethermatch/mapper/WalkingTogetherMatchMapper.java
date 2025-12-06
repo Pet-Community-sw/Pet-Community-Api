@@ -3,7 +3,7 @@ package com.example.petapp.domain.walkingtogethermatch.mapper;
 import com.example.petapp.common.base.util.TimeUtil;
 import com.example.petapp.domain.petbreed.model.entity.PetBreed;
 import com.example.petapp.domain.post.recommend.model.entity.RecommendRoutePost;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogethermatch.model.dto.request.CreateWalkingTogetherMatchDto;
 import com.example.petapp.domain.walkingtogethermatch.model.dto.response.GetWalkingTogetherMatchResponseDto;
 import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;

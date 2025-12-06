@@ -6,7 +6,7 @@ import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.delegate.DelegateWalkPostRepository;
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.petapp.domain.profile.ProfileRepository;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.schedule.ScheduleServiceImpl;
 import com.example.petapp.domain.schedule.model.dto.response.GetSchedulesResponseDto;
 import com.example.petapp.domain.schedule.model.dto.response.ScheduleType;

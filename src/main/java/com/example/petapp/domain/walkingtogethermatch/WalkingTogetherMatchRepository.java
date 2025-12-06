@@ -1,7 +1,7 @@
 package com.example.petapp.domain.walkingtogethermatch;
 
-import com.example.petapp.domain.profile.model.entity.Profile;
 import com.example.petapp.domain.post.recommend.model.entity.RecommendRoutePost;
+import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

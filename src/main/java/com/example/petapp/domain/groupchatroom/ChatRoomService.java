@@ -5,7 +5,7 @@ import com.example.petapp.domain.groupchatroom.model.dto.response.ChatMessageRes
 import com.example.petapp.domain.groupchatroom.model.dto.response.ChatRoomResponseDto;
 import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import org.springframework.stereotype.Service;
 

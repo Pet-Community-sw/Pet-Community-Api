@@ -1,11 +1,12 @@
 package com.example.petapp.domain.schedule;
 
+import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.delegate.DelegateWalkPostRepository;
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.petapp.domain.profile.ProfileRepository;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.schedule.mapper.ScheduleMapper;
 import com.example.petapp.domain.schedule.model.dto.request.TimeDto;
 import com.example.petapp.domain.schedule.model.dto.response.GetSchedulesResponseDto;
@@ -28,6 +29,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService {
 
+    private final ProfileQueryUseCase profileQueryUseCase;
     private final ProfileRepository profileRepository;
     private final MemberRepository memberRepository;
     private final WalkingTogetherMatchRepository walkingTogetherMatchRepository;
@@ -46,7 +48,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         List<GetSchedulesResponseDto> getSchedulesResponseDtos = new ArrayList<>();
         TimeDto timeDto = getTime(start, end);
-        Optional<Profile> profile = profileRepository.findById(profileId);
+        Optional<Profile> profile = profileQueryUseCase.find(profileId);
 
         if (profile.isPresent()) {
             List<WalkingTogetherMatch> walkingTogetherMatchList =

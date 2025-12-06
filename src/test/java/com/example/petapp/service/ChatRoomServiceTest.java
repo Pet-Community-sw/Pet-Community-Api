@@ -13,7 +13,7 @@ import com.example.petapp.domain.groupchatroom.model.dto.response.ChatRoomRespon
 import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.petapp.domain.profile.ProfileRepository;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

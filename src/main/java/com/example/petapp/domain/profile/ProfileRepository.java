@@ -1,17 +1,20 @@
 package com.example.petapp.domain.profile;
 
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.profile.model.entity.Profile;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.example.petapp.domain.profile.model.Profile;
 
 import java.util.List;
+import java.util.Optional;
 
-@Repository
-public interface ProfileRepository extends JpaRepository<Profile, Long> {
+public interface ProfileRepository {
 
-    List<Profile> findByMember(Member member);
+    List<Profile> findList(Member member);
 
-    Long countByMember(Member member);
+    Long count(Member member);
 
+    Optional<Profile> find(Long id);
+
+    Profile save(Profile profile);
+
+    void delete(Profile profile);
 }

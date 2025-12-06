@@ -1,6 +1,7 @@
 package com.example.petapp.domain.chatting;
 
 import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.domain.chatting.mapper.ChatMessageMapper;
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.chatting.model.dto.ChatMessageDto;
@@ -10,7 +11,7 @@ import com.example.petapp.domain.chatting.offline.OfflineUserService;
 import com.example.petapp.domain.chatting.strategy.MessageTypeStrategy;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.query.QueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import java.util.Map;
 @Slf4j
 public class ChattingServiceImpl implements ChattingService {
 
+    private final ProfileQueryUseCase profileQueryUseCase;
     private final Map<CommandType, MessageTypeStrategy> messageTypeMap;
     private final QueryService queryService;
     private final MemberQueryUseCase memberQueryUseCase;
@@ -49,7 +51,7 @@ public class ChattingServiceImpl implements ChattingService {
         UserInfo userInfo = null;
         switch (chatRoom.getChatRoomType()) {
             case MANY -> {
-                Profile profile = queryService.findByProfile(senderId);
+                Profile profile = profileQueryUseCase.findOrThrow(senderId);
                 userInfo = new UserInfo(profile.getPetName(), profile.getPetImageUrl());
             }
             case ONE -> {

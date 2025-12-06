@@ -1,0 +1,27 @@
+package com.example.petapp.application.service.profile;
+
+import com.example.petapp.application.in.profile.ProfileQueryUseCase;
+import com.example.petapp.common.exception.ForbiddenException;
+import com.example.petapp.domain.profile.ProfileRepository;
+import com.example.petapp.domain.profile.model.Profile;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class ProfileQueryService implements ProfileQueryUseCase {
+
+    private final ProfileRepository repository;
+
+    @Override
+    public Profile findOrThrow(Long id) {
+        return repository.find(id).orElseThrow(() -> new ForbiddenException("프로필을 등록해주세요."));
+    }
+
+    @Override
+    public Optional<Profile> find(Long id) {
+        return repository.find(id);
+    }
+}

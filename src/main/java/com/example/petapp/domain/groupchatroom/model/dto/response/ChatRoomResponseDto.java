@@ -1,6 +1,6 @@
 package com.example.petapp.domain.groupchatroom.model.dto.response;
 
-import com.example.petapp.domain.profile.model.dto.response.ChatRoomUsersResponseDto;
+import com.example.petapp.application.in.profile.dto.response.ChatRoomUsersResponseDto;
 import lombok.*;
 
 import java.time.LocalDateTime;

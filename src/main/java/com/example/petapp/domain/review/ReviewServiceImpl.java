@@ -1,8 +1,9 @@
 package com.example.petapp.domain.review;
 
 import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.domain.review.mapper.ReviewMapper;
 import com.example.petapp.domain.review.model.dto.request.CreateReviewDto;
@@ -24,6 +25,7 @@ import static com.example.petapp.domain.review.model.entity.Review.ReviewType;
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
 
+    private final ProfileQueryUseCase profileQueryUseCase;
     private final ReviewRepository reviewRepository;
     private final QueryService queryService;
     private final MemberQueryUseCase memberQueryUseCase;
@@ -52,7 +54,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public GetReviewListResponseDto getReviewListByProfile(Long profileId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        Profile profile = queryService.findByProfile(profileId);
+        Profile profile = profileQueryUseCase.findOrThrow(profileId);
         List<Review> reviewList = reviewRepository.findAllByProfileAndReviewType(profile, ReviewType.MEMBER_TO_PROFILE);
         return ReviewMapper.toGetReviewListResponseDto(reviewList, profile.getId(), profile.getPetName(), profile.getPetImageUrl(), ReviewMapper.toGetReviewList(reviewList, member));
     }

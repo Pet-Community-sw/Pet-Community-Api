@@ -1,4 +1,4 @@
-package com.example.petapp.domain.profile.model.dto.response;
+package com.example.petapp.application.in.profile.dto.response;
 
 import com.example.petapp.domain.petbreed.model.entity.PetBreed;
 import lombok.*;

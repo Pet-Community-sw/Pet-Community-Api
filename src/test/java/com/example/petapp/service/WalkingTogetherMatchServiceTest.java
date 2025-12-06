@@ -12,7 +12,7 @@ import com.example.petapp.domain.petbreed.model.entity.PetBreed;
 import com.example.petapp.domain.post.recommend.RecommendRoutePostRepository;
 import com.example.petapp.domain.post.recommend.model.entity.RecommendRoutePost;
 import com.example.petapp.domain.profile.ProfileRepository;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogethermatch.WalkingTogetherMatchRepository;
 import com.example.petapp.domain.walkingtogethermatch.WalkingTogetherMatchServiceImpl;
 import com.example.petapp.domain.walkingtogethermatch.model.dto.request.CreateWalkingTogetherMatchDto;

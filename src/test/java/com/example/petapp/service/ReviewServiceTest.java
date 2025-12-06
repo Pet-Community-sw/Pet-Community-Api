@@ -8,7 +8,7 @@ import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.petapp.domain.profile.ProfileRepository;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.review.ReviewRepository;
 import com.example.petapp.domain.review.ReviewServiceImpl;
 import com.example.petapp.domain.review.mapper.ReviewMapper;

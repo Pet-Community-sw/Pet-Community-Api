@@ -1,4 +1,4 @@
-package com.example.petapp.domain.profile.model.dto.request;
+package com.example.petapp.application.in.profile.dto.request;
 
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;

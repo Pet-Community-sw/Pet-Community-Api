@@ -1,5 +1,7 @@
 package com.example.petapp.domain.groupchatroom;
 
+import com.example.petapp.application.in.profile.ProfileQueryUseCase;
+import com.example.petapp.application.in.profile.dto.response.ChatRoomUsersResponseDto;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
 import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
 import com.example.petapp.domain.chatting.model.type.ChatRoomType;
@@ -11,8 +13,7 @@ import com.example.petapp.domain.groupchatroom.model.dto.response.ChatRoomRespon
 import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.profile.model.dto.response.ChatRoomUsersResponseDto;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import com.example.petapp.port.InMemoryService;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
  * */
 public class ChatRoomServiceImpl implements ChatRoomService {
 
+    private final ProfileQueryUseCase profileQueryUseCase;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ChattingReader chattingReader;
@@ -102,7 +104,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Override//방장만 수정할 수 있도록 설정.
     public void updateChatRoom(Long chatRoomId, UpdateChatRoomDto updateChatRoomDto, Long profileId) {
         ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
-        Profile profile = queryService.findByProfile(profileId);
+        Profile profile = profileQueryUseCase.findOrThrow(profileId);
         chatRoom.validateChatOwner(profile);
         chatRoom.setName(updateChatRoomDto.getChatRoomName());
         chatRoom.setLimitCount(updateChatRoomDto.getLimitCount());
@@ -125,7 +127,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         LastMessageInfoDto lastMessageInfoDto = inMemoryService.getLastMessageInfoData(chatRoom.getId());
         long unReadCount = Math.max(lastMessageInfoDto.getLastSeq() - userSeq, 0);
         Set<ChatRoomUsersResponseDto> users = chatRoom.getUsers().stream().map(id ->
-                        ChatRoomMapper.toChatRoomUsersResponseDto(queryService.findByProfile(id))
+                        ChatRoomMapper.toChatRoomUsersResponseDto(profileQueryUseCase.findOrThrow(id))
                 )//Member일 때도 구현해야할듯.
                 .collect(Collectors.toSet());
         return ChatRoomMapper.toChatRoomsResponseDto(chatRoom, userId, lastMessageInfoDto, unReadCount, users);

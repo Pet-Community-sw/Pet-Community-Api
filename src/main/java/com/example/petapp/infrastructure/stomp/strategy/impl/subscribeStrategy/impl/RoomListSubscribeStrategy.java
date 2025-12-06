@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.stomp.strategy.impl.subscribeStrategy.impl;
 
+import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.common.exception.ForbiddenException;
-import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.infrastructure.stomp.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.impl.subscribeStrategy.BaseSubscribeTypeStrategy;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class RoomListSubscribeStrategy extends BaseSubscribeTypeStrategy {
 
     private static final String PATTERN = "/sub/list/{userId}";
 
-    private final QueryService queryService;
+    private final ProfileQueryUseCase useCase;
 
     @Override
     public boolean isHandler(String destination) {
@@ -30,7 +30,7 @@ public class RoomListSubscribeStrategy extends BaseSubscribeTypeStrategy {
         Long userId = Long.valueOf(map.get("userId"));
         Long principalId = principalId(subscribeInfo);
         if (userId.equals(principalId)) {
-            queryService.findByProfile(userId);
+            useCase.findOrThrow(userId);
         } else {
             throw new ForbiddenException("[STOMP] userId가 다릅니다.");
         }

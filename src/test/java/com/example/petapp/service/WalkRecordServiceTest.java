@@ -7,7 +7,7 @@ import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;
 import com.example.petapp.domain.walkrecord.WalkRecordServiceImpl;
 import com.example.petapp.domain.walkrecord.mapper.WalkRecordMapper;

@@ -7,7 +7,6 @@ import com.example.petapp.domain.post.common.Post;
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.petapp.domain.post.normal.model.entity.NormalPost;
 import com.example.petapp.domain.post.recommend.model.entity.RecommendRoutePost;
-import com.example.petapp.domain.profile.model.entity.Profile;
 import com.example.petapp.domain.review.model.entity.Review;
 import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
@@ -27,9 +26,7 @@ public interface QueryService {
     PetBreed findByPetBreed(Long petBreedId);
 
     Post findByPost(Long postId);
-
-    Profile findByProfile(Long profileId);
-
+    
     RecommendRoutePost findByRecommendRoutePost(Long recommendRoutePostId);
 
     Review findByReview(Long reviewId);

@@ -23,7 +23,7 @@ import com.example.petapp.domain.post.delegate.model.dto.response.GetDelegateWal
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkStatus;
 import com.example.petapp.domain.profile.ProfileRepository;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkrecord.WalkRecordService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

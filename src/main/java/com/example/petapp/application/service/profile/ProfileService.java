@@ -1,18 +1,21 @@
-package com.example.petapp.domain.profile;
+package com.example.petapp.application.service.profile;
 
 import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.profile.ProfileQueryUseCase;
+import com.example.petapp.application.in.profile.ProfileUseCase;
+import com.example.petapp.application.in.profile.dto.request.ProfileDto;
+import com.example.petapp.application.in.profile.dto.response.AccessTokenByProfileIdResponseDto;
+import com.example.petapp.application.in.profile.dto.response.CreateProfileResponseDto;
+import com.example.petapp.application.in.profile.dto.response.GetProfileResponseDto;
+import com.example.petapp.application.in.profile.dto.response.ProfileListResponseDto;
+import com.example.petapp.application.in.profile.mapper.ProfileMapper;
 import com.example.petapp.common.base.util.imagefile.FileImageKind;
 import com.example.petapp.common.base.util.imagefile.FileUploadUtil;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.petbreed.model.entity.PetBreed;
-import com.example.petapp.domain.profile.mapper.ProfileMapper;
-import com.example.petapp.domain.profile.model.dto.request.ProfileDto;
-import com.example.petapp.domain.profile.model.dto.response.AccessTokenByProfileIdResponseDto;
-import com.example.petapp.domain.profile.model.dto.response.CreateProfileResponseDto;
-import com.example.petapp.domain.profile.model.dto.response.GetProfileResponseDto;
-import com.example.petapp.domain.profile.model.dto.response.ProfileListResponseDto;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.ProfileRepository;
+import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.domain.token.TokenService;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +28,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ProfileServiceImpl implements ProfileService {
+public class ProfileService implements ProfileUseCase {
 
     private final QueryService queryService;
     private final MemberQueryUseCase memberQueryUseCase;
     private final ProfileRepository profileRepository;
     private final TokenService tokenService;
+    private final ProfileQueryUseCase profileQueryUseCase;
     @Value("${spring.dog.profile.image.upload}")
     private String profileUploadDir;
 
@@ -38,7 +42,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public CreateProfileResponseDto createProfile(ProfileDto profileDto, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        if (profileRepository.countByMember(member) >= 4) {
+        if (profileRepository.count(member) >= 4) {
             throw new ConflictException("프로필은 최대 4개 입니다.");
         }
         PetBreed petBreed = queryService.findByPetBreed(profileDto.getPetBreedId());
@@ -56,7 +60,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public List<ProfileListResponseDto> getProfiles(String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        List<Profile> profiles = profileRepository.findByMember(member);
+        List<Profile> profiles = profileRepository.findList(member);
         return profiles.stream()
                 .map(ProfileMapper::toProfileListResponseDto)
                 .collect(Collectors.toList());
@@ -66,7 +70,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public GetProfileResponseDto getProfile(Long profileId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        Profile profile = queryService.findByProfile(profileId);
+        Profile profile = profileQueryUseCase.findOrThrow(profileId);
         return ProfileMapper.toGetProfileResponseDto(profile, member);
     }
 
@@ -75,7 +79,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public void updateProfile(Long profileId, ProfileDto profileDto, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        Profile profile = queryService.findByProfile(profileId);
+        Profile profile = profileQueryUseCase.findOrThrow(profileId);
         PetBreed petBreed = queryService.findByPetBreed(profileDto.getPetBreedId());
 
         member.validateProfile(member, profile.getMember());
@@ -88,16 +92,16 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public void deleteProfile(Long profileId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        Profile profile = queryService.findByProfile(profileId);
+        Profile profile = profileQueryUseCase.findOrThrow(profileId);
         member.validateProfile(member, profile.getMember());
-        profileRepository.deleteById(profileId);
+        profileRepository.delete(profile);
     }
 
     @Transactional
     @Override
     public AccessTokenByProfileIdResponseDto accessTokenByProfile(String accessToken, Long profileId, String email) {//요청했을 당시 토큰을 redis에 저장시켜서 이전 토큰으로 요청 시 인증이 안되게 끔 해야됨.
         Member member = memberQueryUseCase.findOrThrow(email);
-        Profile profile = queryService.findByProfile(profileId);
+        Profile profile = profileQueryUseCase.findOrThrow(profileId);
         member.validateProfile(member, profile.getMember());
         String newAccessToken = tokenService.newAccessTokenByProfile(accessToken, member, profileId);
 

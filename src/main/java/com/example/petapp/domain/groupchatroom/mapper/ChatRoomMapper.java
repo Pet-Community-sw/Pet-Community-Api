@@ -1,5 +1,6 @@
 package com.example.petapp.domain.groupchatroom.mapper;
 
+import com.example.petapp.application.in.profile.dto.response.ChatRoomUsersResponseDto;
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
 import com.example.petapp.domain.chatting.model.type.ChatRoomType;
@@ -7,8 +8,7 @@ import com.example.petapp.domain.groupchatroom.model.dto.request.ChatMessageDtoM
 import com.example.petapp.domain.groupchatroom.model.dto.response.ChatRoomResponseDto;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.profile.model.dto.response.ChatRoomUsersResponseDto;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 
 import java.time.LocalDateTime;

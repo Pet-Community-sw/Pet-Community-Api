@@ -1,5 +1,6 @@
 package com.example.petapp.domain.chatting.strategy.impl;
 
+import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
 import com.example.petapp.domain.chatting.AckInfoRepository;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
@@ -9,7 +10,7 @@ import com.example.petapp.domain.chatting.model.dto.UpdateListDto;
 import com.example.petapp.domain.chatting.model.type.CommandType;
 import com.example.petapp.domain.chatting.strategy.MessageTypeStrategy;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TalkStrategy implements MessageTypeStrategy {
 
+    private final ProfileQueryUseCase profileQueryUseCase;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatMessageRepository chatMessageRepository;
     private final InMemoryService inMemoryService;
@@ -70,7 +72,7 @@ public class TalkStrategy implements MessageTypeStrategy {
         users.stream().filter(userId -> !userId.equals(senderId))
                 .filter(userId -> !onlineUsers.contains(userId.toString()))
                 .forEach(userId -> {
-                    Profile profile = queryService.findByProfile(userId);
+                    Profile profile = profileQueryUseCase.findOrThrow(userId);
                     sendNotificationUtil.sendNotification(profile.getMember(), message);
                     Long profileSeq = inMemoryService.getReadData(chatRoomId, profile.getId());
                     simpMessagingTemplate.convertAndSend("sub/list/" + profile.getMember().getId(),//todo : member와 profile 다르게 해야함.

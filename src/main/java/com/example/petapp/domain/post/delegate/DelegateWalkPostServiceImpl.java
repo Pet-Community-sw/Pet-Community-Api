@@ -1,6 +1,7 @@
 package com.example.petapp.domain.post.delegate;
 
 import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.common.base.embedded.Applicant;
 import com.example.petapp.common.exception.ForbiddenException;
@@ -15,7 +16,7 @@ import com.example.petapp.domain.post.delegate.model.dto.response.ApplyToDelegat
 import com.example.petapp.domain.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
 import com.example.petapp.domain.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
 import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
-import com.example.petapp.domain.profile.model.entity.Profile;
+import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.domain.walkrecord.WalkRecordService;
 import com.example.petapp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
@@ -36,13 +37,14 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     private final DelegateWalkPostRepository delegateWalkPostRepository;
     private final WalkRecordService walkRecordService;
     private final QueryService queryService;
+    private final ProfileQueryUseCase profileQueryUseCase;
     private final MemberQueryUseCase memberQueryUseCase;
     private final ChatRoomService chatRoomService;
 
     @Transactional
     @Override
     public CreateDelegateWalkPostResponseDto createDelegateWalkPost(CreateDelegateWalkPostDto createDelegateWalkPostDto, Long profileId) {
-        Profile profile = queryService.findByProfile(profileId);
+        Profile profile = profileQueryUseCase.findOrThrow(profileId);
         DelegateWalkPost savedDelegateWalkPost = delegateWalkPostRepository.save(DelegateWalkPostMapper.toEntity(createDelegateWalkPostDto, profile));
         return new CreateDelegateWalkPostResponseDto(savedDelegateWalkPost.getId());
     }
