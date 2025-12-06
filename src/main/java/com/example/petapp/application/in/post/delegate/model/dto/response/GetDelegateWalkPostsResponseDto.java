@@ -1,4 +1,4 @@
-package com.example.petapp.domain.post.delegate.model.dto.request;
+package com.example.petapp.application.in.post.delegate.model.dto.response;
 
 import lombok.*;
 
@@ -9,13 +9,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GetDelegatePostResponseDto { //후기 추가해야됨.
+public class GetDelegateWalkPostsResponseDto {
 
     private Long delegateWalkPostId;
 
-    private String title;
+    private Long profileId;
 
-    private String content;
+    private String petName;
+
+    private String petImageUrl;
+
+    private String title;
 
     private Long price;
 
@@ -23,23 +27,15 @@ public class GetDelegatePostResponseDto { //후기 추가해야됨.
 
     private Double locationLatitude;
 
-    private Integer allowedRadiusMeters;
-
     private LocalDateTime scheduledTime;
-
-    private String petName;
-
-    private String petImageUrl;
-
-    private String petBreed;
-
-    private String extraInfo;
 
     private String createdAt;
 
     private Long viewCount;
 
     private int applicantCount;
+
+    private boolean filtering;
 
     private boolean isApply;
 }

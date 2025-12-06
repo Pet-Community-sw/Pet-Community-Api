@@ -1,4 +1,4 @@
-package com.example.petapp.domain.post.delegate.model.dto.request;
+package com.example.petapp.application.in.post.delegate.model.dto.request;
 
 import lombok.*;
 

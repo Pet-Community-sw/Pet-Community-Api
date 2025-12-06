@@ -3,8 +3,8 @@ package com.example.petapp.service;
 
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.delegate.DelegateWalkPostRepository;
-import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
+import com.example.petapp.domain.post.DelegateWalkPostRepository;
+import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.schedule.ScheduleServiceImpl;
@@ -68,7 +68,7 @@ public class ScheduleServiceTest {
         when(walkingTogetherMatchRepository.findAllByProfileContainsAndScheduledTimeBetween(profile, startDateTime, endDateTime))
                 .thenReturn(List.of(walkPost));
         when(memberRepository.find(member.getMemberId())).thenReturn(Optional.of(member));
-        when(delegateWalkPostRepository.findAllBySelectedApplicantMemberIdAndScheduledTimeBetween(member.getMemberId(), startDateTime, endDateTime))
+        when(delegateWalkPostRepository.findList(member.getMemberId(), startDateTime, endDateTime))
                 .thenReturn(List.of(delegatePost));
 
         // When
@@ -91,7 +91,7 @@ public class ScheduleServiceTest {
         verify(profileRepository).findById(profileId);
         verify(walkingTogetherMatchRepository).findAllByProfileContainsAndScheduledTimeBetween(profile, startDateTime, endDateTime);
         verify(memberRepository).find(member.getMemberId());
-        verify(delegateWalkPostRepository).findAllBySelectedApplicantMemberIdAndScheduledTimeBetween(member.getMemberId(), startDateTime, endDateTime);
+        verify(delegateWalkPostRepository).findList(member.getMemberId(), startDateTime, endDateTime);
     }
 
 }

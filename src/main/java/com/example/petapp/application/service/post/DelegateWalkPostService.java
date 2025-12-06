@@ -1,7 +1,15 @@
-package com.example.petapp.domain.post.delegate;
+package com.example.petapp.application.service.post;
 
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.post.PostQueryUseCase;
+import com.example.petapp.application.in.post.delegate.DelegateWalkPostUseCase;
+import com.example.petapp.application.in.post.delegate.mapper.DelegateWalkPostMapper;
+import com.example.petapp.application.in.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
+import com.example.petapp.application.in.post.delegate.model.dto.request.GetDelegatePostResponseDto;
+import com.example.petapp.application.in.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
+import com.example.petapp.application.in.post.delegate.model.dto.response.ApplyToDelegateWalkPostResponseDto;
+import com.example.petapp.application.in.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
+import com.example.petapp.application.in.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.common.base.embedded.Applicant;
@@ -9,15 +17,9 @@ import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.groupchatroom.ChatRoomService;
 import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.post.DelegateWalkPostRepository;
 import com.example.petapp.domain.post.PostRepository;
-import com.example.petapp.domain.post.delegate.mapper.DelegateWalkPostMapper;
-import com.example.petapp.domain.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
-import com.example.petapp.domain.post.delegate.model.dto.request.GetDelegatePostResponseDto;
-import com.example.petapp.domain.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
-import com.example.petapp.domain.post.delegate.model.dto.response.ApplyToDelegateWalkPostResponseDto;
-import com.example.petapp.domain.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
-import com.example.petapp.domain.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
-import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
+import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkrecord.WalkRecordService;
 import com.example.petapp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
@@ -33,7 +35,7 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
-public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
+public class DelegateWalkPostService implements DelegateWalkPostUseCase {
 
     private final DelegateWalkPostRepository delegateWalkPostRepository;
     private final WalkRecordService walkRecordService;
@@ -47,7 +49,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     @Override
     public CreateDelegateWalkPostResponseDto createDelegateWalkPost(CreateDelegateWalkPostDto createDelegateWalkPostDto, Long profileId) {
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
-        DelegateWalkPost savedDelegateWalkPost = delegateWalkPostRepository.save(DelegateWalkPostMapper.toEntity(createDelegateWalkPostDto, profile));
+        DelegateWalkPost savedDelegateWalkPost = postRepository.save(DelegateWalkPostMapper.toEntity(createDelegateWalkPostDto, profile));
         return new CreateDelegateWalkPostResponseDto(savedDelegateWalkPost.getId());
     }
 
@@ -56,7 +58,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     public List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByLocation(Double minLongitude, Double minLatitude, Double maxLongitude, Double maxLatitude, int page, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
         Pageable pageable = PageRequest.of(page - 1, 10);
-        List<DelegateWalkPost> delegateWalkPosts = delegateWalkPostRepository.findByDelegateWalkPostByLocation(minLongitude - 0.01, minLatitude - 0.01, maxLongitude + 0.01, maxLatitude + 0.01, pageable).getContent();
+        List<DelegateWalkPost> delegateWalkPosts = delegateWalkPostRepository.findList(minLongitude - 0.01, minLatitude - 0.01, maxLongitude + 0.01, maxLatitude + 0.01, pageable).getContent();
         return DelegateWalkPostMapper.toGetDelegateWalkPostsResponseDtos(member, delegateWalkPosts);
     }
 
@@ -65,7 +67,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
     public List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByPlace(Double longitude, Double latitude, int page, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
         Pageable pageable = PageRequest.of(page - 1, 10);
-        List<DelegateWalkPost> delegateWalkPosts = delegateWalkPostRepository.findByDelegateWalkPostByPlace(longitude, latitude, pageable).getContent();
+        List<DelegateWalkPost> delegateWalkPosts = delegateWalkPostRepository.findList(longitude, latitude, pageable).getContent();
         return DelegateWalkPostMapper.toGetDelegateWalkPostsResponseDtos(member, delegateWalkPosts);
     }
 
@@ -77,7 +79,7 @@ public class DelegateWalkPostServiceImpl implements DelegateWalkPostService {
         if (delegateWalkPost.filtering(member)) {
             throw new ForbiddenException("프로필 등록해주세요.");
         }
-        delegateWalkPostRepository.incrementViewCount(delegateWalkPostId);
+        postRepository.incrementViewCount(delegateWalkPostId);
         return DelegateWalkPostMapper.toGetPostResponseDto(delegateWalkPost, member);
     }
 

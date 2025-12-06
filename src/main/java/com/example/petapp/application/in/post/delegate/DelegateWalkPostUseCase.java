@@ -1,21 +1,19 @@
-package com.example.petapp.domain.post.delegate;
+package com.example.petapp.application.in.post.delegate;
 
+import com.example.petapp.application.in.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
+import com.example.petapp.application.in.post.delegate.model.dto.request.GetDelegatePostResponseDto;
+import com.example.petapp.application.in.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
+import com.example.petapp.application.in.post.delegate.model.dto.response.ApplyToDelegateWalkPostResponseDto;
+import com.example.petapp.application.in.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
+import com.example.petapp.application.in.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
 import com.example.petapp.common.base.embedded.Applicant;
 import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
-import com.example.petapp.domain.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
-import com.example.petapp.domain.post.delegate.model.dto.request.GetDelegatePostResponseDto;
-import com.example.petapp.domain.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
-import com.example.petapp.domain.post.delegate.model.dto.response.ApplyToDelegateWalkPostResponseDto;
-import com.example.petapp.domain.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
-import com.example.petapp.domain.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
 import com.example.petapp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
 
-@Service
-public interface DelegateWalkPostService {
+public interface DelegateWalkPostUseCase {
     CreateDelegateWalkPostResponseDto createDelegateWalkPost(CreateDelegateWalkPostDto createDelegateWalkPostDto, Long profileId);
 
     ApplyToDelegateWalkPostResponseDto applyToDelegateWalkPost(Long delegateWalkPostId, String content, String email);

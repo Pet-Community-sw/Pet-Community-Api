@@ -3,9 +3,8 @@ package com.example.petapp.domain.schedule;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.delegate.DelegateWalkPostRepository;
-import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
-import com.example.petapp.domain.profile.ProfileRepository;
+import com.example.petapp.domain.post.DelegateWalkPostRepository;
+import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.schedule.mapper.ScheduleMapper;
 import com.example.petapp.domain.schedule.model.dto.request.TimeDto;
@@ -30,7 +29,6 @@ import java.util.Optional;
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ProfileQueryUseCase profileQueryUseCase;
-    private final ProfileRepository profileRepository;
     private final MemberRepository memberRepository;
     private final WalkingTogetherMatchRepository walkingTogetherMatchRepository;
     private final DelegateWalkPostRepository delegateWalkPostRepository;
@@ -62,7 +60,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Member member = memberRepository.find(profile.get().getMember().getId()).get();
         List<DelegateWalkPost> delegateWalkPostList =
-                delegateWalkPostRepository.findAllBySelectedApplicantMemberIdAndScheduledTimeBetween(member.getId(), timeDto.getStart(), timeDto.getEnd());
+                delegateWalkPostRepository.findList(member.getId(), timeDto.getStart(), timeDto.getEnd());
 
         List<GetSchedulesResponseDto> list = delegateWalkPostList.stream()
                 .map(delegateWalkPost -> ScheduleMapper.toGetSchedulesResponseDto(member, delegateWalkPost)

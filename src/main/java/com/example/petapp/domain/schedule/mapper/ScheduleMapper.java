@@ -1,7 +1,7 @@
 package com.example.petapp.domain.schedule.mapper;
 
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
+import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.schedule.model.dto.response.GetSchedulesResponseDto;
 import com.example.petapp.domain.schedule.model.dto.response.ScheduleType;

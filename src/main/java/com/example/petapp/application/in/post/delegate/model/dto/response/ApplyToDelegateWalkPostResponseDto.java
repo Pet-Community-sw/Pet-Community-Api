@@ -1,4 +1,4 @@
-package com.example.petapp.domain.post.delegate.model.dto.response;
+package com.example.petapp.application.in.post.delegate.model.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,5 +1,13 @@
 package com.example.petapp.service;
 
+import com.example.petapp.application.in.post.delegate.mapper.DelegateWalkPostMapper;
+import com.example.petapp.application.in.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
+import com.example.petapp.application.in.post.delegate.model.dto.request.GetPostResponseDto;
+import com.example.petapp.application.in.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
+import com.example.petapp.application.in.post.delegate.model.dto.response.ApplyToDelegateWalkPostResponseDto;
+import com.example.petapp.application.in.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
+import com.example.petapp.application.in.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
+import com.example.petapp.application.service.post.DelegateWalkPostService;
 import com.example.petapp.common.base.embedded.Applicant;
 import com.example.petapp.common.base.embedded.Content;
 import com.example.petapp.common.base.embedded.Location;
@@ -11,17 +19,9 @@ import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.memberchatRoom.MemberChatRoomService;
 import com.example.petapp.domain.memberchatRoom.model.dto.response.CreateMemberChatRoomResponseDto;
-import com.example.petapp.domain.post.delegate.DelegateWalkPostRepository;
-import com.example.petapp.domain.post.delegate.DelegateWalkPostServiceImpl;
-import com.example.petapp.domain.post.delegate.mapper.DelegateWalkPostMapper;
-import com.example.petapp.domain.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
-import com.example.petapp.domain.post.delegate.model.dto.request.GetPostResponseDto;
-import com.example.petapp.domain.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
-import com.example.petapp.domain.post.delegate.model.dto.response.ApplyToDelegateWalkPostResponseDto;
-import com.example.petapp.domain.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
-import com.example.petapp.domain.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
-import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
-import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkStatus;
+import com.example.petapp.domain.post.DelegateWalkPostRepository;
+import com.example.petapp.domain.post.model.DelegateWalkPost;
+import com.example.petapp.domain.post.model.DelegateWalkStatus;
 import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkrecord.WalkRecordService;
@@ -50,7 +50,7 @@ public class
 DelegateWalkNormalPostUseCaseTest {
 
     @InjectMocks
-    private DelegateWalkPostServiceImpl delegateWalkPostServiceImpl;
+    private DelegateWalkPostService delegateWalkPostServiceImpl;
     @Mock
     private DelegateWalkPostRepository delegateWalkPostRepository;
     @Mock
@@ -138,7 +138,7 @@ DelegateWalkNormalPostUseCaseTest {
         ReflectionTestUtils.setField(post2, "createdAt", LocalDateTime.now());
         List<DelegateWalkPost> postList = List.of(post1, post2);
         when(memberRepository.findByEmail(email)).thenReturn(Optional.of(member));
-        when(delegateWalkPostRepository.findByDelegateWalkPostByLocation(
+        when(delegateWalkPostRepository.findList(
                 minLon - 0.01, minLat - 0.01, maxLon + 0.01, maxLat + 0.01))
                 .thenReturn(postList);
         // when
@@ -147,7 +147,7 @@ DelegateWalkNormalPostUseCaseTest {
         // then
         assertThat(result).hasSize(2);
         verify(memberRepository).findByEmail(email);
-        verify(delegateWalkPostRepository).findByDelegateWalkPostByLocation(
+        verify(delegateWalkPostRepository).findList(
                 126.99, 36.99, 128.01, 38.01);
     }
 
@@ -184,13 +184,13 @@ DelegateWalkNormalPostUseCaseTest {
         ReflectionTestUtils.setField(post2, "createdAt", LocalDateTime.now());
         List<DelegateWalkPost> postList = List.of(post1, post2);
         when(memberRepository.findByEmail(email)).thenReturn(Optional.of(member));
-        when(delegateWalkPostRepository.findByDelegateWalkPostByPlace(longitude, latitude)).thenReturn(postList);
+        when(delegateWalkPostRepository.findList(longitude, latitude)).thenReturn(postList);
         // when
         List<GetDelegateWalkPostsResponseDto> result = delegateWalkPostServiceImpl.getDelegateWalkPostsByPlace(longitude, latitude, page, email);
         // then
         assertThat(result).hasSize(2);
         verify(memberRepository).findByEmail(email);
-        verify(delegateWalkPostRepository).findByDelegateWalkPostByPlace(longitude, latitude);
+        verify(delegateWalkPostRepository).findList(longitude, latitude);
     }
 
     @Test

@@ -4,7 +4,7 @@ import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.common.base.util.DistanceUtil;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
+import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.domain.walklocation.model.dto.response.GetWalkRecordLocationResponseDto;
 import com.example.petapp.domain.walkrecord.mapper.WalkRecordMapper;

@@ -5,7 +5,7 @@ import com.example.petapp.common.base.util.notification.SendNotificationUtil;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.post.delegate.model.entity.DelegateWalkPost;
+import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walklocation.LocationServiceImpl;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;

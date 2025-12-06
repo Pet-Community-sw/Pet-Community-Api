@@ -1,4 +1,4 @@
-package com.example.petapp.domain.post.delegate.model.entity;
+package com.example.petapp.domain.post.model;
 
 public enum DelegateWalkStatus {
     RECRUITING,   // 모집중
