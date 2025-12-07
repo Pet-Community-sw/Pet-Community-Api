@@ -28,7 +28,7 @@ public abstract class Post extends BaseEntity {
     private Content content;
 
     @Setter
-    private String postImageUrl;// viewCount랑 postImageUrl 명세서에 추가해야함.
+    private String postImageUrl;
 
     @Setter
     @Min(0)
