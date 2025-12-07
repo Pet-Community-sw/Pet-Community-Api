@@ -1,5 +1,6 @@
 package com.example.petapp.application.service.member;
 
+import com.example.petapp.application.in.email.EmailUseCase;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.member.MemberUseCase;
 import com.example.petapp.application.in.member.dto.request.*;
@@ -12,7 +13,6 @@ import com.example.petapp.common.base.util.imagefile.FileImageKind;
 import com.example.petapp.common.base.util.imagefile.FileUploadUtil;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.UnAuthorizedException;
-import com.example.petapp.domain.email.EmailService;
 import com.example.petapp.domain.fcm.FcmTokenService;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.RoleRepository;
@@ -37,7 +37,7 @@ public class MemberService implements MemberUseCase {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
-    private final EmailService emailService;
+    private final EmailUseCase emailUseCase;
     private final FcmTokenService fcmTokenService;
     private final RoleRepository roleRepository;
     @Value("${spring.dog.member.image.upload}")
@@ -68,7 +68,7 @@ public class MemberService implements MemberUseCase {
 
     @Override
     public AccessTokenResponseDto verifyCode(String email, String code) {//sendEmail할 때 이메일 유효성 검사 했으므로 안해줘도 됨.
-        emailService.verifyCode(email, code);
+        emailUseCase.verifyCode(email, code);
         return tokenService.createResetPasswordJwt(email);
     }
 
@@ -83,7 +83,7 @@ public class MemberService implements MemberUseCase {
     @Override
     public void sendEmail(SendEmailDto sendEmailDto) {
         Member member = memberQueryUseCase.findOrThrow(sendEmailDto.getEmail());
-        emailService.sendMail(member.getEmail());
+        emailUseCase.send(member.getEmail());
     }
 
 

@@ -1,6 +1,7 @@
 package com.example.petapp.service;
 
 
+import com.example.petapp.application.in.email.EmailUseCase;
 import com.example.petapp.application.in.member.dto.request.LoginDto;
 import com.example.petapp.application.in.member.dto.request.MemberSignDto;
 import com.example.petapp.application.in.member.dto.request.ResetPasswordDto;
@@ -11,7 +12,6 @@ import com.example.petapp.common.aop.LogAspect;
 import com.example.petapp.common.base.util.imagefile.FileImageKind;
 import com.example.petapp.common.base.util.imagefile.FileUploadUtil;
 import com.example.petapp.common.exception.NotFoundException;
-import com.example.petapp.domain.email.EmailService;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.RoleRepository;
 import com.example.petapp.domain.member.model.Member;
@@ -54,7 +54,7 @@ class MemberUseCaseTest {
     @Mock
     private TokenService tokenService;
     @Mock
-    private EmailService emailService;
+    private EmailUseCase emailUseCase;
     @Mock
     private RoleRepository roleRepository;
 
@@ -222,7 +222,7 @@ class MemberUseCaseTest {
         memberServiceImp.sendEmail(sendEmailDto);
 
         //then
-        verify(emailService).sendMail(sendEmailDto.getEmail());
+        verify(emailUseCase).sendMail(sendEmailDto.getEmail());
     }
 
     @Test

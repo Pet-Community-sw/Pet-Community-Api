@@ -1,4 +1,4 @@
-package com.example.petapp.config;
+package com.example.petapp.infrastructure.smtp;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +9,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import java.util.Properties;
 
 @Configuration
-public class EmailConfig {
+public class SmtpConfig {
 
     @Value("${spring.mail.host}")
     private String host;
@@ -21,7 +21,7 @@ public class EmailConfig {
     private int port;
 
     @Value("${spring.mail.username}")
-    private String username;
+    private String email;
 
     @Value("${spring.mail.properties.mail.smtp.auth}")
     private boolean auth;
@@ -35,7 +35,7 @@ public class EmailConfig {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         javaMailSender.setHost(host);
         javaMailSender.setPort(port);
-        javaMailSender.setUsername(username);
+        javaMailSender.setUsername(email);
         javaMailSender.setPassword(password);
         javaMailSender.setJavaMailProperties(properties());
         javaMailSender.setDefaultEncoding("UTF-8");
