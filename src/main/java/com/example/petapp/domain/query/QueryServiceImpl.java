@@ -5,8 +5,6 @@ import com.example.petapp.domain.comment.CommentRepository;
 import com.example.petapp.domain.comment.model.entity.Comment;
 import com.example.petapp.domain.groupchatroom.ChatRoomRepository;
 import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
-import com.example.petapp.domain.petbreed.PetBreedRepository;
-import com.example.petapp.domain.petbreed.model.entity.PetBreed;
 import com.example.petapp.domain.review.ReviewRepository;
 import com.example.petapp.domain.review.model.entity.Review;
 import com.example.petapp.domain.walkingtogethermatch.WalkingTogetherMatchRepository;
@@ -22,7 +20,6 @@ public class QueryServiceImpl implements QueryService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final CommentRepository commentRepository;
-    private final PetBreedRepository petBreedRepository;
     private final ReviewRepository reviewRepository;
     private final WalkingTogetherMatchRepository walkingTogetherMatchRepository;
     private final WalkRecordRepository walkRecordRepository;
@@ -35,16 +32,6 @@ public class QueryServiceImpl implements QueryService {
     @Override
     public Comment findByComment(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("해당 댓글은 없습니다."));
-    }
-
-    @Override
-    public PetBreed findByPetBreed(String petBreed) {
-        return petBreedRepository.findByName(petBreed).orElseThrow(() -> new NotFoundException("종을 다시 입력해주세요."));
-    }
-
-    @Override
-    public PetBreed findByPetBreed(Long petBreedId) {
-        return petBreedRepository.findById(petBreedId).orElseThrow(() -> new NotFoundException("종을 다시 입력해주세요."));
     }
 
     @Override

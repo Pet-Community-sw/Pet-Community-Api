@@ -8,7 +8,7 @@ import com.example.petapp.domain.groupchatroom.ChatRoomService;
 import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.petbreed.PetBreedRepository;
-import com.example.petapp.domain.petbreed.model.entity.PetBreed;
+import com.example.petapp.domain.petbreed.model.PetBreed;
 import com.example.petapp.domain.post.RecommendRoutePostRepository;
 import com.example.petapp.domain.post.model.RecommendRoutePost;
 import com.example.petapp.domain.profile.ProfileRepository;
@@ -105,7 +105,7 @@ public class WalkingTogetherMatchServiceTest {
 
         when(profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
         when(walkingTogetherMatchRepository.findById(walkingTogetherPostId)).thenReturn(Optional.of(walkingTogetherMatch));
-        when(petBreedRepository.findByName(any())).thenReturn(Optional.of(petBreed));
+        when(petBreedRepository.find(any())).thenReturn(Optional.of(petBreed));
 
 
         //when
@@ -187,7 +187,7 @@ public class WalkingTogetherMatchServiceTest {
 
         when(profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
         when(recommendRoutePostRepository.findById(recommendRoutePostId)).thenReturn(Optional.of(recommendRoutePost));
-        when(petBreedRepository.findByName("푸들")).thenReturn(Optional.of(petBreed));
+        when(petBreedRepository.find("푸들")).thenReturn(Optional.of(petBreed));
         when(walkingTogetherMatchRepository.findAllByRecommendRoutePost(recommendRoutePost)).thenReturn(postList);
 
         // when
@@ -201,7 +201,7 @@ public class WalkingTogetherMatchServiceTest {
 
         verify(profileRepository).findById(profileId);
         verify(recommendRoutePostRepository).findById(recommendRoutePostId);
-        verify(petBreedRepository).findByName("푸들");
+        verify(petBreedRepository).find("푸들");
         verify(walkingTogetherMatchRepository).findAllByRecommendRoutePost(recommendRoutePost);
     }
 
@@ -334,7 +334,7 @@ public class WalkingTogetherMatchServiceTest {
 
         when(profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
         when(walkingTogetherMatchRepository.findById(walkingTogetherPostId)).thenReturn(Optional.of(post));
-        when(petBreedRepository.findByName("푸들")).thenReturn(Optional.of(petBreed));
+        when(petBreedRepository.find("푸들")).thenReturn(Optional.of(petBreed));
         when(chatRoomService.createChatRoom(post, profile)).thenReturn(chatRoomResponseDto);
 
         // when
@@ -414,7 +414,7 @@ public class WalkingTogetherMatchServiceTest {
 
         when(profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
         when(walkingTogetherMatchRepository.findById(walkingTogetherPostId)).thenReturn(Optional.of(post));
-        when(petBreedRepository.findByName("푸들")).thenReturn(Optional.empty());
+        when(petBreedRepository.find("푸들")).thenReturn(Optional.empty());
 
         //when & then
         assertThatThrownBy(() -> walkingTogetherPostServiceImpl.startMatch(walkingTogetherPostId, profileId))
@@ -443,7 +443,7 @@ public class WalkingTogetherMatchServiceTest {
 
         when(profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
         when(walkingTogetherMatchRepository.findById(walkingTogetherPostId)).thenReturn(Optional.of(post));
-        when(petBreedRepository.findByName("푸들")).thenReturn(Optional.of(petBreed));
+        when(petBreedRepository.find("푸들")).thenReturn(Optional.of(petBreed));
 
         //when & then
         assertThatThrownBy(() -> walkingTogetherPostServiceImpl.startMatch(walkingTogetherPostId, profileId))

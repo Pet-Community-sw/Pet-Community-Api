@@ -1,4 +1,4 @@
-package com.example.petapp.domain.petbreed.model.dto;
+package com.example.petapp.application.in.petbreed.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

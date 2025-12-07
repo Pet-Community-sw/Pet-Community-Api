@@ -1,6 +1,7 @@
 package com.example.petapp.application.service.profile;
 
 import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.petbreed.PetBreedQueryUseCase;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.application.in.profile.ProfileUseCase;
 import com.example.petapp.application.in.profile.dto.request.ProfileDto;
@@ -13,10 +14,9 @@ import com.example.petapp.common.base.util.imagefile.FileImageKind;
 import com.example.petapp.common.base.util.imagefile.FileUploadUtil;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.petbreed.model.entity.PetBreed;
+import com.example.petapp.domain.petbreed.model.PetBreed;
 import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.domain.token.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProfileService implements ProfileUseCase {
 
-    private final QueryService queryService;
+    private final PetBreedQueryUseCase petBreedQueryUseCase;
     private final MemberQueryUseCase memberQueryUseCase;
     private final ProfileRepository profileRepository;
     private final TokenService tokenService;
@@ -45,7 +45,7 @@ public class ProfileService implements ProfileUseCase {
         if (profileRepository.count(member) >= 4) {
             throw new ConflictException("프로필은 최대 4개 입니다.");
         }
-        PetBreed petBreed = queryService.findByPetBreed(profileDto.getPetBreedId());
+        PetBreed petBreed = petBreedQueryUseCase.find(profileDto.getPetBreedId());
 
         String imageFileName = FileUploadUtil.fileUpload(profileDto.getPetImageUrl(), profileUploadDir, FileImageKind.PROFILE);
         Profile profile = ProfileMapper.toEntity(profileDto, member, imageFileName, petBreed);
@@ -80,7 +80,7 @@ public class ProfileService implements ProfileUseCase {
     public void updateProfile(Long profileId, ProfileDto profileDto, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
-        PetBreed petBreed = queryService.findByPetBreed(profileDto.getPetBreedId());
+        PetBreed petBreed = petBreedQueryUseCase.find(profileDto.getPetBreedId());
 
         member.validateProfile(member, profile.getMember());
         validateBreed(profileDto, profile);
@@ -111,7 +111,7 @@ public class ProfileService implements ProfileUseCase {
     private void validateBreed(ProfileDto profileDto, Profile profile) {
         List<Long> avoidBreeds = profileDto.getAvoidBreeds();
         for (Long petBreedId : avoidBreeds) {
-            PetBreed avoidBreed = queryService.findByPetBreed(petBreedId);
+            PetBreed avoidBreed = petBreedQueryUseCase.find(petBreedId);
             profile.addAvoidBreeds(avoidBreed);
         }
     }

@@ -6,7 +6,7 @@ import com.example.petapp.application.in.profile.dto.response.GetProfileResponse
 import com.example.petapp.application.in.profile.dto.response.ProfileListResponseDto;
 import com.example.petapp.common.base.util.AgeUtil;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.petbreed.model.entity.PetBreed;
+import com.example.petapp.domain.petbreed.model.PetBreed;
 import com.example.petapp.domain.profile.model.Profile;
 
 import java.time.LocalDate;

@@ -1,6 +1,6 @@
 package com.example.petapp.application.in.profile.dto.response;
 
-import com.example.petapp.domain.petbreed.model.entity.PetBreed;
+import com.example.petapp.domain.petbreed.model.PetBreed;
 import lombok.*;
 
 import java.time.LocalDate;

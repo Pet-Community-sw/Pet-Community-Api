@@ -1,11 +1,12 @@
 package com.example.petapp.domain.walkingtogethermatch;
 
 
+import com.example.petapp.application.in.petbreed.PetBreedQueryUseCase;
 import com.example.petapp.application.in.post.PostQueryUseCase;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.domain.groupchatroom.ChatRoomService;
 import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
-import com.example.petapp.domain.petbreed.model.entity.PetBreed;
+import com.example.petapp.domain.petbreed.model.PetBreed;
 import com.example.petapp.domain.post.model.RecommendRoutePost;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.query.QueryService;
@@ -28,6 +29,7 @@ public class WalkingTogetherMatchServiceImpl implements WalkingTogetherMatchServ
     private final ChatRoomService chatRoomService;
     private final WalkingTogetherMatchRepository walkingTogetherMatchRepository;
     private final QueryService queryService;
+    private final PetBreedQueryUseCase petBreedQueryUseCase;
     private final ProfileQueryUseCase profileQueryUseCase;
     private final PostQueryUseCase<RecommendRoutePost> postQueryUseCase;
 
@@ -36,7 +38,7 @@ public class WalkingTogetherMatchServiceImpl implements WalkingTogetherMatchServ
     public GetWalkingTogetherMatchResponseDto getWalkingTogetherPost(Long walkingTogetherPostId, Long profileId) {
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
         WalkingTogetherMatch walkingTogetherMatch = queryService.findByWalkingTogetherPost(walkingTogetherPostId);
-        PetBreed petBreed = queryService.findByPetBreed(profile.getPetBreed().getName());
+        PetBreed petBreed = petBreedQueryUseCase.find(profile.getPetBreed().getName());
 
         return WalkingTogetherMatchMapper.toGetWalkingTogetherPostResponseDto(walkingTogetherPostId, walkingTogetherMatch, profile, petBreed);
 
@@ -47,7 +49,7 @@ public class WalkingTogetherMatchServiceImpl implements WalkingTogetherMatchServ
     public List<GetWalkingTogetherMatchResponseDto> getWalkingTogetherPosts(Long recommendRoutePostId, Long profileId) {
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
         RecommendRoutePost recommendRoutePost = postQueryUseCase.findOrThrow(recommendRoutePostId);
-        PetBreed petBreed = queryService.findByPetBreed(profile.getPetBreed().getName());
+        PetBreed petBreed = petBreedQueryUseCase.find(profile.getPetBreed().getName());
         List<WalkingTogetherMatch> walkingTogetherMatches = walkingTogetherMatchRepository.findAllByRecommendRoutePost(recommendRoutePost);
         return WalkingTogetherMatchMapper.toGetWalkingTogetherPostResponseDtos(walkingTogetherMatches, petBreed);
     }
@@ -85,7 +87,7 @@ public class WalkingTogetherMatchServiceImpl implements WalkingTogetherMatchServ
     public CreateChatRoomResponseDto startMatch(Long walkingTogetherPostId, Long profileId) {
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
         WalkingTogetherMatch walkingTogetherMatch = queryService.findByWalkingTogetherPost(walkingTogetherPostId);
-        PetBreed petBreed = queryService.findByPetBreed(profile.getPetBreed().getName());
+        PetBreed petBreed = petBreedQueryUseCase.find(profile.getPetBreed().getName());
 
         walkingTogetherMatch.checkInMatch(profileId, petBreed);
         walkingTogetherMatch.matchingStart(profileId, profile);

@@ -1,6 +1,7 @@
-package com.example.petapp.domain.petbreed;
+package com.example.petapp.interfaces;
 
-import com.example.petapp.domain.petbreed.model.dto.PetBreedGetListDto;
+import com.example.petapp.application.in.petbreed.PetBreedQueryUseCase;
+import com.example.petapp.application.in.petbreed.dto.PetBreedGetListDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +17,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PetBreedController {
 
-    private final PetBreedService petBreedService;
+    private final PetBreedQueryUseCase petBreedQueryUseCase;
 
     @Operation(
             summary = "애완 종 목록 조회"
     )
     @GetMapping()
     public List<PetBreedGetListDto> getList() {
-        return petBreedService.getList();
+        return petBreedQueryUseCase.getList();
     }
 }
