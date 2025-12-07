@@ -1,18 +1,20 @@
-package com.example.petapp.domain.comment;
+package com.example.petapp.application.service.comment;
 
+import com.example.petapp.application.in.comment.CommentQueryUseCase;
+import com.example.petapp.application.in.comment.CommentUseCase;
+import com.example.petapp.application.in.comment.dto.request.CommentDto;
+import com.example.petapp.application.in.comment.dto.request.UpdateCommentDto;
+import com.example.petapp.application.in.comment.dto.response.CreateCommentResponseDto;
+import com.example.petapp.application.in.comment.dto.response.GetCommentsResponseDto;
+import com.example.petapp.application.in.comment.mapper.CommentMapper;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.post.PostQueryUseCase;
 import com.example.petapp.common.aop.annotation.Notification;
-import com.example.petapp.domain.comment.mapper.CommentMapper;
-import com.example.petapp.domain.comment.model.dto.request.CommentDto;
-import com.example.petapp.domain.comment.model.dto.request.UpdateCommentDto;
-import com.example.petapp.domain.comment.model.dto.response.CreateCommentResponseDto;
-import com.example.petapp.domain.comment.model.dto.response.GetCommentsResponseDto;
-import com.example.petapp.domain.comment.model.entity.Comment;
-import com.example.petapp.domain.comment.model.entity.Commentable;
+import com.example.petapp.domain.comment.CommentRepository;
+import com.example.petapp.domain.comment.model.Comment;
+import com.example.petapp.domain.comment.model.Commentable;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.Post;
-import com.example.petapp.domain.query.QueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +23,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor//memberId를 받아서 유효성 검사해야할듯.
-public class CommentServiceImpl implements CommentService {
+public class CommentService implements CommentUseCase {
 
     private final CommentRepository commentRepository;
-    private final QueryService queryService;
+    private final CommentQueryUseCase commentQueryUseCase;
     private final MemberQueryUseCase memberQueryUseCase;
     private final PostQueryUseCase<Post> postQueryUseCase;
 
@@ -54,17 +56,17 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void deleteComment(Long commentId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        Comment comment = queryService.findByComment(commentId);
+        Comment comment = commentQueryUseCase.findOrThrow(commentId);
 
         comment.validated(member);
-        commentRepository.deleteById(commentId);
+        commentRepository.delete(commentId);
     }
 
     @Transactional
     @Override
     public void updateComment(Long commentId, UpdateCommentDto updateCommentDto, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        Comment comment = queryService.findByComment(commentId);
+        Comment comment = commentQueryUseCase.findOrThrow(commentId);
 
         comment.validated(member);
         comment.update(updateCommentDto.getContent());

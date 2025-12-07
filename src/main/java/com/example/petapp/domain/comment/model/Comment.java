@@ -1,4 +1,4 @@
-package com.example.petapp.domain.comment.model.entity;
+package com.example.petapp.domain.comment.model;
 
 import com.example.petapp.common.base.superclass.BaseEntity;
 import com.example.petapp.common.exception.ForbiddenException;

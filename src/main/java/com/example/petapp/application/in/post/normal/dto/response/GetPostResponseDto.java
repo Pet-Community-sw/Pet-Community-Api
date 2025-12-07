@@ -1,7 +1,7 @@
 package com.example.petapp.application.in.post.normal.dto.response;
 
 
-import com.example.petapp.domain.comment.model.dto.response.GetCommentsResponseDto;
+import com.example.petapp.application.in.comment.dto.response.GetCommentsResponseDto;
 import lombok.*;
 
 import java.util.List;

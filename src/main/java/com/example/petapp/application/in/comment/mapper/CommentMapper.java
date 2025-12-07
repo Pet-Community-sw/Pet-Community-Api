@@ -1,10 +1,10 @@
-package com.example.petapp.domain.comment.mapper;
+package com.example.petapp.application.in.comment.mapper;
 
+import com.example.petapp.application.in.comment.dto.request.CommentDto;
+import com.example.petapp.application.in.comment.dto.response.GetCommentsResponseDto;
 import com.example.petapp.common.base.util.TimeUtil;
-import com.example.petapp.domain.comment.model.dto.request.CommentDto;
-import com.example.petapp.domain.comment.model.dto.response.GetCommentsResponseDto;
-import com.example.petapp.domain.comment.model.entity.Comment;
-import com.example.petapp.domain.comment.model.entity.Commentable;
+import com.example.petapp.domain.comment.model.Comment;
+import com.example.petapp.domain.comment.model.Commentable;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.Post;
 import org.jetbrains.annotations.NotNull;

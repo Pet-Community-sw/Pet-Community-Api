@@ -1,7 +1,13 @@
 package com.example.petapp.domain.comment;
 
-import com.example.petapp.domain.comment.model.entity.Comment;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.petapp.domain.comment.model.Comment;
 
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+import java.util.Optional;
+
+public interface CommentRepository {
+    void save(Comment comment);
+
+    void delete(Long id);
+
+    Optional<Comment> find(Long id);
 }

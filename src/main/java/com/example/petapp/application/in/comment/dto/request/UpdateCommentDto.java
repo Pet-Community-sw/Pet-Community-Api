@@ -1,4 +1,4 @@
-package com.example.petapp.domain.comment.model.dto.request;
+package com.example.petapp.application.in.comment.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
