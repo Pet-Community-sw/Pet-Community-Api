@@ -27,6 +27,7 @@ public class SmtpEmailAdapter implements EmailPort {
             message.setSubject(subject);
             message.setText(body, "utf-8", "html");
             message.setFrom(new InternetAddress(email, "멍냥로드"));
+            //InternetAddress: 이메일 주소를 RFC 표준 형식으로 감싸는 객체
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
