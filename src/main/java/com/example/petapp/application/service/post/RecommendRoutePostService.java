@@ -1,5 +1,6 @@
 package com.example.petapp.application.service.post;
 
+import com.example.petapp.application.in.like.LikeQueryUseCase;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.post.PostQueryUseCase;
 import com.example.petapp.application.in.post.recommend.RecommendRoutePostUseCase;
@@ -9,8 +10,6 @@ import com.example.petapp.application.in.post.recommend.dto.response.CreateRecom
 import com.example.petapp.application.in.post.recommend.dto.response.GetRecommendPostResponseDto;
 import com.example.petapp.application.in.post.recommend.dto.response.GetRecommendRoutePostsResponseDto;
 import com.example.petapp.application.in.post.recommend.mapper.RecommendRoutePostMapper;
-import com.example.petapp.domain.like.LikeRepository;
-import com.example.petapp.domain.like.LikeService;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.PostRepository;
 import com.example.petapp.domain.post.RecommendRoutePostRepository;
@@ -30,8 +29,7 @@ import java.util.Set;
 public class RecommendRoutePostService implements RecommendRoutePostUseCase {
 
     private final RecommendRoutePostRepository recommendRoutePostRepository;
-    private final LikeRepository likeRepository;
-    private final LikeService likeService;
+    private final LikeQueryUseCase likeQueryUseCase;
     private final MemberQueryUseCase memberQueryUseCase;
     private final InMemoryService inMemoryService;
     private final PostQueryUseCase<RecommendRoutePost> postQueryUseCase;
@@ -55,7 +53,7 @@ public class RecommendRoutePostService implements RecommendRoutePostUseCase {
         List<RecommendRoutePost> recommendRoutePosts = recommendRoutePostRepository
                 .findList(minLongitude - 0.01, minLatitude - 0.01, maxLongitude + 0.01, maxLatitude + 0.01, pageable)
                 .getContent();
-        return RecommendRoutePostMapper.toRecommendRoutePostsList(recommendRoutePosts, likeService.getLikeCountMap(recommendRoutePosts), memberIds, member);
+        return RecommendRoutePostMapper.toRecommendRoutePostsList(recommendRoutePosts, likeQueryUseCase.getCountMap(recommendRoutePosts), memberIds, member);
     }
 
     @Transactional(readOnly = true)
@@ -65,7 +63,7 @@ public class RecommendRoutePostService implements RecommendRoutePostUseCase {
         Pageable pageable = PageRequest.of(page - 1, 10);
         Set<Long> memberIds = inMemoryService.getLikeData(member.getId());
         List<RecommendRoutePost> recommendRoutePosts = recommendRoutePostRepository.findList(longitude, latitude, pageable).getContent();
-        return RecommendRoutePostMapper.toRecommendRoutePostsList(recommendRoutePosts, likeService.getLikeCountMap(recommendRoutePosts), memberIds, member);
+        return RecommendRoutePostMapper.toRecommendRoutePostsList(recommendRoutePosts, likeQueryUseCase.getCountMap(recommendRoutePosts), memberIds, member);
     }
 
     @Transactional()
@@ -74,7 +72,7 @@ public class RecommendRoutePostService implements RecommendRoutePostUseCase {
         Member member = memberQueryUseCase.findOrThrow(email);
         RecommendRoutePost recommendRoutePost = postQueryUseCase.findOrThrow(recommendRoutePostId);
         postRepository.incrementViewCount(recommendRoutePostId);
-        return RecommendRoutePostMapper.toGetRecommendPostResponseDto(member, recommendRoutePost, likeRepository.countByPost(recommendRoutePost), likeRepository.existsByPostAndMember(recommendRoutePost, member));
+        return RecommendRoutePostMapper.toGetRecommendPostResponseDto(member, recommendRoutePost, likeQueryUseCase.countByPost(recommendRoutePost), likeQueryUseCase.exist(recommendRoutePost, member));
     }
 
     @Transactional

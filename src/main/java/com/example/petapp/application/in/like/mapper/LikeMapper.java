@@ -1,8 +1,8 @@
-package com.example.petapp.domain.like.mapper;
+package com.example.petapp.application.in.like.mapper;
 
-import com.example.petapp.domain.like.model.dto.request.LikeListDto;
-import com.example.petapp.domain.like.model.dto.response.LikeResponseDto;
-import com.example.petapp.domain.like.model.entity.Like;
+import com.example.petapp.application.in.like.dto.request.LikeListDto;
+import com.example.petapp.application.in.like.dto.response.LikeResponseDto;
+import com.example.petapp.domain.like.model.Like;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.Post;
 

@@ -1,6 +1,6 @@
-package com.example.petapp.domain.like.model.dto.response;
+package com.example.petapp.application.in.like.dto.response;
 
-import com.example.petapp.domain.like.model.dto.request.LikeListDto;
+import com.example.petapp.application.in.like.dto.request.LikeListDto;
 import lombok.*;
 
 import java.util.List;

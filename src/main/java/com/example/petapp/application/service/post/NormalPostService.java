@@ -1,5 +1,6 @@
 package com.example.petapp.application.service.post;
 
+import com.example.petapp.application.in.like.LikeQueryUseCase;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.post.PostQueryUseCase;
 import com.example.petapp.application.in.post.normal.NormalPostUseCase;
@@ -10,8 +11,6 @@ import com.example.petapp.application.in.post.normal.dto.response.PostResponseDt
 import com.example.petapp.application.in.post.normal.mapper.NormalPostMapper;
 import com.example.petapp.common.base.util.imagefile.FileImageKind;
 import com.example.petapp.common.base.util.imagefile.FileUploadUtil;
-import com.example.petapp.domain.like.LikeRepository;
-import com.example.petapp.domain.like.LikeService;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.PostRepository;
 import com.example.petapp.domain.post.model.NormalPost;
@@ -29,11 +28,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NormalPostService implements NormalPostUseCase {
 
-    private final LikeRepository likeRepository;
-    private final LikeService likeService;
     private final PostQueryUseCase<NormalPost> postQueryUseCase;
     private final PostRepository<NormalPost> postRepository;
     private final MemberQueryUseCase memberQueryUseCase;
+    private final LikeQueryUseCase likeQueryUseCase;
 
     @Value("${spring.dog.post.image.upload}")
     private String postUploadDir;
@@ -44,7 +42,7 @@ public class NormalPostService implements NormalPostUseCase {
         Member member = memberQueryUseCase.findOrThrow(email);
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "id"));
         List<NormalPost> normalPosts = postQueryUseCase.findList(pageRequest).getContent();
-        return NormalPostMapper.toPostListResponseDto(normalPosts, likeService.getLikeCountMap(normalPosts), member);
+        return NormalPostMapper.toPostListResponseDto(normalPosts, likeQueryUseCase.getCountMap(normalPosts), member);
     }
 
     @Override
@@ -53,7 +51,7 @@ public class NormalPostService implements NormalPostUseCase {
         Member member = memberQueryUseCase.findOrThrow(email);
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "id"));
         List<NormalPost> normalPosts = postQueryUseCase.findList(memberId, pageRequest).getContent();
-        return NormalPostMapper.toPostListResponseDto(normalPosts, likeService.getLikeCountMap(normalPosts), member);
+        return NormalPostMapper.toPostListResponseDto(normalPosts, likeQueryUseCase.getCountMap(normalPosts), member);
     }
 
     @Transactional
@@ -62,7 +60,7 @@ public class NormalPostService implements NormalPostUseCase {
         Member member = memberQueryUseCase.findOrThrow(email);
         NormalPost normalPost = postQueryUseCase.findOrThrow(postId);
         postRepository.incrementViewCount(normalPost.getId());
-        return NormalPostMapper.toGetPostResponseDto(normalPost, member, likeRepository.countByPost(normalPost), likeRepository.existsByPostAndMember(normalPost, member));
+        return NormalPostMapper.toGetPostResponseDto(normalPost, member, likeQueryUseCase.countByPost(normalPost), likeQueryUseCase.exist(normalPost, member));
     }
 
     @Transactional

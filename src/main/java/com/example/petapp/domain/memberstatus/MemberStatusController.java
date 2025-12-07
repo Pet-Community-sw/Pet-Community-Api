@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "UserStatus")
 @RestController
 @RequestMapping("/status")
-@RequiredArgsConstructor
+@RequiredArgsConstructor //todo : 웹소켓 connect시 로 해보자
 public class MemberStatusController {
 
     private final MemberStatusService memberStatusService;

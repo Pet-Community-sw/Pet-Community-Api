@@ -1,9 +1,11 @@
-package com.example.petapp.domain.like;
+package com.example.petapp.interfaces;
 
 
+import com.example.petapp.application.in.like.LikeQueryUseCase;
+import com.example.petapp.application.in.like.LikeUseCase;
+import com.example.petapp.application.in.like.dto.response.LikeResponseDto;
 import com.example.petapp.common.base.dto.MessageResponse;
 import com.example.petapp.common.base.util.AuthUtil;
-import com.example.petapp.domain.like.model.dto.response.LikeResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -18,14 +20,15 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class LikeController {
 
-    private final LikeService likeService;
+    private final LikeUseCase likeUseCase;
+    private final LikeQueryUseCase likeQueryUseCase;
 
     @Operation(
             summary = "좋아요 목록 조회"
     )
     @GetMapping("/{postId}")//api 명세서 수정해야함.
     public LikeResponseDto getLikes(@PathVariable Long postId) {
-        return likeService.getLikes(postId);
+        return likeQueryUseCase.get(postId);
     }
 
     @Operation(
@@ -33,9 +36,9 @@ public class LikeController {
     )
     @PostMapping()
     public ResponseEntity<MessageResponse> createAndDeleteLike(@RequestBody Long postId, Authentication authentication) {
-        return likeService.createAndDeleteLike(postId, AuthUtil.getEmail(authentication)) ?
+        return likeUseCase.createAndDelete(postId, AuthUtil.getEmail(authentication)) ?
                 ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("좋아요 생성했습니다.")) :
                 ResponseEntity.ok(new MessageResponse("좋아요 삭제했습니다."));
     }
-    
+
 }

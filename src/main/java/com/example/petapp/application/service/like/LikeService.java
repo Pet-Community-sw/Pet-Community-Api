@@ -1,12 +1,12 @@
-package com.example.petapp.domain.like;
+package com.example.petapp.application.service.like;
 
+import com.example.petapp.application.in.like.LikeUseCase;
+import com.example.petapp.application.in.like.mapper.LikeMapper;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.post.PostQueryUseCase;
 import com.example.petapp.common.aop.annotation.Notification;
-import com.example.petapp.domain.like.mapper.LikeMapper;
-import com.example.petapp.domain.like.model.dto.request.LikeCountDto;
-import com.example.petapp.domain.like.model.dto.response.LikeResponseDto;
-import com.example.petapp.domain.like.model.entity.Like;
+import com.example.petapp.domain.like.LikeRepository;
+import com.example.petapp.domain.like.model.Like;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.Post;
 import com.example.petapp.port.InMemoryService;
@@ -15,36 +15,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 
 @Slf4j
 @Service
 @RequiredArgsConstructor//like를 superclass로 둠으로써 likeId 겹칠일이없음. 코드 100줄이상 줄임. ㄷㄷ
-public class LikeServiceImpl implements LikeService {
+public class LikeService implements LikeUseCase {
 
-    private final LikeRepository likeRepository;
+    private final LikeRepository repository;
     private final MemberQueryUseCase memberQueryUseCase;
     private final InMemoryService inMemoryService;
     private final PostQueryUseCase<Post> postQueryUseCase;
-
-
-    @Transactional(readOnly = true)
-    @Override
-    public LikeResponseDto getLikes(Long postId) {
-        return LikeMapper.toLikeResponseDto(postQueryUseCase.findOrThrow(postId).getLikes());
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public <T extends Post> Map<Long, Long> getLikeCountMap(List<T> posts) {
-        List<Long> postIds = posts.stream().map(Post::getId).toList();
-        List<LikeCountDto> likeCountDtos = likeRepository.countByPostIds(postIds);//todo : 추후 redis로 변경해야할듯?
-        return likeCountDtos.stream().collect(Collectors.toMap(LikeCountDto::getPostId, LikeCountDto::getLikeCount));
-    }
 
     /*
      *  조회 ->분기 ->저장 : 동시성 이슈 발생할 수 있음. 분기 처리중 저장했다면?
@@ -53,26 +34,26 @@ public class LikeServiceImpl implements LikeService {
     @Notification(recipient = "@queryServiceImpl.findByPost(#p0).member", message = "@queryServiceImpl.findByMember(#p1).name + '님이 회원님의 게시물을 좋아합니다.'", condition = "#result == true")
     @Transactional
     @Override
-    public boolean createAndDeleteLike(Long postId, String email) {
+    public boolean createAndDelete(Long postId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
         Post post = postQueryUseCase.findOrThrow(postId);
         Optional<Like> existingLike = post.getLikes().stream().filter(like -> like.getMember().equals(member)).findFirst();
-        return existingLike.map(like -> deleteLike(like, post)).orElseGet(() -> createLike(post, member));
+        return existingLike.map(like -> delete(like, post)).orElseGet(() -> create(post, member));
     }
 
-    private boolean deleteLike(Like like, Post post) {
+    private boolean delete(Like like, Post post) {
         post.removeLikes(like);
-        likeRepository.delete(like);
+        repository.delete(like);
         log.info("좋아요 삭제");
         inMemoryService.deleteLikeData(like.getMember().getId(), like.getPost().getId());
         return false;
     }
 
-    public boolean createLike(Post post, Member member) {
+    public boolean create(Post post, Member member) {
         log.info("좋아요 생성");
         Like like = LikeMapper.toEntity(member, post);
         post.countUpLike(like);
-        likeRepository.save(like);
+        repository.save(like);
         inMemoryService.createLikeData(member.getId(), post.getId());
         return true;
     }
