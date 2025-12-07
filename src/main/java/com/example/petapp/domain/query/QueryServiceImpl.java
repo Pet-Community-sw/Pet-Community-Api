@@ -1,8 +1,6 @@
 package com.example.petapp.domain.query;
 
 import com.example.petapp.common.exception.NotFoundException;
-import com.example.petapp.domain.review.ReviewRepository;
-import com.example.petapp.domain.review.model.entity.Review;
 import com.example.petapp.domain.walkingtogethermatch.WalkingTogetherMatchRepository;
 import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;
@@ -14,15 +12,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class QueryServiceImpl implements QueryService {
 
-    private final ReviewRepository reviewRepository;
     private final WalkingTogetherMatchRepository walkingTogetherMatchRepository;
     private final WalkRecordRepository walkRecordRepository;
 
-
-    @Override
-    public Review findByReview(Long reviewId) {
-        return reviewRepository.findById(reviewId).orElseThrow(() -> new NotFoundException("해당 리뷰는 없습니다."));
-    }
 
     @Override
     public WalkingTogetherMatch findByWalkingTogetherPost(Long walkingTogetherPostId) {

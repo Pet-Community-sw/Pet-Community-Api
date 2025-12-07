@@ -1,5 +1,13 @@
 package com.example.petapp.service;
 
+import com.example.petapp.application.in.review.dto.request.CreateReviewDto;
+import com.example.petapp.application.in.review.dto.request.GetReviewList;
+import com.example.petapp.application.in.review.dto.request.UpdateReviewDto;
+import com.example.petapp.application.in.review.dto.response.CreateReviewResponseDto;
+import com.example.petapp.application.in.review.dto.response.GetReviewListResponseDto;
+import com.example.petapp.application.in.review.dto.response.GetReviewResponseDto;
+import com.example.petapp.application.in.review.mapper.ReviewMapper;
+import com.example.petapp.application.service.review.ReviewService;
 import com.example.petapp.common.base.embedded.Content;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.ForbiddenException;
@@ -10,15 +18,7 @@ import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.review.ReviewRepository;
-import com.example.petapp.domain.review.ReviewServiceImpl;
-import com.example.petapp.domain.review.mapper.ReviewMapper;
-import com.example.petapp.domain.review.model.dto.request.CreateReviewDto;
-import com.example.petapp.domain.review.model.dto.request.GetReviewList;
-import com.example.petapp.domain.review.model.dto.request.UpdateReviewDto;
-import com.example.petapp.domain.review.model.dto.response.CreateReviewResponseDto;
-import com.example.petapp.domain.review.model.dto.response.GetReviewListResponseDto;
-import com.example.petapp.domain.review.model.dto.response.GetReviewResponseDto;
-import com.example.petapp.domain.review.model.entity.Review;
+import com.example.petapp.domain.review.model.Review;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;
 import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
 import org.junit.jupiter.api.DisplayName;
@@ -38,10 +38,10 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ReviewServiceTest {
+public class ReviewUseCaseTest {
 
     @InjectMocks
-    private ReviewServiceImpl reviewServiceImpl;
+    private ReviewService reviewServiceImpl;
     @Mock
     private ReviewRepository reviewRepository;
     @Mock
@@ -399,7 +399,7 @@ public class ReviewServiceTest {
         reviewServiceImpl.deleteReview(reviewId, email);
 
         // then
-        verify(reviewRepository).deleteById(reviewId);
+        verify(reviewRepository).delete(reviewId);
     }
 
     @Test

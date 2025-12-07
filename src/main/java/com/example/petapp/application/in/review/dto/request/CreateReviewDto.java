@@ -1,11 +1,11 @@
-package com.example.petapp.domain.review.model.dto.request;
+package com.example.petapp.application.in.review.dto.request;
 
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import static com.example.petapp.domain.review.model.entity.Review.*;
+import static com.example.petapp.domain.review.model.Review.ReviewType;
 
 @Getter
 @Setter

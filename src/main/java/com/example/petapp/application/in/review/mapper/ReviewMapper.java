@@ -1,13 +1,13 @@
-package com.example.petapp.domain.review.mapper;
+package com.example.petapp.application.in.review.mapper;
 
-import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.review.model.entity.Review;
-import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
+import com.example.petapp.application.in.review.dto.request.CreateReviewDto;
+import com.example.petapp.application.in.review.dto.request.GetReviewList;
+import com.example.petapp.application.in.review.dto.response.GetReviewListResponseDto;
+import com.example.petapp.application.in.review.dto.response.GetReviewResponseDto;
 import com.example.petapp.common.base.embedded.Content;
-import com.example.petapp.domain.review.model.dto.request.CreateReviewDto;
-import com.example.petapp.domain.review.model.dto.request.GetReviewList;
-import com.example.petapp.domain.review.model.dto.response.GetReviewListResponseDto;
-import com.example.petapp.domain.review.model.dto.response.GetReviewResponseDto;
+import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.review.model.Review;
+import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
 
 import java.util.List;
 import java.util.stream.Collectors;

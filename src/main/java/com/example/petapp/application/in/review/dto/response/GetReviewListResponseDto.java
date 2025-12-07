@@ -1,6 +1,6 @@
-package com.example.petapp.domain.review.model.dto.response;
+package com.example.petapp.application.in.review.dto.response;
 
-import com.example.petapp.domain.review.model.dto.request.GetReviewList;
+import com.example.petapp.application.in.review.dto.request.GetReviewList;
 import lombok.*;
 
 import java.util.List;
@@ -12,15 +12,10 @@ import java.util.List;
 @Builder
 public class GetReviewListResponseDto {
 
-    private Long userId;
-
-    private String userName;
-
-    private String userImageUrl;
-
-    private Double averageRating;
-
-    private int reviewCount;
-
     List<GetReviewList> reviewList;
+    private Long userId;
+    private String userName;
+    private String userImageUrl;
+    private Double averageRating;
+    private int reviewCount;
 }

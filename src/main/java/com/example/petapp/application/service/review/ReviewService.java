@@ -1,17 +1,20 @@
-package com.example.petapp.domain.review;
+package com.example.petapp.application.service.review;
 
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
+import com.example.petapp.application.in.review.ReviewQueryUseCase;
+import com.example.petapp.application.in.review.ReviewUseCase;
+import com.example.petapp.application.in.review.dto.request.CreateReviewDto;
+import com.example.petapp.application.in.review.dto.request.UpdateReviewDto;
+import com.example.petapp.application.in.review.dto.response.CreateReviewResponseDto;
+import com.example.petapp.application.in.review.dto.response.GetReviewListResponseDto;
+import com.example.petapp.application.in.review.dto.response.GetReviewResponseDto;
+import com.example.petapp.application.in.review.mapper.ReviewMapper;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.query.QueryService;
-import com.example.petapp.domain.review.mapper.ReviewMapper;
-import com.example.petapp.domain.review.model.dto.request.CreateReviewDto;
-import com.example.petapp.domain.review.model.dto.request.UpdateReviewDto;
-import com.example.petapp.domain.review.model.dto.response.CreateReviewResponseDto;
-import com.example.petapp.domain.review.model.dto.response.GetReviewListResponseDto;
-import com.example.petapp.domain.review.model.dto.response.GetReviewResponseDto;
-import com.example.petapp.domain.review.model.entity.Review;
+import com.example.petapp.domain.review.ReviewRepository;
+import com.example.petapp.domain.review.model.Review;
 import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,15 +22,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.example.petapp.domain.review.model.entity.Review.ReviewType;
+import static com.example.petapp.domain.review.model.Review.ReviewType;
 
 @Service
 @RequiredArgsConstructor
-public class ReviewServiceImpl implements ReviewService {
+public class ReviewService implements ReviewUseCase {
 
     private final ProfileQueryUseCase profileQueryUseCase;
     private final ReviewRepository reviewRepository;
     private final QueryService queryService;
+    private final ReviewQueryUseCase reviewQueryUseCase;
     private final MemberQueryUseCase memberQueryUseCase;
 
     @Transactional
@@ -64,7 +68,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public GetReviewResponseDto getReview(Long reviewId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        Review review = queryService.findByReview(reviewId);
+        Review review = reviewQueryUseCase.findOrThrow(reviewId);
         return ReviewMapper.toGetReviewResponseDto(review, member);
     }
 
@@ -80,12 +84,12 @@ public class ReviewServiceImpl implements ReviewService {
     public void deleteReview(Long reviewId, String email) {
         Review review = findReviewWithAuth(reviewId, email);
 
-        reviewRepository.deleteById(review.getId());
+        reviewRepository.delete(review.getId());
     }
 
     private Review findReviewWithAuth(Long reviewId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        Review review = queryService.findByReview(reviewId);
+        Review review = reviewQueryUseCase.findOrThrow(reviewId);
 
         review.validated(member);
 

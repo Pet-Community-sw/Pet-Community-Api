@@ -1,12 +1,13 @@
-package com.example.petapp.domain.review;
+package com.example.petapp.interfaces;
 
+import com.example.petapp.application.in.review.ReviewUseCase;
+import com.example.petapp.application.in.review.dto.request.CreateReviewDto;
+import com.example.petapp.application.in.review.dto.request.UpdateReviewDto;
+import com.example.petapp.application.in.review.dto.response.CreateReviewResponseDto;
+import com.example.petapp.application.in.review.dto.response.GetReviewListResponseDto;
+import com.example.petapp.application.in.review.dto.response.GetReviewResponseDto;
 import com.example.petapp.common.base.dto.MessageResponse;
 import com.example.petapp.common.base.util.AuthUtil;
-import com.example.petapp.domain.review.model.dto.request.CreateReviewDto;
-import com.example.petapp.domain.review.model.dto.request.UpdateReviewDto;
-import com.example.petapp.domain.review.model.dto.response.CreateReviewResponseDto;
-import com.example.petapp.domain.review.model.dto.response.GetReviewListResponseDto;
-import com.example.petapp.domain.review.model.dto.response.GetReviewResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +23,14 @@ import javax.validation.Valid;
 @RequestMapping("/reviews")
 public class ReviewController {
 
-    private final ReviewService reviewService;
+    private final ReviewUseCase reviewUseCase;
 
     @Operation(
             summary = "리뷰 생성"
     )
     @PostMapping
     public CreateReviewResponseDto createReview(@RequestBody @Valid CreateReviewDto createReviewDto, Authentication authentication) {
-        return reviewService.createReview(createReviewDto, AuthUtil.getEmail(authentication));
+        return reviewUseCase.createReview(createReviewDto, AuthUtil.getEmail(authentication));
     }
 
     @Operation(
@@ -37,7 +38,7 @@ public class ReviewController {
     )
     @GetMapping("/{memberId}/list/member")
     public GetReviewListResponseDto getReviewListByMember(@PathVariable Long memberId, Authentication authentication) {
-        return reviewService.getReviewListByMember(memberId, AuthUtil.getEmail(authentication));
+        return reviewUseCase.getReviewListByMember(memberId, AuthUtil.getEmail(authentication));
     }
 
     @Operation(
@@ -45,7 +46,7 @@ public class ReviewController {
     )
     @GetMapping("/{profileId}/list/profile")
     public GetReviewListResponseDto getReviewListByProfile(@PathVariable Long profileId, Authentication authentication) {
-        return reviewService.getReviewListByProfile(profileId, AuthUtil.getEmail(authentication));
+        return reviewUseCase.getReviewListByProfile(profileId, AuthUtil.getEmail(authentication));
     }
 
     @Operation(
@@ -53,7 +54,7 @@ public class ReviewController {
     )
     @GetMapping("/{reviewId}")
     public GetReviewResponseDto getReview(@PathVariable Long reviewId, Authentication authentication) {
-        return reviewService.getReview(reviewId, AuthUtil.getEmail(authentication));
+        return reviewUseCase.getReview(reviewId, AuthUtil.getEmail(authentication));
     }
 
     @Operation(
@@ -61,7 +62,7 @@ public class ReviewController {
     )
     @PutMapping("/{reviewId}")
     public ResponseEntity<MessageResponse> updateReview(@PathVariable Long reviewId, @RequestBody @Valid UpdateReviewDto updateReviewDto, Authentication authentication) {
-        reviewService.updateReview(reviewId, updateReviewDto, AuthUtil.getEmail(authentication));
+        reviewUseCase.updateReview(reviewId, updateReviewDto, AuthUtil.getEmail(authentication));
         return ResponseEntity.ok(new MessageResponse("수정 되었습니다."));
     }
 
@@ -70,7 +71,7 @@ public class ReviewController {
     )
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<MessageResponse> deleteReview(@PathVariable Long reviewId, Authentication authentication) {
-        reviewService.deleteReview(reviewId, AuthUtil.getEmail(authentication));
+        reviewUseCase.deleteReview(reviewId, AuthUtil.getEmail(authentication));
         return ResponseEntity.ok(new MessageResponse("삭제 되었습니다."));
     }
 

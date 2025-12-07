@@ -1,4 +1,4 @@
-package com.example.petapp.domain.review.model.dto.request;
+package com.example.petapp.application.in.review.dto.request;
 
 import lombok.*;
 
