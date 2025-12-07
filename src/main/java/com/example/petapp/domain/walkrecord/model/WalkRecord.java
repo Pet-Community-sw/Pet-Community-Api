@@ -1,4 +1,4 @@
-package com.example.petapp.domain.walkrecord.model.entity;
+package com.example.petapp.domain.walkrecord.model;
 
 import com.example.petapp.common.base.superclass.BaseEntity;
 import com.example.petapp.common.exception.ConflictException;

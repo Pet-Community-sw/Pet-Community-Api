@@ -7,6 +7,7 @@ import com.example.petapp.application.in.post.delegate.model.dto.request.UpdateD
 import com.example.petapp.application.in.post.delegate.model.dto.response.ApplyToDelegateWalkPostResponseDto;
 import com.example.petapp.application.in.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
 import com.example.petapp.application.in.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
+import com.example.petapp.application.in.walkrecord.WalkRecordUseCase;
 import com.example.petapp.application.service.post.DelegateWalkPostService;
 import com.example.petapp.common.base.embedded.Applicant;
 import com.example.petapp.common.base.embedded.Content;
@@ -24,7 +25,6 @@ import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.post.model.DelegateWalkStatus;
 import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.domain.walkrecord.WalkRecordService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -60,7 +60,7 @@ DelegateWalkNormalPostUseCaseTest {
     @Mock
     private MemberChatRoomService memberChatRoomService;
     @Mock
-    private WalkRecordService walkRecordService;
+    private WalkRecordUseCase walkRecordUseCase;
     @Mock
     private SendNotificationUtil sendNotificationUtil;
 

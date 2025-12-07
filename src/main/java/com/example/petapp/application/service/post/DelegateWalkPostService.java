@@ -13,6 +13,8 @@ import com.example.petapp.application.in.post.delegate.model.dto.response.ApplyT
 import com.example.petapp.application.in.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
 import com.example.petapp.application.in.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
+import com.example.petapp.application.in.walkrecord.WalkRecordUseCase;
+import com.example.petapp.application.in.walkrecord.dto.response.CreateWalkRecordResponseDto;
 import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.common.base.embedded.Applicant;
 import com.example.petapp.common.exception.ForbiddenException;
@@ -21,8 +23,6 @@ import com.example.petapp.domain.post.DelegateWalkPostRepository;
 import com.example.petapp.domain.post.PostRepository;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.domain.walkrecord.WalkRecordService;
-import com.example.petapp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,7 +38,7 @@ import java.util.Set;
 public class DelegateWalkPostService implements DelegateWalkPostUseCase {
 
     private final DelegateWalkPostRepository delegateWalkPostRepository;
-    private final WalkRecordService walkRecordService;
+    private final WalkRecordUseCase walkRecordUseCase;
     private final ProfileQueryUseCase profileQueryUseCase;
     private final MemberQueryUseCase memberQueryUseCase;
     private final ChatRoomUseCase chatRoomUseCase;
@@ -100,7 +100,7 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
         DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
         delegateWalkPost.validatedUser(profileId);
         delegateWalkPost.grantAuthorize();//산책 start 허가.
-        return walkRecordService.createWalkRecord(delegateWalkPost);
+        return walkRecordUseCase.createWalkRecord(delegateWalkPost);
     }
 
     @Transactional

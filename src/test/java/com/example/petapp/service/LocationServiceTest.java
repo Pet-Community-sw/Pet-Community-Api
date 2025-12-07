@@ -1,5 +1,6 @@
 package com.example.petapp.service;
 
+import com.example.petapp.application.in.walkrecord.dto.request.SendLocationDto;
 import com.example.petapp.common.base.util.HaversineUtil;
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
 import com.example.petapp.common.exception.ForbiddenException;
@@ -9,8 +10,7 @@ import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walklocation.LocationServiceImpl;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;
-import com.example.petapp.domain.walkrecord.model.dto.request.SendLocationDto;
-import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
+import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,4 +1,4 @@
-package com.example.petapp.domain.walkrecord.model.dto.request;
+package com.example.petapp.application.in.walkrecord.dto.request;
 
 import lombok.*;
 

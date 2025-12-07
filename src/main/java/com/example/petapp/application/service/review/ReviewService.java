@@ -10,12 +10,12 @@ import com.example.petapp.application.in.review.dto.response.CreateReviewRespons
 import com.example.petapp.application.in.review.dto.response.GetReviewListResponseDto;
 import com.example.petapp.application.in.review.dto.response.GetReviewResponseDto;
 import com.example.petapp.application.in.review.mapper.ReviewMapper;
+import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.domain.review.ReviewRepository;
 import com.example.petapp.domain.review.model.Review;
-import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
+import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +30,7 @@ public class ReviewService implements ReviewUseCase {
 
     private final ProfileQueryUseCase profileQueryUseCase;
     private final ReviewRepository reviewRepository;
-    private final QueryService queryService;
+    private final WalkRecordQueryUseCase walkRecordQueryUseCase;
     private final ReviewQueryUseCase reviewQueryUseCase;
     private final MemberQueryUseCase memberQueryUseCase;
 
@@ -38,7 +38,7 @@ public class ReviewService implements ReviewUseCase {
     @Override
     public CreateReviewResponseDto createReview(CreateReviewDto createReviewDto, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        WalkRecord walkRecord = queryService.findByWalkRecord(createReviewDto.getWalkRecordId());
+        WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(createReviewDto.getWalkRecordId());
 
         walkRecord.validatedForCreate(member);
         Review savedReview = reviewRepository.save(ReviewMapper.toEntity(walkRecord, createReviewDto));

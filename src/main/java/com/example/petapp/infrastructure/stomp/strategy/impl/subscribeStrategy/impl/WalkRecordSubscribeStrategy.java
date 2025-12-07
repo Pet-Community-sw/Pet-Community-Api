@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.stomp.strategy.impl.subscribeStrategy.impl;
 
-import com.example.petapp.domain.query.QueryService;
-import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
+import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
+import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import com.example.petapp.infrastructure.stomp.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.impl.subscribeStrategy.BaseSubscribeTypeStrategy;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class WalkRecordSubscribeStrategy extends BaseSubscribeTypeStrategy {
 
     private static final String PATTERN = "/sub/walk-record/location/{walkRecordId}";
 
-    private final QueryService queryService;
+    private final WalkRecordQueryUseCase useCase;
 
     @Override
     public boolean isHandler(String destination) {
@@ -34,7 +34,7 @@ public class WalkRecordSubscribeStrategy extends BaseSubscribeTypeStrategy {
         Long walkRecordId = Long.valueOf(map.get("walkRecordId"));
         Long memberId = principalId(subscribeInfo);
 
-        WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
+        WalkRecord walkRecord = useCase.findOrThrow(walkRecordId);
         Long ownerMemberId = walkRecord.getDelegateWalkPost().getProfile().getMember().getId();
 
         if (!ownerMemberId.equals(memberId)) {

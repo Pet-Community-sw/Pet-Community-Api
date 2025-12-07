@@ -1,5 +1,9 @@
 package com.example.petapp.service;
 
+import com.example.petapp.application.in.walkrecord.dto.response.CreateWalkRecordResponseDto;
+import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordResponseDto;
+import com.example.petapp.application.in.walkrecord.mapper.WalkRecordMapper;
+import com.example.petapp.application.service.walkrecord.WalkRecordService;
 import com.example.petapp.common.base.util.DistanceUtil;
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
 import com.example.petapp.common.exception.ForbiddenException;
@@ -9,11 +13,7 @@ import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;
-import com.example.petapp.domain.walkrecord.WalkRecordServiceImpl;
-import com.example.petapp.domain.walkrecord.mapper.WalkRecordMapper;
-import com.example.petapp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
-import com.example.petapp.domain.walkrecord.model.dto.response.GetWalkRecordResponseDto;
-import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
+import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,10 +35,10 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class WalkRecordServiceTest {
+public class WalkRecordUseCaseTest {
 
     @InjectMocks
-    private WalkRecordServiceImpl walkRecordServiceImpl;
+    private WalkRecordService walkRecordServiceImpl;
     @Mock
     private WalkRecordRepository walkRecordRepository;
     @Mock

@@ -1,16 +1,18 @@
-package com.example.petapp.domain.walkrecord;
+package com.example.petapp.application.service.walkrecord;
 
 import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
+import com.example.petapp.application.in.walkrecord.WalkRecordUseCase;
+import com.example.petapp.application.in.walkrecord.dto.response.CreateWalkRecordResponseDto;
+import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordResponseDto;
+import com.example.petapp.application.in.walkrecord.mapper.WalkRecordMapper;
 import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.common.base.util.DistanceUtil;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
-import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.domain.walklocation.model.dto.response.GetWalkRecordLocationResponseDto;
-import com.example.petapp.domain.walkrecord.mapper.WalkRecordMapper;
-import com.example.petapp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
-import com.example.petapp.domain.walkrecord.model.dto.response.GetWalkRecordResponseDto;
-import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
+import com.example.petapp.domain.walkrecord.WalkRecordRepository;
+import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,10 +22,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class WalkRecordServiceImpl implements WalkRecordService {
+public class WalkRecordService implements WalkRecordUseCase {
 
     private final WalkRecordRepository walkRecordRepository;
-    private final QueryService queryService;
+    private final WalkRecordQueryUseCase walkRecordQueryUseCase;
     private final MemberQueryUseCase memberQueryUseCase;
     private final InMemoryService inMemoryService;
 
@@ -40,7 +42,7 @@ public class WalkRecordServiceImpl implements WalkRecordService {
     @Transactional(readOnly = true)
     @Override
     public GetWalkRecordResponseDto getWalkRecord(Long walkRecordId, String email) {
-        WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
+        WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
         return WalkRecordMapper.toGetWalkRecordResponseDto(walkRecord);
     }
 
@@ -48,7 +50,7 @@ public class WalkRecordServiceImpl implements WalkRecordService {
     @Override
     public GetWalkRecordLocationResponseDto getWalkRecordLocation(Long walkRecordId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
+        WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
         walkRecord.validateMember(member);
         return new GetWalkRecordLocationResponseDto(inMemoryService.getLocationData(walkRecordId));
     }
@@ -59,7 +61,7 @@ public class WalkRecordServiceImpl implements WalkRecordService {
     @Override
     public void updateStartWalkRecord(Long walkRecordId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
+        WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
         walkRecord.validateMember(member.getId());
         walkRecord.updateWalkStatus(WalkRecord.WalkStatus.START);
     }
@@ -70,7 +72,7 @@ public class WalkRecordServiceImpl implements WalkRecordService {
     @Override
     public void FinishWalkRecord(Long walkRecordId, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
-        WalkRecord walkRecord = queryService.findByWalkRecord(walkRecordId);
+        WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
         walkRecord.validateMember(member.getId());
         walkRecord.updateWalkStatus(WalkRecord.WalkStatus.FINISH);
 
@@ -84,4 +86,6 @@ public class WalkRecordServiceImpl implements WalkRecordService {
         walkRecord.updateRecordToPath(totalDistance, paths);
         inMemoryService.deleteLocationData(walkRecordId);
     }
+
+    //todo : delete 있어야함.
 }

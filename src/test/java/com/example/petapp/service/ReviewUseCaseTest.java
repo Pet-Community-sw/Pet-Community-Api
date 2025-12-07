@@ -20,7 +20,7 @@ import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.review.ReviewRepository;
 import com.example.petapp.domain.review.model.Review;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;
-import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
+import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

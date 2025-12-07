@@ -8,10 +8,10 @@ import com.example.petapp.application.in.post.delegate.model.dto.request.UpdateD
 import com.example.petapp.application.in.post.delegate.model.dto.response.ApplyToDelegateWalkPostResponseDto;
 import com.example.petapp.application.in.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
 import com.example.petapp.application.in.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
+import com.example.petapp.application.in.walkrecord.dto.response.CreateWalkRecordResponseDto;
 import com.example.petapp.common.base.dto.MessageResponse;
 import com.example.petapp.common.base.embedded.Applicant;
 import com.example.petapp.common.base.util.AuthUtil;
-import com.example.petapp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

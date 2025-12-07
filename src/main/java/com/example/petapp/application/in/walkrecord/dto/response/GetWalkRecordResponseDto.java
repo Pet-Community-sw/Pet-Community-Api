@@ -1,4 +1,4 @@
-package com.example.petapp.domain.walkrecord.model.dto.response;
+package com.example.petapp.application.in.walkrecord.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,12 +1,12 @@
 package com.example.petapp.domain.walklocation;
 
+import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
+import com.example.petapp.application.in.walkrecord.dto.request.SendLocationDto;
 import com.example.petapp.common.base.util.HaversineUtil;
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
-import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.domain.walklocation.mapper.LocationMapper;
 import com.example.petapp.domain.walklocation.model.dto.request.LocationMessage;
-import com.example.petapp.domain.walkrecord.model.dto.request.SendLocationDto;
-import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
+import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +21,11 @@ public class LocationServiceImpl implements LocationService {//예외 처리해�
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final SendNotificationUtil sendNotificationUtil;
     private final InMemoryService inMemoryService;
-    private final QueryService queryService;
+    private final WalkRecordQueryUseCase walkRecordQueryUseCase;
 
     @Override
     public void sendLocation(LocationMessage locationMessage, String memberId) {
-        WalkRecord walkRecord = queryService.findByWalkRecord(locationMessage.getWalkRecordId());
+        WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(locationMessage.getWalkRecordId());
         walkRecord.validateMember(Long.valueOf(memberId));
         walkRecord.validateStart();
 

@@ -1,10 +1,10 @@
-package com.example.petapp.domain.walkrecord.mapper;
+package com.example.petapp.application.in.walkrecord.mapper;
 
+import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordResponseDto;
 import com.example.petapp.common.base.util.CreatedAtUtil;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
-import com.example.petapp.domain.walkrecord.model.dto.response.GetWalkRecordResponseDto;
-import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
+import com.example.petapp.domain.walkrecord.model.WalkRecord;
 
 public class WalkRecordMapper {
 

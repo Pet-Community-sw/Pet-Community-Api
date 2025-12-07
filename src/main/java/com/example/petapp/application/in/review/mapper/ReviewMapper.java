@@ -7,7 +7,7 @@ import com.example.petapp.application.in.review.dto.response.GetReviewResponseDt
 import com.example.petapp.common.base.embedded.Content;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.review.model.Review;
-import com.example.petapp.domain.walkrecord.model.entity.WalkRecord;
+import com.example.petapp.domain.walkrecord.model.WalkRecord;
 
 import java.util.List;
 import java.util.stream.Collectors;

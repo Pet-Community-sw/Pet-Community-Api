@@ -1,9 +1,10 @@
-package com.example.petapp.domain.walkrecord;
+package com.example.petapp.interfaces;
 
+import com.example.petapp.application.in.walkrecord.WalkRecordUseCase;
+import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordResponseDto;
 import com.example.petapp.common.base.dto.MessageResponse;
 import com.example.petapp.common.base.util.AuthUtil;
 import com.example.petapp.domain.walklocation.model.dto.response.GetWalkRecordLocationResponseDto;
-import com.example.petapp.domain.walkrecord.model.dto.response.GetWalkRecordResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -16,14 +17,14 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/walk-record")//삭제도 있어야하나?
 public class WalkRecordController {
-    private final WalkRecordService walkRecordService;
+    private final WalkRecordUseCase walkRecordUseCase;
 
     @Operation(
             summary = "산책 기록 상세 조회"
     )
     @GetMapping("/{walkRecordId}")
     public GetWalkRecordResponseDto getWalkRecord(@PathVariable Long walkRecordId, Authentication authentication) {
-        return walkRecordService.getWalkRecord(walkRecordId, AuthUtil.getEmail(authentication));
+        return walkRecordUseCase.getWalkRecord(walkRecordId, AuthUtil.getEmail(authentication));
     }
 
     @Operation(
@@ -31,7 +32,7 @@ public class WalkRecordController {
     )
     @GetMapping("/{walkRecordId}/location")
     public GetWalkRecordLocationResponseDto getWalkRecordLocation(@PathVariable Long walkRecordId, Authentication authentication) {
-        return walkRecordService.getWalkRecordLocation(walkRecordId, AuthUtil.getEmail(authentication));
+        return walkRecordUseCase.getWalkRecordLocation(walkRecordId, AuthUtil.getEmail(authentication));
     }
 
     @Operation(
@@ -39,7 +40,7 @@ public class WalkRecordController {
     )
     @PutMapping("/{walkRecordId}/start")
     public ResponseEntity<MessageResponse> updateStartWalkRecord(@PathVariable Long walkRecordId, Authentication authentication) {
-        walkRecordService.updateStartWalkRecord(walkRecordId, AuthUtil.getEmail(authentication));
+        walkRecordUseCase.updateStartWalkRecord(walkRecordId, AuthUtil.getEmail(authentication));
         return ResponseEntity.ok(new MessageResponse("start"));
     }
 
@@ -48,7 +49,7 @@ public class WalkRecordController {
     )
     @PutMapping("/{walkRecordId}/finish")
     public ResponseEntity<MessageResponse> updateFinishWalkRecord(@PathVariable Long walkRecordId, Authentication authentication) {
-        walkRecordService.FinishWalkRecord(walkRecordId, AuthUtil.getEmail(authentication));
+        walkRecordUseCase.FinishWalkRecord(walkRecordId, AuthUtil.getEmail(authentication));
         return ResponseEntity.ok(new MessageResponse("finish"));
     }
 }
