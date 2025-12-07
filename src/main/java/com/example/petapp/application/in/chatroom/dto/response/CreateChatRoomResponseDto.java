@@ -1,4 +1,4 @@
-package com.example.petapp.domain.groupchatroom.model.dto.response;
+package com.example.petapp.application.in.chatroom.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

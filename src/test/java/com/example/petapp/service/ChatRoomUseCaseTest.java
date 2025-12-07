@@ -1,17 +1,17 @@
 package com.example.petapp.service;
 
+import com.example.petapp.application.in.chatroom.dto.request.UpdateChatRoomDto;
+import com.example.petapp.application.in.chatroom.dto.response.ChatRoomResponseDto;
+import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
+import com.example.petapp.application.in.chatroom.mapper.ChatRoomMapper;
+import com.example.petapp.application.service.chatroom.ChatRoomService;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.common.exception.NotFoundException;
+import com.example.petapp.domain.chatroom.ChatRoomRepository;
+import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
 import com.example.petapp.domain.chatting.reader.ChattingReader;
-import com.example.petapp.domain.groupchatroom.ChatRoomRepository;
-import com.example.petapp.domain.groupchatroom.ChatRoomServiceImpl;
-import com.example.petapp.domain.groupchatroom.mapper.ChatRoomMapper;
-import com.example.petapp.domain.groupchatroom.model.dto.request.UpdateChatRoomDto;
-import com.example.petapp.domain.groupchatroom.model.dto.response.ChatRoomResponseDto;
-import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
-import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
@@ -36,10 +36,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ChatRoomServiceTest {
+class ChatRoomUseCaseTest {
 
     @InjectMocks
-    private ChatRoomServiceImpl chatRoomServiceImpl;
+    private ChatRoomService chatRoomServiceImpl;
 
     @Mock
     private ChatRoomRepository chatRoomRepository;
@@ -79,7 +79,7 @@ class ChatRoomServiceTest {
 
         when(redisTemplate.opsForValue()).thenReturn(valueOperations);
         when(profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
-        when(chatRoomRepository.findAllByUserIdAndChatRoomType(profile, chatRoomType)).thenReturn(List.of(chatRoom));
+        when(chatRoomRepository.findAll(profile, chatRoomType)).thenReturn(List.of(chatRoom));
 
         when(valueOperations.get("chat:lastMessage99")).thenReturn("안녕!");
         when(valueOperations.get("chat:lastMessageTime99")).thenReturn(LocalDateTime.now().toString());
@@ -129,7 +129,7 @@ class ChatRoomServiceTest {
                 .chatRoomId(2L)
                 .build();
 
-        when(chatRoomRepository.findByWalkingTogetherMatch(post)).thenReturn(Optional.empty());
+        when(chatRoomRepository.find(post)).thenReturn(Optional.empty());
         try (MockedStatic<ChatRoomMapper> mockedStatic = mockStatic(ChatRoomMapper.class)) {
             mockedStatic.when(() -> ChatRoomMapper.toEntity(post, profile)).thenReturn(chatRoom);
         }
@@ -166,7 +166,7 @@ class ChatRoomServiceTest {
                 .profiles(new ArrayList<>()) // 현재 참여자 0명
                 .build();
 
-        when(chatRoomRepository.findByWalkingTogetherMatch(post)).thenReturn(Optional.of(existingRoom));
+        when(chatRoomRepository.find(post)).thenReturn(Optional.of(existingRoom));
 
         // when
         CreateChatRoomResponseDto result = chatRoomServiceImpl.createChatRoom(post, profile);
@@ -201,7 +201,7 @@ class ChatRoomServiceTest {
                 .profiles(List.of(fakeProfile))
                 .build();
 
-        when(chatRoomRepository.findByWalkingTogetherMatch(post)).thenReturn(Optional.of(chatRoom));
+        when(chatRoomRepository.find(post)).thenReturn(Optional.of(chatRoom));
 
         //when & then
         assertThatThrownBy(() -> chatRoomServiceImpl.createChatRoom(post, profile))
@@ -279,7 +279,7 @@ class ChatRoomServiceTest {
 
         //then
         verify(chatMessageRepository).deleteByChatRoomId(chatRoomId);
-        verify(chatRoomRepository).deleteById(chatRoomId);
+        verify(chatRoomRepository).delete(chatRoomId);
     }
 
     @Test

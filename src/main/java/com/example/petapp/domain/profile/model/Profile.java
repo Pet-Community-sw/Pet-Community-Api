@@ -2,7 +2,7 @@ package com.example.petapp.domain.profile.model;
 
 import com.example.petapp.application.in.profile.dto.request.ProfileDto;
 import com.example.petapp.common.base.superclass.BaseEntity;
-import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
+import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.petbreed.model.PetBreed;
 import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;

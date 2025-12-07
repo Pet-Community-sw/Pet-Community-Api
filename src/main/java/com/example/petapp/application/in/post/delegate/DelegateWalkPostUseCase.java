@@ -1,5 +1,6 @@
 package com.example.petapp.application.in.post.delegate;
 
+import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.application.in.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
 import com.example.petapp.application.in.post.delegate.model.dto.request.GetDelegatePostResponseDto;
 import com.example.petapp.application.in.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
@@ -7,7 +8,6 @@ import com.example.petapp.application.in.post.delegate.model.dto.response.ApplyT
 import com.example.petapp.application.in.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
 import com.example.petapp.application.in.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
 import com.example.petapp.common.base.embedded.Applicant;
-import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.domain.walkrecord.model.dto.response.CreateWalkRecordResponseDto;
 
 import java.util.List;

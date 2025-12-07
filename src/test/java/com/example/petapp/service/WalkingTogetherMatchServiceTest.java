@@ -1,11 +1,11 @@
 package com.example.petapp.service;
 
+import com.example.petapp.application.in.chatroom.ChatRoomUseCase;
+import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.common.base.embedded.Content;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.common.exception.NotFoundException;
-import com.example.petapp.domain.groupchatroom.ChatRoomService;
-import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.petbreed.PetBreedRepository;
 import com.example.petapp.domain.petbreed.model.PetBreed;
@@ -46,7 +46,7 @@ public class WalkingTogetherMatchServiceTest {
     @InjectMocks
     private WalkingTogetherMatchServiceImpl walkingTogetherPostServiceImpl;
     @Mock
-    private ChatRoomService chatRoomService;
+    private ChatRoomUseCase chatRoomUseCase;
     @Mock
     private WalkingTogetherMatchRepository walkingTogetherMatchRepository;
     @Mock
@@ -335,7 +335,7 @@ public class WalkingTogetherMatchServiceTest {
         when(profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
         when(walkingTogetherMatchRepository.findById(walkingTogetherPostId)).thenReturn(Optional.of(post));
         when(petBreedRepository.find("푸들")).thenReturn(Optional.of(petBreed));
-        when(chatRoomService.createChatRoom(post, profile)).thenReturn(chatRoomResponseDto);
+        when(chatRoomUseCase.createChatRoom(post, profile)).thenReturn(chatRoomResponseDto);
 
         // when
         CreateChatRoomResponseDto result = walkingTogetherPostServiceImpl.startMatch(walkingTogetherPostId, profileId);
@@ -343,7 +343,7 @@ public class WalkingTogetherMatchServiceTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.getChatRoomId()).isEqualTo(1L);
-        verify(chatRoomService).createChatRoom(post, profile);
+        verify(chatRoomUseCase).createChatRoom(post, profile);
     }
 
     @Test

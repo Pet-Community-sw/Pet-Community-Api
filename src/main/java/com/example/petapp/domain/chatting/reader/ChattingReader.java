@@ -1,6 +1,6 @@
 package com.example.petapp.domain.chatting.reader;
 
-import com.example.petapp.domain.groupchatroom.model.dto.response.ChatMessageResponseDto;
+import com.example.petapp.application.in.chatroom.dto.response.ChatMessageResponseDto;
 import org.springframework.stereotype.Service;
 
 @Service

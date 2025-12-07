@@ -1,8 +1,8 @@
 package com.example.petapp.domain.walkingtogethermatch;
 
+import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.common.base.dto.MessageResponse;
 import com.example.petapp.common.base.util.AuthUtil;
-import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.domain.walkingtogethermatch.model.dto.request.CreateWalkingTogetherMatchDto;
 import com.example.petapp.domain.walkingtogethermatch.model.dto.request.UpdateWalkingTogetherMatchDto;
 import com.example.petapp.domain.walkingtogethermatch.model.dto.response.CreateWalkingTogetherMatchResponseDto;

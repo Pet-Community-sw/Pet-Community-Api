@@ -1,11 +1,11 @@
 package com.example.petapp.domain.walkingtogethermatch;
 
 
+import com.example.petapp.application.in.chatroom.ChatRoomUseCase;
+import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.application.in.petbreed.PetBreedQueryUseCase;
 import com.example.petapp.application.in.post.PostQueryUseCase;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
-import com.example.petapp.domain.groupchatroom.ChatRoomService;
-import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.domain.petbreed.model.PetBreed;
 import com.example.petapp.domain.post.model.RecommendRoutePost;
 import com.example.petapp.domain.profile.model.Profile;
@@ -26,7 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WalkingTogetherMatchServiceImpl implements WalkingTogetherMatchService {
 
-    private final ChatRoomService chatRoomService;
+    private final ChatRoomUseCase chatRoomUseCase;
     private final WalkingTogetherMatchRepository walkingTogetherMatchRepository;
     private final QueryService queryService;
     private final PetBreedQueryUseCase petBreedQueryUseCase;
@@ -92,6 +92,6 @@ public class WalkingTogetherMatchServiceImpl implements WalkingTogetherMatchServ
         walkingTogetherMatch.checkInMatch(profileId, petBreed);
         walkingTogetherMatch.matchingStart(profileId, profile);
 
-        return chatRoomService.createChatRoom(walkingTogetherMatch, profile);
+        return chatRoomUseCase.createChatRoom(walkingTogetherMatch, profile);
     }
 }

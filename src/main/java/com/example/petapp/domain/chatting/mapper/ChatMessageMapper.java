@@ -3,7 +3,7 @@ package com.example.petapp.domain.chatting.mapper;
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.chatting.model.dto.ChatMessageDto;
 import com.example.petapp.domain.chatting.model.dto.UserInfo;
-import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
+import com.example.petapp.domain.chatroom.model.ChatRoom;
 
 import java.time.LocalDateTime;
 

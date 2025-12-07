@@ -1,11 +1,11 @@
 package com.example.petapp.domain.chatting.strategy.impl;
 
+import com.example.petapp.application.in.chatroom.ChatRoomUseCase;
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.chatting.model.dto.NotificationDto;
 import com.example.petapp.domain.chatting.model.dto.StompResponseDto;
 import com.example.petapp.domain.chatting.model.type.CommandType;
 import com.example.petapp.domain.chatting.strategy.MessageTypeStrategy;
-import com.example.petapp.domain.groupchatroom.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class LeaveStrategy implements MessageTypeStrategy {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
-    private final ChatRoomService chatRoomService;
+    private final ChatRoomUseCase chatRoomUseCase;
 
     @Override
     public void handle(ChatMessage chatMessage) {
@@ -23,6 +23,6 @@ public class LeaveStrategy implements MessageTypeStrategy {
         NotificationDto notificationDto = new NotificationDto(chatMessage.getSenderId(), message);
         simpMessagingTemplate.convertAndSend("/sub/chat/" + chatMessage.getChatRoomId(),
                 StompResponseDto.builder().commandType(CommandType.LEAVE).body(notificationDto).build());
-        chatRoomService.deleteChatRoom(chatMessage.getChatRoomId(), chatMessage.getSenderId());
+        chatRoomUseCase.deleteChatRoom(chatMessage.getChatRoomId(), chatMessage.getSenderId());
     }
 }

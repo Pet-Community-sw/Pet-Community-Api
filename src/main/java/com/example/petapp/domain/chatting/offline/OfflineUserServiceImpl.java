@@ -1,7 +1,7 @@
 package com.example.petapp.domain.chatting.offline;
 
+import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.model.ChatMessage;
-import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,8 +1,6 @@
 package com.example.petapp.domain.query;
 
 import com.example.petapp.common.exception.NotFoundException;
-import com.example.petapp.domain.groupchatroom.ChatRoomRepository;
-import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.petapp.domain.review.ReviewRepository;
 import com.example.petapp.domain.review.model.entity.Review;
 import com.example.petapp.domain.walkingtogethermatch.WalkingTogetherMatchRepository;
@@ -16,15 +14,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class QueryServiceImpl implements QueryService {
 
-    private final ChatRoomRepository chatRoomRepository;
     private final ReviewRepository reviewRepository;
     private final WalkingTogetherMatchRepository walkingTogetherMatchRepository;
     private final WalkRecordRepository walkRecordRepository;
 
-    @Override
-    public ChatRoom findByChatRoom(Long chatRoomId) {
-        return chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new NotFoundException("해당 채팅방은 없습니다."));
-    }
 
     @Override
     public Review findByReview(Long reviewId) {

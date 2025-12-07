@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.stomp.strategy.impl.subscribeStrategy.impl;
 
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
-import com.example.petapp.domain.groupchatroom.ChatRoomRepository;
+import com.example.petapp.domain.chatroom.ChatRoomRepository;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.infrastructure.stomp.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.impl.subscribeStrategy.BaseSubscribeTypeStrategy;
@@ -34,7 +34,7 @@ public class ChatRoomSubscribeStrategy extends BaseSubscribeTypeStrategy {
         Long chatroomId = Long.valueOf(map.get("chatRoomId"));
         Long profileId = principalId(subscribeInfo);
         Profile profile = useCase.findOrThrow(profileId);
-        if (!chatRoomRepository.existsByIdAndUsersContains(chatroomId, profile.getId())) {
+        if (!chatRoomRepository.existAndContain(chatroomId, profile.getId())) {
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }
         inMemoryService.createOnlineData(chatroomId, profileId);

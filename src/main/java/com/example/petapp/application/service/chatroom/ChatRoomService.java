@@ -1,20 +1,22 @@
-package com.example.petapp.domain.groupchatroom;
+package com.example.petapp.application.service.chatroom;
 
+import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
+import com.example.petapp.application.in.chatroom.ChatRoomUseCase;
+import com.example.petapp.application.in.chatroom.dto.request.UpdateChatRoomDto;
+import com.example.petapp.application.in.chatroom.dto.response.ChatMessageResponseDto;
+import com.example.petapp.application.in.chatroom.dto.response.ChatRoomResponseDto;
+import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
+import com.example.petapp.application.in.chatroom.mapper.ChatRoomMapper;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.application.in.profile.dto.response.ChatRoomUsersResponseDto;
+import com.example.petapp.domain.chatroom.ChatRoomRepository;
+import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
 import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
 import com.example.petapp.domain.chatting.model.type.ChatRoomType;
 import com.example.petapp.domain.chatting.reader.ChattingReader;
-import com.example.petapp.domain.groupchatroom.mapper.ChatRoomMapper;
-import com.example.petapp.domain.groupchatroom.model.dto.request.UpdateChatRoomDto;
-import com.example.petapp.domain.groupchatroom.model.dto.response.ChatMessageResponseDto;
-import com.example.petapp.domain.groupchatroom.model.dto.response.ChatRoomResponseDto;
-import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
-import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
 import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
@@ -34,19 +36,19 @@ import java.util.stream.Collectors;
 /*
  *   todo : 지금은 profile 채팅방만 구현해놨음.
  * */
-public class ChatRoomServiceImpl implements ChatRoomService {
+public class ChatRoomService implements ChatRoomUseCase {
 
     private final ProfileQueryUseCase profileQueryUseCase;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ChattingReader chattingReader;
-    private final QueryService queryService;
+    private final ChatRoomQueryUseCase chatRoomQueryUseCase;
     private final InMemoryService inMemoryService;
 
     @Transactional(readOnly = true)
     @Override
     public List<ChatRoomResponseDto> getChatRooms(Long profileId) {//todo : 나중에 One으로도 같이 내보내면 될듯?
-        List<ChatRoom> chatRoomList = chatRoomRepository.findAllByUserIdAndChatRoomType(profileId, ChatRoomType.MANY);//나중에 타입 파라미터로 방아야함
+        List<ChatRoom> chatRoomList = chatRoomRepository.findAll(profileId, ChatRoomType.MANY);//나중에 타입 파라미터로 방아야함
         return chatRoomList.stream()
                 .map(chatRoom -> toChatRoomsResponseDtoWithRedis(chatRoom, profileId))
                 .collect(Collectors.toList());
@@ -55,7 +57,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Transactional
     @Override
     public CreateChatRoomResponseDto createChatRoom(WalkingTogetherMatch walkingTogetherMatch, Profile profile) {
-        Optional<ChatRoom> chatRoom = chatRoomRepository.findByWalkingTogetherMatch(walkingTogetherMatch);
+        Optional<ChatRoom> chatRoom = chatRoomQueryUseCase.find(walkingTogetherMatch);
         if (chatRoom.isEmpty()) {//채팅방이 없으면 새로운생성 있으면 profiles에 신청자 Profile 추가
             ChatRoom savedChatRoom = chatRoomRepository.save(ChatRoomMapper.toEntity(walkingTogetherMatch, profile));
             return new CreateChatRoomResponseDto(savedChatRoom.getId(), true);
@@ -81,7 +83,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Transactional(readOnly = true)
     @Override
     public List<Long> getUsers(Long chatRoomId) {
-        ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
+        ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
         return new ArrayList<>(chatRoom
                 .getUsers());
     }
@@ -89,13 +91,13 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Transactional
     @Override
     public void deleteChatRoom(Long chatRoomId, Long userId) {
-        ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
+        ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
         chatRoom.validateUser(userId);
         chatRoom.deleteUser(userId);
         inMemoryService.deleteReadData(chatRoomId, userId);
         if (chatRoomRepository.countByProfile(chatRoomId) <= 1) {//방 사용자 수가 1이되면 채팅방 전체 삭제.
             chatMessageRepository.deleteByChatRoomId(chatRoomId);//채팅방 메시지 삭제.
-            chatRoomRepository.deleteById(chatRoomId);
+            chatRoomRepository.delete(chatRoomId);
             deleteRedis(chatRoomId);
         }
     }
@@ -103,7 +105,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Transactional
     @Override//방장만 수정할 수 있도록 설정.
     public void updateChatRoom(Long chatRoomId, UpdateChatRoomDto updateChatRoomDto, Long profileId) {
-        ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
+        ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
         chatRoom.validateChatOwner(profile);
         chatRoom.setName(updateChatRoomDto.getChatRoomName());
@@ -111,7 +113,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     @Transactional(readOnly = true)
-    @Override
+    @Override//todo : service 따로 둬야할듯.
     public ChatMessageResponseDto getMessages(Long chatRoomId, Long userId, int page) {
         return chattingReader.getMessages(chatRoomId, userId, page);
     }

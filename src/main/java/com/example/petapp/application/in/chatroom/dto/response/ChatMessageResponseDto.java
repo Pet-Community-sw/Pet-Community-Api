@@ -1,6 +1,6 @@
-package com.example.petapp.domain.groupchatroom.model.dto.response;
+package com.example.petapp.application.in.chatroom.dto.response;
 
-import com.example.petapp.domain.groupchatroom.model.dto.request.ChatMessageDtoMember;
+import com.example.petapp.application.in.chatroom.dto.request.ChatMessageDtoMember;
 import lombok.*;
 
 import java.util.List;

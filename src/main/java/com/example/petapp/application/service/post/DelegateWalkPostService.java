@@ -1,5 +1,7 @@
 package com.example.petapp.application.service.post;
 
+import com.example.petapp.application.in.chatroom.ChatRoomUseCase;
+import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.post.PostQueryUseCase;
 import com.example.petapp.application.in.post.delegate.DelegateWalkPostUseCase;
@@ -14,8 +16,6 @@ import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.common.base.embedded.Applicant;
 import com.example.petapp.common.exception.ForbiddenException;
-import com.example.petapp.domain.groupchatroom.ChatRoomService;
-import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.DelegateWalkPostRepository;
 import com.example.petapp.domain.post.PostRepository;
@@ -41,7 +41,7 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
     private final WalkRecordService walkRecordService;
     private final ProfileQueryUseCase profileQueryUseCase;
     private final MemberQueryUseCase memberQueryUseCase;
-    private final ChatRoomService chatRoomService;
+    private final ChatRoomUseCase chatRoomUseCase;
     private final PostQueryUseCase<DelegateWalkPost> postQueryUseCase;
     private final PostRepository<DelegateWalkPost> postRepository;
 
@@ -91,7 +91,7 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
         DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
         delegateWalkPost.validatedAndSelectApplicant(memberId, member);
         //켈린더에 넣는 로직필요.
-        return chatRoomService.createChatRoom(member, applicantMember);
+        return chatRoomUseCase.createChatRoom(member, applicantMember);
     }
 
     @Transactional//산책 허가.

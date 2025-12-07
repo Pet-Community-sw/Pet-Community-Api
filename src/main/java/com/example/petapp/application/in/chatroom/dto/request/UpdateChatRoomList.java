@@ -1,4 +1,4 @@
-package com.example.petapp.domain.groupchatroom.model.dto.request;
+package com.example.petapp.application.in.chatroom.dto.request;
 
 import lombok.*;
 

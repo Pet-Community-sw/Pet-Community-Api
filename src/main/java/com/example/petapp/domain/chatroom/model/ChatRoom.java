@@ -1,4 +1,4 @@
-package com.example.petapp.domain.groupchatroom.model.entity;
+package com.example.petapp.domain.chatroom.model;
 
 import com.example.petapp.common.base.superclass.BaseEntity;
 import com.example.petapp.common.exception.ConflictException;

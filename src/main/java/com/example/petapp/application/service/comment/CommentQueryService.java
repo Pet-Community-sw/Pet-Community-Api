@@ -6,7 +6,9 @@ import com.example.petapp.domain.comment.CommentRepository;
 import com.example.petapp.domain.comment.model.Comment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class CommentQueryService implements CommentQueryUseCase {

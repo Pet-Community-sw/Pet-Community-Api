@@ -1,18 +1,16 @@
-package com.example.petapp.domain.groupchatroom;
+package com.example.petapp.application.in.chatroom;
 
-import com.example.petapp.domain.groupchatroom.model.dto.request.UpdateChatRoomDto;
-import com.example.petapp.domain.groupchatroom.model.dto.response.ChatMessageResponseDto;
-import com.example.petapp.domain.groupchatroom.model.dto.response.ChatRoomResponseDto;
-import com.example.petapp.domain.groupchatroom.model.dto.response.CreateChatRoomResponseDto;
+import com.example.petapp.application.in.chatroom.dto.request.UpdateChatRoomDto;
+import com.example.petapp.application.in.chatroom.dto.response.ChatMessageResponseDto;
+import com.example.petapp.application.in.chatroom.dto.response.ChatRoomResponseDto;
+import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public interface ChatRoomService {
+public interface ChatRoomUseCase {
 
     List<ChatRoomResponseDto> getChatRooms(Long userId);
 

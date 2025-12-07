@@ -1,7 +1,9 @@
 package com.example.petapp.domain.chatting.strategy.impl;
 
+import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
+import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.AckInfoRepository;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
 import com.example.petapp.domain.chatting.model.ChatMessage;
@@ -9,9 +11,7 @@ import com.example.petapp.domain.chatting.model.dto.StompResponseDto;
 import com.example.petapp.domain.chatting.model.dto.UpdateListDto;
 import com.example.petapp.domain.chatting.model.type.CommandType;
 import com.example.petapp.domain.chatting.strategy.MessageTypeStrategy;
-import com.example.petapp.domain.groupchatroom.model.entity.ChatRoom;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.domain.query.QueryService;
 import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -27,12 +27,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TalkStrategy implements MessageTypeStrategy {
 
+    private final ChatRoomQueryUseCase chatRoomQueryUseCase;
     private final ProfileQueryUseCase profileQueryUseCase;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatMessageRepository chatMessageRepository;
     private final InMemoryService inMemoryService;
     private final SendNotificationUtil sendNotificationUtil;
-    private final QueryService queryService;
     private final AckInfoRepository ackInfoRepository;
     private final SimpUserRegistry simpUserRegistry;
     private final TaskScheduler resendScheduler;//stompConfig에서 선언해놓았던 스케줄러가 선언이됨.
@@ -65,7 +65,7 @@ public class TalkStrategy implements MessageTypeStrategy {
         Long senderId = chatMessage.getSenderId();
         String message = chatMessage.getSenderName() + "님이 메시지를 보냈습니다.";
 
-        ChatRoom chatRoom = queryService.findByChatRoom(chatRoomId);
+        ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
         Set<Long> users = chatRoom.getUsers();
         Set<String> onlineUsers = inMemoryService.getOnlineDatas(chatRoomId);
 
@@ -85,7 +85,7 @@ public class TalkStrategy implements MessageTypeStrategy {
      */
     private void scheduleRetry(ChatMessage chatMessage) {
         Set<Long> unReadUsers = chatMessage.getUsers();
-        ChatRoom chatRoom = queryService.findByChatRoom(chatMessage.getChatRoomId());
+        ChatRoom chatRoom = chatRoomQueryUseCase.find(chatMessage.getChatRoomId());
         Set<Long> sendUsers = chatRoom.getUsers().stream().filter(userId -> !unReadUsers.contains(userId)).collect(Collectors.toSet());
         ackInfoRepository.save(chatMessage.getClientMessageId(), sendUsers);
 
