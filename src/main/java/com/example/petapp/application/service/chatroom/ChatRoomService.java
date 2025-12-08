@@ -17,7 +17,7 @@ import com.example.petapp.domain.chatting.model.type.ChatRoomType;
 import com.example.petapp.domain.chatting.reader.ChattingReader;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
+import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
 import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

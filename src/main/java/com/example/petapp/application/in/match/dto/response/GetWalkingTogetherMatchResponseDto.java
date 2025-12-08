@@ -1,4 +1,4 @@
-package com.example.petapp.domain.walkingtogethermatch.model.dto.response;
+package com.example.petapp.application.in.match.dto.response;
 
 import lombok.*;
 

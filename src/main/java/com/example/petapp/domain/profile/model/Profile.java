@@ -5,7 +5,7 @@ import com.example.petapp.common.base.superclass.BaseEntity;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.petbreed.model.PetBreed;
-import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
+import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.format.annotation.DateTimeFormat;

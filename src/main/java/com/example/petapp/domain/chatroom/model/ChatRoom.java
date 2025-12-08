@@ -5,7 +5,7 @@ import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.chatting.model.type.ChatRoomType;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
+import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

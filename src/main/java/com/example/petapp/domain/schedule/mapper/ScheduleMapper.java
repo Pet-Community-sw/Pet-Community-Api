@@ -5,7 +5,7 @@ import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.schedule.model.dto.response.GetSchedulesResponseDto;
 import com.example.petapp.domain.schedule.model.dto.response.ScheduleType;
-import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
+import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
 
 public class ScheduleMapper {
 

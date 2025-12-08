@@ -6,7 +6,7 @@ import com.example.petapp.application.in.chatroom.dto.response.ChatRoomResponseD
 import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
+import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
 
 import java.util.List;
 

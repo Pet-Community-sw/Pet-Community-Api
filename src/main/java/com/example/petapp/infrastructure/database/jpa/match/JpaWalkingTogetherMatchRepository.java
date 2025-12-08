@@ -1,22 +1,15 @@
-package com.example.petapp.domain.walkingtogethermatch;
+package com.example.petapp.infrastructure.database.jpa.match;
 
 import com.example.petapp.domain.post.model.RecommendRoutePost;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
-public interface WalkingTogetherMatchRepository {
-
+public interface JpaWalkingTogetherMatchRepository extends JpaRepository<WalkingTogetherMatch, Long> {
     List<WalkingTogetherMatch> findAllByRecommendRoutePost(RecommendRoutePost recommendRoutePost);
 
     List<WalkingTogetherMatch> findAllByProfileContainsAndScheduledTimeBetween(Profile profile, LocalDateTime startDateTime, LocalDateTime endDateTime);
-
-    WalkingTogetherMatch save(WalkingTogetherMatch walkingTogetherMatch);
-
-    void delete(WalkingTogetherMatch walkingTogetherMatch);
-
-    Optional<WalkingTogetherMatch> find(Long id);
 }

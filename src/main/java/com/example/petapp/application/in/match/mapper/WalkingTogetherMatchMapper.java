@@ -1,12 +1,12 @@
-package com.example.petapp.domain.walkingtogethermatch.mapper;
+package com.example.petapp.application.in.match.mapper;
 
+import com.example.petapp.application.in.match.dto.request.CreateWalkingTogetherMatchDto;
+import com.example.petapp.application.in.match.dto.response.GetWalkingTogetherMatchResponseDto;
 import com.example.petapp.common.base.util.TimeUtil;
 import com.example.petapp.domain.petbreed.model.PetBreed;
 import com.example.petapp.domain.post.model.RecommendRoutePost;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.domain.walkingtogethermatch.model.dto.request.CreateWalkingTogetherMatchDto;
-import com.example.petapp.domain.walkingtogethermatch.model.dto.response.GetWalkingTogetherMatchResponseDto;
-import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
+import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
 
 import java.util.List;
 import java.util.stream.Collectors;

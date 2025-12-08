@@ -1,12 +1,13 @@
-package com.example.petapp.domain.walkingtogethermatch;
+package com.example.petapp.interfaces;
 
 import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
+import com.example.petapp.application.in.match.WalkingTogetherMatchUseCase;
+import com.example.petapp.application.in.match.dto.request.CreateWalkingTogetherMatchDto;
+import com.example.petapp.application.in.match.dto.request.UpdateWalkingTogetherMatchDto;
+import com.example.petapp.application.in.match.dto.response.CreateWalkingTogetherMatchResponseDto;
+import com.example.petapp.application.in.match.dto.response.GetWalkingTogetherMatchResponseDto;
 import com.example.petapp.common.base.dto.MessageResponse;
 import com.example.petapp.common.base.util.AuthUtil;
-import com.example.petapp.domain.walkingtogethermatch.model.dto.request.CreateWalkingTogetherMatchDto;
-import com.example.petapp.domain.walkingtogethermatch.model.dto.request.UpdateWalkingTogetherMatchDto;
-import com.example.petapp.domain.walkingtogethermatch.model.dto.response.CreateWalkingTogetherMatchResponseDto;
-import com.example.petapp.domain.walkingtogethermatch.model.dto.response.GetWalkingTogetherMatchResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,14 +25,14 @@ import java.util.List;
 @RequestMapping("/walking-together-posts")
 public class WalkingTogetherMatchController {
 
-    private final WalkingTogetherMatchService walkingTogetherMatchService;
+    private final WalkingTogetherMatchUseCase walkingTogetherMatchUseCase;
 
     @Operation(
             summary = "함께 산책해요 게시글 상세 조회"
     )
     @GetMapping("/{walkingTogetherPostId}")
     private GetWalkingTogetherMatchResponseDto getWalkingTogetherPost(@PathVariable Long walkingTogetherPostId, Authentication authentication) {
-        return walkingTogetherMatchService.getWalkingTogetherPost(walkingTogetherPostId, AuthUtil.getProfileId(authentication));
+        return walkingTogetherMatchUseCase.getWalkingTogetherPost(walkingTogetherPostId, AuthUtil.getProfileId(authentication));
     }
 
     @Operation(
@@ -39,7 +40,7 @@ public class WalkingTogetherMatchController {
     )
     @GetMapping("/by-recommend-route-post/{recommendRoutePostId}")
     private List<GetWalkingTogetherMatchResponseDto> getWalkingTogetherPosts(@PathVariable Long recommendRoutePostId, Authentication authentication) {
-        return walkingTogetherMatchService.getWalkingTogetherPosts(recommendRoutePostId, AuthUtil.getProfileId(authentication));
+        return walkingTogetherMatchUseCase.getWalkingTogetherPosts(recommendRoutePostId, AuthUtil.getProfileId(authentication));
     }
 
     @Operation(
@@ -47,7 +48,7 @@ public class WalkingTogetherMatchController {
     )
     @PostMapping
     private CreateWalkingTogetherMatchResponseDto createWalkingTogetherPost(@RequestBody @Valid CreateWalkingTogetherMatchDto createWalkingTogetherMatchDto, Authentication authentication) {
-        return walkingTogetherMatchService.createWalkingTogetherPost(createWalkingTogetherMatchDto, AuthUtil.getProfileId(authentication));
+        return walkingTogetherMatchUseCase.createWalkingTogetherPost(createWalkingTogetherMatchDto, AuthUtil.getProfileId(authentication));
     }
 
     @Operation(
@@ -55,7 +56,7 @@ public class WalkingTogetherMatchController {
     )
     @PutMapping("/{walkingTogetherPostId}")
     private ResponseEntity<MessageResponse> updateWalkingTogetherPost(@PathVariable Long walkingTogetherPostId, @RequestBody @Valid UpdateWalkingTogetherMatchDto updateWalkingTogetherMatchDto, Authentication authentication) {
-        walkingTogetherMatchService.updateWalkingTogetherPost(walkingTogetherPostId, updateWalkingTogetherMatchDto, AuthUtil.getProfileId(authentication));
+        walkingTogetherMatchUseCase.updateWalkingTogetherPost(walkingTogetherPostId, updateWalkingTogetherMatchDto, AuthUtil.getProfileId(authentication));
         return ResponseEntity.ok(new MessageResponse("수정 되었습니다."));
     }
 
@@ -64,7 +65,7 @@ public class WalkingTogetherMatchController {
     )
     @DeleteMapping("/{walkingTogetherPostId}")
     private ResponseEntity<MessageResponse> deleteWalkingTogetherPost(@PathVariable Long walkingTogetherPostId, Authentication authentication) {
-        walkingTogetherMatchService.deleteWalkingTogetherPost(walkingTogetherPostId, AuthUtil.getProfileId(authentication));
+        walkingTogetherMatchUseCase.deleteWalkingTogetherPost(walkingTogetherPostId, AuthUtil.getProfileId(authentication));
         return ResponseEntity.ok(new MessageResponse("삭제 되었습니다."));
     }
 
@@ -73,7 +74,7 @@ public class WalkingTogetherMatchController {
     )
     @PostMapping("/{walkingTogetherPostId}")
     private ResponseEntity<MessageResponse> startMatch(@PathVariable Long walkingTogetherPostId, Authentication authentication) {
-        CreateChatRoomResponseDto createChatRoomResponseDto = walkingTogetherMatchService.startMatch(walkingTogetherPostId, AuthUtil.getProfileId(authentication));
+        CreateChatRoomResponseDto createChatRoomResponseDto = walkingTogetherMatchUseCase.startMatch(walkingTogetherPostId, AuthUtil.getProfileId(authentication));
         return createChatRoomResponseDto.isCreated() ?
                 ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse(createChatRoomResponseDto.getChatRoomId().toString())) :
                 ResponseEntity.ok(new MessageResponse("매칭 완료."));

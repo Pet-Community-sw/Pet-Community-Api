@@ -1,4 +1,4 @@
-package com.example.petapp.domain.walkingtogethermatch.model.dto.request;
+package com.example.petapp.application.in.match.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -11,10 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateWalkingTogetherMatchDto {
-
-    @NotNull(message = "산책길추천id는 필수입니다.")
-    private Long recommendRoutePostId;
+public class UpdateWalkingTogetherMatchDto {
 
     @NotNull(message = "함께 산책해요 시간은 필수입니다.")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")

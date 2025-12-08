@@ -2,6 +2,10 @@ package com.example.petapp.service;
 
 import com.example.petapp.application.in.chatroom.ChatRoomUseCase;
 import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
+import com.example.petapp.application.in.match.dto.request.CreateWalkingTogetherMatchDto;
+import com.example.petapp.application.in.match.dto.response.CreateWalkingTogetherMatchResponseDto;
+import com.example.petapp.application.in.match.dto.response.GetWalkingTogetherMatchResponseDto;
+import com.example.petapp.application.service.match.WalkingTogetherMatchService;
 import com.example.petapp.common.base.embedded.Content;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.ForbiddenException;
@@ -14,11 +18,7 @@ import com.example.petapp.domain.post.model.RecommendRoutePost;
 import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogethermatch.WalkingTogetherMatchRepository;
-import com.example.petapp.domain.walkingtogethermatch.WalkingTogetherMatchServiceImpl;
-import com.example.petapp.domain.walkingtogethermatch.model.dto.request.CreateWalkingTogetherMatchDto;
-import com.example.petapp.domain.walkingtogethermatch.model.dto.response.CreateWalkingTogetherMatchResponseDto;
-import com.example.petapp.domain.walkingtogethermatch.model.dto.response.GetWalkingTogetherMatchResponseDto;
-import com.example.petapp.domain.walkingtogethermatch.model.entity.WalkingTogetherMatch;
+import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,9 +42,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class WalkingTogetherMatchServiceTest {
+public class WalkingTogetherMatchUseCaseTest {
     @InjectMocks
-    private WalkingTogetherMatchServiceImpl walkingTogetherPostServiceImpl;
+    private WalkingTogetherMatchService walkingTogetherPostServiceImpl;
     @Mock
     private ChatRoomUseCase chatRoomUseCase;
     @Mock

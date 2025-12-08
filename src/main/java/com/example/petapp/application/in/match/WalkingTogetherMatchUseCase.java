@@ -1,16 +1,14 @@
-package com.example.petapp.domain.walkingtogethermatch;
+package com.example.petapp.application.in.match;
 
 import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
-import com.example.petapp.domain.walkingtogethermatch.model.dto.request.CreateWalkingTogetherMatchDto;
-import com.example.petapp.domain.walkingtogethermatch.model.dto.request.UpdateWalkingTogetherMatchDto;
-import com.example.petapp.domain.walkingtogethermatch.model.dto.response.CreateWalkingTogetherMatchResponseDto;
-import com.example.petapp.domain.walkingtogethermatch.model.dto.response.GetWalkingTogetherMatchResponseDto;
-import org.springframework.stereotype.Service;
+import com.example.petapp.application.in.match.dto.request.CreateWalkingTogetherMatchDto;
+import com.example.petapp.application.in.match.dto.request.UpdateWalkingTogetherMatchDto;
+import com.example.petapp.application.in.match.dto.response.CreateWalkingTogetherMatchResponseDto;
+import com.example.petapp.application.in.match.dto.response.GetWalkingTogetherMatchResponseDto;
 
 import java.util.List;
 
-@Service
-public interface WalkingTogetherMatchService {
+public interface WalkingTogetherMatchUseCase {
 
     CreateWalkingTogetherMatchResponseDto createWalkingTogetherPost(CreateWalkingTogetherMatchDto createWalkingTogetherMatchDto, Long profileId);
 
