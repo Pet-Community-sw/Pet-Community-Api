@@ -9,9 +9,9 @@ public interface PetBreedQueryUseCase {
 
     Long count();
 
-    PetBreed find(Long id);
+    PetBreed findOrThrow(Long id);
 
-    PetBreed find(String name);
+    PetBreed findOrThrow(String name);
 
     List<PetBreedGetListDto> getList();
 

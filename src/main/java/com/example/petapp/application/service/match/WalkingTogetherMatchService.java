@@ -40,7 +40,7 @@ public class WalkingTogetherMatchService implements WalkingTogetherMatchUseCase 
     public GetWalkingTogetherMatchResponseDto getWalkingTogetherPost(Long walkingTogetherPostId, Long profileId) {
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
         WalkingTogetherMatch walkingTogetherMatch = walkingTogetherMatchQueryUseCase.findOrThrow(walkingTogetherPostId);
-        PetBreed petBreed = petBreedQueryUseCase.find(profile.getPetBreed().getName());
+        PetBreed petBreed = petBreedQueryUseCase.findOrThrow(profile.getPetBreed().getName());
 
         return WalkingTogetherMatchMapper.toGetWalkingTogetherPostResponseDto(walkingTogetherPostId, walkingTogetherMatch, profile, petBreed);
 
@@ -51,7 +51,7 @@ public class WalkingTogetherMatchService implements WalkingTogetherMatchUseCase 
     public List<GetWalkingTogetherMatchResponseDto> getWalkingTogetherPosts(Long recommendRoutePostId, Long profileId) {
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
         RecommendRoutePost recommendRoutePost = postQueryUseCase.findOrThrow(recommendRoutePostId);
-        PetBreed petBreed = petBreedQueryUseCase.find(profile.getPetBreed().getName());
+        PetBreed petBreed = petBreedQueryUseCase.findOrThrow(profile.getPetBreed().getName());
         List<WalkingTogetherMatch> walkingTogetherMatches = walkingTogetherMatchRepository.findAllByRecommendRoutePost(recommendRoutePost);
         return WalkingTogetherMatchMapper.toGetWalkingTogetherPostResponseDtos(walkingTogetherMatches, petBreed);
     }
@@ -89,7 +89,7 @@ public class WalkingTogetherMatchService implements WalkingTogetherMatchUseCase 
     public CreateChatRoomResponseDto startMatch(Long walkingTogetherPostId, Long profileId) {
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
         WalkingTogetherMatch walkingTogetherMatch = walkingTogetherMatchQueryUseCase.findOrThrow(walkingTogetherPostId);
-        PetBreed petBreed = petBreedQueryUseCase.find(profile.getPetBreed().getName());
+        PetBreed petBreed = petBreedQueryUseCase.findOrThrow(profile.getPetBreed().getName());
 
         walkingTogetherMatch.checkInMatch(profileId, petBreed);
         walkingTogetherMatch.matchingStart(profileId, profile);

@@ -45,7 +45,7 @@ public class ProfileService implements ProfileUseCase {
         if (profileRepository.count(member) >= 4) {
             throw new ConflictException("프로필은 최대 4개 입니다.");
         }
-        PetBreed petBreed = petBreedQueryUseCase.find(profileDto.getPetBreedId());
+        PetBreed petBreed = petBreedQueryUseCase.findOrThrow(profileDto.getPetBreedId());
 
         String imageFileName = FileUploadUtil.fileUpload(profileDto.getPetImageUrl(), profileUploadDir, FileImageKind.PROFILE);
         Profile profile = ProfileMapper.toEntity(profileDto, member, imageFileName, petBreed);
@@ -80,7 +80,7 @@ public class ProfileService implements ProfileUseCase {
     public void updateProfile(Long profileId, ProfileDto profileDto, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
-        PetBreed petBreed = petBreedQueryUseCase.find(profileDto.getPetBreedId());
+        PetBreed petBreed = petBreedQueryUseCase.findOrThrow(profileDto.getPetBreedId());
 
         member.validateProfile(member, profile.getMember());
         validateBreed(profileDto, profile);
@@ -111,7 +111,7 @@ public class ProfileService implements ProfileUseCase {
     private void validateBreed(ProfileDto profileDto, Profile profile) {
         List<Long> avoidBreeds = profileDto.getAvoidBreeds();
         for (Long petBreedId : avoidBreeds) {
-            PetBreed avoidBreed = petBreedQueryUseCase.find(petBreedId);
+            PetBreed avoidBreed = petBreedQueryUseCase.findOrThrow(petBreedId);
             profile.addAvoidBreeds(avoidBreed);
         }
     }

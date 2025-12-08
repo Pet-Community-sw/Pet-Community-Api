@@ -24,12 +24,12 @@ public class PetBreedQueryService implements PetBreedQueryUseCase {
     }
 
     @Override
-    public PetBreed find(Long id) {
+    public PetBreed findOrThrow(Long id) {
         return repository.find(id).orElseThrow(() -> new NotFoundException("해당 종은 없습니다."));
     }
 
     @Override
-    public PetBreed find(String name) {
+    public PetBreed findOrThrow(String name) {
         return repository.find(name).orElseThrow(() -> new NotFoundException("해당 종은 없습니다."));
     }
 
