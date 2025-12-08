@@ -1,10 +1,10 @@
 package com.example.petapp.interfaces;
 
 import com.example.petapp.application.in.walkrecord.WalkRecordUseCase;
+import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordLocationResponseDto;
 import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordResponseDto;
 import com.example.petapp.common.base.dto.MessageResponse;
 import com.example.petapp.common.base.util.AuthUtil;
-import com.example.petapp.domain.walklocation.model.dto.response.GetWalkRecordLocationResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

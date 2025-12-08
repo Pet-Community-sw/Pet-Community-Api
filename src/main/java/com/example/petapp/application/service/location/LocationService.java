@@ -1,11 +1,12 @@
-package com.example.petapp.domain.walklocation;
+package com.example.petapp.application.service.location;
 
+import com.example.petapp.application.in.location.LocationUseCase;
+import com.example.petapp.application.in.location.dto.request.LocationMessage;
+import com.example.petapp.application.in.location.mapper.LocationMapper;
 import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
 import com.example.petapp.application.in.walkrecord.dto.request.SendLocationDto;
 import com.example.petapp.common.base.util.HaversineUtil;
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
-import com.example.petapp.domain.walklocation.mapper.LocationMapper;
-import com.example.petapp.domain.walklocation.model.dto.request.LocationMessage;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class LocationServiceImpl implements LocationService {//예외 처리해야됨.
+public class LocationService implements LocationUseCase {//예외 처리해야됨.
 
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final SendNotificationUtil sendNotificationUtil;

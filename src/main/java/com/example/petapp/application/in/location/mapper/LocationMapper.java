@@ -1,7 +1,7 @@
-package com.example.petapp.domain.walklocation.mapper;
+package com.example.petapp.application.in.location.mapper;
 
+import com.example.petapp.application.in.location.dto.request.LocationMessage;
 import com.example.petapp.application.in.walkrecord.dto.request.SendLocationDto;
-import com.example.petapp.domain.walklocation.model.dto.request.LocationMessage;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 
 public class LocationMapper {
