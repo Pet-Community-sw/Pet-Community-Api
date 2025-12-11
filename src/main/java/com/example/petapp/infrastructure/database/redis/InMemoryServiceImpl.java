@@ -2,10 +2,8 @@ package com.example.petapp.infrastructure.database.redis;
 
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
-import com.example.petapp.domain.notification.model.dto.NotificationListDto;
 import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +14,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class InMemoryServiceImpl implements InMemoryService {
 
-    private final RedisTemplate<String, NotificationListDto> notificationRedisTemplate;
     private final StringRedisTemplate redisTemplate;
 
     @Override
@@ -51,20 +48,6 @@ public class InMemoryServiceImpl implements InMemoryService {
     @Override
     public void deleteStringData(String key) {
         redisTemplate.delete(key);
-    }
-    //-------------------------------------------------------------------------------------
-
-    @Override
-    public void createNotificationData(Long memberId, NotificationListDto notificationListDto, int day) {
-        String key = RedisKeys.notifications(memberId);
-        notificationRedisTemplate.opsForList().rightPush(key, notificationListDto);
-        notificationRedisTemplate.expire(key, Duration.ofDays(day));
-    }
-
-    @Override
-    public List<NotificationListDto> getNotifications(Long memberId) {
-        String key = RedisKeys.notifications(memberId);
-        return notificationRedisTemplate.opsForList().range(key, 0, -1);
     }
     //-------------------------------------------------------------------------------------
 

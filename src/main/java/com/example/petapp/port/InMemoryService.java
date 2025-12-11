@@ -3,7 +3,6 @@ package com.example.petapp.port;
 
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
-import com.example.petapp.domain.notification.model.dto.NotificationListDto;
 
 import java.util.List;
 import java.util.Set;
@@ -19,14 +18,9 @@ public interface InMemoryService {
     void deleteStringData(String key);
 
     Set<String> getStringSetData(String userId);
-    
+
     void createStringData(String key, String value);
-
-
-    List<NotificationListDto> getNotifications(Long key);
-
-    void createNotificationData(Long key, NotificationListDto notificationListDto, int day);
-
+    
 
     void createLocationData(String key, String value);
 

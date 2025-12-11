@@ -1,5 +1,6 @@
 package com.example.petapp.common.base.util.notification;
 
+import com.example.petapp.application.out.cache.NotificationsCachePort;
 import com.example.petapp.domain.chatting.model.dto.NotificationDto;
 import com.example.petapp.domain.chatting.model.dto.StompResponseDto;
 import com.example.petapp.domain.chatting.model.type.CommandType;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 public class SendNotificationUtil {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final NotificationsCachePort port;
     private final InMemoryService inMemoryService;
 //    private final FcmService fcmService;
 
@@ -26,7 +28,7 @@ public class SendNotificationUtil {
      * foreground 유저는 sse, background 유저는 fcm
      * */
     public void sendNotification(Member member, String message) {
-        inMemoryService.createNotificationData(member.getId(), new NotificationListDto(message, LocalDateTime.now()), 3);
+        port.create(member.getId(), new NotificationListDto(message, LocalDateTime.now()), 3);
         if (inMemoryService.existForeGroundData(member.getId())) {
             simpMessagingTemplate.convertAndSend("/sub/notification/" + member.getId(),
                     StompResponseDto.builder().commandType(CommandType.NOTIFICATION).body(new NotificationDto(member.getId(), message)));

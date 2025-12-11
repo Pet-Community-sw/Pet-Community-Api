@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -14,15 +15,20 @@ public class RedisNotificationCacheAdapter implements NotificationsCachePort {
 
     private final RedisTemplate<String, NotificationListDto> notificationRedisTemplate;
 
-    public static String key(long memberId) {
-        return "notification:" + memberId;
+    public static String getKey(Long id) {
+        return "notification:" + id;
     }
 
     @Override
-    public void create(Long memberId, NotificationListDto notificationListDto, int day) {
-        notificationRedisTemplate.opsForList().rightPush(key(memberId), notificationListDto);
-        notificationRedisTemplate.expire(key(memberId), Duration.ofDays(day));
+    public void create(Long id, NotificationListDto notificationListDto, int day) {
+        notificationRedisTemplate.opsForList().rightPush(getKey(id), notificationListDto);
+        notificationRedisTemplate.expire(getKey(id), Duration.ofDays(day));
 
+    }
+
+    @Override
+    public List<NotificationListDto> getList(Long id) {
+        return notificationRedisTemplate.opsForList().range(getKey(id), 0, -1);
     }
 
 }

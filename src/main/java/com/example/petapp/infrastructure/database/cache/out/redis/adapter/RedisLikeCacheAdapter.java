@@ -18,7 +18,7 @@ public class RedisLikeCacheAdapter implements LikeCachePort {
     }
 
     @Override
-    public Set<Long> get(Long id) {
+    public Set<Long> getList(Long id) {
         return likeRedisTemplate.opsForSet().members(getKey(id));
     }
 
