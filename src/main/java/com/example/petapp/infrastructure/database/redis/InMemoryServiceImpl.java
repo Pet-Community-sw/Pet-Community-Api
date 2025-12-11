@@ -17,7 +17,6 @@ import java.util.*;
 public class InMemoryServiceImpl implements InMemoryService {
 
     private final RedisTemplate<String, NotificationListDto> notificationRedisTemplate;
-    private final RedisTemplate<String, Long> likeRedisTemplate;
     private final StringRedisTemplate redisTemplate;
 
     @Override
@@ -52,22 +51,6 @@ public class InMemoryServiceImpl implements InMemoryService {
     @Override
     public void deleteStringData(String key) {
         redisTemplate.delete(key);
-    }
-    //-------------------------------------------------------------------------------------
-
-    @Override
-    public Set<Long> getLikeData(Long key) {
-        return likeRedisTemplate.opsForSet().members(RedisKeys.postLikes(key));
-    }
-
-    @Override
-    public void createLikeData(Long key, Long value) {
-        likeRedisTemplate.opsForSet().add(RedisKeys.postLikes(key), value);
-    }
-
-    @Override
-    public void deleteLikeData(Long key, Long value) {
-        likeRedisTemplate.opsForSet().remove(RedisKeys.postLikes(key), value);
     }
     //-------------------------------------------------------------------------------------
 

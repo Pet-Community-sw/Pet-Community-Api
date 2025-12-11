@@ -1,8 +1,8 @@
 package com.example.petapp.domain.chatting.strategy.impl;
 
-import com.example.petapp.domain.chatting.AckInfoRepositoryImpl;
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.chatting.strategy.MessageTypeStrategy;
+import com.example.petapp.infrastructure.database.cache.in.AckInfoRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

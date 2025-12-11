@@ -19,15 +19,8 @@ public interface InMemoryService {
     void deleteStringData(String key);
 
     Set<String> getStringSetData(String userId);
-
-
-    void createLikeData(Long key, Long value);
-
-    void deleteLikeData(Long key, Long value);
-
+    
     void createStringData(String key, String value);
-
-    Set<Long> getLikeData(Long key);
 
 
     List<NotificationListDto> getNotifications(Long key);

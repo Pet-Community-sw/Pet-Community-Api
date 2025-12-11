@@ -4,12 +4,12 @@ import com.example.petapp.application.in.like.LikeUseCase;
 import com.example.petapp.application.in.like.mapper.LikeMapper;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.post.PostQueryUseCase;
+import com.example.petapp.application.out.cache.LikeCachePort;
 import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.domain.like.LikeRepository;
 import com.example.petapp.domain.like.model.Like;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.Post;
-import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class LikeService implements LikeUseCase {
 
     private final LikeRepository repository;
     private final MemberQueryUseCase memberQueryUseCase;
-    private final InMemoryService inMemoryService;
+    private final LikeCachePort port;
     private final PostQueryUseCase<Post> postQueryUseCase;
 
     /*
@@ -45,7 +45,7 @@ public class LikeService implements LikeUseCase {
         post.removeLikes(like);
         repository.delete(like);
         log.info("좋아요 삭제");
-        inMemoryService.deleteLikeData(like.getMember().getId(), like.getPost().getId());
+        port.delete(like.getMember().getId(), like.getPost().getId());
         return false;
     }
 
@@ -54,7 +54,7 @@ public class LikeService implements LikeUseCase {
         Like like = LikeMapper.toEntity(member, post);
         post.countUpLike(like);
         repository.save(like);
-        inMemoryService.createLikeData(member.getId(), post.getId());
+        port.create(member.getId(), post.getId());
         return true;
     }
 }

@@ -10,11 +10,11 @@ import com.example.petapp.application.in.post.recommend.dto.response.CreateRecom
 import com.example.petapp.application.in.post.recommend.dto.response.GetRecommendPostResponseDto;
 import com.example.petapp.application.in.post.recommend.dto.response.GetRecommendRoutePostsResponseDto;
 import com.example.petapp.application.in.post.recommend.mapper.RecommendRoutePostMapper;
+import com.example.petapp.application.out.cache.LikeCachePort;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.PostRepository;
 import com.example.petapp.domain.post.RecommendRoutePostRepository;
 import com.example.petapp.domain.post.model.RecommendRoutePost;
-import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +31,7 @@ public class RecommendRoutePostService implements RecommendRoutePostUseCase {
     private final RecommendRoutePostRepository recommendRoutePostRepository;
     private final LikeQueryUseCase likeQueryUseCase;
     private final MemberQueryUseCase memberQueryUseCase;
-    private final InMemoryService inMemoryService;
+    private final LikeCachePort port;
     private final PostQueryUseCase<RecommendRoutePost> postQueryUseCase;
     private final PostRepository<RecommendRoutePost> postRepository;
 
@@ -49,7 +49,7 @@ public class RecommendRoutePostService implements RecommendRoutePostUseCase {
     public List<GetRecommendRoutePostsResponseDto> getRecommendRoutePosts(Double minLongitude, Double minLatitude, Double maxLongitude, Double maxLatitude, int page, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
         Pageable pageable = PageRequest.of(page - 1, 10);
-        Set<Long> memberIds = inMemoryService.getLikeData(member.getId());
+        Set<Long> memberIds = port.get(member.getId());
         List<RecommendRoutePost> recommendRoutePosts = recommendRoutePostRepository
                 .findList(minLongitude - 0.01, minLatitude - 0.01, maxLongitude + 0.01, maxLatitude + 0.01, pageable)
                 .getContent();
@@ -61,7 +61,7 @@ public class RecommendRoutePostService implements RecommendRoutePostUseCase {
     public List<GetRecommendRoutePostsResponseDto> getRecommendRoutePosts(Double longitude, Double latitude, int page, String email) {
         Member member = memberQueryUseCase.findOrThrow(email);
         Pageable pageable = PageRequest.of(page - 1, 10);
-        Set<Long> memberIds = inMemoryService.getLikeData(member.getId());
+        Set<Long> memberIds = port.get(member.getId());
         List<RecommendRoutePost> recommendRoutePosts = recommendRoutePostRepository.findList(longitude, latitude, pageable).getContent();
         return RecommendRoutePostMapper.toRecommendRoutePostsList(recommendRoutePosts, likeQueryUseCase.getCountMap(recommendRoutePosts), memberIds, member);
     }
