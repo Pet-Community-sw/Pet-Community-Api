@@ -17,33 +17,6 @@ public class InMemoryServiceImpl implements InMemoryService {
     private final StringRedisTemplate redisTemplate;
 
     @Override
-    public void createReadData(ChatMessage chatMessage) {
-        redisTemplate.opsForHash().put(
-                RedisKeys.readHash(chatMessage.getChatRoomId()),
-                String.valueOf(chatMessage.getSenderId()),
-                String.valueOf(chatMessage.getSeq())
-        );
-    }
-
-    @Override
-    public void deleteReadData(Long chatRoomId, Long userId) {
-        redisTemplate.opsForHash().delete(RedisKeys.readHash(chatRoomId), String.valueOf(userId));
-    }
-
-    @Override
-    public Long getReadData(Long chatRoomId, Long userId) {
-        Object seq = redisTemplate.opsForHash().get(RedisKeys.readHash(chatRoomId), String.valueOf(userId));
-        return seq == null ? 0 : (Long) seq;
-    }
-
-    @Override
-    public void deleteReadData(Long chatRoomId) {
-        redisTemplate.delete(RedisKeys.readHash(chatRoomId));
-    }
-
-    //-------------------------------------------------------------------------------------
-
-    @Override
     public void createLastMessageInfoData(ChatMessage chatMessage) {
         Map<String, String> lastMessageInfo = new HashMap<>();
         lastMessageInfo.put("seq", String.valueOf(chatMessage.getSeq()));

@@ -9,6 +9,7 @@ import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomRes
 import com.example.petapp.application.in.chatroom.mapper.ChatRoomMapper;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.application.in.profile.dto.response.ChatRoomUsersResponseDto;
+import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.domain.chatroom.ChatRoomRepository;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
@@ -44,6 +45,7 @@ public class ChatRoomService implements ChatRoomUseCase {
     private final ChattingReader chattingReader;
     private final ChatRoomQueryUseCase chatRoomQueryUseCase;
     private final InMemoryService inMemoryService;
+    private final ReadMessageCachePort readMessageCachePort;
 
     @Transactional(readOnly = true)
     @Override
@@ -94,7 +96,7 @@ public class ChatRoomService implements ChatRoomUseCase {
         ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
         chatRoom.validateUser(userId);
         chatRoom.deleteUser(userId);
-        inMemoryService.deleteReadData(chatRoomId, userId);
+        readMessageCachePort.delete(chatRoomId, userId);
         if (chatRoomRepository.countByProfile(chatRoomId) <= 1) {//방 사용자 수가 1이되면 채팅방 전체 삭제.
             chatMessageRepository.deleteByChatRoomId(chatRoomId);//채팅방 메시지 삭제.
             chatRoomRepository.delete(chatRoomId);
@@ -125,7 +127,7 @@ public class ChatRoomService implements ChatRoomUseCase {
     }
 
     private ChatRoomResponseDto toChatRoomsResponseDtoWithRedis(ChatRoom chatRoom, Long userId) {
-        Long userSeq = inMemoryService.getReadData(chatRoom.getId(), userId);
+        Long userSeq = readMessageCachePort.find(chatRoom.getId(), userId);
         LastMessageInfoDto lastMessageInfoDto = inMemoryService.getLastMessageInfoData(chatRoom.getId());
         long unReadCount = Math.max(lastMessageInfoDto.getLastSeq() - userSeq, 0);
         Set<ChatRoomUsersResponseDto> users = chatRoom.getUsers().stream().map(id ->
@@ -138,6 +140,6 @@ public class ChatRoomService implements ChatRoomUseCase {
     private void deleteRedis(Long chatRoomId) {
         inMemoryService.deleteRoomSeq(chatRoomId);
         inMemoryService.deleteLastMessageInfoData(chatRoomId);
-        inMemoryService.deleteReadData(chatRoomId);
+        readMessageCachePort.delete(chatRoomId);
     }
 }

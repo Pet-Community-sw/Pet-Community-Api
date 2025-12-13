@@ -4,6 +4,7 @@ import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.in.chatroom.dto.request.ChatMessageDtoMember;
 import com.example.petapp.application.in.chatroom.dto.response.ChatMessageResponseDto;
 import com.example.petapp.application.in.chatroom.mapper.ChatRoomMapper;
+import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
 import com.example.petapp.domain.chatting.model.ChatMessage;
@@ -33,6 +34,7 @@ public class ChattingReaderImpl implements ChattingReader {
     private final ChatRoomQueryUseCase chatRoomQueryUseCase;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final MongoService mongoService;
+    private final ReadMessageCachePort port;
 
     @Transactional
     @Override
@@ -68,7 +70,7 @@ public class ChattingReaderImpl implements ChattingReader {
      */
     private void updateMessagesUnReadCount(Long chatRoomId, Long userId) {
         LastMessageInfoDto lastMessageInfoDto = inMemoryService.getLastMessageInfoData(userId);
-        Long startSeq = inMemoryService.getReadData(chatRoomId, userId);
+        Long startSeq = port.find(chatRoomId, userId);
         Long endSeq = lastMessageInfoDto.getLastSeq();
         mongoService.updateMessages(chatRoomId, userId, startSeq, endSeq);
         simpMessagingTemplate.convertAndSend("/sub/chat/" + chatRoomId,

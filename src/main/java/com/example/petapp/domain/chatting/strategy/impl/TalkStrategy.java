@@ -3,6 +3,7 @@ package com.example.petapp.domain.chatting.strategy.impl;
 import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.application.out.cache.ChatOnlineCachePort;
+import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.AckInfoRepository;
@@ -34,6 +35,7 @@ public class TalkStrategy implements MessageTypeStrategy {
     private final ChatMessageRepository chatMessageRepository;
     private final InMemoryService inMemoryService;
     private final ChatOnlineCachePort chatOnlineCachePort;
+    private final ReadMessageCachePort readMessageCachePort;
     private final SendNotificationUtil sendNotificationUtil;
     private final AckInfoRepository ackInfoRepository;
     private final SimpUserRegistry simpUserRegistry;
@@ -76,7 +78,7 @@ public class TalkStrategy implements MessageTypeStrategy {
                 .forEach(userId -> {
                     Profile profile = profileQueryUseCase.findOrThrow(userId);
                     sendNotificationUtil.sendNotification(profile.getMember(), message);
-                    Long profileSeq = inMemoryService.getReadData(chatRoomId, profile.getId());
+                    Long profileSeq = readMessageCachePort.find(chatRoomId, profile.getId());
                     simpMessagingTemplate.convertAndSend("sub/list/" + profile.getMember().getId(),//todo : member와 profile 다르게 해야함.
                             StompResponseDto.builder().commandType(CommandType.LIST_UPDATE).body(new UpdateListDto(chatRoomId, (chatMessage.getSeq() - profileSeq), chatMessage.getMessage(), chatMessage.getMessageTime())));
                 });
