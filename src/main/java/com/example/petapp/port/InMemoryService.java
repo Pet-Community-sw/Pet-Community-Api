@@ -8,11 +8,9 @@ import java.util.List;
 import java.util.Set;
 
 public interface InMemoryService {
-
-    void createStringDataWithDuration(String key, String value, long duration);
-
-    Boolean existStringData(String key);
     
+    Boolean existStringData(String key);
+
     Set<String> getStringSetData(String userId);
 
     void createStringData(String key, String value);

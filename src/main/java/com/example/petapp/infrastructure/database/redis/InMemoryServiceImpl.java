@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.util.*;
 
 @Service
@@ -15,12 +14,6 @@ import java.util.*;
 public class InMemoryServiceImpl implements InMemoryService {
 
     private final StringRedisTemplate redisTemplate;
-
-    @Override
-    public void createStringDataWithDuration(String key, String value, long duration) {
-        Duration expire = Duration.ofSeconds(duration);
-        redisTemplate.opsForValue().set(key, value, expire);
-    }
 
     @Override
     public void createStringData(String key, String memberId) {

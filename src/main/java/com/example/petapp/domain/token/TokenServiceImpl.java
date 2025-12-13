@@ -4,6 +4,7 @@ import com.example.petapp.application.in.member.dto.request.AccessTokenResponseD
 import com.example.petapp.application.in.member.dto.response.LoginResponseDto;
 import com.example.petapp.application.in.member.dto.response.TokenResponseDto;
 import com.example.petapp.application.in.member.mapper.MemberMapper;
+import com.example.petapp.application.out.cache.TokenCachePort;
 import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.common.exception.UnAuthorizedException;
 import com.example.petapp.common.jwt.util.JwtTokenizer;
@@ -12,7 +13,6 @@ import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.member.model.Role;
 import com.example.petapp.domain.token.model.dto.request.ReissueTokenRequestDto;
 import com.example.petapp.domain.token.model.entity.RefreshToken;
-import com.example.petapp.port.InMemoryService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
 
     private final RefreshRepository refreshRepository;
     private final JwtTokenizer jwtTokenizer;
-    private final InMemoryService inMemoryService;
+    private final TokenCachePort port;
     private final RoleRepository roleRepository;
 
     @NotNull
@@ -132,7 +132,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
     }
 
     private void blacklistAccessToken(String accessToken) {
-        inMemoryService.createStringDataWithDuration("blacklist", accessToken, 30 * 60L);
+        port.createWithDuration("blacklist", accessToken, 30 * 60L);
     }
 
     private Claims getClaimsFromToken(String token) {
