@@ -2,6 +2,7 @@ package com.example.petapp.domain.chatting.strategy.impl;
 
 import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
+import com.example.petapp.application.out.cache.ChatOnlineCachePort;
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.AckInfoRepository;
@@ -32,6 +33,7 @@ public class TalkStrategy implements MessageTypeStrategy {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatMessageRepository chatMessageRepository;
     private final InMemoryService inMemoryService;
+    private final ChatOnlineCachePort chatOnlineCachePort;
     private final SendNotificationUtil sendNotificationUtil;
     private final AckInfoRepository ackInfoRepository;
     private final SimpUserRegistry simpUserRegistry;
@@ -67,7 +69,7 @@ public class TalkStrategy implements MessageTypeStrategy {
 
         ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
         Set<Long> users = chatRoom.getUsers();
-        Set<String> onlineUsers = inMemoryService.getOnlineDatas(chatRoomId);
+        Set<String> onlineUsers = chatOnlineCachePort.find(chatRoomId);
 
         users.stream().filter(userId -> !userId.equals(senderId))
                 .filter(userId -> !onlineUsers.contains(userId.toString()))

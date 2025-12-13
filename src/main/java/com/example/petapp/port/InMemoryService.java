@@ -4,15 +4,7 @@ package com.example.petapp.port;
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
 
-import java.util.Set;
-
 public interface InMemoryService {
-
-    void createOnlineData(Long chatroomId, Long profileId);
-
-
-    Set<String> getOnlineDatas(Long id);
-
 
     Boolean existForeGroundData(Long id);
 

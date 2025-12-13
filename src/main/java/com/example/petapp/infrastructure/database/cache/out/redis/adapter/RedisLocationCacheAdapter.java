@@ -24,13 +24,13 @@ public class RedisLocationCacheAdapter implements LocationCachePort {
     }
 
     @Override
-    public String get(Long key) {
+    public String find(Long key) {
         return template.opsForList().index(getKey(key), -1);
         //마지막 요소 반환
     }
 
     @Override
-    public List<String> getList(Long key) {
+    public List<String> findList(Long key) {
         return template.opsForList().range(getKey(key), 0, -1);
         //전체 데이터 반환
     }

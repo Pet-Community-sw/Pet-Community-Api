@@ -1,8 +1,8 @@
 package com.example.petapp.domain.chatting.offline;
 
+import com.example.petapp.application.out.cache.ChatOnlineCachePort;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.model.ChatMessage;
-import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,12 +15,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OfflineUserServiceImpl implements OfflineUserService {
 
-    private final InMemoryService inMemoryService;
+    private final ChatOnlineCachePort port;
 
     @Override
     public void setOfflineUsersAndUnreadCount(ChatMessage chatMessage, ChatRoom chatRoom) {
         Set<Long> users = chatRoom.getUsers();
-        Set<String> onlineUsers = inMemoryService.getOnlineDatas(chatRoom.getId());
+        Set<String> onlineUsers = port.find(chatRoom.getId());
 
         Set<Long> offlineProfiles = users.stream()
                 .filter(userId -> !onlineUsers.contains(userId.toString()))

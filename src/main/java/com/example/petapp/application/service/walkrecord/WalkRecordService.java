@@ -52,7 +52,7 @@ public class WalkRecordService implements WalkRecordUseCase {
         Member member = memberQueryUseCase.findOrThrow(email);
         WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
         walkRecord.validateMember(member);
-        return new GetWalkRecordLocationResponseDto(port.get(walkRecordId));
+        return new GetWalkRecordLocationResponseDto(port.find(walkRecordId));
     }
 
     @Notification(recipient = "@queryServiceImpl.findByWalkRecord(#p0).delegateWalkPost.profile.member",
@@ -80,7 +80,7 @@ public class WalkRecordService implements WalkRecordUseCase {
     }
 
     private void updateWalkRecordPathData(Long walkRecordId, WalkRecord walkRecord) {
-        List<String> paths = port.getList(walkRecordId);
+        List<String> paths = port.findList(walkRecordId);
 
         Double totalDistance = DistanceUtil.calculateTotalDistance(paths);
         walkRecord.updateRecordToPath(totalDistance, paths);

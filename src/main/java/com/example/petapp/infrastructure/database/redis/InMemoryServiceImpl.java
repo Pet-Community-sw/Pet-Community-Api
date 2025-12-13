@@ -7,25 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class InMemoryServiceImpl implements InMemoryService {
 
     private final StringRedisTemplate redisTemplate;
-    
-    @Override
-    public void createOnlineData(Long chatRoomId, Long profileId) {
-        redisTemplate.opsForSet().add(RedisKeys.onlineUsers(chatRoomId), profileId.toString());
-    }
-
-    @Override
-    public Set<String> getOnlineDatas(Long id) {
-        return Optional.ofNullable(redisTemplate.opsForSet().members(RedisKeys.onlineUsers(id)))
-                .orElse(Collections.emptySet());
-    }
-    //-------------------------------------------------------------------------------------
 
     @Override
     public void createForeGroundData(Long id) {
