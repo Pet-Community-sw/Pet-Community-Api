@@ -2,6 +2,7 @@ package com.example.petapp.infrastructure.database.cache.out.redis.adapter;
 
 import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.domain.chatting.model.ChatMessage;
+import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -29,18 +30,18 @@ public class RedisLastMessageCacheAdapter implements LastMessageCachePort {
         redisTemplate.opsForHash().putAll(key(chatMessage.getChatRoomId()), lastMessageInfo);
     }
 
-//    @Override
-//    public LastMessageInfoDto find(Long id) {
-//        Map<Object, Object> lastMessageInfo = redisTemplate.opsForHash().entries(key(id));
-//        String lastMessage = (String) lastMessageInfo.getOrDefault("lastMessage", "");
-//        String lastMessageTime = (String) lastMessageInfo.getOrDefault("lastMessageTime", "");
-//        Long lastSeq = (Long) lastMessageInfo.getOrDefault("seq", 0);
-//        return LastMessageInfoDto.builder()
-//                .lastSeq(lastSeq)
-//                .lastMessage(lastMessage)
-//                .lastMessageTime(lastMessageTime)
-//                .build();
-//    }
+    @Override
+    public LastMessageInfoDto find(Long id) {
+        Map<Object, Object> lastMessageInfo = redisTemplate.opsForHash().entries(key(id));
+        String lastMessage = (String) lastMessageInfo.getOrDefault("lastMessage", "");
+        String lastMessageTime = (String) lastMessageInfo.getOrDefault("lastMessageTime", "");
+        Long lastSeq = (Long) lastMessageInfo.getOrDefault("seq", 0);
+        return LastMessageInfoDto.builder()
+                .lastSeq(lastSeq)
+                .lastMessage(lastMessage)
+                .lastMessageTime(lastMessageTime)
+                .build();
+    }
 
     @Override
     public void delete(Long chatRoomId) {

@@ -9,6 +9,7 @@ import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomRes
 import com.example.petapp.application.in.chatroom.mapper.ChatRoomMapper;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.application.in.profile.dto.response.ChatRoomUsersResponseDto;
+import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.domain.chatroom.ChatRoomRepository;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
@@ -46,6 +47,7 @@ public class ChatRoomService implements ChatRoomUseCase {
     private final ChatRoomQueryUseCase chatRoomQueryUseCase;
     private final InMemoryService inMemoryService;
     private final ReadMessageCachePort readMessageCachePort;
+    private final LastMessageCachePort lastMessageCachePort;
 
     @Transactional(readOnly = true)
     @Override
@@ -128,7 +130,7 @@ public class ChatRoomService implements ChatRoomUseCase {
 
     private ChatRoomResponseDto toChatRoomsResponseDtoWithRedis(ChatRoom chatRoom, Long userId) {
         Long userSeq = readMessageCachePort.find(chatRoom.getId(), userId);
-        LastMessageInfoDto lastMessageInfoDto = inMemoryService.getLastMessageInfoData(chatRoom.getId());
+        LastMessageInfoDto lastMessageInfoDto = lastMessageCachePort.find(chatRoom.getId());
         long unReadCount = Math.max(lastMessageInfoDto.getLastSeq() - userSeq, 0);
         Set<ChatRoomUsersResponseDto> users = chatRoom.getUsers().stream().map(id ->
                         ChatRoomMapper.toChatRoomUsersResponseDto(profileQueryUseCase.findOrThrow(id))
@@ -139,7 +141,7 @@ public class ChatRoomService implements ChatRoomUseCase {
 
     private void deleteRedis(Long chatRoomId) {
         inMemoryService.deleteRoomSeq(chatRoomId);
-        inMemoryService.deleteLastMessageInfoData(chatRoomId);
+        lastMessageCachePort.delete(chatRoomId);
         readMessageCachePort.delete(chatRoomId);
     }
 }

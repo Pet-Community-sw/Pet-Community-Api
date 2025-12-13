@@ -4,6 +4,7 @@ import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.in.chatroom.dto.request.ChatMessageDtoMember;
 import com.example.petapp.application.in.chatroom.dto.response.ChatMessageResponseDto;
 import com.example.petapp.application.in.chatroom.mapper.ChatRoomMapper;
+import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
@@ -34,7 +35,8 @@ public class ChattingReaderImpl implements ChattingReader {
     private final ChatRoomQueryUseCase chatRoomQueryUseCase;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final MongoService mongoService;
-    private final ReadMessageCachePort port;
+    private final ReadMessageCachePort readMessageCachePort;
+    private final LastMessageCachePort lastMessageCachePort;
 
     @Transactional
     @Override
@@ -69,8 +71,8 @@ public class ChattingReaderImpl implements ChattingReader {
      * 채팅 내역 조회시 채팅 메세지의 안읽은 수 업데이트
      */
     private void updateMessagesUnReadCount(Long chatRoomId, Long userId) {
-        LastMessageInfoDto lastMessageInfoDto = inMemoryService.getLastMessageInfoData(userId);
-        Long startSeq = port.find(chatRoomId, userId);
+        LastMessageInfoDto lastMessageInfoDto = lastMessageCachePort.find(userId);
+        Long startSeq = readMessageCachePort.find(chatRoomId, userId);
         Long endSeq = lastMessageInfoDto.getLastSeq();
         mongoService.updateMessages(chatRoomId, userId, startSeq, endSeq);
         simpMessagingTemplate.convertAndSend("/sub/chat/" + chatRoomId,

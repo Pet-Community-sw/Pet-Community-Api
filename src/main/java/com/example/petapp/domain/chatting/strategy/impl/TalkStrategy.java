@@ -3,6 +3,7 @@ package com.example.petapp.domain.chatting.strategy.impl;
 import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.application.out.cache.ChatOnlineCachePort;
+import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
@@ -36,6 +37,7 @@ public class TalkStrategy implements MessageTypeStrategy {
     private final InMemoryService inMemoryService;
     private final ChatOnlineCachePort chatOnlineCachePort;
     private final ReadMessageCachePort readMessageCachePort;
+    private final LastMessageCachePort lastMessageCachePort;
     private final SendNotificationUtil sendNotificationUtil;
     private final AckInfoRepository ackInfoRepository;
     private final SimpUserRegistry simpUserRegistry;
@@ -60,7 +62,7 @@ public class TalkStrategy implements MessageTypeStrategy {
 
         scheduleRetry(chatMessage);
         sendChatNotificationAndUpdateList(chatMessage);
-        inMemoryService.createLastMessageInfoData(chatMessage);
+        lastMessageCachePort.create(chatMessage);
     }
 
     //todo : 업데이트 로직 정리해야됨.
