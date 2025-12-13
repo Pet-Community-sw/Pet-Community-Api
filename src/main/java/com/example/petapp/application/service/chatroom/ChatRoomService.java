@@ -11,6 +11,7 @@ import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.application.in.profile.dto.response.ChatRoomUsersResponseDto;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
+import com.example.petapp.application.out.cache.SeqCachePort;
 import com.example.petapp.domain.chatroom.ChatRoomRepository;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
@@ -20,7 +21,6 @@ import com.example.petapp.domain.chatting.reader.ChattingReader;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
-import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -45,7 +45,7 @@ public class ChatRoomService implements ChatRoomUseCase {
     private final ChatMessageRepository chatMessageRepository;
     private final ChattingReader chattingReader;
     private final ChatRoomQueryUseCase chatRoomQueryUseCase;
-    private final InMemoryService inMemoryService;
+    private final SeqCachePort seqCachePort;
     private final ReadMessageCachePort readMessageCachePort;
     private final LastMessageCachePort lastMessageCachePort;
 
@@ -140,7 +140,7 @@ public class ChatRoomService implements ChatRoomUseCase {
     }
 
     private void deleteRedis(Long chatRoomId) {
-        inMemoryService.deleteRoomSeq(chatRoomId);
+        seqCachePort.delete(chatRoomId);
         lastMessageCachePort.delete(chatRoomId);
         readMessageCachePort.delete(chatRoomId);
     }

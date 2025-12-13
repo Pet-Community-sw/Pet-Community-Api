@@ -5,6 +5,7 @@ import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.application.out.cache.ChatOnlineCachePort;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
+import com.example.petapp.application.out.cache.SeqCachePort;
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.AckInfoRepository;
@@ -15,7 +16,6 @@ import com.example.petapp.domain.chatting.model.dto.UpdateListDto;
 import com.example.petapp.domain.chatting.model.type.CommandType;
 import com.example.petapp.domain.chatting.strategy.MessageTypeStrategy;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
@@ -34,7 +34,7 @@ public class TalkStrategy implements MessageTypeStrategy {
     private final ProfileQueryUseCase profileQueryUseCase;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatMessageRepository chatMessageRepository;
-    private final InMemoryService inMemoryService;
+    private final SeqCachePort seqCachePort;
     private final ChatOnlineCachePort chatOnlineCachePort;
     private final ReadMessageCachePort readMessageCachePort;
     private final LastMessageCachePort lastMessageCachePort;
@@ -45,14 +45,14 @@ public class TalkStrategy implements MessageTypeStrategy {
 
     @Override
     public void handle(ChatMessage chatMessage) {
-        boolean isExist = inMemoryService.existRoomSeq(chatMessage.getChatRoomId());
+        boolean isExist = seqCachePort.exist(chatMessage.getChatRoomId());
         if (!isExist) {
             Long LastMessageSeq = chatMessageRepository.findFirstByChatRoomIdOrderBySeqDesc(chatMessage.getChatRoomId())
                     .map(ChatMessage::getSeq).orElse(0L);
 
-            inMemoryService.createRoomSeq(chatMessage.getChatRoomId(), LastMessageSeq);//seq가 0일수도있고 아닐수도있음.
+            seqCachePort.create(chatMessage.getChatRoomId(), LastMessageSeq);//seq가 0일수도있고 아닐수도있음.
         }
-        Long seq = inMemoryService.incrementSeq(chatMessage.getChatRoomId());
+        Long seq = seqCachePort.increment(chatMessage.getChatRoomId());
         chatMessage.updateSeq(seq);
         chatMessageRepository.save(chatMessage);
 

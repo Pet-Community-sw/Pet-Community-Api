@@ -14,7 +14,6 @@ import com.example.petapp.domain.chatting.model.dto.StompResponseDto;
 import com.example.petapp.domain.chatting.model.dto.UpdateMessageDto;
 import com.example.petapp.domain.chatting.model.type.CommandType;
 import com.example.petapp.infrastructure.database.mongo.MongoService;
-import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +30,6 @@ import java.util.List;
 public class ChattingReaderImpl implements ChattingReader {
 
     private final ChatMessageRepository chatMessageRepository;
-    private final InMemoryService inMemoryService;
     private final ChatRoomQueryUseCase chatRoomQueryUseCase;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final MongoService mongoService;
