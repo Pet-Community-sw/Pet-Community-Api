@@ -12,24 +12,24 @@ public class RedisAppOnlineCacheAdapter implements AppOnlineCachePort {
     private final StringRedisTemplate redisTemplate;
 
     // Foreground members
-    public static String key() {
+    public static String getKey() {
         return "foreGroundMembers";
     }
 
     @Override
     public void create(Long id) {
-        redisTemplate.opsForSet().add(key(), id.toString());
+        redisTemplate.opsForSet().add(getKey(), id.toString());
     }
 
     @Override
     public void delete(Long id) {
-        redisTemplate.opsForSet().remove(key(), id.toString());
+        redisTemplate.opsForSet().remove(getKey(), id.toString());
     }
 
     //todo : websocket connect할 때 유저 저장하면 될 것 같은데...
     @Override
     public Boolean exist(Long id) {
-        return redisTemplate.opsForSet().isMember(key(), id.toString());
+        return redisTemplate.opsForSet().isMember(getKey(), id.toString());
     }
 
 }

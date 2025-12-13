@@ -6,11 +6,6 @@ import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
 
 public interface InMemoryService {
 
-    Boolean existForeGroundData(Long id);
-
-    void createForeGroundData(Long id);
-
-
     void createReadData(ChatMessage chatMessage);
 
     void deleteReadData(Long chatRoomId, Long userId);
@@ -25,8 +20,6 @@ public interface InMemoryService {
     void deleteLastMessageInfoData(Long chatRoomId);
 
     void deleteReadData(Long chatRoomId);
-
-    void deleteForeGroundData(Long id);
 
 
     boolean existRoomSeq(Long chatRoomId);

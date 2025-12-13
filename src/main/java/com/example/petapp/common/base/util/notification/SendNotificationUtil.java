@@ -1,12 +1,12 @@
 package com.example.petapp.common.base.util.notification;
 
+import com.example.petapp.application.out.cache.AppOnlineCachePort;
 import com.example.petapp.application.out.cache.NotificationsCachePort;
 import com.example.petapp.domain.chatting.model.dto.NotificationDto;
 import com.example.petapp.domain.chatting.model.dto.StompResponseDto;
 import com.example.petapp.domain.chatting.model.type.CommandType;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.notification.model.dto.NotificationListDto;
-import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -20,16 +20,16 @@ import java.time.LocalDateTime;
 public class SendNotificationUtil {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
-    private final NotificationsCachePort port;
-    private final InMemoryService inMemoryService;
+    private final NotificationsCachePort notificationsCachePort;
+    private final AppOnlineCachePort appOnlineCachePort;
 //    private final FcmService fcmService;
 
     /*
      * foreground 유저는 sse, background 유저는 fcm
      * */
     public void sendNotification(Member member, String message) {
-        port.create(member.getId(), new NotificationListDto(message, LocalDateTime.now()), 3);
-        if (inMemoryService.existForeGroundData(member.getId())) {
+        notificationsCachePort.create(member.getId(), new NotificationListDto(message, LocalDateTime.now()), 3);
+        if (appOnlineCachePort.exist(member.getId())) {
             simpMessagingTemplate.convertAndSend("/sub/notification/" + member.getId(),
                     StompResponseDto.builder().commandType(CommandType.NOTIFICATION).body(new NotificationDto(member.getId(), message)));
         } else {

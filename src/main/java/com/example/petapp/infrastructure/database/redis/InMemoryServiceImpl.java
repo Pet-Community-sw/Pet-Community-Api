@@ -17,24 +17,6 @@ public class InMemoryServiceImpl implements InMemoryService {
     private final StringRedisTemplate redisTemplate;
 
     @Override
-    public void createForeGroundData(Long id) {
-        redisTemplate.opsForSet().add(RedisKeys.foregroundMembers(), id.toString());
-        //todo : 이것도 사용자가 많을 때 어떻게 되는건지?
-    }
-
-    @Override
-    public void deleteForeGroundData(Long id) {
-        redisTemplate.opsForSet().remove(RedisKeys.foregroundMembers(), id.toString());
-    }
-
-
-    @Override
-    public Boolean existForeGroundData(Long id) {
-        return redisTemplate.opsForSet().isMember(RedisKeys.foregroundMembers(), id.toString());
-    }
-    //-------------------------------------------------------------------------------------
-
-    @Override
     public void createReadData(ChatMessage chatMessage) {
         redisTemplate.opsForHash().put(
                 RedisKeys.readHash(chatMessage.getChatRoomId()),
@@ -58,6 +40,7 @@ public class InMemoryServiceImpl implements InMemoryService {
     public void deleteReadData(Long chatRoomId) {
         redisTemplate.delete(RedisKeys.readHash(chatRoomId));
     }
+
     //-------------------------------------------------------------------------------------
 
     @Override
