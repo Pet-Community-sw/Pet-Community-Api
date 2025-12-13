@@ -4,19 +4,9 @@ package com.example.petapp.port;
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.chatting.model.dto.LastMessageInfoDto;
 
-import java.util.List;
 import java.util.Set;
 
 public interface InMemoryService {
-
-    void createLocationData(String key, String value);
-
-    String getLocationData(Long id);
-
-    List<String> getLocationDatas(Long id);
-
-    void deleteLocationData(Long id);
-
 
     void createOnlineData(Long chatroomId, Long profileId);
 

@@ -5,10 +5,10 @@ import com.example.petapp.application.in.location.dto.request.LocationMessage;
 import com.example.petapp.application.in.location.mapper.LocationMapper;
 import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
 import com.example.petapp.application.in.walkrecord.dto.request.SendLocationDto;
+import com.example.petapp.application.out.cache.LocationCachePort;
 import com.example.petapp.common.base.util.HaversineUtil;
 import com.example.petapp.common.base.util.notification.SendNotificationUtil;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
-import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -21,7 +21,7 @@ public class LocationService implements LocationUseCase {//예외 처리해야�
 
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final SendNotificationUtil sendNotificationUtil;
-    private final InMemoryService inMemoryService;
+    private final LocationCachePort port;
     private final WalkRecordQueryUseCase walkRecordQueryUseCase;
 
     @Override
@@ -39,7 +39,7 @@ public class LocationService implements LocationUseCase {//예외 처리해야�
 
     private void locationRedis(LocationMessage locationMessage, SendLocationDto sendLocationDto) {
         String location = sendLocationDto.getWalkerLongitude() + "," + sendLocationDto.getWalkerLatitude();
-        inMemoryService.createLocationData("walk:path:" + locationMessage.getWalkRecordId(), location);
+        port.create(locationMessage.getWalkRecordId(), location);
 
         simpMessagingTemplate.convertAndSend(
                 "/sub/walk-record/location/" + locationMessage.getWalkRecordId(),

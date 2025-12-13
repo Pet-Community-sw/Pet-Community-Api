@@ -14,28 +14,7 @@ import java.util.*;
 public class InMemoryServiceImpl implements InMemoryService {
 
     private final StringRedisTemplate redisTemplate;
-
-    @Override
-    public void createLocationData(String key, String value) {
-        redisTemplate.opsForList().rightPush(key, value);
-    }
-
-    @Override
-    public String getLocationData(Long id) {
-        return redisTemplate.opsForList().index(RedisKeys.walkPath(id), -1);
-    }
-
-    @Override
-    public List<String> getLocationDatas(Long id) {
-        return redisTemplate.opsForList().range(RedisKeys.walkPath(id), 0, -1);
-    }
-
-    @Override
-    public void deleteLocationData(Long id) {
-        redisTemplate.delete(RedisKeys.walkPath(id));
-    }
-    //-------------------------------------------------------------------------------------
-
+    
     @Override
     public void createOnlineData(Long chatRoomId, Long profileId) {
         redisTemplate.opsForSet().add(RedisKeys.onlineUsers(chatRoomId), profileId.toString());

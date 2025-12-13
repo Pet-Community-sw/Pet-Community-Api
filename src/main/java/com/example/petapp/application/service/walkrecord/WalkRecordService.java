@@ -7,13 +7,13 @@ import com.example.petapp.application.in.walkrecord.dto.response.CreateWalkRecor
 import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordLocationResponseDto;
 import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordResponseDto;
 import com.example.petapp.application.in.walkrecord.mapper.WalkRecordMapper;
+import com.example.petapp.application.out.cache.LocationCachePort;
 import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.common.base.util.DistanceUtil;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
-import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +27,7 @@ public class WalkRecordService implements WalkRecordUseCase {
     private final WalkRecordRepository walkRecordRepository;
     private final WalkRecordQueryUseCase walkRecordQueryUseCase;
     private final MemberQueryUseCase memberQueryUseCase;
-    private final InMemoryService inMemoryService;
+    private final LocationCachePort port;
 
     @Notification(recipient = "@queryService.findByMember(#p0.selectedApplicantMemberId).member", message = "산책 권한이 부여 되었습니다.")
     @Transactional
@@ -52,7 +52,7 @@ public class WalkRecordService implements WalkRecordUseCase {
         Member member = memberQueryUseCase.findOrThrow(email);
         WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
         walkRecord.validateMember(member);
-        return new GetWalkRecordLocationResponseDto(inMemoryService.getLocationData(walkRecordId));
+        return new GetWalkRecordLocationResponseDto(port.get(walkRecordId));
     }
 
     @Notification(recipient = "@queryServiceImpl.findByWalkRecord(#p0).delegateWalkPost.profile.member",
@@ -80,11 +80,11 @@ public class WalkRecordService implements WalkRecordUseCase {
     }
 
     private void updateWalkRecordPathData(Long walkRecordId, WalkRecord walkRecord) {
-        List<String> paths = inMemoryService.getLocationDatas(walkRecordId);
+        List<String> paths = port.getList(walkRecordId);
 
         Double totalDistance = DistanceUtil.calculateTotalDistance(paths);
         walkRecord.updateRecordToPath(totalDistance, paths);
-        inMemoryService.deleteLocationData(walkRecordId);
+        port.delete(walkRecordId);
     }
 
     //todo : delete 있어야함.
