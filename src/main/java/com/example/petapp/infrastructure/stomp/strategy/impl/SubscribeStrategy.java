@@ -1,9 +1,9 @@
 package com.example.petapp.infrastructure.stomp.strategy.impl;
 
+import com.example.petapp.infrastructure.stomp.DestinationCachePort;
 import com.example.petapp.infrastructure.stomp.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.StompCommandStrategy;
 import com.example.petapp.infrastructure.stomp.strategy.impl.subscribeStrategy.SubscribeTypeStrategy;
-import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -18,7 +18,7 @@ import java.util.List;
 public class SubscribeStrategy implements StompCommandStrategy {
 
     private final List<SubscribeTypeStrategy> handlers;  //스프링이 구현체 다 넣어줌 ㅋㅋㅋㅋㅋ
-    private final InMemoryService inMemoryService;
+    private final DestinationCachePort port;
 
     @Override
     public void handle(StompHeaderAccessor accessor) {
@@ -31,7 +31,7 @@ public class SubscribeStrategy implements StompCommandStrategy {
             throw new IllegalArgumentException("destination 또는 user 정보가 없습니다.");
         }
 
-        inMemoryService.createStringData(accessor.getSubscriptionId(), destination);
+        port.create(accessor.getSubscriptionId(), destination);
 
         SubscribeInfo subscribeInfo = SubscribeInfo.builder()
                 .destination(destination)

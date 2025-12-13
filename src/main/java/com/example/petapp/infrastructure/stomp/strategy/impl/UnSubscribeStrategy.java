@@ -1,7 +1,8 @@
 package com.example.petapp.infrastructure.stomp.strategy.impl;
 
+import com.example.petapp.application.out.cache.ChatOnlineCachePort;
+import com.example.petapp.infrastructure.stomp.DestinationCachePort;
 import com.example.petapp.infrastructure.stomp.strategy.StompCommandStrategy;
-import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UnSubscribeStrategy implements StompCommandStrategy {
 
-    private final InMemoryService inMemoryService;
+    private final DestinationCachePort destinationCachePort;
+    private final ChatOnlineCachePort chatOnlineCachePort;
 
     @Override
     public void handle(StompHeaderAccessor accessor) {
@@ -23,12 +25,12 @@ public class UnSubscribeStrategy implements StompCommandStrategy {
          * 급하니까 서버에서 처리하는걸로
          * todo : 테스트해봐야함.
          * */
-
-        String userId = accessor.getUser().getName();
-        Set<String> subscribePaths = inMemoryService.getStringSetData(userId);
+        String id = accessor.getSubscriptionId();
+        Set<String> subscribePaths = destinationCachePort.getSet(id);
+        destinationCachePort.delete(id);
         for (String path : subscribePaths) {
             if (path.startsWith("/sub/chat")) {
-                inMemoryService.deleteOnlineDate(Long.valueOf(path.substring("/sub/chat/".length())), Long.valueOf(userId));
+                chatOnlineCachePort.delete(Long.valueOf(path.substring("/sub/chat/".length())), Long.valueOf(id));
             }
         }
     }

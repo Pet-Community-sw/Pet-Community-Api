@@ -16,16 +16,6 @@ public class InMemoryServiceImpl implements InMemoryService {
     private final StringRedisTemplate redisTemplate;
 
     @Override
-    public void createStringData(String key, String memberId) {
-        redisTemplate.opsForSet().add(key, memberId);
-    }
-
-    @Override
-    public Set<String> getStringSetData(String key) {
-        return redisTemplate.opsForSet().members(key);
-    }
-
-    @Override
     public Boolean existStringData(String key) {
         if (key == null) {
             return false;
@@ -58,11 +48,6 @@ public class InMemoryServiceImpl implements InMemoryService {
     @Override
     public void createOnlineData(Long chatRoomId, Long profileId) {
         redisTemplate.opsForSet().add(RedisKeys.onlineUsers(chatRoomId), profileId.toString());
-    }
-
-    @Override
-    public void deleteOnlineDate(Long chatRoomId, Long profileId) {
-        redisTemplate.opsForSet().remove(RedisKeys.onlineUsers(chatRoomId), profileId.toString());
     }
 
     @Override

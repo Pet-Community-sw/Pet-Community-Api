@@ -8,13 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 public interface InMemoryService {
-    
+
     Boolean existStringData(String key);
-
-    Set<String> getStringSetData(String userId);
-
-    void createStringData(String key, String value);
-
 
     void createLocationData(String key, String value);
 
@@ -27,7 +22,6 @@ public interface InMemoryService {
 
     void createOnlineData(Long chatroomId, Long profileId);
 
-    void deleteOnlineDate(Long chatRoomId, Long profileId);
 
     Set<String> getOnlineDatas(Long id);
 
