@@ -28,11 +28,6 @@ public class InMemoryServiceImpl implements InMemoryService {
     }
 
     @Override
-    public String getStringData(String key) {
-        return redisTemplate.opsForValue().get(key);
-    }
-
-    @Override
     public Set<String> getStringSetData(String key) {
         return redisTemplate.opsForSet().members(key);
     }
@@ -43,11 +38,6 @@ public class InMemoryServiceImpl implements InMemoryService {
             return false;
         }
         return redisTemplate.hasKey(key);
-    }
-
-    @Override
-    public void deleteStringData(String key) {
-        redisTemplate.delete(key);
     }
     //-------------------------------------------------------------------------------------
 

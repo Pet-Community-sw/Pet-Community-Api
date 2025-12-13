@@ -2,7 +2,7 @@ package com.example.petapp.application.service.email;
 
 import com.example.petapp.application.in.email.EmailUseCase;
 import com.example.petapp.application.out.EmailPort;
-import com.example.petapp.port.InMemoryService;
+import com.example.petapp.application.out.cache.EmailCachePort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,23 +14,23 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class EmailService implements EmailUseCase {
 
-    private final InMemoryService inMemoryService;
+    private final EmailCachePort emailCachePort;
     private final EmailPort emailPort;
 
     @Override
     public void send(String toEmail) {
-        if (inMemoryService.existStringData(toEmail)) {
-            inMemoryService.deleteStringData(toEmail);
+        if (emailCachePort.exist(toEmail)) {
+            emailCachePort.delete(toEmail);
         }
         String emailCode = buildCode();
 
-        inMemoryService.createStringDataWithDuration(toEmail, emailCode, 3 * 60L);
+        emailCachePort.createWithDuration(toEmail, emailCode, 3 * 60L);
         emailPort.send(toEmail, "멍냥로드 인증코드 안내입니다.", buildBody(emailCode));
     }
 
     @Override
     public void verifyCode(String email, String code) {
-        String authCode = inMemoryService.getStringData(email);
+        String authCode = emailCachePort.get(email);
         log.info("email : {}, code : {}", email, code);
         if (authCode == null) {
             throw new IllegalArgumentException("인증번호가 만료되었습니다. 다시 시도해주세요.");

@@ -11,16 +11,12 @@ public interface InMemoryService {
 
     void createStringDataWithDuration(String key, String value, long duration);
 
-    String getStringData(String key);
-
     Boolean existStringData(String key);
-
-    void deleteStringData(String key);
-
+    
     Set<String> getStringSetData(String userId);
 
     void createStringData(String key, String value);
-    
+
 
     void createLocationData(String key, String value);
 
