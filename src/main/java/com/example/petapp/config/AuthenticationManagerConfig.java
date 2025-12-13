@@ -1,8 +1,8 @@
 package com.example.petapp.config;
 
+import com.example.petapp.application.out.cache.TokenCachePort;
 import com.example.petapp.common.jwt.filter.JwtAuthenticationFilter;
 import com.example.petapp.common.jwt.provider.JwtAuthenticationProvider;
-import com.example.petapp.port.InMemoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,14 +15,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class AuthenticationManagerConfig extends AbstractHttpConfigurer<AuthenticationManagerConfig, HttpSecurity> {
 
     private final JwtAuthenticationProvider authenticationProvider;
-    private final InMemoryService inMemoryService;
+    private final TokenCachePort port;
 
     @Override
     public void configure(HttpSecurity builder) throws Exception {
         AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
         builder.addFilterBefore(
-                new JwtAuthenticationFilter(authenticationManager, inMemoryService),
+                new JwtAuthenticationFilter(authenticationManager, port),
+                //todo : 수정해야할듯 인터페이스로
                 UsernamePasswordAuthenticationFilter.class
         ).authenticationProvider(authenticationProvider);
     }

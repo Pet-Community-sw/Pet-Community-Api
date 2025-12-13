@@ -16,15 +16,6 @@ public class InMemoryServiceImpl implements InMemoryService {
     private final StringRedisTemplate redisTemplate;
 
     @Override
-    public Boolean existStringData(String key) {
-        if (key == null) {
-            return false;
-        }
-        return redisTemplate.hasKey(key);
-    }
-    //-------------------------------------------------------------------------------------
-
-    @Override
     public void createLocationData(String key, String value) {
         redisTemplate.opsForList().rightPush(key, value);
     }

@@ -132,7 +132,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
     }
 
     private void blacklistAccessToken(String accessToken) {
-        port.createWithDuration("blacklist", accessToken, 30 * 60L);
+        port.create("blacklist", accessToken, 30 * 60L);
     }
 
     private Claims getClaimsFromToken(String token) {

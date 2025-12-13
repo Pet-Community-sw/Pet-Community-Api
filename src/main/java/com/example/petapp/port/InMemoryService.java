@@ -9,8 +9,6 @@ import java.util.Set;
 
 public interface InMemoryService {
 
-    Boolean existStringData(String key);
-
     void createLocationData(String key, String value);
 
     String getLocationData(Long id);

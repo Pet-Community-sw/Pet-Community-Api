@@ -14,7 +14,13 @@ public class RedisTokenCacheAdapter implements TokenCachePort {
     private final StringRedisTemplate template;
 
     @Override
-    public void createWithDuration(String key, String value, long duration) {
+    public void create(String key, String value, long duration) {
         template.opsForValue().set(key, value, Duration.ofSeconds(duration));
     }
+
+    @Override
+    public boolean exist(String key) {
+        return template.hasKey(key);
+    }
+
 }

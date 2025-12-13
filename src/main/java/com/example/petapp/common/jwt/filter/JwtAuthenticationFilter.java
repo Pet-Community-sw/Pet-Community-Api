@@ -1,8 +1,8 @@
 package com.example.petapp.common.jwt.filter;
 
+import com.example.petapp.application.out.cache.TokenCachePort;
 import com.example.petapp.common.jwt.exception.JwtExceptionCode;
 import com.example.petapp.common.jwt.token.JwtAuthenticationToken;
-import com.example.petapp.port.InMemoryService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -30,7 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * OncePerRequestFilter는 http요청당 한 번 씩 실행되는 filter
      */
     private final AuthenticationManager authenticationManager;
-    private final InMemoryService inMemoryService;
+    private final TokenCachePort port;
 
     @Override//filter 하지않게 하려고
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
@@ -87,7 +87,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authorization = request.getHeader("Authorization");
         if (StringUtils.hasText(authorization) && authorization.startsWith("Bearer")) {
             String[] arr = authorization.split(" ");
-            if (inMemoryService.existStringData(arr[1])) {
+            if (port.exist(arr[1])) {
                 throw new BadCredentialsException("로그아웃된 토큰입니다.");
             }
             return arr[1];
