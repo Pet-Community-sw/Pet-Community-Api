@@ -1,7 +1,8 @@
-package com.example.petapp.domain.token;
+package com.example.petapp.interfaces;
 
 import com.example.petapp.application.in.member.dto.response.TokenResponseDto;
-import com.example.petapp.domain.token.model.dto.request.ReissueTokenRequestDto;
+import com.example.petapp.application.in.token.TokenUseCase;
+import com.example.petapp.application.in.token.dto.ReissueTokenRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/token")
 public class TokenController {
 
-    private final TokenService tokenService;
+    private final TokenUseCase tokenUseCase;
 
     @Operation(
             summary = "토큰 재발급"
@@ -23,6 +24,6 @@ public class TokenController {
     @ApiResponse(description = "상단 Authorization에 accessToken넣고 요청.")
     @PostMapping
     public TokenResponseDto reissueToken(@Parameter(hidden = true) @RequestHeader("Authorization") String accessToken, @RequestBody() ReissueTokenRequestDto reissueTokenRequestDto) {
-        return tokenService.reissueToken(accessToken, reissueTokenRequestDto);
+        return tokenUseCase.reissueToken(accessToken, reissueTokenRequestDto);
     }
 }

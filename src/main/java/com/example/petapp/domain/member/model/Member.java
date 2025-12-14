@@ -5,7 +5,7 @@ import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.fcm.model.entity.FcmToken;
 import com.example.petapp.domain.post.model.Post;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.domain.token.model.entity.RefreshToken;
+import com.example.petapp.domain.token.model.Token;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -56,7 +56,7 @@ public class Member extends BaseEntity {//수정 필요
     private String memberImageUrl;
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private RefreshToken refreshToken;
+    private Token token;
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private FcmToken fcmToken;

@@ -1,4 +1,4 @@
-package com.example.petapp.domain.token.model.dto.request;
+package com.example.petapp.application.in.token.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

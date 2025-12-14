@@ -9,12 +9,12 @@ import com.example.petapp.application.in.member.dto.request.MemberSignDto;
 import com.example.petapp.application.in.member.dto.request.ResetPasswordDto;
 import com.example.petapp.application.in.member.dto.request.SendEmailDto;
 import com.example.petapp.application.in.member.dto.response.MemberSignResponseDto;
+import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.application.service.member.MemberService;
 import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.RoleRepository;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.token.TokenService;
 import com.example.petapp.infrastructure.aop.LogAspect;
 import com.example.petapp.util.Mapper;
 import org.junit.jupiter.api.DisplayName;
@@ -52,7 +52,7 @@ class MemberUseCaseTest {
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
-    private TokenService tokenService;
+    private TokenUseCase tokenUseCase;
     @Mock
     private EmailUseCase emailUseCase;
     @Mock

@@ -12,12 +12,12 @@ import com.example.petapp.application.in.profile.dto.response.CreateProfileRespo
 import com.example.petapp.application.in.profile.dto.response.GetProfileResponseDto;
 import com.example.petapp.application.in.profile.dto.response.ProfileListResponseDto;
 import com.example.petapp.application.in.profile.mapper.ProfileMapper;
+import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.petbreed.model.PetBreed;
 import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.domain.token.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class ProfileService implements ProfileUseCase {
     private final PetBreedQueryUseCase petBreedQueryUseCase;
     private final MemberQueryUseCase memberQueryUseCase;
     private final ProfileRepository profileRepository;
-    private final TokenService tokenService;
+    private final TokenUseCase tokenUseCase;
     private final ProfileQueryUseCase profileQueryUseCase;
     @Value("${spring.dog.profile.image.upload}")
     private String profileUploadDir;
@@ -103,7 +103,7 @@ public class ProfileService implements ProfileUseCase {
         Member member = memberQueryUseCase.findOrThrow(email);
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
         member.validateProfile(member, profile.getMember());
-        String newAccessToken = tokenService.newAccessTokenByProfile(accessToken, member, profileId);
+        String newAccessToken = tokenUseCase.newAccessTokenByProfile(accessToken, member, profileId);
 
         return ProfileMapper.toAccessTokenToProfileIdResponseDto(profileId, newAccessToken);
     }

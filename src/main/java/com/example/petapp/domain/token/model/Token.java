@@ -1,4 +1,4 @@
-package com.example.petapp.domain.token.model.entity;
+package com.example.petapp.domain.token.model;
 
 
 import com.example.petapp.common.exception.ForbiddenException;
@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @SuperBuilder
-public class RefreshToken extends BaseEntity {
+public class Token extends BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", unique = true)

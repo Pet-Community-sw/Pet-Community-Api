@@ -3,7 +3,7 @@ package com.example.petapp.infrastructure.stomp.strategy.impl;
 import com.example.petapp.common.jwt.util.JwtTokenizer;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.token.TokenType;
+import com.example.petapp.domain.token.model.TokenType;
 import com.example.petapp.infrastructure.stomp.strategy.StompCommandStrategy;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;

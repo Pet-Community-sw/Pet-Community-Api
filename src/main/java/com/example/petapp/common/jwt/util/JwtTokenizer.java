@@ -1,6 +1,6 @@
 package com.example.petapp.common.jwt.util;
 
-import com.example.petapp.domain.token.TokenType;
+import com.example.petapp.domain.token.model.TokenType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -16,12 +16,10 @@ import java.util.List;
 @Component
 public class JwtTokenizer {
 
-    private final byte[] accessKey;
-
-    private final byte[] refreshKey;
-
     private static final Long ACCESS_TOKEN_EXPIRE_COUNT = 24 * 60 * 60 * 1000L;
     private static final Long REFRESH_TOKEN_EXPIRE_COUNT = 7 * 24 * 60 * 60 * 1000L;
+    private final byte[] accessKey;
+    private final byte[] refreshKey;
 
 
     public JwtTokenizer(@Value("${jwt.accessKey}") String accessKey, @Value("${jwt.refreshKey}") String refreshKey) {

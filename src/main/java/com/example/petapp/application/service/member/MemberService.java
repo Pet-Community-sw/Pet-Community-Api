@@ -11,6 +11,7 @@ import com.example.petapp.application.in.member.dto.response.GetMemberResponseDt
 import com.example.petapp.application.in.member.dto.response.LoginResponseDto;
 import com.example.petapp.application.in.member.dto.response.MemberSignResponseDto;
 import com.example.petapp.application.in.member.mapper.MemberMapper;
+import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.UnAuthorizedException;
 import com.example.petapp.domain.fcm.FcmTokenService;
@@ -19,7 +20,6 @@ import com.example.petapp.domain.member.RoleRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.member.model.MemberRole;
 import com.example.petapp.domain.member.model.Role;
-import com.example.petapp.domain.token.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,7 +36,7 @@ public class MemberService implements MemberUseCase {
     private final MemberQueryUseCase memberQueryUseCase;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final TokenService tokenService;
+    private final TokenUseCase tokenUseCase;
     private final EmailUseCase emailUseCase;
     private final FcmTokenService fcmTokenService;
     private final RoleRepository roleRepository;
@@ -63,13 +63,13 @@ public class MemberService implements MemberUseCase {
             throw new UnAuthorizedException("이메일 혹은 비밀번호가 일치하지 않습니다.");
         }
         setRole(member);
-        return tokenService.save(member);
+        return tokenUseCase.save(member);
     }
 
     @Override
     public AccessTokenResponseDto verifyCode(String email, String code) {//sendEmail할 때 이메일 유효성 검사 했으므로 안해줘도 됨.
         emailUseCase.verifyCode(email, code);
-        return tokenService.createResetPasswordJwt(email);
+        return tokenUseCase.createResetPasswordJwt(email);
     }
 
     @Transactional(readOnly = true)
@@ -89,7 +89,7 @@ public class MemberService implements MemberUseCase {
 
     @Override
     public void logout(String accessToken) {
-        tokenService.deleteRefreshToken(accessToken);
+        tokenUseCase.deleteRefreshToken(accessToken);
     }
 
 

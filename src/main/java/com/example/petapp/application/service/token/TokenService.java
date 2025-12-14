@@ -1,9 +1,11 @@
-package com.example.petapp.domain.token;
+package com.example.petapp.application.service.token;
 
 import com.example.petapp.application.in.member.dto.request.AccessTokenResponseDto;
 import com.example.petapp.application.in.member.dto.response.LoginResponseDto;
 import com.example.petapp.application.in.member.dto.response.TokenResponseDto;
 import com.example.petapp.application.in.member.mapper.MemberMapper;
+import com.example.petapp.application.in.token.TokenUseCase;
+import com.example.petapp.application.in.token.dto.ReissueTokenRequestDto;
 import com.example.petapp.application.out.cache.TokenCachePort;
 import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.common.exception.UnAuthorizedException;
@@ -11,8 +13,9 @@ import com.example.petapp.common.jwt.util.JwtTokenizer;
 import com.example.petapp.domain.member.RoleRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.member.model.Role;
-import com.example.petapp.domain.token.model.dto.request.ReissueTokenRequestDto;
-import com.example.petapp.domain.token.model.entity.RefreshToken;
+import com.example.petapp.domain.token.TokenRepository;
+import com.example.petapp.domain.token.model.Token;
+import com.example.petapp.domain.token.model.TokenType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +32,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class TokenServiceImpl implements TokenService {//리펙토링 필요.
+public class TokenService implements TokenUseCase {//리펙토링 필요.
 
-    private final RefreshRepository refreshRepository;
+    private final TokenRepository tokenRepository;
     private final JwtTokenizer jwtTokenizer;
     private final TokenCachePort port;
     private final RoleRepository roleRepository;
@@ -52,11 +55,11 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
 
         String accessToken = jwtTokenizer.createAccessToken(member.getId(), null, member.getEmail(), roles);
         String refreshToken = jwtTokenizer.createRefreshToken(member.getId(), member.getEmail(), roles);
-        Optional<RefreshToken> savedRefreshToken = refreshRepository.findByMemberId(member.getId());
+        Optional<Token> savedRefreshToken = tokenRepository.find(member.getId());
         if (savedRefreshToken.isPresent()) {
             savedRefreshToken.get().updateRefreshToken(refreshToken);
         } else {
-            refreshRepository.save(new RefreshToken(member, refreshToken));
+            tokenRepository.save(new Token(member, refreshToken));
         }
         log.info("로그인 요청 성공");
         return MemberMapper.toLoginResponseDto(member, refreshToken, accessToken);
@@ -76,18 +79,18 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
         log.info("이게안되는듯");
         Claims claims = getClaimsFromToken(accessToken);
         Long memberId = Long.valueOf((Integer) claims.get("memberId"));
-        RefreshToken savedRefreshToken = refreshRepository.findByMemberId(memberId)
+        Token savedToken = tokenRepository.find(memberId)
                 .orElseThrow(() -> new NotFoundException("refreshToken이 없음. 다시 로그인."));
 
-        savedRefreshToken.isEqual(reissueTokenRequestDto.getRefreshToken());
+        savedToken.isEqual(reissueTokenRequestDto.getRefreshToken());
         blacklistAccessToken(accessToken);
 
-        return createNewToken(claims, memberId, savedRefreshToken);
+        return createNewToken(claims, memberId, savedToken);
     }
 
     @NotNull
-    private TokenResponseDto createNewToken(Claims claims, Long memberId, RefreshToken refreshToken) {
-        if (jwtTokenizer.isTokenExpired(TokenType.REFRESH, refreshToken.getRefreshToken())) {
+    private TokenResponseDto createNewToken(Claims claims, Long memberId, Token token) {
+        if (jwtTokenizer.isTokenExpired(TokenType.REFRESH, token.getRefreshToken())) {
             throw new UnAuthorizedException("로그인 다시 해야됨.");
         } else {
             List<String> roles = (List<String>) claims.get("roles");
@@ -99,7 +102,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
             } else
                 newAccessToken = jwtTokenizer.createAccessToken(memberId, Long.valueOf(profileId.toString()), email, roles);//profile이있으면 붙혀서 반환.
             String newRefreshToken = jwtTokenizer.createRefreshToken(memberId, email, roles);
-            refreshToken.setRefreshToken(newRefreshToken);
+            token.setRefreshToken(newRefreshToken);
             return new TokenResponseDto(newAccessToken, newRefreshToken);
         }
     }
@@ -127,7 +130,7 @@ public class TokenServiceImpl implements TokenService {//리펙토링 필요.
         String[] arr = accessToken.split(" ");
         Claims claims = jwtTokenizer.parseAccessToken(arr[1]);
         Long memberId = Long.valueOf((Integer) claims.get("memberId"));
-        refreshRepository.deleteByMemberId(memberId);
+        tokenRepository.delete(memberId);
         blacklistAccessToken(accessToken);
     }
 
