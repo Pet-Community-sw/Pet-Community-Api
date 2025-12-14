@@ -1,4 +1,4 @@
-package com.example.petapp.common.base.util.imagefile;
+package com.example.petapp.application.common.imagefile;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;

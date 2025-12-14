@@ -1,12 +1,12 @@
 package com.example.petapp.interfaces;
 
+import com.example.petapp.application.common.AuthUtil;
 import com.example.petapp.application.in.post.normal.NormalPostUseCase;
 import com.example.petapp.application.in.post.normal.dto.request.PostDto;
 import com.example.petapp.application.in.post.normal.dto.response.CreatePostResponseDto;
 import com.example.petapp.application.in.post.normal.dto.response.GetPostResponseDto;
 import com.example.petapp.application.in.post.normal.dto.response.PostResponseDto;
-import com.example.petapp.common.base.dto.MessageResponse;
-import com.example.petapp.common.base.util.AuthUtil;
+import com.example.petapp.interfaces.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

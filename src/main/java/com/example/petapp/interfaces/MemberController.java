@@ -1,13 +1,13 @@
 package com.example.petapp.interfaces;
 
+import com.example.petapp.application.common.AuthUtil;
 import com.example.petapp.application.in.member.MemberUseCase;
 import com.example.petapp.application.in.member.dto.request.*;
 import com.example.petapp.application.in.member.dto.response.FindByIdResponseDto;
 import com.example.petapp.application.in.member.dto.response.GetMemberResponseDto;
 import com.example.petapp.application.in.member.dto.response.LoginResponseDto;
 import com.example.petapp.application.in.member.dto.response.MemberSignResponseDto;
-import com.example.petapp.common.base.dto.MessageResponse;
-import com.example.petapp.common.base.util.AuthUtil;
+import com.example.petapp.interfaces.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

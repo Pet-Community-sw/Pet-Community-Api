@@ -1,5 +1,6 @@
 package com.example.petapp.application.service.location;
 
+import com.example.petapp.application.common.HaversineUtil;
 import com.example.petapp.application.in.location.LocationUseCase;
 import com.example.petapp.application.in.location.dto.request.LocationMessage;
 import com.example.petapp.application.in.location.mapper.LocationMapper;
@@ -7,7 +8,6 @@ import com.example.petapp.application.in.notification.NotificationUseCase;
 import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
 import com.example.petapp.application.in.walkrecord.dto.request.SendLocationDto;
 import com.example.petapp.application.out.cache.LocationCachePort;
-import com.example.petapp.common.base.util.HaversineUtil;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

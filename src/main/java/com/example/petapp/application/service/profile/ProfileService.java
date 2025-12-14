@@ -1,5 +1,7 @@
 package com.example.petapp.application.service.profile;
 
+import com.example.petapp.application.common.imagefile.FileImageKind;
+import com.example.petapp.application.common.imagefile.FileUploadUtil;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.petbreed.PetBreedQueryUseCase;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
@@ -10,8 +12,6 @@ import com.example.petapp.application.in.profile.dto.response.CreateProfileRespo
 import com.example.petapp.application.in.profile.dto.response.GetProfileResponseDto;
 import com.example.petapp.application.in.profile.dto.response.ProfileListResponseDto;
 import com.example.petapp.application.in.profile.mapper.ProfileMapper;
-import com.example.petapp.common.base.util.imagefile.FileImageKind;
-import com.example.petapp.common.base.util.imagefile.FileUploadUtil;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.petbreed.model.PetBreed;

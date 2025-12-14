@@ -1,5 +1,6 @@
 package com.example.petapp.interfaces;
 
+import com.example.petapp.application.common.AuthUtil;
 import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.application.in.post.delegate.DelegateWalkPostUseCase;
 import com.example.petapp.application.in.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
@@ -9,9 +10,8 @@ import com.example.petapp.application.in.post.delegate.model.dto.response.ApplyT
 import com.example.petapp.application.in.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
 import com.example.petapp.application.in.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
 import com.example.petapp.application.in.walkrecord.dto.response.CreateWalkRecordResponseDto;
-import com.example.petapp.common.base.dto.MessageResponse;
-import com.example.petapp.common.base.util.AuthUtil;
 import com.example.petapp.domain.post.model.Applicant;
+import com.example.petapp.interfaces.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

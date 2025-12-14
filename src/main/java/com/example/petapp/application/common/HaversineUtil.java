@@ -1,4 +1,4 @@
-package com.example.petapp.common.base.util;
+package com.example.petapp.application.common;
 
 
 public class HaversineUtil {

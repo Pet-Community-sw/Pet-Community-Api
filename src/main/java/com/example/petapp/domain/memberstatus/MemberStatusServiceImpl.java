@@ -2,8 +2,8 @@ package com.example.petapp.domain.memberstatus;
 
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.out.cache.AppOnlineCachePort;
-import com.example.petapp.common.base.dto.MessageResponse;
 import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.interfaces.dto.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

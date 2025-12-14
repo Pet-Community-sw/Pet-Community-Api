@@ -1,8 +1,8 @@
 package com.example.petapp.application.in.match.mapper;
 
+import com.example.petapp.application.common.TimeUtil;
 import com.example.petapp.application.in.match.dto.request.CreateWalkingTogetherMatchDto;
 import com.example.petapp.application.in.match.dto.response.GetWalkingTogetherMatchResponseDto;
-import com.example.petapp.common.base.util.TimeUtil;
 import com.example.petapp.domain.petbreed.model.PetBreed;
 import com.example.petapp.domain.post.model.RecommendRoutePost;
 import com.example.petapp.domain.profile.model.Profile;

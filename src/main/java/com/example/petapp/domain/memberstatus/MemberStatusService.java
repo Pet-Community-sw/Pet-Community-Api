@@ -1,6 +1,6 @@
 package com.example.petapp.domain.memberstatus;
 
-import com.example.petapp.common.base.dto.MessageResponse;
+import com.example.petapp.interfaces.dto.MessageResponse;
 import org.springframework.stereotype.Service;
 
 @Service

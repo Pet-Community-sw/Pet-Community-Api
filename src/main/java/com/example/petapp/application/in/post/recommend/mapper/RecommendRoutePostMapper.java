@@ -1,9 +1,9 @@
 package com.example.petapp.application.in.post.recommend.mapper;
 
+import com.example.petapp.application.common.TimeUtil;
 import com.example.petapp.application.in.post.recommend.dto.request.CreateRecommendRoutePostDto;
 import com.example.petapp.application.in.post.recommend.dto.response.GetRecommendPostResponseDto;
 import com.example.petapp.application.in.post.recommend.dto.response.GetRecommendRoutePostsResponseDto;
-import com.example.petapp.common.base.util.TimeUtil;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.Content;
 import com.example.petapp.domain.post.model.Location;

@@ -1,13 +1,13 @@
 package com.example.petapp.interfaces;
 
+import com.example.petapp.application.common.AuthUtil;
 import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.application.in.match.WalkingTogetherMatchUseCase;
 import com.example.petapp.application.in.match.dto.request.CreateWalkingTogetherMatchDto;
 import com.example.petapp.application.in.match.dto.request.UpdateWalkingTogetherMatchDto;
 import com.example.petapp.application.in.match.dto.response.CreateWalkingTogetherMatchResponseDto;
 import com.example.petapp.application.in.match.dto.response.GetWalkingTogetherMatchResponseDto;
-import com.example.petapp.common.base.dto.MessageResponse;
-import com.example.petapp.common.base.util.AuthUtil;
+import com.example.petapp.interfaces.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

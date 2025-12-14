@@ -1,10 +1,10 @@
-package com.example.petapp.common.base.util;
+package com.example.petapp.application.common;
 
 import java.util.List;
 
 public class DistanceUtil {
     public static Double calculateTotalDistance(List<String> list) {
-        double totalDistance=0.0;
+        double totalDistance = 0.0;
         for (int i = 1; i < list.size(); i++) {
             String path1 = list.get(i - 1);
             String path2 = list.get(i);

@@ -1,6 +1,6 @@
 package com.example.petapp.domain.memberstatus;
 
-import com.example.petapp.common.base.dto.MessageResponse;
+import com.example.petapp.interfaces.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "UserStatus")
 @RestController
 @RequestMapping("/status")
-@RequiredArgsConstructor //todo : 웹소켓 connect시 로 해보자
+@RequiredArgsConstructor //todo : 웹소켓 connect시 로 해보자 없앨 에정
 public class MemberStatusController {
 
     private final MemberStatusService memberStatusService;

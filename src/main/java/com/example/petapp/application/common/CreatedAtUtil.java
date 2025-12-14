@@ -1,4 +1,4 @@
-package com.example.petapp.common.base.util;
+package com.example.petapp.application.common;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

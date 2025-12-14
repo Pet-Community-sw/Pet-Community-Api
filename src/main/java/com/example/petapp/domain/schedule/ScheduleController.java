@@ -1,7 +1,7 @@
 package com.example.petapp.domain.schedule;
 
 
-import com.example.petapp.common.base.util.AuthUtil;
+import com.example.petapp.application.common.AuthUtil;
 import com.example.petapp.domain.schedule.model.dto.response.GetSchedulesResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

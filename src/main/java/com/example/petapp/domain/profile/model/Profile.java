@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.example.petapp.common.base.util.AgeUtil.CalculateAge;
+import static com.example.petapp.application.common.AgeUtil.CalculateAge;
 
 @Entity
 @Getter

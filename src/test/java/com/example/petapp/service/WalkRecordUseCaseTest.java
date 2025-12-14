@@ -1,10 +1,10 @@
 package com.example.petapp.service;
 
+import com.example.petapp.application.common.DistanceUtil;
 import com.example.petapp.application.in.walkrecord.dto.response.CreateWalkRecordResponseDto;
 import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordResponseDto;
 import com.example.petapp.application.in.walkrecord.mapper.WalkRecordMapper;
 import com.example.petapp.application.service.walkrecord.WalkRecordService;
-import com.example.petapp.common.base.util.DistanceUtil;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.domain.member.MemberRepository;

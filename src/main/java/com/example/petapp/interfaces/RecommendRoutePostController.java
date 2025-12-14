@@ -1,13 +1,13 @@
 package com.example.petapp.interfaces;
 
+import com.example.petapp.application.common.AuthUtil;
 import com.example.petapp.application.in.post.recommend.RecommendRoutePostUseCase;
 import com.example.petapp.application.in.post.recommend.dto.request.CreateRecommendRoutePostDto;
 import com.example.petapp.application.in.post.recommend.dto.request.UpdateRecommendRoutePostDto;
 import com.example.petapp.application.in.post.recommend.dto.response.CreateRecommendRoutePostResponseDto;
 import com.example.petapp.application.in.post.recommend.dto.response.GetRecommendPostResponseDto;
 import com.example.petapp.application.in.post.recommend.dto.response.GetRecommendRoutePostsResponseDto;
-import com.example.petapp.common.base.dto.MessageResponse;
-import com.example.petapp.common.base.util.AuthUtil;
+import com.example.petapp.interfaces.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

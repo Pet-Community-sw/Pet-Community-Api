@@ -1,4 +1,4 @@
-package com.example.petapp.common.base.dto;
+package com.example.petapp.interfaces.dto;
 
 import lombok.*;
 

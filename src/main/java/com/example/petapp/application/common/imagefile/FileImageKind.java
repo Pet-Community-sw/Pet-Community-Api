@@ -1,4 +1,4 @@
-package com.example.petapp.common.base.util.imagefile;
+package com.example.petapp.application.common.imagefile;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,12 +8,12 @@ public enum FileImageKind {
     MEMBER("members"),
     PROFILE("profiles");
 
+    @Getter
+    @Setter
+    private String type;
+
     FileImageKind(String type) {
         this.type = type;
     }
 
-    @Getter
-    @Setter
-    private String type;
-    
 }

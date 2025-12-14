@@ -1,13 +1,13 @@
 package com.example.petapp.interfaces;
 
 
+import com.example.petapp.application.common.AuthUtil;
 import com.example.petapp.application.in.comment.CommentUseCase;
 import com.example.petapp.application.in.comment.dto.request.CommentDto;
 import com.example.petapp.application.in.comment.dto.request.UpdateCommentDto;
 import com.example.petapp.application.in.comment.dto.response.CreateCommentResponseDto;
 import com.example.petapp.application.in.comment.dto.response.GetCommentsResponseDto;
-import com.example.petapp.common.base.dto.MessageResponse;
-import com.example.petapp.common.base.util.AuthUtil;
+import com.example.petapp.interfaces.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

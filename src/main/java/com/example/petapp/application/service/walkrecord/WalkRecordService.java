@@ -1,6 +1,7 @@
 package com.example.petapp.application.service.walkrecord;
 
 import com.example.petapp.application.annotation.Notification;
+import com.example.petapp.application.common.DistanceUtil;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
 import com.example.petapp.application.in.walkrecord.WalkRecordUseCase;
@@ -9,7 +10,6 @@ import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordLo
 import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordResponseDto;
 import com.example.petapp.application.in.walkrecord.mapper.WalkRecordMapper;
 import com.example.petapp.application.out.cache.LocationCachePort;
-import com.example.petapp.common.base.util.DistanceUtil;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;

@@ -1,8 +1,8 @@
 package com.example.petapp.application.in.comment.mapper;
 
+import com.example.petapp.application.common.TimeUtil;
 import com.example.petapp.application.in.comment.dto.request.CommentDto;
 import com.example.petapp.application.in.comment.dto.response.GetCommentsResponseDto;
-import com.example.petapp.common.base.util.TimeUtil;
 import com.example.petapp.domain.comment.model.Comment;
 import com.example.petapp.domain.comment.model.Commentable;
 import com.example.petapp.domain.member.model.Member;

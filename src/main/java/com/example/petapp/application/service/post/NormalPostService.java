@@ -1,5 +1,7 @@
 package com.example.petapp.application.service.post;
 
+import com.example.petapp.application.common.imagefile.FileImageKind;
+import com.example.petapp.application.common.imagefile.FileUploadUtil;
 import com.example.petapp.application.in.like.LikeQueryUseCase;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.post.PostQueryUseCase;
@@ -9,8 +11,6 @@ import com.example.petapp.application.in.post.normal.dto.response.CreatePostResp
 import com.example.petapp.application.in.post.normal.dto.response.GetPostResponseDto;
 import com.example.petapp.application.in.post.normal.dto.response.PostResponseDto;
 import com.example.petapp.application.in.post.normal.mapper.NormalPostMapper;
-import com.example.petapp.common.base.util.imagefile.FileImageKind;
-import com.example.petapp.common.base.util.imagefile.FileUploadUtil;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.PostRepository;
 import com.example.petapp.domain.post.model.NormalPost;

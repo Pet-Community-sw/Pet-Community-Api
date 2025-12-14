@@ -1,5 +1,7 @@
 package com.example.petapp.application.service.member;
 
+import com.example.petapp.application.common.imagefile.FileImageKind;
+import com.example.petapp.application.common.imagefile.FileUploadUtil;
 import com.example.petapp.application.in.email.EmailUseCase;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.member.MemberUseCase;
@@ -9,8 +11,6 @@ import com.example.petapp.application.in.member.dto.response.GetMemberResponseDt
 import com.example.petapp.application.in.member.dto.response.LoginResponseDto;
 import com.example.petapp.application.in.member.dto.response.MemberSignResponseDto;
 import com.example.petapp.application.in.member.mapper.MemberMapper;
-import com.example.petapp.common.base.util.imagefile.FileImageKind;
-import com.example.petapp.common.base.util.imagefile.FileUploadUtil;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.UnAuthorizedException;
 import com.example.petapp.domain.fcm.FcmTokenService;

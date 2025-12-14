@@ -1,13 +1,13 @@
 package com.example.petapp.interfaces;
 
+import com.example.petapp.application.common.AuthUtil;
 import com.example.petapp.application.in.profile.ProfileUseCase;
 import com.example.petapp.application.in.profile.dto.request.ProfileDto;
 import com.example.petapp.application.in.profile.dto.response.AccessTokenByProfileIdResponseDto;
 import com.example.petapp.application.in.profile.dto.response.CreateProfileResponseDto;
 import com.example.petapp.application.in.profile.dto.response.GetProfileResponseDto;
 import com.example.petapp.application.in.profile.dto.response.ProfileListResponseDto;
-import com.example.petapp.common.base.dto.MessageResponse;
-import com.example.petapp.common.base.util.AuthUtil;
+import com.example.petapp.interfaces.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

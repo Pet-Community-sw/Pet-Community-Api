@@ -1,8 +1,8 @@
 package com.example.petapp.interfaces;
 
+import com.example.petapp.application.common.AuthUtil;
 import com.example.petapp.application.in.notification.NotificationUseCase;
 import com.example.petapp.application.in.notification.dto.NotificationListDto;
-import com.example.petapp.common.base.util.AuthUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
