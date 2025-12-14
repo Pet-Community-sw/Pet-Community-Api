@@ -1,5 +1,6 @@
 package com.example.petapp.application.service.post;
 
+import com.example.petapp.application.annotation.Notification;
 import com.example.petapp.application.in.chatroom.ChatRoomUseCase;
 import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
@@ -15,7 +16,6 @@ import com.example.petapp.application.in.post.delegate.model.dto.response.GetDel
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.application.in.walkrecord.WalkRecordUseCase;
 import com.example.petapp.application.in.walkrecord.dto.response.CreateWalkRecordResponseDto;
-import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.common.base.embedded.Applicant;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.member.model.Member;

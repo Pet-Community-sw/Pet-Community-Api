@@ -1,4 +1,4 @@
-package com.example.petapp.common.aop.annotation;
+package com.example.petapp.application.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -12,7 +12,6 @@ import com.example.petapp.application.service.post.DelegateWalkPostService;
 import com.example.petapp.common.base.embedded.Applicant;
 import com.example.petapp.common.base.embedded.Content;
 import com.example.petapp.common.base.embedded.Location;
-import com.example.petapp.common.base.util.notification.SendNotificationUtil;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.common.exception.NotFoundException;

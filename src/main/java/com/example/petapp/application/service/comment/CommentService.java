@@ -1,5 +1,6 @@
 package com.example.petapp.application.service.comment;
 
+import com.example.petapp.application.annotation.Notification;
 import com.example.petapp.application.in.comment.CommentQueryUseCase;
 import com.example.petapp.application.in.comment.CommentUseCase;
 import com.example.petapp.application.in.comment.dto.request.CommentDto;
@@ -9,7 +10,6 @@ import com.example.petapp.application.in.comment.dto.response.GetCommentsRespons
 import com.example.petapp.application.in.comment.mapper.CommentMapper;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.post.PostQueryUseCase;
-import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.domain.comment.CommentRepository;
 import com.example.petapp.domain.comment.model.Comment;
 import com.example.petapp.domain.comment.model.Commentable;

@@ -1,11 +1,11 @@
 package com.example.petapp.application.service.like;
 
+import com.example.petapp.application.annotation.Notification;
 import com.example.petapp.application.in.like.LikeUseCase;
 import com.example.petapp.application.in.like.mapper.LikeMapper;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.post.PostQueryUseCase;
 import com.example.petapp.application.out.cache.LikeCachePort;
-import com.example.petapp.common.aop.annotation.Notification;
 import com.example.petapp.domain.like.LikeRepository;
 import com.example.petapp.domain.like.model.Like;
 import com.example.petapp.domain.member.model.Member;

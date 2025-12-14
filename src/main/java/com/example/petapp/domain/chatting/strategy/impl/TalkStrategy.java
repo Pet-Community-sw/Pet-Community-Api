@@ -1,12 +1,12 @@
 package com.example.petapp.domain.chatting.strategy.impl;
 
 import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
+import com.example.petapp.application.in.notification.NotificationUseCase;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.application.out.cache.ChatOnlineCachePort;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.application.out.cache.SeqCachePort;
-import com.example.petapp.common.base.util.notification.SendNotificationUtil;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.AckInfoRepository;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
@@ -38,7 +38,7 @@ public class TalkStrategy implements MessageTypeStrategy {
     private final ChatOnlineCachePort chatOnlineCachePort;
     private final ReadMessageCachePort readMessageCachePort;
     private final LastMessageCachePort lastMessageCachePort;
-    private final SendNotificationUtil sendNotificationUtil;
+    private final NotificationUseCase notificationUseCase;
     private final AckInfoRepository ackInfoRepository;
     private final SimpUserRegistry simpUserRegistry;
     private final TaskScheduler resendScheduler;//stompConfig에서 선언해놓았던 스케줄러가 선언이됨.
@@ -79,7 +79,7 @@ public class TalkStrategy implements MessageTypeStrategy {
                 .filter(userId -> !onlineUsers.contains(userId.toString()))
                 .forEach(userId -> {
                     Profile profile = profileQueryUseCase.findOrThrow(userId);
-                    sendNotificationUtil.sendNotification(profile.getMember(), message);
+                    notificationUseCase.send(profile.getMember(), message);
                     Long profileSeq = readMessageCachePort.find(chatRoomId, profile.getId());
                     simpMessagingTemplate.convertAndSend("sub/list/" + profile.getMember().getId(),//todo : member와 profile 다르게 해야함.
                             StompResponseDto.builder().commandType(CommandType.LIST_UPDATE).body(new UpdateListDto(chatRoomId, (chatMessage.getSeq() - profileSeq), chatMessage.getMessage(), chatMessage.getMessageTime())));

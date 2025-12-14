@@ -1,6 +1,6 @@
 package com.example.petapp.application.out.cache;
 
-import com.example.petapp.domain.notification.model.dto.NotificationListDto;
+import com.example.petapp.application.in.notification.dto.NotificationListDto;
 
 import java.util.List;
 

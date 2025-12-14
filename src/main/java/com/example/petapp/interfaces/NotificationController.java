@@ -1,7 +1,8 @@
-package com.example.petapp.domain.notification;
+package com.example.petapp.interfaces;
 
+import com.example.petapp.application.in.notification.NotificationUseCase;
+import com.example.petapp.application.in.notification.dto.NotificationListDto;
 import com.example.petapp.common.base.util.AuthUtil;
-import com.example.petapp.domain.notification.model.dto.NotificationListDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/notifications")
 public class NotificationController {
-    private final NotificationService notificationService;
+    private final NotificationUseCase notificationUseCase;
 //
 //    sse는 브라우저 기반이므로 stomp로 알림 전송.
 //    @Operation(
@@ -33,6 +34,6 @@ public class NotificationController {
     )
     @GetMapping
     public List<NotificationListDto> getNotifications(Authentication authentication) {
-        return notificationService.getNotifications(AuthUtil.getEmail(authentication));
+        return notificationUseCase.getList(AuthUtil.getEmail(authentication));
     }
 }

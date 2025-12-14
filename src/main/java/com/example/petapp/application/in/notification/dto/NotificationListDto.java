@@ -1,4 +1,4 @@
-package com.example.petapp.domain.notification.model.dto;
+package com.example.petapp.application.in.notification.dto;
 
 import lombok.*;
 

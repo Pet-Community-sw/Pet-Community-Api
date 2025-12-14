@@ -3,7 +3,6 @@ package com.example.petapp.service;
 import com.example.petapp.application.in.walkrecord.dto.request.SendLocationDto;
 import com.example.petapp.application.service.location.LocationService;
 import com.example.petapp.common.base.util.HaversineUtil;
-import com.example.petapp.common.base.util.notification.SendNotificationUtil;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.domain.member.model.Member;

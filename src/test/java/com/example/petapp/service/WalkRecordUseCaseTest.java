@@ -5,7 +5,6 @@ import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordRe
 import com.example.petapp.application.in.walkrecord.mapper.WalkRecordMapper;
 import com.example.petapp.application.service.walkrecord.WalkRecordService;
 import com.example.petapp.common.base.util.DistanceUtil;
-import com.example.petapp.common.base.util.notification.SendNotificationUtil;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.domain.member.MemberRepository;

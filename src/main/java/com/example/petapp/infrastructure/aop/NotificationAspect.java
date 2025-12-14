@@ -1,7 +1,7 @@
-package com.example.petapp.common.aop;
+package com.example.petapp.infrastructure.aop;
 
-import com.example.petapp.common.aop.annotation.Notification;
-import com.example.petapp.common.base.util.notification.SendNotificationUtil;
+import com.example.petapp.application.annotation.Notification;
+import com.example.petapp.application.in.notification.NotificationUseCase;
 import com.example.petapp.domain.member.model.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,6 @@ import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 @Aspect
@@ -21,9 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class NotificationAspect {
-    private final SendNotificationUtil notificationUtil; // send(Member, String)
-
-    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final NotificationUseCase useCase; // send(Member, String)
 
     private final ExpressionParser parser = new SpelExpressionParser();
 
@@ -60,7 +57,7 @@ public class NotificationAspect {
                 log.warn("[Notification] 메세지가 없습니다.");
                 return;
             }
-            notificationUtil.sendNotification(member, message);
+            useCase.send(member, message);
         } catch (Exception e) {
             log.error("[Notification] 실패", e);
         }

@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.database.cache.out.redis.adapter;
 
+import com.example.petapp.application.in.notification.dto.NotificationListDto;
 import com.example.petapp.application.out.cache.NotificationsCachePort;
-import com.example.petapp.domain.notification.model.dto.NotificationListDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
