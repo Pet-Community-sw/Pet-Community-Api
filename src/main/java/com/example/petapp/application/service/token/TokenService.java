@@ -6,10 +6,10 @@ import com.example.petapp.application.in.member.dto.response.TokenResponseDto;
 import com.example.petapp.application.in.member.mapper.MemberMapper;
 import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.application.in.token.dto.ReissueTokenRequestDto;
+import com.example.petapp.application.out.TokenPort;
 import com.example.petapp.application.out.cache.TokenCachePort;
 import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.common.exception.UnAuthorizedException;
-import com.example.petapp.common.jwt.util.JwtTokenizer;
 import com.example.petapp.domain.member.RoleRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.member.model.Role;
@@ -35,9 +35,9 @@ import java.util.stream.Collectors;
 public class TokenService implements TokenUseCase {//리펙토링 필요.
 
     private final TokenRepository tokenRepository;
-    private final JwtTokenizer jwtTokenizer;
-    private final TokenCachePort port;
+    private final TokenCachePort tokenCachePort;
     private final RoleRepository roleRepository;
+    private final TokenPort tokenPort;
 
     @NotNull
     private static List<String> getRoles(Member member) {
@@ -53,8 +53,9 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
     public LoginResponseDto save(Member member) {
         List<String> roles = member.getMemberRoles().stream().map(memberRole -> memberRole.getRole().getName()).collect(Collectors.toList());
 
-        String accessToken = jwtTokenizer.createAccessToken(member.getId(), null, member.getEmail(), roles);
-        String refreshToken = jwtTokenizer.createRefreshToken(member.getId(), member.getEmail(), roles);
+        String accessToken = tokenPort.create(TokenType.ACCESS, member.getId(), null, member.getEmail(), roles);
+        String refreshToken = tokenPort.create(TokenType.REFRESH, member.getId(), null, member.getEmail(), roles);
+
         Optional<Token> savedRefreshToken = tokenRepository.find(member.getId());
         if (savedRefreshToken.isPresent()) {
             savedRefreshToken.get().updateRefreshToken(refreshToken);
@@ -135,7 +136,7 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
     }
 
     private void blacklistAccessToken(String accessToken) {
-        port.create("blacklist", accessToken, 30 * 60L);
+        tokenCachePort.create("blacklist", accessToken, 30 * 60L);
     }
 
     private Claims getClaimsFromToken(String token) {
