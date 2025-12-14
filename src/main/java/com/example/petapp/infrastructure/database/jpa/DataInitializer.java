@@ -1,4 +1,4 @@
-package com.example.petapp.common.base.init;
+package com.example.petapp.infrastructure.database.jpa;
 
 import com.example.petapp.application.in.petbreed.PetBreedQueryUseCase;
 import com.example.petapp.application.in.petbreed.PetBreedUseCase;
