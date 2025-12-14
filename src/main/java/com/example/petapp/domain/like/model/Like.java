@@ -1,6 +1,6 @@
 package com.example.petapp.domain.like.model;
 
-import com.example.petapp.common.base.superclass.BaseEntity;
+import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.Post;
 import lombok.AccessLevel;

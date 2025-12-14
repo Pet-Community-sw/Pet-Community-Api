@@ -1,4 +1,4 @@
-package com.example.petapp.common.base.superclass;
+package com.example.petapp.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;

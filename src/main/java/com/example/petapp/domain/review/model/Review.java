@@ -1,10 +1,10 @@
 package com.example.petapp.domain.review.model;
 
 import com.example.petapp.application.in.review.dto.request.UpdateReviewDto;
-import com.example.petapp.common.base.embedded.Content;
-import com.example.petapp.common.base.superclass.BaseEntity;
 import com.example.petapp.common.exception.ForbiddenException;
+import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.post.model.Content;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import lombok.*;

@@ -8,7 +8,7 @@ import com.example.petapp.application.in.post.delegate.model.dto.response.ApplyT
 import com.example.petapp.application.in.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
 import com.example.petapp.application.in.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
 import com.example.petapp.application.in.walkrecord.dto.response.CreateWalkRecordResponseDto;
-import com.example.petapp.common.base.embedded.Applicant;
+import com.example.petapp.domain.post.model.Applicant;
 
 import java.util.List;
 import java.util.Set;

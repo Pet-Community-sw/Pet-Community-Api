@@ -1,4 +1,4 @@
-package com.example.petapp.common.base.embedded;
+package com.example.petapp.domain.post.model;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

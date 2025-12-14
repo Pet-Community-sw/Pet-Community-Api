@@ -1,9 +1,9 @@
 package com.example.petapp.domain.walkingtogethermatch.model;
 
 import com.example.petapp.application.in.match.dto.request.UpdateWalkingTogetherMatchDto;
-import com.example.petapp.common.base.superclass.BaseEntity;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.ForbiddenException;
+import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.petbreed.model.PetBreed;
 import com.example.petapp.domain.post.model.RecommendRoutePost;

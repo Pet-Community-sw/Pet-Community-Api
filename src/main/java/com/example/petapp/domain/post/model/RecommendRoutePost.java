@@ -1,6 +1,5 @@
 package com.example.petapp.domain.post.model;
 
-import com.example.petapp.common.base.embedded.Location;
 import com.example.petapp.domain.comment.model.Comment;
 import com.example.petapp.domain.comment.model.Commentable;
 import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;

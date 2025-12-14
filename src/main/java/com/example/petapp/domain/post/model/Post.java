@@ -1,8 +1,7 @@
 package com.example.petapp.domain.post.model;
 
-import com.example.petapp.common.base.embedded.Content;
-import com.example.petapp.common.base.superclass.BaseEntity;
 import com.example.petapp.common.exception.ForbiddenException;
+import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.like.model.Like;
 import com.example.petapp.domain.member.model.Member;
 import lombok.*;

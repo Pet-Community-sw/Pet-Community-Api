@@ -1,7 +1,7 @@
 package com.example.petapp.domain.member.model;
 
-import com.example.petapp.common.base.superclass.BaseEntity;
 import com.example.petapp.common.exception.ForbiddenException;
+import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.fcm.model.entity.FcmToken;
 import com.example.petapp.domain.post.model.Post;
 import com.example.petapp.domain.profile.model.Profile;

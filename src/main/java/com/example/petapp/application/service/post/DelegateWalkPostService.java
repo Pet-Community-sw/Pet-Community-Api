@@ -16,11 +16,11 @@ import com.example.petapp.application.in.post.delegate.model.dto.response.GetDel
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.application.in.walkrecord.WalkRecordUseCase;
 import com.example.petapp.application.in.walkrecord.dto.response.CreateWalkRecordResponseDto;
-import com.example.petapp.common.base.embedded.Applicant;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.DelegateWalkPostRepository;
 import com.example.petapp.domain.post.PostRepository;
+import com.example.petapp.domain.post.model.Applicant;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.profile.model.Profile;
 import lombok.RequiredArgsConstructor;

@@ -6,7 +6,6 @@ import com.example.petapp.application.in.match.dto.request.CreateWalkingTogether
 import com.example.petapp.application.in.match.dto.response.CreateWalkingTogetherMatchResponseDto;
 import com.example.petapp.application.in.match.dto.response.GetWalkingTogetherMatchResponseDto;
 import com.example.petapp.application.service.match.WalkingTogetherMatchService;
-import com.example.petapp.common.base.embedded.Content;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.common.exception.NotFoundException;
@@ -14,6 +13,7 @@ import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.petbreed.PetBreedRepository;
 import com.example.petapp.domain.petbreed.model.PetBreed;
 import com.example.petapp.domain.post.RecommendRoutePostRepository;
+import com.example.petapp.domain.post.model.Content;
 import com.example.petapp.domain.post.model.RecommendRoutePost;
 import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;

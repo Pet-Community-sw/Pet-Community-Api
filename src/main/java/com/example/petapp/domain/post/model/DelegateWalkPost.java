@@ -1,9 +1,6 @@
 package com.example.petapp.domain.post.model;
 
 import com.example.petapp.application.in.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
-import com.example.petapp.common.base.embedded.Applicant;
-import com.example.petapp.common.base.embedded.Content;
-import com.example.petapp.common.base.embedded.Location;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.member.model.Member;

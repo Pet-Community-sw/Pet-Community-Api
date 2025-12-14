@@ -1,6 +1,6 @@
 package com.example.petapp.domain.fcm.model.entity;
 
-import com.example.petapp.common.base.superclass.BaseEntity;
+import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.member.model.Member;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

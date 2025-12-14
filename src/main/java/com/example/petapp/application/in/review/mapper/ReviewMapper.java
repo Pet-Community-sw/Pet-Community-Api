@@ -4,8 +4,8 @@ import com.example.petapp.application.in.review.dto.request.CreateReviewDto;
 import com.example.petapp.application.in.review.dto.request.GetReviewList;
 import com.example.petapp.application.in.review.dto.response.GetReviewListResponseDto;
 import com.example.petapp.application.in.review.dto.response.GetReviewResponseDto;
-import com.example.petapp.common.base.embedded.Content;
 import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.post.model.Content;
 import com.example.petapp.domain.review.model.Review;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 

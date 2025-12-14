@@ -8,12 +8,12 @@ import com.example.petapp.application.in.review.dto.response.GetReviewListRespon
 import com.example.petapp.application.in.review.dto.response.GetReviewResponseDto;
 import com.example.petapp.application.in.review.mapper.ReviewMapper;
 import com.example.petapp.application.service.review.ReviewService;
-import com.example.petapp.common.base.embedded.Content;
 import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.post.model.Content;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;
