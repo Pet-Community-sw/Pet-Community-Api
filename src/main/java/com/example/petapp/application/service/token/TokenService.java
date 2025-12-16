@@ -14,10 +14,10 @@ import com.example.petapp.domain.member.RoleRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.member.model.Role;
 import com.example.petapp.domain.token.TokenRepository;
+import com.example.petapp.domain.token.model.ParseType;
 import com.example.petapp.domain.token.model.Token;
 import com.example.petapp.domain.token.model.TokenType;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -77,32 +77,31 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
         String[] str = header.split(" ");
         String accessToken = str[1];
 
-        log.info("이게안되는듯");
-        Claims claims = getClaimsFromToken(accessToken);
-        Long memberId = Long.valueOf((Integer) claims.get("memberId"));
-        Token savedToken = tokenRepository.find(memberId)
+        Long memberId = tokenPort.get(ParseType.MEMBER_ID, TokenType.ACCESS, accessToken);
+        Token refreshToken = tokenRepository.find(memberId)
                 .orElseThrow(() -> new NotFoundException("refreshToken이 없음. 다시 로그인."));
 
-        savedToken.isEqual(reissueTokenRequestDto.getRefreshToken());
+        refreshToken.isEqual(reissueTokenRequestDto.getRefreshToken());
         blacklistAccessToken(accessToken);
 
-        return createNewToken(claims, memberId, savedToken);
+
+        return createNewToken(memberId, refreshToken);
     }
 
     @NotNull
-    private TokenResponseDto createNewToken(Claims claims, Long memberId, Token token) {
-        if (jwtTokenizer.isTokenExpired(TokenType.REFRESH, token.getRefreshToken())) {
+    private TokenResponseDto createNewToken(Long memberId, Token token) {
+        if (tokenPort.parse(TokenType.REFRESH, token.getRefreshToken())) {
             throw new UnAuthorizedException("로그인 다시 해야됨.");
         } else {
             List<String> roles = (List<String>) claims.get("roles");
             String email = claims.getSubject();
-            Optional<Object> profileId = Optional.ofNullable(claims.get("profileId"));//refresh에서 profileId를 꺼내는것이 보안상 좋을 듯한데
+            Optional<Object> profileId = Optional.ofNullable(claims.get("profileId"));
             String newAccessToken;//getProfileId를 했을 때 null이면 일반 토큰 있으면 profile토큰
             if (profileId.isEmpty()) {
-                newAccessToken = jwtTokenizer.createAccessToken(memberId, null, email, roles);
+                newAccessToken = tokenPort.create(TokenType.ACCESS, memberId, null, email, roles);
             } else
-                newAccessToken = jwtTokenizer.createAccessToken(memberId, Long.valueOf(profileId.toString()), email, roles);//profile이있으면 붙혀서 반환.
-            String newRefreshToken = jwtTokenizer.createRefreshToken(memberId, email, roles);
+                newAccessToken = tokenPort.create(TokenType.ACCESS, memberId, Long.valueOf(profileId.toString()), email, roles);//profile이있으면 붙혀서 반환.
+            String newRefreshToken = tokenPort.create(TokenType.REFRESH, memberId, null, email, roles);
             token.setRefreshToken(newRefreshToken);
             return new TokenResponseDto(newAccessToken, newRefreshToken);
         }
@@ -137,13 +136,5 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
 
     private void blacklistAccessToken(String accessToken) {
         tokenCachePort.create("blacklist", accessToken, 30 * 60L);
-    }
-
-    private Claims getClaimsFromToken(String token) {
-        try {
-            return jwtTokenizer.parseAccessToken(token);
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
-        }
     }
 }

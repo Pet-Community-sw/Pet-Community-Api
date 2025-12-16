@@ -79,6 +79,12 @@ public class JwtTokenizer {
         }
     }
 
+    private Long getMemberId(TokenType tokenType, String token) {
+        Claims claims = parseToken(tokenType, token);
+        return (Long) claims.get("memberId");
+    }
+
+
     private Key getSigningKey(byte[] key) {
         return Keys.hmacShaKeyFor(key);
     }
