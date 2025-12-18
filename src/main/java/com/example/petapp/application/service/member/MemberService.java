@@ -89,7 +89,7 @@ public class MemberService implements MemberUseCase {
 
     @Override
     public void logout(String accessToken) {
-        tokenUseCase.deleteRefreshToken(accessToken);
+        tokenUseCase.delete(accessToken);
     }
 
 

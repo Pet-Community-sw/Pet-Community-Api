@@ -1,8 +1,9 @@
 package com.example.petapp.common.jwt.provider;
 
+import com.example.petapp.application.in.token.MemberInfo;
 import com.example.petapp.common.jwt.token.JwtAuthenticationToken;
-import com.example.petapp.common.jwt.util.JwtTokenizer;
-import io.jsonwebtoken.Claims;
+import com.example.petapp.common.jwt.util.JwtTokenAdapter;
+import com.example.petapp.domain.token.model.TokenType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -17,19 +18,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-    private final JwtTokenizer jwtTokenizer;
+    private final JwtTokenAdapter jwtTokenAdapter;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) authentication;
-        Claims claims = jwtTokenizer.parseAccessToken(authenticationToken.getToken());
-        String email = claims.getSubject();
-        Object profileId = claims.get("profileId");
-        List<GrantedAuthority> authorities = getGrantedAuthority(claims);
+        MemberInfo info = jwtTokenAdapter.getInfo(TokenType.ACCESS, authenticationToken.getToken());
+        String email = info.getEmail();
+        Object profileId = info.getProfileId();
+        List<GrantedAuthority> authorities = getGrantedAuthority(info.getRoles());
         return new JwtAuthenticationToken(authorities, email, null, profileId);
     }
 
-    private List<GrantedAuthority> getGrantedAuthority(Claims claims) {
-        List<String> roles = (List<String>) claims.get("roles");
+    private List<GrantedAuthority> getGrantedAuthority(List<String> roles) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (String role : roles) {
             authorities.add(() -> role);

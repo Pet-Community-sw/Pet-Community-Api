@@ -1,5 +1,7 @@
 package com.example.petapp.common.jwt.util;
 
+import com.example.petapp.application.in.token.MemberInfo;
+import com.example.petapp.application.out.TokenPort;
 import com.example.petapp.common.exception.UnAuthorizedException;
 import com.example.petapp.domain.token.model.TokenType;
 import io.jsonwebtoken.Claims;
@@ -14,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-public class JwtTokenizer {
+public class JwtTokenAdapter implements TokenPort {
 
     private static final Long ACCESS_TOKEN_EXPIRE_COUNT = 24 * 60 * 60 * 1000L;
     private static final Long REFRESH_TOKEN_EXPIRE_COUNT = 7 * 24 * 60 * 60 * 1000L;
@@ -23,27 +25,23 @@ public class JwtTokenizer {
     private final byte[] refreshKey;
 
 
-    public JwtTokenizer(@Value("${jwt.accessKey}") String accessKey, @Value("${jwt.refreshKey}") String refreshKey) {
+    public JwtTokenAdapter(@Value("${jwt.accessKey}") String accessKey, @Value("${jwt.refreshKey}") String refreshKey) {
         this.accessKey = accessKey.getBytes(StandardCharsets.UTF_8);
         this.refreshKey = refreshKey.getBytes(StandardCharsets.UTF_8);
     }
 
-    private String createToken(Long id, Long profileId, List<String> roles, String email, Long expire, byte[] key) {
-        Claims claims = Jwts.claims().setSubject(email);//todo : memberId 넣도록 수정
-        claims.put("memberId", id);
-        claims.put("roles", roles);
-        if (profileId != null) {
-            claims.put("profileId", profileId);
-        }
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + expire))
-                .signWith(getSigningKey(key))
-                .compact();
+    @Override
+    public MemberInfo getInfo(TokenType tokenType, String token) {
+        Claims claims = parseToken(tokenType, token);
+        return MemberInfo.builder()
+                .memberId((Long) claims.get("memberId"))
+                .profileId((Long) claims.get("profileId"))
+                .email(claims.getSubject())
+                .roles((List<String>) claims.get("roles"))
+                .build();
     }
 
+    @Override
     public String create(TokenType tokenType, Long memberId, Long profileId, String email, List<String> roles) {
         switch (tokenType) {
             case ACCESS -> {
@@ -64,6 +62,22 @@ public class JwtTokenizer {
         }
     }
 
+    private String createToken(Long id, Long profileId, List<String> roles, String email, Long expire, byte[] key) {
+        Claims claims = Jwts.claims().setSubject(email);//todo : memberId 넣도록 수정
+        claims.put("memberId", id);
+        claims.put("roles", roles);
+        if (profileId != null) {
+            claims.put("profileId", profileId);
+        }
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + expire))
+                .signWith(getSigningKey(key))
+                .compact();
+    }
+
     private Claims parseToken(TokenType tokenType, String token) {
         byte[] key = tokenType.equals(TokenType.ACCESS) ? accessKey : refreshKey;
 
@@ -78,12 +92,6 @@ public class JwtTokenizer {
             throw new UnAuthorizedException("토큰 파싱 에러");//만료된 토큰도 파싱 에러 남.
         }
     }
-
-    private Long getMemberId(TokenType tokenType, String token) {
-        Claims claims = parseToken(tokenType, token);
-        return (Long) claims.get("memberId");
-    }
-
 
     private Key getSigningKey(byte[] key) {
         return Keys.hmacShaKeyFor(key);

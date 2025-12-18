@@ -4,20 +4,19 @@ import com.example.petapp.application.in.member.dto.request.AccessTokenResponseD
 import com.example.petapp.application.in.member.dto.response.LoginResponseDto;
 import com.example.petapp.application.in.member.dto.response.TokenResponseDto;
 import com.example.petapp.application.in.member.mapper.MemberMapper;
+import com.example.petapp.application.in.token.MemberInfo;
+import com.example.petapp.application.in.token.TokenQueryUseCase;
 import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.application.in.token.dto.ReissueTokenRequestDto;
 import com.example.petapp.application.out.TokenPort;
 import com.example.petapp.application.out.cache.TokenCachePort;
-import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.common.exception.UnAuthorizedException;
 import com.example.petapp.domain.member.RoleRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.member.model.Role;
 import com.example.petapp.domain.token.TokenRepository;
-import com.example.petapp.domain.token.model.ParseType;
 import com.example.petapp.domain.token.model.Token;
 import com.example.petapp.domain.token.model.TokenType;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +36,7 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
     private final TokenRepository tokenRepository;
     private final TokenCachePort tokenCachePort;
     private final RoleRepository roleRepository;
+    private final TokenQueryUseCase tokenQueryUseCase;
     private final TokenPort tokenPort;
 
     @NotNull
@@ -77,42 +77,22 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
         String[] str = header.split(" ");
         String accessToken = str[1];
 
-        Long memberId = tokenPort.get(ParseType.MEMBER_ID, TokenType.ACCESS, accessToken);
-        Token refreshToken = tokenRepository.find(memberId)
-                .orElseThrow(() -> new NotFoundException("refreshToken이 없음. 다시 로그인."));
+        MemberInfo info = tokenPort.getInfo(TokenType.ACCESS, accessToken);
+        Token refreshToken = tokenQueryUseCase.findOrThrow(info.getMemberId());
 
         refreshToken.isEqual(reissueTokenRequestDto.getRefreshToken());
         blacklistAccessToken(accessToken);
 
-
-        return createNewToken(memberId, refreshToken);
-    }
-
-    @NotNull
-    private TokenResponseDto createNewToken(Long memberId, Token token) {
-        if (tokenPort.parse(TokenType.REFRESH, token.getRefreshToken())) {
-            throw new UnAuthorizedException("로그인 다시 해야됨.");
-        } else {
-            List<String> roles = (List<String>) claims.get("roles");
-            String email = claims.getSubject();
-            Optional<Object> profileId = Optional.ofNullable(claims.get("profileId"));
-            String newAccessToken;//getProfileId를 했을 때 null이면 일반 토큰 있으면 profile토큰
-            if (profileId.isEmpty()) {
-                newAccessToken = tokenPort.create(TokenType.ACCESS, memberId, null, email, roles);
-            } else
-                newAccessToken = tokenPort.create(TokenType.ACCESS, memberId, Long.valueOf(profileId.toString()), email, roles);//profile이있으면 붙혀서 반환.
-            String newRefreshToken = tokenPort.create(TokenType.REFRESH, memberId, null, email, roles);
-            token.setRefreshToken(newRefreshToken);
-            return new TokenResponseDto(newAccessToken, newRefreshToken);
-        }
+        return createNewToken(refreshToken);
     }
 
     @Override
     public AccessTokenResponseDto createResetPasswordJwt(String email) {
-        List<Role> roles = new ArrayList<>();
+        List<String> roles = new ArrayList<>();
         Role role = roleRepository.find("ROLE_USER").get();
-        roles.add(role);
-        String resetPasswordToken = jwtTokenizer.createResetPasswordToken(email, roles.stream().map(Role::getName).collect(Collectors.toList()));
+        roles.add(role.getName());
+
+        String resetPasswordToken = tokenPort.create(TokenType.EMAIL_ACCESS, null, null, email, roles);
         return new AccessTokenResponseDto(resetPasswordToken);
     }
 
@@ -120,18 +100,34 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
     public String newAccessTokenByProfile(String accessToken, Member member, Long profileId) {
         blacklistAccessToken(accessToken);
         List<String> roles = getRoles(member);
-        return jwtTokenizer.createAccessToken(member.getId(), profileId, member.getEmail(), roles);
+        return tokenPort.create(TokenType.ACCESS, member.getId(), profileId, member.getEmail(), roles);
     }
 
     @Transactional
     @Override
-    public void deleteRefreshToken(String accessToken) {
+    public void delete(String authorization) {
         log.info("deleteRefreshToken 요청");
-        String[] arr = accessToken.split(" ");
-        Claims claims = jwtTokenizer.parseAccessToken(arr[1]);
-        Long memberId = Long.valueOf((Integer) claims.get("memberId"));
-        tokenRepository.delete(memberId);
+        String[] arr = authorization.split(" ");
+        String accessToken = arr[1];
+        MemberInfo info = tokenPort.getInfo(TokenType.ACCESS, accessToken);
+        tokenRepository.delete(info.getMemberId());
         blacklistAccessToken(accessToken);
+    }
+
+    private TokenResponseDto createNewToken(Token token) {
+        MemberInfo info = tokenPort.getInfo(TokenType.REFRESH, token.getRefreshToken());
+        List<String> roles = info.getRoles();
+        String email = info.getEmail();
+        Long profileId = info.getProfileId();
+        Long memberId = info.getMemberId();
+        String newAccessToken = profileId == null ?
+                tokenPort.create(TokenType.ACCESS, memberId, null, email, roles)  //getProfileId를 했을 때 null이면 일반 토큰 있으면 profile토큰
+                : tokenPort.create(TokenType.ACCESS, memberId, Long.valueOf(profileId.toString()), email, roles);//profile이있으면 붙혀서 반환.
+        String newRefreshToken = tokenPort.create(TokenType.REFRESH, memberId, null, email, roles);
+        token.setRefreshToken(newRefreshToken);
+
+        return new TokenResponseDto(newAccessToken, newRefreshToken);
+
     }
 
     private void blacklistAccessToken(String accessToken) {

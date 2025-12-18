@@ -7,7 +7,7 @@ import com.example.petapp.application.in.token.dto.ReissueTokenRequestDto;
 import com.example.petapp.domain.member.model.Member;
 
 public interface TokenUseCase {
-    void deleteRefreshToken(String email);
+    void delete(String authorization);
 
     LoginResponseDto save(Member member);
 

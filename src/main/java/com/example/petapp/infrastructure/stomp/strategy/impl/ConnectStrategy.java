@@ -1,11 +1,9 @@
 package com.example.petapp.infrastructure.stomp.strategy.impl;
 
-import com.example.petapp.common.jwt.util.JwtTokenizer;
-import com.example.petapp.domain.member.MemberRepository;
-import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.application.in.token.MemberInfo;
+import com.example.petapp.application.out.TokenPort;
 import com.example.petapp.domain.token.model.TokenType;
 import com.example.petapp.infrastructure.stomp.strategy.StompCommandStrategy;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -25,8 +23,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class ConnectStrategy implements StompCommandStrategy {
 
-    private final JwtTokenizer jwtTokenizer;
-    private final MemberRepository memberRepository;
+    private final TokenPort port;
 
     @Override
     public void handle(StompHeaderAccessor accessor) {
@@ -39,25 +36,13 @@ public class ConnectStrategy implements StompCommandStrategy {
         }
 
         String accessToken = token.split(" ")[1];
-        if (jwtTokenizer.isTokenExpired(TokenType.ACCESS, accessToken)) {
-            log.error("[STOMP][CONNECT] 만료된 토큰");
-            throw new IllegalArgumentException("만료된 토큰입니다.");
-        }
+        MemberInfo info = port.getInfo(TokenType.ACCESS, accessToken);
 
-        Claims claims = jwtTokenizer.parseAccessToken(accessToken);
-        Object profileId = claims.get("profileId");
+        Long profileId = info.getProfileId();
 
-        Authentication authentication;
-        if (profileId == null) {
-            String email = claims.getSubject();
-            Member member = memberRepository.findByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("해당 이메일의 사용자를 찾을 수 없습니다."));
-            authentication = new UsernamePasswordAuthenticationToken(member.getId(), null);
-            log.info("[STOMP][CONNECT] memberId 인증 완료: {}", member.getId());
-        } else {
-            authentication = new UsernamePasswordAuthenticationToken(profileId, null);
-            log.info("[STOMP][CONNECT] profileId 인증 완료: {}", profileId);
-        }
+        Authentication authentication = profileId == null
+                ? new UsernamePasswordAuthenticationToken(info.getMemberId(), null)
+                : new UsernamePasswordAuthenticationToken(profileId, null);
 
         accessor.setUser(authentication);
     }
