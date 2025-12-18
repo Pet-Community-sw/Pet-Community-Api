@@ -3,7 +3,7 @@ package com.example.petapp.infrastructure.jwt.provider;
 import com.example.petapp.application.in.token.MemberInfo;
 import com.example.petapp.domain.token.model.TokenType;
 import com.example.petapp.infrastructure.jwt.token.JwtAuthenticationToken;
-import com.example.petapp.infrastructure.jwt.util.JwtTokenAdapter;
+import com.example.petapp.infrastructure.jwt.util.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -18,12 +18,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-    private final JwtTokenAdapter jwtTokenAdapter;
+    private final JwtTokenizer jwtTokenizer;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) authentication;
-        MemberInfo info = jwtTokenAdapter.getInfo(TokenType.ACCESS, authenticationToken.getToken());
+        MemberInfo info = jwtTokenizer.getInfo(TokenType.ACCESS, authenticationToken.getToken());
         String email = info.getEmail();
         Object profileId = info.getProfileId();
         List<GrantedAuthority> authorities = getGrantedAuthority(info.getRoles());

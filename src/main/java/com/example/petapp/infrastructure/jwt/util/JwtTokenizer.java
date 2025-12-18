@@ -1,7 +1,6 @@
 package com.example.petapp.infrastructure.jwt.util;
 
 import com.example.petapp.application.in.token.MemberInfo;
-import com.example.petapp.application.out.TokenPort;
 import com.example.petapp.domain.token.model.TokenType;
 import com.example.petapp.interfaces.exception.UnAuthorizedException;
 import io.jsonwebtoken.Claims;
@@ -16,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-public class JwtTokenAdapter implements TokenPort {
+public class JwtTokenizer {
 
     private static final Long ACCESS_TOKEN_EXPIRE_COUNT = 24 * 60 * 60 * 1000L;
     private static final Long REFRESH_TOKEN_EXPIRE_COUNT = 7 * 24 * 60 * 60 * 1000L;
@@ -25,12 +24,11 @@ public class JwtTokenAdapter implements TokenPort {
     private final byte[] refreshKey;
 
 
-    public JwtTokenAdapter(@Value("${jwt.accessKey}") String accessKey, @Value("${jwt.refreshKey}") String refreshKey) {
+    public JwtTokenizer(@Value("${jwt.accessKey}") String accessKey, @Value("${jwt.refreshKey}") String refreshKey) {
         this.accessKey = accessKey.getBytes(StandardCharsets.UTF_8);
         this.refreshKey = refreshKey.getBytes(StandardCharsets.UTF_8);
     }
 
-    @Override
     public MemberInfo getInfo(TokenType tokenType, String token) {
         Claims claims = parseToken(tokenType, token);
         return MemberInfo.builder()
@@ -41,7 +39,6 @@ public class JwtTokenAdapter implements TokenPort {
                 .build();
     }
 
-    @Override
     public String create(TokenType tokenType, Long memberId, Long profileId, String email, List<String> roles) {
         switch (tokenType) {
             case ACCESS -> {
