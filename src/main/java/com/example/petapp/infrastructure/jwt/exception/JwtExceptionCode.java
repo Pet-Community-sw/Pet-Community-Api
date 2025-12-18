@@ -1,4 +1,4 @@
-package com.example.petapp.common.jwt.exception;
+package com.example.petapp.infrastructure.jwt.exception;
 
 import lombok.Getter;
 
@@ -12,10 +12,10 @@ public enum JwtExceptionCode {
 
 
     @Getter
-    private String code;
+    private final String code;
 
     @Getter
-    private String message;
+    private final String message;
 
     JwtExceptionCode(String code, String message) {
         this.code = code;

@@ -1,9 +1,9 @@
 package com.example.petapp.application.service.walkrecord;
 
 import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
-import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
+import com.example.petapp.interfaces.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

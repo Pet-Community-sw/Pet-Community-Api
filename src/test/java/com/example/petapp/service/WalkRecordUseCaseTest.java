@@ -5,14 +5,14 @@ import com.example.petapp.application.in.walkrecord.dto.response.CreateWalkRecor
 import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordResponseDto;
 import com.example.petapp.application.in.walkrecord.mapper.WalkRecordMapper;
 import com.example.petapp.application.service.walkrecord.WalkRecordService;
-import com.example.petapp.common.exception.ForbiddenException;
-import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
+import com.example.petapp.interfaces.exception.ForbiddenException;
+import com.example.petapp.interfaces.exception.NotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

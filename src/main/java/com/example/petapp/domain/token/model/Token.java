@@ -1,9 +1,9 @@
 package com.example.petapp.domain.token.model;
 
 
-import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

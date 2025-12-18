@@ -1,4 +1,4 @@
-package com.example.petapp.common.jwt.token;
+package com.example.petapp.infrastructure.jwt.token;
 
 import lombok.Getter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -13,6 +13,7 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     private Object principal;
     @Getter
     private Long profileId;
+
     /**
      * Creates a token with the supplied array of authorities.
      *
@@ -25,25 +26,25 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
         this.credentials = credentials;
         if (profileId == null) {
             this.profileId = null;
-        }else {
+        } else {
             this.profileId = Long.valueOf(profileId.toString());
         }
-        this.setAuthenticated(true);
+        setAuthenticated(true);
     }
 
     public JwtAuthenticationToken(String token) {
         super(null);
         this.token = token;
-        this.setAuthenticated(false);
+        setAuthenticated(false);
     }
 
     @Override
     public Object getCredentials() {
-        return this.credentials;
+        return credentials;
     }
 
     @Override
     public Object getPrincipal() {
-        return this.principal;
+        return principal;
     }
 }

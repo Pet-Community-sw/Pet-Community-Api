@@ -1,10 +1,10 @@
 package com.example.petapp.domain.post.model;
 
 import com.example.petapp.application.in.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
-import com.example.petapp.common.exception.ConflictException;
-import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.Profile;
+import com.example.petapp.interfaces.exception.ConflictException;
+import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

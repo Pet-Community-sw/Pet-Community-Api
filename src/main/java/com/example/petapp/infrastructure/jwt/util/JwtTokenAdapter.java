@@ -1,9 +1,9 @@
-package com.example.petapp.common.jwt.util;
+package com.example.petapp.infrastructure.jwt.util;
 
 import com.example.petapp.application.in.token.MemberInfo;
 import com.example.petapp.application.out.TokenPort;
-import com.example.petapp.common.exception.UnAuthorizedException;
 import com.example.petapp.domain.token.model.TokenType;
+import com.example.petapp.interfaces.exception.UnAuthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

@@ -1,6 +1,7 @@
-package com.example.petapp.config;
+package com.example.petapp.infrastructure.config;
 
-import com.example.petapp.common.jwt.exception.CustomAuthenticationEntryPoint;
+import com.example.petapp.infrastructure.jwt.AuthenticationManagerConfig;
+import com.example.petapp.infrastructure.jwt.exception.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

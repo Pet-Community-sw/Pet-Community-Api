@@ -13,11 +13,11 @@ import com.example.petapp.application.in.profile.dto.response.GetProfileResponse
 import com.example.petapp.application.in.profile.dto.response.ProfileListResponseDto;
 import com.example.petapp.application.in.profile.mapper.ProfileMapper;
 import com.example.petapp.application.in.token.TokenUseCase;
-import com.example.petapp.common.exception.ConflictException;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.petbreed.model.PetBreed;
 import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;
+import com.example.petapp.interfaces.exception.ConflictException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

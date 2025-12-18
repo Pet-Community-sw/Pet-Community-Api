@@ -1,9 +1,9 @@
 package com.example.petapp.application.service.post;
 
 import com.example.petapp.application.in.post.PostQueryUseCase;
-import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.domain.post.PostRepository;
 import com.example.petapp.domain.post.model.Post;
+import com.example.petapp.interfaces.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

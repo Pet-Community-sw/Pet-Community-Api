@@ -1,8 +1,8 @@
-package com.example.petapp.config;
+package com.example.petapp.infrastructure.jwt;
 
 import com.example.petapp.application.out.cache.TokenCachePort;
-import com.example.petapp.common.jwt.filter.JwtAuthenticationFilter;
-import com.example.petapp.common.jwt.provider.JwtAuthenticationProvider;
+import com.example.petapp.infrastructure.jwt.filter.JwtAuthenticationFilter;
+import com.example.petapp.infrastructure.jwt.provider.JwtAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -1,9 +1,9 @@
 package com.example.petapp.application.service.comment;
 
 import com.example.petapp.application.in.comment.CommentQueryUseCase;
-import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.domain.comment.CommentRepository;
 import com.example.petapp.domain.comment.model.Comment;
+import com.example.petapp.interfaces.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

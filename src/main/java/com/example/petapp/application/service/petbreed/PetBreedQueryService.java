@@ -2,9 +2,9 @@ package com.example.petapp.application.service.petbreed;
 
 import com.example.petapp.application.in.petbreed.PetBreedQueryUseCase;
 import com.example.petapp.application.in.petbreed.dto.PetBreedGetListDto;
-import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.domain.petbreed.PetBreedRepository;
 import com.example.petapp.domain.petbreed.model.PetBreed;
+import com.example.petapp.interfaces.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

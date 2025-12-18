@@ -1,8 +1,8 @@
-package com.example.petapp.common.jwt.filter;
+package com.example.petapp.infrastructure.jwt.filter;
 
 import com.example.petapp.application.out.cache.TokenCachePort;
-import com.example.petapp.common.jwt.exception.JwtExceptionCode;
-import com.example.petapp.common.jwt.token.JwtAuthenticationToken;
+import com.example.petapp.infrastructure.jwt.exception.JwtExceptionCode;
+import com.example.petapp.infrastructure.jwt.token.JwtAuthenticationToken;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;

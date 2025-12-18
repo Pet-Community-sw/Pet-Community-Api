@@ -1,9 +1,9 @@
 package com.example.petapp.application.service.match;
 
 import com.example.petapp.application.in.match.WalkingTogetherMatchQueryUseCase;
-import com.example.petapp.common.exception.NotFoundException;
 import com.example.petapp.domain.walkingtogethermatch.WalkingTogetherMatchRepository;
 import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
+import com.example.petapp.interfaces.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

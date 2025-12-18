@@ -1,9 +1,9 @@
-package com.example.petapp.common.jwt.provider;
+package com.example.petapp.infrastructure.jwt.provider;
 
 import com.example.petapp.application.in.token.MemberInfo;
-import com.example.petapp.common.jwt.token.JwtAuthenticationToken;
-import com.example.petapp.common.jwt.util.JwtTokenAdapter;
 import com.example.petapp.domain.token.model.TokenType;
+import com.example.petapp.infrastructure.jwt.token.JwtAuthenticationToken;
+import com.example.petapp.infrastructure.jwt.util.JwtTokenAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;

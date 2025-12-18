@@ -1,9 +1,9 @@
 package com.example.petapp.infrastructure.stomp.strategy.impl.subscribeStrategy.impl;
 
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
-import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.infrastructure.stomp.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.impl.subscribeStrategy.BaseSubscribeTypeStrategy;
+import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

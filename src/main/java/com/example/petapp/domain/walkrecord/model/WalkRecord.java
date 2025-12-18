@@ -1,10 +1,10 @@
 package com.example.petapp.domain.walkrecord.model;
 
-import com.example.petapp.common.exception.ConflictException;
-import com.example.petapp.common.exception.ForbiddenException;
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
+import com.example.petapp.interfaces.exception.ConflictException;
+import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

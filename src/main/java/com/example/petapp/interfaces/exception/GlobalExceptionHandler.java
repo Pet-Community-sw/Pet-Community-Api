@@ -1,4 +1,4 @@
-package com.example.petapp.common.exception;
+package com.example.petapp.interfaces.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleBindException(BindException ex) {
         return buildValidationErrorResponse(ex.getBindingResult());
     }
-    
+
     private ResponseEntity<?> buildValidationErrorResponse(BindingResult bindingResult) {
         Map<String, String> errors = bindingResult.getFieldErrors().stream()
                 .collect(Collectors.toMap(

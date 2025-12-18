@@ -1,4 +1,4 @@
-package com.example.petapp.config;
+package com.example.petapp.infrastructure.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
