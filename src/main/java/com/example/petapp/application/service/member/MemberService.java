@@ -62,8 +62,9 @@ public class MemberService implements MemberUseCase {
         if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
             throw new UnAuthorizedException("이메일 혹은 비밀번호가 일치하지 않습니다.");
         }
-        setRole(member);
-        return tokenUseCase.save(member);
+        Role role = roleRepository.find("ROLE_USER").get();
+        setRole(member, role);
+        return tokenUseCase.save(member, role);
     }
 
     @Override
@@ -125,8 +126,7 @@ public class MemberService implements MemberUseCase {
         fcmTokenService.createFcmToken(member, fcmTokenDto.getFcmToken());
     }
 
-    private void setRole(Member member) {
-        Role role = roleRepository.find("ROLE_USER").get();
+    private void setRole(Member member, Role role) {
         MemberRole memberRole = MemberRole.builder()
                 .member(member)
                 .role(role)

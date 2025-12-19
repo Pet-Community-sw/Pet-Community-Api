@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,18 +49,17 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
 
     @Transactional
     @Override
-    public LoginResponseDto save(Member member) {
-        List<String> roles = member.getMemberRoles().stream().map(memberRole -> memberRole.getRole().getName()).collect(Collectors.toList());
+    public LoginResponseDto save(Member member, Role role) {
+        List<String> roles = List.of(role.getName());
 
         String accessToken = tokenPort.create(TokenType.ACCESS, member.getId(), null, member.getEmail(), roles);
         String refreshToken = tokenPort.create(TokenType.REFRESH, member.getId(), null, member.getEmail(), roles);
 
-        Optional<Token> savedRefreshToken = tokenRepository.find(member.getId());
-        if (savedRefreshToken.isPresent()) {
-            savedRefreshToken.get().updateRefreshToken(refreshToken);
-        } else {
-            tokenRepository.save(new Token(member, refreshToken));
-        }
+        tokenQueryUseCase.find(member.getId()).ifPresentOrElse(
+                token -> token.updateRefreshToken(refreshToken),
+                () -> tokenRepository.save(new Token(member, refreshToken))
+        );
+
         log.info("로그인 요청 성공");
         return MemberMapper.toLoginResponseDto(member, refreshToken, accessToken);
     }
@@ -69,8 +67,6 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
     @Transactional
     @Override
     public TokenResponseDto reissueToken(String header, ReissueTokenRequestDto reissueTokenRequestDto) {
-        log.info("토큰 재요청.");
-
         if (header == null || !header.startsWith("Bearer ")) {
             throw new UnAuthorizedException("헤더가 null이거나 Bearer로 시작하지않음");
         }
@@ -106,7 +102,6 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
     @Transactional
     @Override
     public void delete(String authorization) {
-        log.info("deleteRefreshToken 요청");
         String[] arr = authorization.split(" ");
         String accessToken = arr[1];
         MemberInfo info = tokenPort.getInfo(TokenType.ACCESS, accessToken);
