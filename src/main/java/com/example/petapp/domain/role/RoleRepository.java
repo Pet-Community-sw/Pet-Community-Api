@@ -1,6 +1,4 @@
-package com.example.petapp.domain.member;
-
-import com.example.petapp.domain.member.model.Role;
+package com.example.petapp.domain.role;
 
 import java.util.Optional;
 

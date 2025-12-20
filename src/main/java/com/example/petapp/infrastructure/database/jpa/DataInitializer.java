@@ -2,9 +2,9 @@ package com.example.petapp.infrastructure.database.jpa;
 
 import com.example.petapp.application.in.petbreed.PetBreedQueryUseCase;
 import com.example.petapp.application.in.petbreed.PetBreedUseCase;
-import com.example.petapp.domain.member.RoleRepository;
-import com.example.petapp.domain.member.model.Role;
 import com.example.petapp.domain.petbreed.model.PetBreed;
+import com.example.petapp.domain.role.Role;
+import com.example.petapp.domain.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;

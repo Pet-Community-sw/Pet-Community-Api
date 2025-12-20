@@ -12,8 +12,8 @@ import com.example.petapp.application.in.member.dto.response.MemberSignResponseD
 import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.application.service.member.MemberService;
 import com.example.petapp.domain.member.MemberRepository;
-import com.example.petapp.domain.member.RoleRepository;
 import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.role.RoleRepository;
 import com.example.petapp.infrastructure.aop.LogAspect;
 import com.example.petapp.interfaces.exception.NotFoundException;
 import com.example.petapp.util.Mapper;

@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.database.jpa.member;
 
-import com.example.petapp.domain.member.RoleRepository;
-import com.example.petapp.domain.member.model.Role;
+import com.example.petapp.domain.role.Role;
+import com.example.petapp.domain.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

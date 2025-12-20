@@ -1,6 +1,7 @@
 package com.example.petapp.domain.member.model;
 
 import com.example.petapp.domain.BaseEntity;
+import com.example.petapp.domain.role.Role;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

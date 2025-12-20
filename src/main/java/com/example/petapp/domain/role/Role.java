@@ -1,7 +1,8 @@
-package com.example.petapp.domain.member.model;
+package com.example.petapp.domain.role;
 
 
 import com.example.petapp.domain.BaseEntity;
+import com.example.petapp.domain.member.model.MemberRole;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

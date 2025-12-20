@@ -4,15 +4,15 @@ import com.example.petapp.application.in.member.dto.request.AccessTokenResponseD
 import com.example.petapp.application.in.member.dto.response.LoginResponseDto;
 import com.example.petapp.application.in.member.dto.response.TokenResponseDto;
 import com.example.petapp.application.in.member.mapper.MemberMapper;
+import com.example.petapp.application.in.role.RoleQueryUseCase;
 import com.example.petapp.application.in.token.MemberInfo;
 import com.example.petapp.application.in.token.TokenQueryUseCase;
 import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.application.in.token.dto.ReissueTokenRequestDto;
 import com.example.petapp.application.out.TokenPort;
 import com.example.petapp.application.out.cache.TokenCachePort;
-import com.example.petapp.domain.member.RoleRepository;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.member.model.Role;
+import com.example.petapp.domain.role.Role;
 import com.example.petapp.domain.token.TokenRepository;
 import com.example.petapp.domain.token.model.Token;
 import com.example.petapp.domain.token.model.TokenType;
@@ -34,7 +34,7 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
 
     private final TokenRepository tokenRepository;
     private final TokenCachePort tokenCachePort;
-    private final RoleRepository roleRepository;
+    private final RoleQueryUseCase roleQueryUseCase;
     private final TokenQueryUseCase tokenQueryUseCase;
     private final TokenPort tokenPort;
 
@@ -75,17 +75,15 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
 
         MemberInfo info = tokenPort.getInfo(TokenType.ACCESS, accessToken);
         Token refreshToken = tokenQueryUseCase.findOrThrow(info.getMemberId());
-
         refreshToken.isEqual(reissueTokenRequestDto.getRefreshToken());
         blacklistAccessToken(accessToken);
-
         return createNewToken(refreshToken);
     }
 
     @Override
     public AccessTokenResponseDto createResetPasswordJwt(String email) {
         List<String> roles = new ArrayList<>();
-        Role role = roleRepository.find("ROLE_USER").get();
+        Role role = roleQueryUseCase.findOrThrow();//todo : 여기 해야함.
         roles.add(role.getName());
 
         String resetPasswordToken = tokenPort.create(TokenType.EMAIL_ACCESS, null, null, email, roles);

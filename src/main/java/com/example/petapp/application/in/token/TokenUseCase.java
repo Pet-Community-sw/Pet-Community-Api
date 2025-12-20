@@ -5,7 +5,7 @@ import com.example.petapp.application.in.member.dto.response.LoginResponseDto;
 import com.example.petapp.application.in.member.dto.response.TokenResponseDto;
 import com.example.petapp.application.in.token.dto.ReissueTokenRequestDto;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.member.model.Role;
+import com.example.petapp.domain.role.Role;
 
 public interface TokenUseCase {
     void delete(String authorization);

@@ -11,13 +11,13 @@ import com.example.petapp.application.in.member.dto.response.GetMemberResponseDt
 import com.example.petapp.application.in.member.dto.response.LoginResponseDto;
 import com.example.petapp.application.in.member.dto.response.MemberSignResponseDto;
 import com.example.petapp.application.in.member.mapper.MemberMapper;
+import com.example.petapp.application.in.role.RoleQueryUseCase;
 import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.domain.fcm.FcmTokenService;
 import com.example.petapp.domain.member.MemberRepository;
-import com.example.petapp.domain.member.RoleRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.member.model.MemberRole;
-import com.example.petapp.domain.member.model.Role;
+import com.example.petapp.domain.role.Role;
 import com.example.petapp.interfaces.exception.ConflictException;
 import com.example.petapp.interfaces.exception.UnAuthorizedException;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,7 @@ public class MemberService implements MemberUseCase {
     private final TokenUseCase tokenUseCase;
     private final EmailUseCase emailUseCase;
     private final FcmTokenService fcmTokenService;
-    private final RoleRepository roleRepository;
+    private final RoleQueryUseCase roleQueryUseCase;
     @Value("${spring.dog.member.image.upload}")
     private String memberUploadDir;
 
@@ -62,7 +62,7 @@ public class MemberService implements MemberUseCase {
         if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
             throw new UnAuthorizedException("이메일 혹은 비밀번호가 일치하지 않습니다.");
         }
-        Role role = roleRepository.find("ROLE_USER").get();
+        Role role = roleQueryUseCase.findOrThrow();
         setRole(member, role);
         return tokenUseCase.save(member, role);
     }
