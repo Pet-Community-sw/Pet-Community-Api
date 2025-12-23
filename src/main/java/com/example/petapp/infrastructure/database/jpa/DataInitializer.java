@@ -16,6 +16,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+// 데이터베이스 초기화용 클래스
 public class DataInitializer implements CommandLineRunner {
 
     private final RoleRepository roleRepository;
