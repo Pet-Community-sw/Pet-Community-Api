@@ -1,7 +1,5 @@
 package com.example.petapp.application.service.member;
 
-import com.example.petapp.application.common.imagefile.FileImageKind;
-import com.example.petapp.application.common.imagefile.FileUploadUtil;
 import com.example.petapp.application.in.email.EmailUseCase;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.member.MemberUseCase;
@@ -13,7 +11,9 @@ import com.example.petapp.application.in.member.dto.response.MemberSignResponseD
 import com.example.petapp.application.in.member.mapper.MemberMapper;
 import com.example.petapp.application.in.role.RoleQueryUseCase;
 import com.example.petapp.application.in.token.TokenUseCase;
+import com.example.petapp.application.out.StoragePort;
 import com.example.petapp.domain.fcm.FcmTokenService;
+import com.example.petapp.domain.file.FileKind;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.member.model.MemberRole;
@@ -21,7 +21,6 @@ import com.example.petapp.domain.role.Role;
 import com.example.petapp.interfaces.exception.ConflictException;
 import com.example.petapp.interfaces.exception.UnAuthorizedException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,8 +39,7 @@ public class MemberService implements MemberUseCase {
     private final EmailUseCase emailUseCase;
     private final FcmTokenService fcmTokenService;
     private final RoleQueryUseCase roleQueryUseCase;
-    @Value("${spring.dog.member.image.upload}")
-    private String memberUploadDir;
+    private final StoragePort storagePort;
 
     @Transactional
     @Override
@@ -49,7 +47,7 @@ public class MemberService implements MemberUseCase {
         if (memberRepository.exist(memberSignDto.getEmail())) {
             throw new ConflictException("이미 가입된 회원입니다.");
         }
-        String imageFileName = FileUploadUtil.fileUpload(memberSignDto.getMemberImageUrl(), memberUploadDir, FileImageKind.MEMBER);
+        String imageFileName = storagePort.uploadFile(memberSignDto.getMemberImageUrl(), FileKind.MEMBER);
         Member member = MemberMapper.toEntity(memberSignDto, passwordEncoder.encode(memberSignDto.getPassword()), imageFileName);
         Member savedMember = memberRepository.save(member);
         return new MemberSignResponseDto(savedMember.getId());

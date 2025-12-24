@@ -1,8 +1,6 @@
 package com.example.petapp.service;
 
 
-import com.example.petapp.application.common.imagefile.FileImageKind;
-import com.example.petapp.application.common.imagefile.FileUploadUtil;
 import com.example.petapp.application.in.email.EmailUseCase;
 import com.example.petapp.application.in.member.dto.request.LoginDto;
 import com.example.petapp.application.in.member.dto.request.MemberSignDto;
@@ -11,6 +9,7 @@ import com.example.petapp.application.in.member.dto.request.SendEmailDto;
 import com.example.petapp.application.in.member.dto.response.MemberSignResponseDto;
 import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.application.service.member.MemberService;
+import com.example.petapp.domain.file.FileKind;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.role.RoleRepository;
@@ -114,7 +113,7 @@ class MemberUseCaseTest {
         // given
 
         // when
-        String result = FileUploadUtil.fileUpload(null, "/uploads", FileImageKind.MEMBER);
+        String result = FileUploadUtil.fileUpload(null, "/uploads", FileKind.MEMBER);
 
         // then
         assertThat(result).isEqualTo("/image/basic/Profile_avatar_placeholder_large.png");

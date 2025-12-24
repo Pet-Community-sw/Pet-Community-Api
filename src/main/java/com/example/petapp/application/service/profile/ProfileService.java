@@ -1,7 +1,5 @@
 package com.example.petapp.application.service.profile;
 
-import com.example.petapp.application.common.imagefile.FileImageKind;
-import com.example.petapp.application.common.imagefile.FileUploadUtil;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.petbreed.PetBreedQueryUseCase;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
@@ -13,13 +11,14 @@ import com.example.petapp.application.in.profile.dto.response.GetProfileResponse
 import com.example.petapp.application.in.profile.dto.response.ProfileListResponseDto;
 import com.example.petapp.application.in.profile.mapper.ProfileMapper;
 import com.example.petapp.application.in.token.TokenUseCase;
+import com.example.petapp.application.out.StoragePort;
+import com.example.petapp.domain.file.FileKind;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.petbreed.model.PetBreed;
 import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.interfaces.exception.ConflictException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,8 +34,7 @@ public class ProfileService implements ProfileUseCase {
     private final ProfileRepository profileRepository;
     private final TokenUseCase tokenUseCase;
     private final ProfileQueryUseCase profileQueryUseCase;
-    @Value("${spring.dog.profile.image.upload}")
-    private String profileUploadDir;
+    private final StoragePort storagePort;
 
     @Transactional//accesstoken 수정 필요 이름이 같은지 확인해야됨.
     @Override
@@ -47,7 +45,7 @@ public class ProfileService implements ProfileUseCase {
         }
         PetBreed petBreed = petBreedQueryUseCase.findOrThrow(profileDto.getPetBreedId());
 
-        String imageFileName = FileUploadUtil.fileUpload(profileDto.getPetImageUrl(), profileUploadDir, FileImageKind.PROFILE);
+        String imageFileName = storagePort.uploadFile(profileDto.getPetImageUrl(), FileKind.PROFILE);
         Profile profile = ProfileMapper.toEntity(profileDto, member, imageFileName, petBreed);
         validateBreed(profileDto, profile);
         profileRepository.save(profile);
@@ -84,8 +82,8 @@ public class ProfileService implements ProfileUseCase {
 
         member.validateProfile(member, profile.getMember());
         validateBreed(profileDto, profile);
-        String imageFimeName = FileUploadUtil.fileUpload(profileDto.getPetImageUrl(), profileUploadDir, FileImageKind.PROFILE);
-        profile.updateProfile(profile, profileDto, imageFimeName, petBreed);
+        String imageFileName = storagePort.uploadFile(profileDto.getPetImageUrl(), FileKind.PROFILE);
+        profile.updateProfile(profile, profileDto, imageFileName, petBreed);
     }
 
     @Transactional
