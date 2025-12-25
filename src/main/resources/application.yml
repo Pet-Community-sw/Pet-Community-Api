@@ -17,8 +17,8 @@ spring:
     open-in-view: false
 
   mail:
-    host: smtp.gmail.com
-    port: 587
+    host: ${SMTP_HOST}
+    port: ${SMTP_PORT}
     username: ${SMTP_EMAIL}
     password: ${SMTP_PASSWORD}
     properties:
@@ -27,6 +27,7 @@ spring:
           auth: true
           starttls:
             enable: true
+    default-encoding: UTF-8
 
   data:
     mongodb:
@@ -45,7 +46,7 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-          
+
   cloud:
     aws:
       credentials:
