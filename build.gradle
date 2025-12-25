@@ -34,6 +34,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    // Retryable(재전송)
+    implementation 'org.springframework.retry:spring-retry'
+
     // Swagger
     implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
 
