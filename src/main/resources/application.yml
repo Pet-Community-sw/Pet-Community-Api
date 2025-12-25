@@ -54,8 +54,6 @@ spring:
         secret-key: ${AWS_IAM_SECRET_KEY}
       region:
         static: ${AWS_S3_REGION}
-      s3:
-        enabled: true
 
 aws:
   s3:
