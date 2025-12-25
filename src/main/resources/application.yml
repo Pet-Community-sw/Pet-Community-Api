@@ -45,14 +45,20 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-      
+          
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_IAM_ACCESS_KEY}
+        secret-key: ${AWS_IAM_SECRET_KEY}
+      region:
+        static: ${AWS_S3_REGION}
+      s3:
+        enabled: true
+
 aws:
   s3:
     bucket: ${AWS_S3_BUCKET}
-    region: ${AWS_S3_REGION}
-  credentials:
-    access-key: ${AWS_IAM_ACCESS_KEY}
-    secret-key: ${AWS_IAM_SECRET_KEY}
   cloudfront:
     domain: ${AWS_CLOUD_FRONT}
 
