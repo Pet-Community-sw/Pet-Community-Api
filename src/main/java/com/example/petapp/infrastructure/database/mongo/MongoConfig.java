@@ -1,6 +1,5 @@
 package com.example.petapp.infrastructure.database.mongo;
 
-import com.example.petapp.domain.chatting.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +14,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @Configuration
 @RequiredArgsConstructor
 @EnableMongoRepositories(
-        basePackageClasses = {ChatMessageRepository.class})
+        basePackageClasses = {MongoChatMessageRepository.class})
 public class MongoConfig {
     @Bean
     public MappingMongoConverter mappingMongoConverter(

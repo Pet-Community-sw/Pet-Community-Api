@@ -66,7 +66,7 @@ dependencies {
 
     //Aws
     implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.0.0'
-    implementation 'io.awspring.cloud:spring-cloud-aws-starter-ses:3.0.0'
+//    implementation 'io.awspring.cloud:spring-cloud-aws-starter-ses:3.0.0'
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

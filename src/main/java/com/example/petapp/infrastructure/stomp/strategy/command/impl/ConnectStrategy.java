@@ -38,7 +38,6 @@ public class ConnectStrategy implements StompCommandStrategy {
 
         String accessToken = token.split(" ")[1];
         MemberInfo info = port.getInfo(TokenType.ACCESS, accessToken);
-
         Long profileId = info.getProfileId();
 
         Authentication authentication = profileId == null

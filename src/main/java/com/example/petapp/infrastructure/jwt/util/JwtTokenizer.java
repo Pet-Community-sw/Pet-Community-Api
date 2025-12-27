@@ -6,6 +6,7 @@ import com.example.petapp.interfaces.exception.UnAuthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Component
 public class JwtTokenizer {
 
@@ -31,9 +33,12 @@ public class JwtTokenizer {
 
     public MemberInfo getInfo(TokenType tokenType, String token) {
         Claims claims = parseToken(tokenType, token);
+        Long memberId = claims.get("memberId") != null ? ((Number) claims.get("memberId")).longValue() : null;
+        Long profileId = claims.get("profileId") != null ? ((Number) claims.get("profileId")).longValue() : null;
+
         return MemberInfo.builder()
-                .memberId((Long) claims.get("memberId"))
-                .profileId((Long) claims.get("profileId"))
+                .memberId(memberId)
+                .profileId(profileId)
                 .email(claims.getSubject())
                 .roles((List<String>) claims.get("roles"))
                 .build();
@@ -77,7 +82,6 @@ public class JwtTokenizer {
 
     private Claims parseToken(TokenType tokenType, String token) {
         byte[] key = tokenType.equals(TokenType.ACCESS) ? accessKey : refreshKey;
-
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(getSigningKey(key))
@@ -90,6 +94,7 @@ public class JwtTokenizer {
         }
     }
 
+    //key를 실제 암호화 알고리즘에 사용할 수 있는 Key 객체로 변환
     private Key getSigningKey(byte[] key) {
         return Keys.hmacShaKeyFor(key);
     }

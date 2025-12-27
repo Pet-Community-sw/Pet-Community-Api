@@ -8,6 +8,8 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 
+import java.security.Principal;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -18,9 +20,13 @@ public class DisConnectStrategy implements StompCommandStrategy {
     @Override
     public void handle(StompHeaderAccessor accessor) {
         log.info("[STOMP][DISCONNECT] 전략 시작");
-
-        appOnlineCachePort.delete(Long.valueOf(accessor.getUser().getName()));
-        log.info("[STOMP][DISCONNECT] 온라인 유저 삭제 ");
+        Principal principal = accessor.getUser();
+        if (principal == null) {
+            log.error("[STOMP][DISCONNECT] user 정보가 없습니다.");
+        } else {
+            appOnlineCachePort.delete(Long.valueOf(accessor.getUser().getName()));
+            log.info("[STOMP][DISCONNECT] 온라인 유저 삭제 ");
+        }
     }
 
     @Override
