@@ -1,8 +1,8 @@
 package com.example.petapp.infrastructure.database.jpa.chatroom;
 
+import com.example.petapp.application.in.chatting.model.type.ChatRoomType;
 import com.example.petapp.domain.chatroom.ChatRoomRepository;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
-import com.example.petapp.domain.chatting.model.type.ChatRoomType;
 import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

@@ -1,17 +1,19 @@
 package com.example.petapp.application.service.location;
 
 import com.example.petapp.application.common.HaversineUtil;
+import com.example.petapp.application.in.chatting.model.dto.StompResponseDto;
+import com.example.petapp.application.in.chatting.model.type.CommandType;
 import com.example.petapp.application.in.location.LocationUseCase;
 import com.example.petapp.application.in.location.dto.request.LocationMessage;
 import com.example.petapp.application.in.location.mapper.LocationMapper;
 import com.example.petapp.application.in.notification.NotificationUseCase;
 import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
 import com.example.petapp.application.in.walkrecord.dto.request.SendLocationDto;
+import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.LocationCachePort;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,10 +21,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LocationService implements LocationUseCase {//예외 처리해야됨.
 
-    private final SimpMessagingTemplate simpMessagingTemplate;
     private final NotificationUseCase notificationUseCase;
     private final LocationCachePort port;
     private final WalkRecordQueryUseCase walkRecordQueryUseCase;
+    private final SendPort sendPort;
 
     @Override
     public void sendLocation(LocationMessage locationMessage, String memberId) {
@@ -41,9 +43,9 @@ public class LocationService implements LocationUseCase {//예외 처리해야�
         String location = sendLocationDto.getWalkerLongitude() + "," + sendLocationDto.getWalkerLatitude();
         port.create(locationMessage.getWalkRecordId(), location);
 
-        simpMessagingTemplate.convertAndSend(
+        sendPort.send(
                 "/sub/walk-record/location/" + locationMessage.getWalkRecordId(),
-                locationMessage);
+                StompResponseDto.builder().commandType(CommandType.LOCATION).body(locationMessage).build());
     }
 
     private void sendLocationAndNotification(WalkRecord walkRecord, SendLocationDto sendLocationDto) {

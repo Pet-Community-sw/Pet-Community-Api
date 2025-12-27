@@ -4,23 +4,21 @@ package com.example.petapp.domain.chatting;
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+public interface ChatMessageRepository {
 
-@Repository
-public interface ChatMessageRepository extends MongoRepository<ChatMessage, String> {
+    Optional<ChatMessage> findCurrent(Long chatRoomId);
 
-    Optional<ChatMessage> findFirstByChatRoomIdOrderBySeqDesc(Long chatRoomId);
+    void delete(Long chatRoomId);
 
-    void deleteByChatRoomId(Long chatRoomId);
+    void save(ChatMessage chatMessage);
 
-    Page<ChatMessage> findAllByChatRoomIdOrderBySeqAsc(Long chatRoomId, Pageable pageable);
+    Page<ChatMessage> findAll(Long chatRoomId, Pageable pageable);
 
-    List<ChatMessage> findAllByChatRoomIdAndSeqGreaterThanOrderBySeqAsc(Long chatRoomId, Long seqIsGreaterThan);
+    List<ChatMessage> findAllBySeq(Long chatRoomId, Long seqIsGreaterThan);
 
 }
 

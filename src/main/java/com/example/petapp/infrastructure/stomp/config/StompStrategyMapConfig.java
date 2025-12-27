@@ -1,10 +1,10 @@
 package com.example.petapp.infrastructure.stomp.config;
 
-import com.example.petapp.infrastructure.stomp.strategy.StompCommandStrategy;
-import com.example.petapp.infrastructure.stomp.strategy.impl.ConnectStrategy;
-import com.example.petapp.infrastructure.stomp.strategy.impl.SendStrategy;
-import com.example.petapp.infrastructure.stomp.strategy.impl.SubscribeStrategy;
-import com.example.petapp.infrastructure.stomp.strategy.impl.UnSubscribeStrategy;
+import com.example.petapp.infrastructure.stomp.strategy.command.StompCommandStrategy;
+import com.example.petapp.infrastructure.stomp.strategy.command.impl.ConnectStrategy;
+import com.example.petapp.infrastructure.stomp.strategy.command.impl.SendStrategy;
+import com.example.petapp.infrastructure.stomp.strategy.command.impl.SubscribeStrategy;
+import com.example.petapp.infrastructure.stomp.strategy.command.impl.UnSubscribeStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.stomp.StompCommand;

@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.stomp.interceptor;
 
-import com.example.petapp.infrastructure.stomp.strategy.StompCommandStrategy;
+import com.example.petapp.infrastructure.stomp.strategy.command.StompCommandStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;

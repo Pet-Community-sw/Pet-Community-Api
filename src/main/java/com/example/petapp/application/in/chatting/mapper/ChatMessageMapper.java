@@ -1,0 +1,24 @@
+package com.example.petapp.application.in.chatting.mapper;
+
+import com.example.petapp.application.in.chatting.model.dto.ChatMessageDto;
+import com.example.petapp.application.in.chatting.model.dto.UserInfo;
+import com.example.petapp.domain.chatroom.model.ChatRoom;
+import com.example.petapp.domain.chatting.model.ChatMessage;
+
+import java.time.LocalDateTime;
+
+public class ChatMessageMapper {
+
+    public static ChatMessage toEntity(ChatMessageDto chatMessageDto, ChatRoom chatRoom, Long senderId, UserInfo userInfo) {
+        return ChatMessage.builder()
+                .chatRoomType(chatRoom.getChatRoomType())
+                .chatRoomId(chatMessageDto.getChatRoomId())
+                .senderId(senderId)
+                .senderName(userInfo.getUserName())
+                .senderImageUrl(userInfo.getImageUrl())
+                .message(chatMessageDto.getMessage())
+                .clientMessageId(chatMessageDto.getClientMessageId())
+                .messageTime(LocalDateTime.now())
+                .build();
+    }
+}

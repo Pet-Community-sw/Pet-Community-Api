@@ -1,6 +1,6 @@
 package com.example.petapp.domain.chatting.model;
 
-import com.example.petapp.domain.chatting.model.type.ChatRoomType;
+import com.example.petapp.application.in.chatting.model.type.ChatRoomType;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
