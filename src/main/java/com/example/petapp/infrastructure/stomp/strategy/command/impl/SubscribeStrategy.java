@@ -6,6 +6,7 @@ import com.example.petapp.infrastructure.stomp.strategy.command.StompCommandStra
 import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 
@@ -45,5 +46,10 @@ public class SubscribeStrategy implements StompCommandStrategy {
             }
         }
         throw new IllegalArgumentException("알 수 없는 구독 경로입니다.");
+    }
+
+    @Override
+    public StompCommand getCommand() {
+        return StompCommand.SUBSCRIBE;
     }
 }

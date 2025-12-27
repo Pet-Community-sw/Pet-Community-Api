@@ -15,7 +15,7 @@ public class MessageTypeStrategyMapConfig {
     public Map<CommandType, MessageTypeStrategy> messageTypeMap(List<MessageTypeStrategy> strategies) {
         Map<CommandType, MessageTypeStrategy> map = new HashMap<>();
         for (MessageTypeStrategy strategy : strategies) {
-            map.put(strategy.getType(), strategy);
+            map.put(strategy.getCommand(), strategy);
         }
         return map;
     }

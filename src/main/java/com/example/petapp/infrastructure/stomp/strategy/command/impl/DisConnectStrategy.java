@@ -4,6 +4,7 @@ import com.example.petapp.application.out.cache.AppOnlineCachePort;
 import com.example.petapp.infrastructure.stomp.strategy.command.StompCommandStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 
@@ -20,5 +21,10 @@ public class DisConnectStrategy implements StompCommandStrategy {
 
         appOnlineCachePort.delete(Long.valueOf(accessor.getUser().getName()));
         log.info("[STOMP][DISCONNECT] 온라인 유저 삭제 ");
+    }
+
+    @Override
+    public StompCommand getCommand() {
+        return StompCommand.DISCONNECT;
     }
 }

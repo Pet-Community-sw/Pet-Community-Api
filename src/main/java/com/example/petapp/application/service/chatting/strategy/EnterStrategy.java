@@ -24,7 +24,7 @@ public class EnterStrategy implements MessageTypeStrategy {
     }
 
     @Override
-    public CommandType getType() {
+    public CommandType getCommand() {
         return CommandType.ENTER;
     }
 }

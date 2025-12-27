@@ -7,5 +7,5 @@ public interface MessageTypeStrategy {
 
     void handle(ChatMessage chatMessage);
 
-    CommandType getType();
+    CommandType getCommand();
 }

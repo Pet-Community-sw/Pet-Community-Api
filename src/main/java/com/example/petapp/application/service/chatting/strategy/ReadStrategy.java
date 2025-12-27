@@ -19,7 +19,7 @@ public class ReadStrategy implements MessageTypeStrategy {
     }
 
     @Override
-    public CommandType getType() {
+    public CommandType getCommand() {
         return CommandType.READ;
     }
 }

@@ -66,7 +66,7 @@ public class TalkStrategy implements MessageTypeStrategy {
     }
 
     @Override
-    public CommandType getType() {
+    public CommandType getCommand() {
         return CommandType.TALK;
     }
 

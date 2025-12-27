@@ -27,7 +27,7 @@ public class LeaveStrategy implements MessageTypeStrategy {
     }
 
     @Override
-    public CommandType getType() {
+    public CommandType getCommand() {
         return CommandType.LEAVE;
     }
 }

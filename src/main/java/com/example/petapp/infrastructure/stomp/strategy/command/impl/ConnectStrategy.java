@@ -6,6 +6,7 @@ import com.example.petapp.domain.token.model.TokenType;
 import com.example.petapp.infrastructure.stomp.strategy.command.StompCommandStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,6 +46,11 @@ public class ConnectStrategy implements StompCommandStrategy {
                 : new UsernamePasswordAuthenticationToken(profileId, null);
 
         accessor.setUser(authentication);
+    }
+
+    @Override
+    public StompCommand getCommand() {
+        return StompCommand.CONNECT;
     }
 }
 

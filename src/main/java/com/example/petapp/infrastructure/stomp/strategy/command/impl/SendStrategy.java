@@ -3,6 +3,7 @@ package com.example.petapp.infrastructure.stomp.strategy.command.impl;
 import com.example.petapp.infrastructure.stomp.strategy.command.StompCommandStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 
@@ -21,5 +22,10 @@ public class SendStrategy implements StompCommandStrategy {
         if (destination == null || user == null) {
             throw new IllegalArgumentException("destination 또는 user 정보가 없습니다.");
         }
+    }
+
+    @Override
+    public StompCommand getCommand() {
+        return StompCommand.SEND;
     }
 }

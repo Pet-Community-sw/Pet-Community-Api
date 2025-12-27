@@ -4,6 +4,7 @@ import com.example.petapp.application.out.cache.ChatOnlineCachePort;
 import com.example.petapp.infrastructure.stomp.DestinationCachePort;
 import com.example.petapp.infrastructure.stomp.strategy.command.StompCommandStrategy;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 
@@ -12,8 +13,8 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 public class UnSubscribeStrategy implements StompCommandStrategy {
-
     private final DestinationCachePort destinationCachePort;
+
     private final ChatOnlineCachePort chatOnlineCachePort;
 
     @Override
@@ -35,5 +36,10 @@ public class UnSubscribeStrategy implements StompCommandStrategy {
                 chatOnlineCachePort.delete(Long.valueOf(path.substring("/sub/chat/".length())), Long.valueOf(id));
             }
         }
+    }
+
+    @Override
+    public StompCommand getCommand() {
+        return StompCommand.UNSUBSCRIBE;
     }
 }
