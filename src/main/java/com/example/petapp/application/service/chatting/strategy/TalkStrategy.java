@@ -2,7 +2,7 @@ package com.example.petapp.application.service.chatting.strategy;
 
 import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.in.chatting.MessageTypeStrategy;
-import com.example.petapp.application.in.chatting.model.dto.StompResponseDto;
+import com.example.petapp.application.in.chatting.model.dto.SendResponseDto;
 import com.example.petapp.application.in.chatting.model.dto.UpdateListDto;
 import com.example.petapp.application.in.chatting.model.type.CommandType;
 import com.example.petapp.application.in.notification.NotificationUseCase;
@@ -58,7 +58,7 @@ public class TalkStrategy implements MessageTypeStrategy {
 
         //메시지를 전송
         sendPort.send("/sub/chat/" + chatMessage.getChatRoomId(),
-                StompResponseDto.builder().commandType(CommandType.TALK).body(chatMessage).build());
+                SendResponseDto.builder().commandType(CommandType.TALK).body(chatMessage).build());
 
         scheduleRetry(chatMessage);
         sendChatNotificationAndUpdateList(chatMessage);
@@ -87,7 +87,7 @@ public class TalkStrategy implements MessageTypeStrategy {
                     notificationUseCase.send(profile.getMember(), message);
                     Long profileSeq = readMessageCachePort.find(chatRoomId, profile.getId());
                     sendPort.send("sub/list/" + profile.getMember().getId(),//todo : member와 profile 다르게 해야함.
-                            StompResponseDto.builder().commandType(CommandType.LIST_UPDATE).body(new UpdateListDto(chatRoomId, (chatMessage.getSeq() - profileSeq), chatMessage.getMessage(), chatMessage.getMessageTime())).build());
+                            SendResponseDto.builder().commandType(CommandType.LIST_UPDATE).body(new UpdateListDto(chatRoomId, (chatMessage.getSeq() - profileSeq), chatMessage.getMessage(), chatMessage.getMessageTime())).build());
                 });
     }
 
@@ -119,7 +119,7 @@ public class TalkStrategy implements MessageTypeStrategy {
             }
             sendPort.sendToUser(
                     userId.toString(), "/sub/chat",
-                    StompResponseDto.builder().commandType(CommandType.TALK).body(chatMessage).build());
+                    SendResponseDto.builder().commandType(CommandType.TALK).body(chatMessage).build());
         }
         ackInfoRepository.clear(chatMessage.getClientMessageId());
     }

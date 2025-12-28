@@ -1,7 +1,7 @@
 package com.example.petapp.application.service.notification;
 
 import com.example.petapp.application.in.chatting.model.dto.NotificationDto;
-import com.example.petapp.application.in.chatting.model.dto.StompResponseDto;
+import com.example.petapp.application.in.chatting.model.dto.SendResponseDto;
 import com.example.petapp.application.in.chatting.model.type.CommandType;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.notification.NotificationUseCase;
@@ -45,7 +45,7 @@ public class NotificationService implements NotificationUseCase {
         notificationsCachePort.create(member.getId(), new NotificationListDto(message, LocalDateTime.now()), 3);
         if (appOnlineCachePort.exist(member.getId())) {
             sendPort.send("/sub/notification/" + member.getId(),
-                    StompResponseDto.builder().commandType(CommandType.NOTIFICATION).body(new NotificationDto(member.getId(), message)).build());
+                    SendResponseDto.builder().commandType(CommandType.NOTIFICATION).body(new NotificationDto(member.getId(), message)).build());
         } else {
             log.info("backGroundMember");
 //            fcmService.sendNotification(member.getFcmToken().getFcmToken(), "명냥로드", message);

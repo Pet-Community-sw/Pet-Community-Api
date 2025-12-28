@@ -6,7 +6,7 @@ import com.example.petapp.application.in.chatroom.dto.response.ChatMessageRespon
 import com.example.petapp.application.in.chatroom.mapper.ChatRoomMapper;
 import com.example.petapp.application.in.chatting.ReaderUseCase;
 import com.example.petapp.application.in.chatting.model.dto.LastMessageInfoDto;
-import com.example.petapp.application.in.chatting.model.dto.StompResponseDto;
+import com.example.petapp.application.in.chatting.model.dto.SendResponseDto;
 import com.example.petapp.application.in.chatting.model.dto.UpdateMessageDto;
 import com.example.petapp.application.in.chatting.model.type.CommandType;
 import com.example.petapp.application.out.SendPort;
@@ -75,6 +75,6 @@ public class ReaderService implements ReaderUseCase {
         Long endSeq = lastMessageInfoDto.getLastSeq();
         mongoService.updateMessages(chatRoomId, userId, startSeq, endSeq);
         sendPort.send("/sub/chat/" + chatRoomId,
-                StompResponseDto.builder().commandType(CommandType.CHAT_UPDATE).body(new UpdateMessageDto(startSeq, endSeq)).build());
+                SendResponseDto.builder().commandType(CommandType.CHAT_UPDATE).body(new UpdateMessageDto(startSeq, endSeq)).build());
     }
 }

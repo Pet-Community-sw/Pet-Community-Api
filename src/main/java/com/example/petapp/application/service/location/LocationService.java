@@ -1,7 +1,7 @@
 package com.example.petapp.application.service.location;
 
 import com.example.petapp.application.common.HaversineUtil;
-import com.example.petapp.application.in.chatting.model.dto.StompResponseDto;
+import com.example.petapp.application.in.chatting.model.dto.SendResponseDto;
 import com.example.petapp.application.in.chatting.model.type.CommandType;
 import com.example.petapp.application.in.location.LocationUseCase;
 import com.example.petapp.application.in.location.dto.request.LocationMessage;
@@ -45,7 +45,7 @@ public class LocationService implements LocationUseCase {//예외 처리해야�
 
         sendPort.send(
                 "/sub/walk-record/location/" + locationMessage.getWalkRecordId(),
-                StompResponseDto.builder().commandType(CommandType.LOCATION).body(locationMessage).build());
+                SendResponseDto.builder().commandType(CommandType.LOCATION).body(locationMessage).build());
     }
 
     private void sendLocationAndNotification(WalkRecord walkRecord, SendLocationDto sendLocationDto) {

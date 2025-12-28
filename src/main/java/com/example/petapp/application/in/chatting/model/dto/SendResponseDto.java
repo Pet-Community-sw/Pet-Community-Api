@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class StompResponseDto<T> {
+public class SendResponseDto<T> {
     private CommandType commandType;
     private T body;
 }
