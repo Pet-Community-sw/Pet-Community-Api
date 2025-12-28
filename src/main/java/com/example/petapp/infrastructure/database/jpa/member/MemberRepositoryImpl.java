@@ -5,6 +5,7 @@ import com.example.petapp.domain.member.model.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -41,5 +42,10 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public Optional<Member> findByPhoneNumber(String phoneNumber) {
         return repository.findByPhoneNumber(phoneNumber);
+    }
+
+    @Override
+    public List<String> findAllByIds(List<Long> ids) {
+        return repository.findNamesByIds(ids);
     }
 }

@@ -6,7 +6,11 @@ import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.interfaces.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class MemberQueryService implements MemberQueryUseCase {
@@ -26,5 +30,10 @@ public class MemberQueryService implements MemberQueryUseCase {
     @Override
     public Member findOrThrowByPhoneNumber(String phoneNumber) {
         return repository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new NotFoundException("해당 유저는 없는 유저입니다. 회원가입 해주세요."));
+    }
+
+    @Override
+    public List<String> findNamesOrThrowByIds(List<Long> ids) {
+        return repository.findAllByIds(ids);
     }
 }

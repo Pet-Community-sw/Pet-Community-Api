@@ -35,7 +35,7 @@ public class ChattingService implements ChattingUseCase {
     @Transactional
     @Override
     public void sendToMessage(ChatMessageDto chatMessageDto, Long senderId) {
-        log.info("[STOMP] messageMapping 시작 chatRoomId: {}, messageType: {}", chatMessageDto.getChatRoomId(), chatMessageDto.getCommandType());
+        log.info("[STOMP] 일반 메시지 전송 chatRoomId: {}, messageType: {}", chatMessageDto.getChatRoomId(), chatMessageDto.getCommandType());
         ChatRoom chatRoom = chatRoomQueryUseCase.find(chatMessageDto.getChatRoomId());
         chatRoom.validateUser(senderId);
         ChatMessage chatMessage = getChatMessage(chatMessageDto, senderId, chatRoom);
