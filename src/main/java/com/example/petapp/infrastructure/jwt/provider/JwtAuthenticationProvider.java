@@ -24,7 +24,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) authentication;
         MemberInfo info = jwtTokenizer.getInfo(TokenType.ACCESS, authenticationToken.getToken());
-        String email = info.getEmail();
+        String email = info.getName();
         Object profileId = info.getProfileId();
         List<GrantedAuthority> authorities = getGrantedAuthority(info.getRoles());
         return new JwtAuthenticationToken(authorities, email, null, profileId);

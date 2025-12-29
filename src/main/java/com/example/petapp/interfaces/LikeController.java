@@ -36,7 +36,7 @@ public class LikeController {
     )
     @PostMapping()
     public ResponseEntity<MessageResponse> createAndDeleteLike(@RequestBody Long postId, Authentication authentication) {
-        return likeUseCase.createAndDelete(postId, AuthUtil.getEmail(authentication)) ?
+        return likeUseCase.createAndDelete(postId, AuthUtil.getMemberId(authentication)) ?
                 ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("좋아요 생성했습니다.")) :
                 ResponseEntity.ok(new MessageResponse("좋아요 삭제했습니다."));
     }

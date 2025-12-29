@@ -16,7 +16,12 @@ public class RoleQueryService implements RoleQueryUseCase {
     private final RoleRepository repository;
 
     @Override
-    public Role findOrThrow() {
+    public Role findTemporaryRole() {
+        return repository.find("ROLE_TEMPORARY").orElseThrow(() -> new NotFoundException("해당 role은 없습니다."));
+    }
+
+    @Override
+    public Role findUserRole() {
         return repository.find("ROLE_USER").orElseThrow(() -> new NotFoundException("해당 role은 없습니다."));
     }
 

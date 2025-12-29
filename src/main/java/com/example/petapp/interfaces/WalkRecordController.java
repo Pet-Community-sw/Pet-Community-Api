@@ -24,7 +24,7 @@ public class WalkRecordController {
     )
     @GetMapping("/{walkRecordId}")
     public GetWalkRecordResponseDto getWalkRecord(@PathVariable Long walkRecordId, Authentication authentication) {
-        return walkRecordUseCase.getWalkRecord(walkRecordId, AuthUtil.getEmail(authentication));
+        return walkRecordUseCase.getWalkRecord(walkRecordId, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -32,7 +32,7 @@ public class WalkRecordController {
     )
     @GetMapping("/{walkRecordId}/location")
     public GetWalkRecordLocationResponseDto getWalkRecordLocation(@PathVariable Long walkRecordId, Authentication authentication) {
-        return walkRecordUseCase.getWalkRecordLocation(walkRecordId, AuthUtil.getEmail(authentication));
+        return walkRecordUseCase.getWalkRecordLocation(walkRecordId, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -40,7 +40,7 @@ public class WalkRecordController {
     )
     @PutMapping("/{walkRecordId}/start")
     public ResponseEntity<MessageResponse> updateStartWalkRecord(@PathVariable Long walkRecordId, Authentication authentication) {
-        walkRecordUseCase.updateStartWalkRecord(walkRecordId, AuthUtil.getEmail(authentication));
+        walkRecordUseCase.updateStartWalkRecord(walkRecordId, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("start"));
     }
 
@@ -49,7 +49,7 @@ public class WalkRecordController {
     )
     @PutMapping("/{walkRecordId}/finish")
     public ResponseEntity<MessageResponse> updateFinishWalkRecord(@PathVariable Long walkRecordId, Authentication authentication) {
-        walkRecordUseCase.FinishWalkRecord(walkRecordId, AuthUtil.getEmail(authentication));
+        walkRecordUseCase.FinishWalkRecord(walkRecordId, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("finish"));
     }
 }

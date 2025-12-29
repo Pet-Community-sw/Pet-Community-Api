@@ -16,8 +16,8 @@ public class JwtTokenAdapter implements TokenPort {
     private final JwtTokenizer tokenizer;
 
     @Override
-    public String create(TokenType tokenType, Long memberId, Long profileId, String email, List<String> roles) {
-        return tokenizer.create(tokenType, memberId, profileId, email, roles);
+    public String create(TokenType tokenType, Long memberId, Long profileId, String name, List<String> roles) {
+        return tokenizer.create(tokenType, memberId, profileId, name, roles);
     }
 
     @Override

@@ -1,8 +1,11 @@
 package com.example.petapp.infrastructure.stomp.strategy.command.impl;
 
+import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.token.MemberInfo;
 import com.example.petapp.application.out.TokenPort;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.token.model.TokenType;
+import com.example.petapp.infrastructure.stomp.dto.User;
 import com.example.petapp.infrastructure.stomp.strategy.command.StompCommandStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +28,7 @@ import org.springframework.stereotype.Component;
 public class ConnectStrategy implements StompCommandStrategy {
 
     private final TokenPort port;
+    private final MemberQueryUseCase memberQueryUseCase;
 
     @Override
     public void handle(StompHeaderAccessor accessor) {
@@ -38,11 +42,10 @@ public class ConnectStrategy implements StompCommandStrategy {
 
         String accessToken = token.split(" ")[1];
         MemberInfo info = port.getInfo(TokenType.ACCESS, accessToken);
-        Long profileId = info.getProfileId();
+        Member member = memberQueryUseCase.findOrThrow(info.getMemberId());
 
-        Authentication authentication = profileId == null
-                ? new UsernamePasswordAuthenticationToken(info.getMemberId(), null)
-                : new UsernamePasswordAuthenticationToken(profileId, null);
+        //검증이 끝난 유저의 인증 객체 생성
+        Authentication authentication = new UsernamePasswordAuthenticationToken(new User(info.getMemberId(), member.getName()), null);
 
         accessor.setUser(authentication);
     }

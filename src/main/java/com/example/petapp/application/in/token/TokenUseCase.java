@@ -12,7 +12,7 @@ public interface TokenUseCase {
 
     LoginResponseDto save(Member member, Role role);
 
-    AccessTokenResponseDto createResetPasswordJwt(String email);
+    AccessTokenResponseDto createResetPasswordJwt(Member member);
 
     String newAccessTokenByProfile(String accessToken, Member member, Long profileId);
 

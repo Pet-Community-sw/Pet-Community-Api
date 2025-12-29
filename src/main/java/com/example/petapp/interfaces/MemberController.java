@@ -53,9 +53,9 @@ public class MemberController {
     @Operation(
             summary = "유저 상세 조회"
     )
-    @GetMapping("/{memberId}")
-    public GetMemberResponseDto getMember(@PathVariable Long memberId, Authentication authentication) {
-        return memberUseCase.getMember(memberId, AuthUtil.getEmail(authentication));
+    @GetMapping("/{targetId}")
+    public GetMemberResponseDto getMember(@PathVariable Long targetId, Authentication authentication) {
+        return memberUseCase.getMember(targetId, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -89,7 +89,7 @@ public class MemberController {
     )
     @PostMapping("/verify-code")
     public AccessTokenResponseDto verifyCode(@RequestBody @Valid AuthCodeDto authCodeDto) {
-        return memberUseCase.verifyCode(authCodeDto.getEmail(), authCodeDto.getCode());
+        return memberUseCase.verifyCode(authCodeDto);
     }
 
     @Operation(
@@ -97,7 +97,7 @@ public class MemberController {
     )
     @PutMapping("/reset-password")//수정 필요 토큰 있을 때와 없을 때
     public ResponseEntity<MessageResponse> resetPassword(@RequestBody @Valid ResetPasswordDto resetPasswordDto, Authentication authentication) {
-        memberUseCase.resetPassword(resetPasswordDto, AuthUtil.getEmail(authentication));
+        memberUseCase.resetPassword(resetPasswordDto, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("비밀번호가 성공적으로 변경되었습나다."));
     }
 
@@ -106,7 +106,7 @@ public class MemberController {
     )
     @DeleteMapping()
     public ResponseEntity<MessageResponse> deleteMember(Authentication authentication) {
-        memberUseCase.deleteMember(AuthUtil.getEmail(authentication));
+        memberUseCase.deleteMember(AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("탈퇴 되었습니다."));
     }
 

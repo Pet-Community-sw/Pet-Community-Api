@@ -21,13 +21,13 @@ public interface MemberUseCase {
 
     void logout(String accessToken);
 
-    AccessTokenResponseDto verifyCode(String email, String code);
+    AccessTokenResponseDto verifyCode(AuthCodeDto authCodeDto);
 
-    void resetPassword(ResetPasswordDto resetPasswordDto, String email);
+    void resetPassword(ResetPasswordDto resetPasswordDto, Long memberId);
 
-    GetMemberResponseDto getMember(Long memberId, String email);
+    GetMemberResponseDto getMember(Long targetId, Long memberId);
 
-    void deleteMember(String email);
+    void deleteMember(Long memberId);
 
     void createFcmToken(FcmTokenDto fcmTokenDto);
 }

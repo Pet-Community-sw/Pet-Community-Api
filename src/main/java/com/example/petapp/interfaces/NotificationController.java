@@ -34,6 +34,6 @@ public class NotificationController {
     )
     @GetMapping
     public List<NotificationListDto> getNotifications(Authentication authentication) {
-        return notificationUseCase.getList(AuthUtil.getEmail(authentication));
+        return notificationUseCase.getList(AuthUtil.getMemberId(authentication));
     }
 }

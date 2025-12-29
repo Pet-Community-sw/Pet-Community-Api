@@ -32,7 +32,7 @@ public class RecommendRoutePostController {
     @PostMapping
     private CreateRecommendRoutePostResponseDto createRecommendRoutePost(@RequestBody @Valid CreateRecommendRoutePostDto createRecommendRoutePostDto,
                                                                          Authentication authentication) {
-        return recommendRoutePostUseCase.createRecommendRoutePost(createRecommendRoutePostDto, AuthUtil.getEmail(authentication));
+        return recommendRoutePostUseCase.createRecommendRoutePost(createRecommendRoutePostDto, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -45,7 +45,7 @@ public class RecommendRoutePostController {
                                                                            @RequestParam Double maxLatitude,
                                                                            @RequestParam(required = false, defaultValue = "1") int page,
                                                                            Authentication authentication) {
-        return recommendRoutePostUseCase.getRecommendRoutePosts(minLongitude, minLatitude, maxLongitude, maxLatitude, page, AuthUtil.getEmail(authentication));
+        return recommendRoutePostUseCase.getRecommendRoutePosts(minLongitude, minLatitude, maxLongitude, maxLatitude, page, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -56,7 +56,7 @@ public class RecommendRoutePostController {
                                                                            @RequestParam Double latitude,
                                                                            @RequestParam(required = false, defaultValue = "1") int page,
                                                                            Authentication authentication) {
-        return recommendRoutePostUseCase.getRecommendRoutePosts(longitude, latitude, page, AuthUtil.getEmail(authentication));
+        return recommendRoutePostUseCase.getRecommendRoutePosts(longitude, latitude, page, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -64,7 +64,7 @@ public class RecommendRoutePostController {
     )
     @GetMapping("/{recommendRoutePostId}")
     private GetRecommendPostResponseDto getRecommendRoutePost(@PathVariable Long recommendRoutePostId, Authentication authentication) {
-        return recommendRoutePostUseCase.getRecommendRoutePost(recommendRoutePostId, AuthUtil.getEmail(authentication));
+        return recommendRoutePostUseCase.getRecommendRoutePost(recommendRoutePostId, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -74,7 +74,7 @@ public class RecommendRoutePostController {
     private ResponseEntity<MessageResponse> updateRecommendRoutePost(@PathVariable Long recommendRoutePostId,
                                                                      @RequestBody @Valid UpdateRecommendRoutePostDto updateRecommendRoutePostDto,
                                                                      Authentication authentication) {
-        recommendRoutePostUseCase.updateRecommendRoutePost(recommendRoutePostId, updateRecommendRoutePostDto, AuthUtil.getEmail(authentication));
+        recommendRoutePostUseCase.updateRecommendRoutePost(recommendRoutePostId, updateRecommendRoutePostDto, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("수정 되었습니다."));
     }
 
@@ -83,7 +83,7 @@ public class RecommendRoutePostController {
     )
     @DeleteMapping("/{recommendRoutePostId}")
     private ResponseEntity<MessageResponse> deleteRecommendRoutePost(@PathVariable Long recommendRoutePostId, Authentication authentication) {
-        recommendRoutePostUseCase.deleteRecommendRoutePost(recommendRoutePostId, AuthUtil.getEmail(authentication));
+        recommendRoutePostUseCase.deleteRecommendRoutePost(recommendRoutePostId, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("삭제 되었습니다."));
     }
 }

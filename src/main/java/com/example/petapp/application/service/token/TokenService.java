@@ -23,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,8 +51,8 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
     public LoginResponseDto save(Member member, Role role) {
         List<String> roles = List.of(role.getName());
 
-        String accessToken = tokenPort.create(TokenType.ACCESS, member.getId(), null, member.getEmail(), roles);
-        String refreshToken = tokenPort.create(TokenType.REFRESH, member.getId(), null, member.getEmail(), roles);
+        String accessToken = tokenPort.create(TokenType.ACCESS, member.getId(), null, member.getName(), roles);
+        String refreshToken = tokenPort.create(TokenType.REFRESH, member.getId(), null, member.getName(), roles);
 
         tokenQueryUseCase.find(member.getId()).ifPresentOrElse(
                 token -> token.updateRefreshToken(refreshToken),
@@ -80,13 +79,14 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
         return createNewToken(refreshToken);
     }
 
+    /**
+     * 임시 권한을 토큰에 담아 비밀번호 수정 api만 접근할 수 있는 토큰 생성
+     */
     @Override
-    public AccessTokenResponseDto createResetPasswordJwt(String email) {
-        List<String> roles = new ArrayList<>();
-        Role role = roleQueryUseCase.findOrThrow();//todo : 여기 해야함.
-        roles.add(role.getName());
+    public AccessTokenResponseDto createResetPasswordJwt(Member member) {
+        List<String> roles = List.of(roleQueryUseCase.findTemporaryRole().getName());
 
-        String resetPasswordToken = tokenPort.create(TokenType.EMAIL_ACCESS, null, null, email, roles);
+        String resetPasswordToken = tokenPort.create(TokenType.EMAIL_ACCESS, member.getId(), null, null, roles);
         return new AccessTokenResponseDto(resetPasswordToken);
     }
 
@@ -110,13 +110,13 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
     private TokenResponseDto createNewToken(Token token) {
         MemberInfo info = tokenPort.getInfo(TokenType.REFRESH, token.getRefreshToken());
         List<String> roles = info.getRoles();
-        String email = info.getEmail();
+        String name = info.getName();
         Long profileId = info.getProfileId();
         Long memberId = info.getMemberId();
         String newAccessToken = profileId == null ?
-                tokenPort.create(TokenType.ACCESS, memberId, null, email, roles)  //getProfileId를 했을 때 null이면 일반 토큰 있으면 profile토큰
-                : tokenPort.create(TokenType.ACCESS, memberId, Long.valueOf(profileId.toString()), email, roles);//profile이있으면 붙혀서 반환.
-        String newRefreshToken = tokenPort.create(TokenType.REFRESH, memberId, null, email, roles);
+                tokenPort.create(TokenType.ACCESS, memberId, null, name, roles)  //getProfileId를 했을 때 null이면 일반 토큰 있으면 profile토큰
+                : tokenPort.create(TokenType.ACCESS, memberId, Long.valueOf(profileId.toString()), name, roles);//profile이있으면 붙혀서 반환.
+        String newRefreshToken = tokenPort.create(TokenType.REFRESH, memberId, null, name, roles);
         token.setRefreshToken(newRefreshToken);
 
         return new TokenResponseDto(newAccessToken, newRefreshToken);

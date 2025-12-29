@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TokenPort {
 
-    String create(TokenType tokenType, Long memberId, Long profileId, String email, List<String> roles);
+    String create(TokenType tokenType, Long memberId, Long profileId, String name, List<String> roles);
 
     MemberInfo getInfo(TokenType tokenType, String token);
 }

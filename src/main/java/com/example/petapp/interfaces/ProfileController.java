@@ -32,7 +32,7 @@ public class ProfileController {
     )
     @GetMapping
     public List<ProfileListResponseDto> getProfiles(Authentication authentication) {//dogBreed를 안내보내도 될듯? 효빈이랑 얘기해봐야됨.
-        return profileUseCase.getProfiles(AuthUtil.getEmail(authentication));
+        return profileUseCase.getProfiles(AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -40,7 +40,7 @@ public class ProfileController {
     )
     @GetMapping("/{profileId}")
     public GetProfileResponseDto getProfile(@PathVariable Long profileId, Authentication authentication) {
-        return profileUseCase.getProfile(profileId, AuthUtil.getEmail(authentication));
+        return profileUseCase.getProfile(profileId, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -48,7 +48,7 @@ public class ProfileController {
     )
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CreateProfileResponseDto createProfile(@ModelAttribute @Validated ProfileDto profileDto, Authentication authentication) {
-        return profileUseCase.createProfile(profileDto, AuthUtil.getEmail(authentication));
+        return profileUseCase.createProfile(profileDto, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -56,7 +56,7 @@ public class ProfileController {
     )
     @PutMapping(value = "/{profileId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MessageResponse> updateProfile(@PathVariable Long profileId, @ModelAttribute @Validated ProfileDto addProfileDto, Authentication authentication) {
-        profileUseCase.updateProfile(profileId, addProfileDto, AuthUtil.getEmail(authentication));
+        profileUseCase.updateProfile(profileId, addProfileDto, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("수정 되었습니다."));
     }
 
@@ -65,7 +65,7 @@ public class ProfileController {
     )
     @DeleteMapping("/{profileId}")//삭제 수정도 authentication에 profileId가 추가되어있어야함.
     public ResponseEntity<MessageResponse> deleteProfile(@PathVariable Long profileId, Authentication authentication) {
-        profileUseCase.deleteProfile(profileId, AuthUtil.getEmail(authentication));
+        profileUseCase.deleteProfile(profileId, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("삭제 되었습니다."));
     }
 
@@ -74,7 +74,7 @@ public class ProfileController {
     )
     @PostMapping("/token/{profileId}")//리팩토링 시에 authentication 말고 accesstoken을 받아서 이전 토큰 무효화 처리해야됨.
     public AccessTokenByProfileIdResponseDto accessTokenByProfileId(@RequestHeader("Authorization") String accessToken, @PathVariable Long profileId, Authentication authentication) {
-        return profileUseCase.accessTokenByProfile(accessToken, profileId, AuthUtil.getEmail(authentication));
+        return profileUseCase.accessTokenByProfile(accessToken, profileId, AuthUtil.getMemberId(authentication));
     }
 
 }

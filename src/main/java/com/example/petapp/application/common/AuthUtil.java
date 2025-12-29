@@ -5,8 +5,8 @@ import org.springframework.security.core.Authentication;
 
 public class AuthUtil {
 
-    public static String getEmail(Authentication authentication) {
-        return authentication.getPrincipal().toString();
+    public static Long getMemberId(Authentication authentication) {
+        return Long.valueOf(authentication.getPrincipal().toString());
     }
 
     public static Long getProfileId(Authentication authentication) {

@@ -15,7 +15,7 @@ public class MemberInfo {
 
     private Long profileId;
 
-    private String email;
+    private String name;
 
     private List<String> roles;
 }

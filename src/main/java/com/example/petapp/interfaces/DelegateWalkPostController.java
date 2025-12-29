@@ -46,7 +46,7 @@ public class DelegateWalkPostController {
     public ApplyToDelegateWalkPostResponseDto applyToDelegateWalkPost(@PathVariable Long delegateWalkPostId,
                                                                       @RequestBody String content,
                                                                       Authentication authentication) {
-        return delegateWalkPostUseCase.applyToDelegateWalkPost(delegateWalkPostId, content, AuthUtil.getEmail(authentication));
+        return delegateWalkPostUseCase.applyToDelegateWalkPost(delegateWalkPostId, content, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -59,7 +59,7 @@ public class DelegateWalkPostController {
                                                                                 @RequestParam Double maxLatitude,
                                                                                 @RequestParam(defaultValue = "1", required = false) int page,
                                                                                 Authentication authentication) {
-        return delegateWalkPostUseCase.getDelegateWalkPostsByLocation(minLongitude, minLatitude, maxLongitude, maxLatitude, page, AuthUtil.getEmail(authentication));
+        return delegateWalkPostUseCase.getDelegateWalkPostsByLocation(minLongitude, minLatitude, maxLongitude, maxLatitude, page, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -70,7 +70,7 @@ public class DelegateWalkPostController {
                                                                              @RequestParam Double latitude,
                                                                              @RequestParam(defaultValue = "1", required = false) int page,
                                                                              Authentication authentication) {
-        return delegateWalkPostUseCase.getDelegateWalkPostsByPlace(longitude, latitude, page, AuthUtil.getEmail(authentication));
+        return delegateWalkPostUseCase.getDelegateWalkPostsByPlace(longitude, latitude, page, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -78,7 +78,7 @@ public class DelegateWalkPostController {
     )
     @GetMapping("/{delegateWalkPostId}")
     public GetDelegatePostResponseDto getDelegateWalkPost(@PathVariable Long delegateWalkPostId, Authentication authentication) {
-        return delegateWalkPostUseCase.getDelegateWalkPost(delegateWalkPostId, AuthUtil.getEmail(authentication));
+        return delegateWalkPostUseCase.getDelegateWalkPost(delegateWalkPostId, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -103,7 +103,7 @@ public class DelegateWalkPostController {
     )
     @PutMapping("/{delegateWalkPostId}")
     public ResponseEntity<MessageResponse> updateDelegateWalkPost(@PathVariable Long delegateWalkPostId, @RequestBody UpdateDelegateWalkPostDto updateDelegateWalkPostDto, Authentication authentication) {
-        delegateWalkPostUseCase.updateDelegateWalkPost(delegateWalkPostId, updateDelegateWalkPostDto, AuthUtil.getEmail(authentication));
+        delegateWalkPostUseCase.updateDelegateWalkPost(delegateWalkPostId, updateDelegateWalkPostDto, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("수정 되었습니다."));
     }
 
@@ -112,7 +112,7 @@ public class DelegateWalkPostController {
     )
     @DeleteMapping("/{delegateWalkPostId}")
     public ResponseEntity<MessageResponse> deleteDelegateWalkPost(@PathVariable Long delegateWalkPostId, Authentication authentication) {
-        delegateWalkPostUseCase.deleteDelegateWalkPost(delegateWalkPostId, AuthUtil.getEmail(authentication));
+        delegateWalkPostUseCase.deleteDelegateWalkPost(delegateWalkPostId, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("삭제 되었습니다."));
     }
 
@@ -121,6 +121,6 @@ public class DelegateWalkPostController {
     )
     @PostMapping("/{delegateWalkPostId}/select-applicant")
     public CreateChatRoomResponseDto selectApplicant(@PathVariable Long delegateWalkPostId, @RequestBody Long memberId, Authentication authentication) {
-        return delegateWalkPostUseCase.selectApplicant(delegateWalkPostId, memberId, AuthUtil.getEmail(authentication));
+        return delegateWalkPostUseCase.selectApplicant(delegateWalkPostId, memberId, AuthUtil.getMemberId(authentication));
     }
 }

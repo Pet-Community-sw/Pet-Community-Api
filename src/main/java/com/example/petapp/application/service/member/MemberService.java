@@ -60,25 +60,27 @@ public class MemberService implements MemberUseCase {
         if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
             throw new UnAuthorizedException("이메일 혹은 비밀번호가 일치하지 않습니다.");
         }
-        Role role = roleQueryUseCase.findOrThrow();
+        Role role = roleQueryUseCase.findUserRole();
         setRole(member, role);
         return tokenUseCase.save(member, role);
     }
 
+    /**
+     * 인증코드 검증 후 비밀번호 재설정용 임시 JWT 발급
+     */
     @Override
-    public AccessTokenResponseDto verifyCode(String email, String code) {//sendEmail할 때 이메일 유효성 검사 했으므로 안해줘도 됨.
-        emailUseCase.verifyCode(email, code);
-        return tokenUseCase.createResetPasswordJwt(email);
+    public AccessTokenResponseDto verifyCode(AuthCodeDto authCodeDto) {//sendEmail할 때 이메일 유효성 검사 했으므로 안해줘도 됨.
+        emailUseCase.verifyCode(authCodeDto.getEmail(), authCodeDto.getCode());//todo : name을 email로?
+        Member member = memberQueryUseCase.findOrThrow(authCodeDto.getEmail());
+        return tokenUseCase.createResetPasswordJwt(member);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public FindByIdResponseDto findById(String phoneNumber) {
         Member member = memberQueryUseCase.findOrThrowByPhoneNumber(phoneNumber);
         return new FindByIdResponseDto(member.getEmail());
     }
 
-    @Transactional(readOnly = true)
     @Override
     public void sendEmail(SendEmailDto sendEmailDto) {
         Member member = memberQueryUseCase.findOrThrow(sendEmailDto.getEmail());
@@ -94,8 +96,8 @@ public class MemberService implements MemberUseCase {
 
     @Transactional
     @Override
-    public void resetPassword(ResetPasswordDto resetPasswordDto, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public void resetPassword(ResetPasswordDto resetPasswordDto, Long memberId) {
+        Member member = memberQueryUseCase.findOrThrow(memberId);
         if (member.isSamePassword(passwordEncoder, resetPasswordDto.getNewPassword())) {
             throw new IllegalArgumentException("전 비밀번호와 다르게 설정해야합니다.");
         } else {
@@ -103,17 +105,17 @@ public class MemberService implements MemberUseCase {
         }
     }
 
-    @Transactional(readOnly = true)//상세 멤버 프로필 추가랑 어떤거 해야할지 해야됨. 여기에 자기가 쓴 게시물, 산책길 추천, 후기 추가해야할듯.
+    //상세 멤버 프로필 추가랑 어떤거 해야할지 해야됨. 여기에 자기가 쓴 게시물, 산책길 추천, 후기 추가해야할듯.
     @Override
-    public GetMemberResponseDto getMember(Long memberId, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public GetMemberResponseDto getMember(Long targetId, Long memberId) {
+        Member member = memberQueryUseCase.findOrThrow(memberId);
         return MemberMapper.toGetMemberResponseDto(member);
     }
 
     @Transactional
     @Override
-    public void deleteMember(String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public void deleteMember(Long memberId) {//todo 한번에
+        Member member = memberQueryUseCase.findOrThrow(memberId);
         memberRepository.delete(member);
     }
 

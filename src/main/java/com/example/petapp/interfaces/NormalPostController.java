@@ -31,7 +31,7 @@ public class NormalPostController {
     )
     @GetMapping()
     public List<PostResponseDto> getPosts(@RequestParam(defaultValue = "1") int page, Authentication authentication) {
-        return normalPostUseCase.getPosts(page, AuthUtil.getEmail(authentication));
+        return normalPostUseCase.getPosts(page, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -39,7 +39,7 @@ public class NormalPostController {
     )
     @GetMapping("/{memberId}/by-member")
     public List<PostResponseDto> getPostsByMember(@PathVariable Long memberId, @RequestParam(defaultValue = "1") int page, Authentication authentication) {
-        return normalPostUseCase.getPostsByMember(memberId, page, AuthUtil.getEmail(authentication));
+        return normalPostUseCase.getPostsByMember(memberId, page, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -47,7 +47,7 @@ public class NormalPostController {
     )
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CreatePostResponseDto createPost(@ModelAttribute @Validated PostDto createPostDto, Authentication authentication) {
-        return normalPostUseCase.createPost(createPostDto, AuthUtil.getEmail(authentication));
+        return normalPostUseCase.createPost(createPostDto, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -55,7 +55,7 @@ public class NormalPostController {
     )
     @GetMapping("/{postId}")//요청시 댓글까지 한번에 반환. 상세게시물을 보면 무조건 댓글까지 보이게 할거임 그리고 댓글수가 많지않은 커뮤니티라 판단함.
     public GetPostResponseDto getPost(@PathVariable Long postId, Authentication authentication) {
-        return normalPostUseCase.getPost(postId, AuthUtil.getEmail(authentication));
+        return normalPostUseCase.getPost(postId, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -63,7 +63,7 @@ public class NormalPostController {
     )
     @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MessageResponse> updatePost(@PathVariable Long postId, @ModelAttribute @Validated PostDto postDto, Authentication authentication) {
-        normalPostUseCase.updatePost(postId, postDto, AuthUtil.getEmail(authentication));
+        normalPostUseCase.updatePost(postId, postDto, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("수정 되었습니다."));
     }
 
@@ -72,7 +72,7 @@ public class NormalPostController {
     )
     @DeleteMapping("/{postId}")
     public ResponseEntity<MessageResponse> deletePost(@PathVariable Long postId, Authentication authentication) {
-        normalPostUseCase.deletePost(postId, AuthUtil.getEmail(authentication));
+        normalPostUseCase.deletePost(postId, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("삭제 되었습니다."));
     }
 }

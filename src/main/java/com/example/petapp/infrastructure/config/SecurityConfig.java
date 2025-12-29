@@ -12,9 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsUtils;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
-
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -44,10 +41,12 @@ public class SecurityConfig {
                 ).permitAll()
                 .antMatchers("/image/profiles/**", "/image/members/**", "/image/posts/**", "/image/basic/**", "/favicon.ico").permitAll()
                 .mvcMatchers("/ws-stomp/**", "/pub/**", "/sub/**").permitAll()
-                .mvcMatchers("/members/signup", "/members/login", "/members/find-id", "/members/send-email", "/members/verify-code", "/members/reset-password").permitAll()
+                .mvcMatchers("/members/signup", "/members/login", "/members/find-id", "/members/send-email", "/members/verify-code").permitAll()
                 .mvcMatchers("/token").permitAll()
-                .mvcMatchers(GET, "/**").hasAnyRole("USER", "ADMIN")
-                .mvcMatchers(POST, "/**").hasAnyRole("USER", "ADMIN")
+                // 임시 비밀번호 발급 후 비밀번호 변경은 TEMPORARY 권한도 허용
+                .mvcMatchers("/members/reset-password").hasAnyRole("USER", "TEMPORARY")
+                //ROLE_안붙여도 spring security가 자동으로 붙여줌
+                .mvcMatchers("/**").hasAnyRole("USER")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()

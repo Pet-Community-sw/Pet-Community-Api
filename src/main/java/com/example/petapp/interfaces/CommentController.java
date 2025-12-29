@@ -31,7 +31,7 @@ public class CommentController {
     )
     @GetMapping("/{postId}")
     private List<GetCommentsResponseDto> getComments(@PathVariable Long postId, Authentication authentication) {
-        return commentUseCase.getComments(postId, AuthUtil.getEmail(authentication));
+        return commentUseCase.getComments(postId, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -39,7 +39,7 @@ public class CommentController {
     )
     @PostMapping()
     public CreateCommentResponseDto createComment(@RequestBody @Valid CommentDto commentDto, Authentication authentication) {
-        return commentUseCase.createComment(commentDto, AuthUtil.getEmail(authentication));
+        return commentUseCase.createComment(commentDto, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -47,7 +47,7 @@ public class CommentController {
     )
     @DeleteMapping("/{commentId}")
     public ResponseEntity<MessageResponse> deleteComment(@PathVariable Long commentId, Authentication authentication) {
-        commentUseCase.deleteComment(commentId, AuthUtil.getEmail(authentication));
+        commentUseCase.deleteComment(commentId, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("삭제 되었습니다."));
     }
 
@@ -56,7 +56,7 @@ public class CommentController {
     )
     @PutMapping("/{commentId}")//좋아요 개수는 따로하는게 좋을 듯
     public ResponseEntity<MessageResponse> updateComment(@PathVariable Long commentId, @RequestBody @Valid UpdateCommentDto updateCommentDto, Authentication authentication) {
-        commentUseCase.updateComment(commentId, updateCommentDto, AuthUtil.getEmail(authentication));
+        commentUseCase.updateComment(commentId, updateCommentDto, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("수정 되었습니다."));
     }
 }
