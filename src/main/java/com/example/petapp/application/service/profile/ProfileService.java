@@ -17,7 +17,6 @@ import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.petbreed.model.PetBreed;
 import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.interfaces.exception.ConflictException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,11 +37,9 @@ public class ProfileService implements ProfileUseCase {
 
     @Transactional//accesstoken 수정 필요 이름이 같은지 확인해야됨.
     @Override
-    public CreateProfileResponseDto createProfile(ProfileDto profileDto, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
-        if (profileRepository.count(member) >= 4) {
-            throw new ConflictException("프로필은 최대 4개 입니다.");
-        }
+    public CreateProfileResponseDto createProfile(ProfileDto profileDto, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
+        member.checkProfileCount();
         PetBreed petBreed = petBreedQueryUseCase.findOrThrow(profileDto.getPetBreedId());
 
         String imageFileName = storagePort.uploadFile(profileDto.getPetImageUrl(), FileKind.PROFILE);
@@ -56,8 +53,8 @@ public class ProfileService implements ProfileUseCase {
 
     @Transactional(readOnly = true)
     @Override
-    public List<ProfileListResponseDto> getProfiles(String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public List<ProfileListResponseDto> getProfiles(Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         List<Profile> profiles = profileRepository.findList(member);
         return profiles.stream()
                 .map(ProfileMapper::toProfileListResponseDto)
@@ -66,8 +63,8 @@ public class ProfileService implements ProfileUseCase {
 
     @Transactional(readOnly = true)
     @Override
-    public GetProfileResponseDto getProfile(Long profileId, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public GetProfileResponseDto getProfile(Long profileId, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
         return ProfileMapper.toGetProfileResponseDto(profile, member);
     }
@@ -75,8 +72,8 @@ public class ProfileService implements ProfileUseCase {
 
     @Transactional
     @Override
-    public void updateProfile(Long profileId, ProfileDto profileDto, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public void updateProfile(Long profileId, ProfileDto profileDto, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
         PetBreed petBreed = petBreedQueryUseCase.findOrThrow(profileDto.getPetBreedId());
 
@@ -88,8 +85,8 @@ public class ProfileService implements ProfileUseCase {
 
     @Transactional
     @Override
-    public void deleteProfile(Long profileId, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public void deleteProfile(Long profileId, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
         member.validateProfile(member, profile.getMember());
         profileRepository.delete(profile);
@@ -97,8 +94,8 @@ public class ProfileService implements ProfileUseCase {
 
     @Transactional
     @Override
-    public AccessTokenByProfileIdResponseDto accessTokenByProfile(String accessToken, Long profileId, String email) {//요청했을 당시 토큰을 redis에 저장시켜서 이전 토큰으로 요청 시 인증이 안되게 끔 해야됨.
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public AccessTokenByProfileIdResponseDto accessTokenByProfile(String accessToken, Long profileId, Long id) {//요청했을 당시 토큰을 redis에 저장시켜서 이전 토큰으로 요청 시 인증이 안되게 끔 해야됨.
+        Member member = memberQueryUseCase.findOrThrow(id);
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
         member.validateProfile(member, profile.getMember());
         String newAccessToken = tokenUseCase.newAccessTokenByProfile(accessToken, member, profileId);

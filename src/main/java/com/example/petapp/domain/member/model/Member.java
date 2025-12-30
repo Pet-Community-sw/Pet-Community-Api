@@ -90,4 +90,10 @@ public class Member extends BaseEntity {//수정 필요
             throw new ForbiddenException("권한이 없습니다.");
         }
     }
+
+    public void checkProfileCount() {
+        if (profiles.size() >= 4) {
+            throw new IllegalStateException("프로필은 최대 4개 입니다.");
+        }
+    }
 }

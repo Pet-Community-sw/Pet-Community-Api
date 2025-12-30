@@ -8,8 +8,5 @@ import java.util.List;
 
 public interface JpaProfileRepository extends JpaRepository<Profile, Long> {
     List<Profile> findByMember(Member member);
-
-    Long countByMember(Member member);
-
 }
 

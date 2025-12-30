@@ -19,12 +19,7 @@ public class ProfileRepositoryImpl implements ProfileRepository {
     public List<Profile> findList(Member member) {
         return repository.findByMember(member);
     }
-
-    @Override
-    public Long count(Member member) {
-        return repository.countByMember(member);
-    }
-
+    
     @Override
     public Optional<Profile> find(Long id) {
         return repository.findById(id);

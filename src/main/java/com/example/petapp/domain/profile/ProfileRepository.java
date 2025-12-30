@@ -9,9 +9,7 @@ import java.util.Optional;
 public interface ProfileRepository {
 
     List<Profile> findList(Member member);
-
-    Long count(Member member);
-
+    
     Optional<Profile> find(Long id);
 
     Profile save(Profile profile);

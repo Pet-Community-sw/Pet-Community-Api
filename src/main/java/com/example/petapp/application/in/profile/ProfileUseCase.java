@@ -9,15 +9,15 @@ import com.example.petapp.application.in.profile.dto.response.ProfileListRespons
 import java.util.List;
 
 public interface ProfileUseCase {
-    CreateProfileResponseDto createProfile(ProfileDto addProfileDto, String email);
+    CreateProfileResponseDto createProfile(ProfileDto addProfileDto, Long id);
 
-    List<ProfileListResponseDto> getProfiles(String email);
+    List<ProfileListResponseDto> getProfiles(Long id);
 
-    GetProfileResponseDto getProfile(Long profileId, String email);
+    GetProfileResponseDto getProfile(Long profileId, Long id);
 
-    void updateProfile(Long profileId, ProfileDto addProfileDto, String email);
+    void updateProfile(Long profileId, ProfileDto addProfileDto, Long id);
 
-    void deleteProfile(Long profileId, String email);
+    void deleteProfile(Long profileId, Long id);
 
-    AccessTokenByProfileIdResponseDto accessTokenByProfile(String accessToken, Long profileId, String email);
+    AccessTokenByProfileIdResponseDto accessTokenByProfile(String accessToken, Long profileId, Long id);
 }
