@@ -33,7 +33,7 @@ public class JwtTokenizer {
 
     public MemberInfo getInfo(TokenType tokenType, String token) {
         Claims claims = parseToken(tokenType, token);
-        Long memberId = claims.getSubject() != null ? ((Number) claims.get("memberId")).longValue() : null;
+        Long memberId = Long.valueOf(claims.getSubject());
         Long profileId = claims.get("profileId") != null ? ((Number) claims.get("profileId")).longValue() : null;
 
         return MemberInfo.builder()
@@ -91,6 +91,7 @@ public class JwtTokenizer {
                     .getBody();
 
         } catch (Exception e) {
+            log.error("토큰 파싱 에러: {}", e.getMessage());
             throw new UnAuthorizedException("토큰 파싱 에러");//만료된 토큰도 파싱 에러 남.
         }
     }

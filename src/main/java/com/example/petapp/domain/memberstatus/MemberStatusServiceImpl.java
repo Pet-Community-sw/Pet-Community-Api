@@ -14,6 +14,7 @@ public class MemberStatusServiceImpl implements MemberStatusService {
     private final MemberQueryUseCase useCase;
     private final AppOnlineCachePort port;
 
+    //todo : connect에서 처리
     @Override
     public MessageResponse updateMemberStatus(String email) {
         Member member = useCase.findOrThrow(email);
