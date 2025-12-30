@@ -32,8 +32,8 @@ public class NotificationService implements NotificationUseCase {
 
     @Transactional(readOnly = true)
     @Override
-    public List<NotificationListDto> getList(String email) {//몇분 전 추가해야할듯.
-        return notificationsCachePort.getList(useCase.findOrThrow(email).getId());
+    public List<NotificationListDto> getList(Long id) {//몇분 전 추가해야할듯.
+        return notificationsCachePort.getList(useCase.findOrThrow(id).getId());
     }
 
     /*

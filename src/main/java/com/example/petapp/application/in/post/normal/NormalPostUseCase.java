@@ -9,15 +9,15 @@ import java.util.List;
 
 public interface NormalPostUseCase {
 
-    List<PostResponseDto> getPosts(int page, String email);
+    List<PostResponseDto> getPosts(int page, Long id);
 
-    CreatePostResponseDto createPost(PostDto createPostDto, String email);
+    CreatePostResponseDto createPost(PostDto createPostDto, Long id);
 
-    GetPostResponseDto getPost(Long postId, String email);
+    GetPostResponseDto getPost(Long postId, Long id);
 
-    void deletePost(Long postId, String email);
+    void deletePost(Long postId, Long id);
 
-    void updatePost(Long postId, PostDto postDto, String email);
+    void updatePost(Long postId, PostDto postDto, Long id);
 
-    List<PostResponseDto> getPostsByMember(Long memberId, int page, String email);
+    List<PostResponseDto> getPostsByMember(Long memberId, int page, Long id);
 }

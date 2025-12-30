@@ -32,21 +32,21 @@ public class NormalPostService implements NormalPostUseCase {
     private final MemberQueryUseCase memberQueryUseCase;
     private final LikeQueryUseCase likeQueryUseCase;
     private final StoragePort storagePort;
-    
+
 
     @Transactional(readOnly = true)
     @Override
-    public List<PostResponseDto> getPosts(int page, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public List<PostResponseDto> getPosts(int page, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "id"));
         List<NormalPost> normalPosts = postQueryUseCase.findList(pageRequest).getContent();
         return NormalPostMapper.toPostListResponseDto(normalPosts, likeQueryUseCase.getCountMap(normalPosts), member);
     }
 
     @Override
-    public List<PostResponseDto> getPostsByMember(Long memberId, int page, String email) {
+    public List<PostResponseDto> getPostsByMember(Long memberId, int page, Long id) {
         memberQueryUseCase.findOrThrow(memberId);
-        Member member = memberQueryUseCase.findOrThrow(email);
+        Member member = memberQueryUseCase.findOrThrow(id);
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "id"));
         List<NormalPost> normalPosts = postQueryUseCase.findList(memberId, pageRequest).getContent();
         return NormalPostMapper.toPostListResponseDto(normalPosts, likeQueryUseCase.getCountMap(normalPosts), member);
@@ -54,8 +54,8 @@ public class NormalPostService implements NormalPostUseCase {
 
     @Transactional
     @Override
-    public GetPostResponseDto getPost(Long postId, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public GetPostResponseDto getPost(Long postId, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         NormalPost normalPost = postQueryUseCase.findOrThrow(postId);
         postRepository.incrementViewCount(normalPost.getId());
         return NormalPostMapper.toGetPostResponseDto(normalPost, member, likeQueryUseCase.countByPost(normalPost), likeQueryUseCase.exist(normalPost, member));
@@ -63,8 +63,8 @@ public class NormalPostService implements NormalPostUseCase {
 
     @Transactional
     @Override
-    public CreatePostResponseDto createPost(PostDto createPostDto, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public CreatePostResponseDto createPost(PostDto createPostDto, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         String imageFileName = storagePort.uploadFile(createPostDto.getPostImageFile(), FileKind.POST);
         NormalPost normalPost = NormalPostMapper.toEntity(createPostDto, imageFileName, member);
         NormalPost savedPost = postRepository.save(normalPost);
@@ -73,8 +73,8 @@ public class NormalPostService implements NormalPostUseCase {
 
     @Transactional
     @Override
-    public void deletePost(Long postId, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public void deletePost(Long postId, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         NormalPost normalPost = postQueryUseCase.findOrThrow(postId);
         normalPost.validateMember(member);
         postRepository.delete(postId);
@@ -82,8 +82,8 @@ public class NormalPostService implements NormalPostUseCase {
 
     @Transactional
     @Override
-    public void updatePost(Long postId, PostDto updatePostDto, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public void updatePost(Long postId, PostDto updatePostDto, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         NormalPost normalPost = postQueryUseCase.findOrThrow(postId);
         normalPost.validateMember(member);
         normalPost.updateNormalPost(storagePort.uploadFile(updatePostDto.getPostImageFile(), FileKind.POST), updatePostDto.getTitle(), updatePostDto.getContent());

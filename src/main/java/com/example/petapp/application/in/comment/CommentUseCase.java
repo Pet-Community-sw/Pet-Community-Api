@@ -8,11 +8,11 @@ import com.example.petapp.application.in.comment.dto.response.GetCommentsRespons
 import java.util.List;
 
 public interface CommentUseCase {
-    CreateCommentResponseDto createComment(CommentDto commentDto, String email);
+    CreateCommentResponseDto createComment(CommentDto commentDto, Long id);
 
-    void deleteComment(Long commentId, String email);
+    void deleteComment(Long commentId, Long id);
 
-    void updateComment(Long commentId, UpdateCommentDto updateCommentDto, String email);
+    void updateComment(Long commentId, UpdateCommentDto updateCommentDto, Long id);
 
-    List<GetCommentsResponseDto> getComments(Long postId, String email);
+    List<GetCommentsResponseDto> getComments(Long postId, Long id);
 }

@@ -16,21 +16,21 @@ import java.util.Set;
 public interface DelegateWalkPostUseCase {
     CreateDelegateWalkPostResponseDto createDelegateWalkPost(CreateDelegateWalkPostDto createDelegateWalkPostDto, Long profileId);
 
-    ApplyToDelegateWalkPostResponseDto applyToDelegateWalkPost(Long delegateWalkPostId, String content, String email);
+    ApplyToDelegateWalkPostResponseDto applyToDelegateWalkPost(Long delegateWalkPostId, String content, Long id);
 
-    List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByLocation(Double minLongitude, Double minLatitude, Double maxLongitude, Double maxLatitude, int page, String email);
+    List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByLocation(Double minLongitude, Double minLatitude, Double maxLongitude, Double maxLatitude, int page, Long id);
 
-    List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByPlace(Double longitude, Double latitude, int page, String email);
+    List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByPlace(Double longitude, Double latitude, int page, Long id);
 
-    GetDelegatePostResponseDto getDelegateWalkPost(Long delegateWalkPostId, String email);
+    GetDelegatePostResponseDto getDelegateWalkPost(Long delegateWalkPostId, Long id);
 
-    void updateDelegateWalkPost(Long delegateWalkPostId, UpdateDelegateWalkPostDto updateDelegateWalkPostDto, String email);
+    void updateDelegateWalkPost(Long delegateWalkPostId, UpdateDelegateWalkPostDto updateDelegateWalkPostDto, Long id);
 
-    void deleteDelegateWalkPost(Long delegateWalkPostId, String email);
+    void deleteDelegateWalkPost(Long delegateWalkPostId, Long id);
 
     Set<Applicant> getApplicants(Long delegateWalkPostId, Long profileId);
 
-    CreateChatRoomResponseDto selectApplicant(Long delegateWalkPostId, Long memberId, String email);
+    CreateChatRoomResponseDto selectApplicant(Long delegateWalkPostId, Long memberId, Long id);
 
     CreateWalkRecordResponseDto grantAuthorize(Long delegateWalkPostId, Long profileId);
 }

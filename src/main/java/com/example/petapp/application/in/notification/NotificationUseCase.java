@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface NotificationUseCase {
 
-    List<NotificationListDto> getList(String email);
+    List<NotificationListDto> getList(Long id);
 
     void send(Member member, String message);
 

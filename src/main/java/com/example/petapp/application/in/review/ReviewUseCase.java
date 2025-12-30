@@ -7,15 +7,15 @@ import com.example.petapp.application.in.review.dto.response.GetReviewListRespon
 import com.example.petapp.application.in.review.dto.response.GetReviewResponseDto;
 
 public interface ReviewUseCase {
-    CreateReviewResponseDto createReview(CreateReviewDto createReviewDto, String email);
+    CreateReviewResponseDto createReview(CreateReviewDto createReviewDto, Long id);
 
-    GetReviewResponseDto getReview(Long reviewId, String email);
+    GetReviewResponseDto getReview(Long reviewId, Long id);
 
-    void updateReview(Long reviewId, UpdateReviewDto updateReviewDto, String email);
+    void updateReview(Long reviewId, UpdateReviewDto updateReviewDto, Long id);
 
-    void deleteReview(Long reviewId, String email);
+    void deleteReview(Long reviewId, Long id);
 
-    GetReviewListResponseDto getReviewListByMember(Long memberId, String email);
+    GetReviewListResponseDto getReviewListByMember(Long memberId, Long id);
 
-    GetReviewListResponseDto getReviewListByProfile(Long profileId, String email);
+    GetReviewListResponseDto getReviewListByProfile(Long profileId, Long id);
 }

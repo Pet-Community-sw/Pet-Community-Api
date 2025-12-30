@@ -49,7 +49,7 @@ public class WalkRecordController {
     )
     @PutMapping("/{walkRecordId}/finish")
     public ResponseEntity<MessageResponse> updateFinishWalkRecord(@PathVariable Long walkRecordId, Authentication authentication) {
-        walkRecordUseCase.FinishWalkRecord(walkRecordId, AuthUtil.getMemberId(authentication));
+        walkRecordUseCase.finishWalkRecord(walkRecordId, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("finish"));
     }
 }

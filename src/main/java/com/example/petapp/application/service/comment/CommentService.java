@@ -32,8 +32,8 @@ public class CommentService implements CommentUseCase {
 
     @Transactional(readOnly = true)
     @Override
-    public List<GetCommentsResponseDto> getComments(Long postId, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public List<GetCommentsResponseDto> getComments(Long postId, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         Post post = postQueryUseCase.findOrThrow(postId);
 
         return CommentMapper.toGetCommentsResponseDtos((Commentable) post, member);
@@ -42,8 +42,8 @@ public class CommentService implements CommentUseCase {
     @Notification(recipient = "@queryService.findByPost(#p0.postId).member", message = "@queryService.findByMember(#1).name + '님이 회원님의 게시물에 댓글을 남겼습니다.'")
     @Transactional
     @Override
-    public CreateCommentResponseDto createComment(CommentDto commentDto, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public CreateCommentResponseDto createComment(CommentDto commentDto, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         Post post = postQueryUseCase.findOrThrow(commentDto.getPostId());
 
         Comment comment = CommentMapper.toEntity(commentDto, post, member);
@@ -54,8 +54,8 @@ public class CommentService implements CommentUseCase {
 
     @Transactional
     @Override
-    public void deleteComment(Long commentId, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public void deleteComment(Long commentId, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         Comment comment = commentQueryUseCase.findOrThrow(commentId);
 
         comment.validated(member);
@@ -64,8 +64,8 @@ public class CommentService implements CommentUseCase {
 
     @Transactional
     @Override
-    public void updateComment(Long commentId, UpdateCommentDto updateCommentDto, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public void updateComment(Long commentId, UpdateCommentDto updateCommentDto, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         Comment comment = commentQueryUseCase.findOrThrow(commentId);
 
         comment.validated(member);

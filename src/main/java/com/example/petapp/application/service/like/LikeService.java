@@ -34,8 +34,8 @@ public class LikeService implements LikeUseCase {
     @Notification(recipient = "@queryServiceImpl.findByPost(#p0).member", message = "@queryServiceImpl.findByMember(#p1).name + '님이 회원님의 게시물을 좋아합니다.'", condition = "#result == true")
     @Transactional
     @Override
-    public boolean createAndDelete(Long postId, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public boolean createAndDelete(Long postId, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         Post post = postQueryUseCase.findOrThrow(postId);
         Optional<Like> existingLike = post.getLikes().stream().filter(like -> like.getMember().equals(member)).findFirst();
         return existingLike.map(like -> delete(like, post)).orElseGet(() -> create(post, member));

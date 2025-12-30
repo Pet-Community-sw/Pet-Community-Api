@@ -8,12 +8,12 @@ import com.example.petapp.domain.post.model.DelegateWalkPost;
 public interface WalkRecordUseCase {
     CreateWalkRecordResponseDto createWalkRecord(DelegateWalkPost delegateWalkPost);
 
-    GetWalkRecordResponseDto getWalkRecord(Long walkRecordId, String email);
+    GetWalkRecordResponseDto getWalkRecord(Long walkRecordId, Long id);
 
-    void updateStartWalkRecord(Long walkRecordId, String email);
+    void updateStartWalkRecord(Long walkRecordId, Long id);
 
-    void FinishWalkRecord(Long walkRecordId, String email);
+    void finishWalkRecord(Long walkRecordId, Long id);
 
-    GetWalkRecordLocationResponseDto getWalkRecordLocation(Long walkRecordId, String email);
+    GetWalkRecordLocationResponseDto getWalkRecordLocation(Long walkRecordId, Long id);
 
 }

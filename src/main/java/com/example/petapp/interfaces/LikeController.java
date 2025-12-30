@@ -14,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * todo:좋아요를 따로 둬야할지? 고민
+ */
 @Tag(name = "Like")
 @RestController
 @RequestMapping("/likes")

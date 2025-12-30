@@ -41,15 +41,15 @@ public class WalkRecordService implements WalkRecordUseCase {
 
     @Transactional(readOnly = true)
     @Override
-    public GetWalkRecordResponseDto getWalkRecord(Long walkRecordId, String email) {
+    public GetWalkRecordResponseDto getWalkRecord(Long walkRecordId, Long id) {
         WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
         return WalkRecordMapper.toGetWalkRecordResponseDto(walkRecord);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public GetWalkRecordLocationResponseDto getWalkRecordLocation(Long walkRecordId, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public GetWalkRecordLocationResponseDto getWalkRecordLocation(Long walkRecordId, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
         walkRecord.validateMember(member);
         return new GetWalkRecordLocationResponseDto(port.find(walkRecordId));
@@ -59,8 +59,8 @@ public class WalkRecordService implements WalkRecordUseCase {
             message = "@queryServiceImpl.findByWalkRecord(#p0).member.name+'님이 산책을 시작하였습니다.'")
     @Transactional
     @Override
-    public void updateStartWalkRecord(Long walkRecordId, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public void updateStartWalkRecord(Long walkRecordId, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
         walkRecord.validateMember(member.getId());
         walkRecord.updateWalkStatus(WalkRecord.WalkStatus.START);
@@ -70,8 +70,8 @@ public class WalkRecordService implements WalkRecordUseCase {
             message = "@queryServiceImpl.findByWalkRecord(#p0).member.name+'님이 산책을 마쳤습니다. 후기를 작성해주세요.'")
     @Transactional//분리를 어떻게 시키면 졸을까
     @Override
-    public void FinishWalkRecord(Long walkRecordId, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public void finishWalkRecord(Long walkRecordId, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
         walkRecord.validateMember(member.getId());
         walkRecord.updateWalkStatus(WalkRecord.WalkStatus.FINISH);

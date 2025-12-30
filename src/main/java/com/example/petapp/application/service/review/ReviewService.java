@@ -36,8 +36,8 @@ public class ReviewService implements ReviewUseCase {
 
     @Transactional
     @Override
-    public CreateReviewResponseDto createReview(CreateReviewDto createReviewDto, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public CreateReviewResponseDto createReview(CreateReviewDto createReviewDto, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(createReviewDto.getWalkRecordId());
 
         walkRecord.validatedForCreate(member);
@@ -47,17 +47,17 @@ public class ReviewService implements ReviewUseCase {
 
     @Transactional(readOnly = true)
     @Override
-    public GetReviewListResponseDto getReviewListByMember(Long memberId, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
-        Member ownerMember = memberQueryUseCase.findOrThrow(email);
+    public GetReviewListResponseDto getReviewListByMember(Long memberId, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
+        Member ownerMember = memberQueryUseCase.findOrThrow(id);
         List<Review> reviewList = reviewRepository.findAllByMemberAndReviewType(member, ReviewType.PROFILE_TO_MEMBER);
         return ReviewMapper.toGetReviewListResponseDto(reviewList, ownerMember.getId(), ownerMember.getName(), ownerMember.getMemberImageUrl(), ReviewMapper.toGetReviewList(reviewList, member));
     }
 
     @Transactional(readOnly = true)
     @Override
-    public GetReviewListResponseDto getReviewListByProfile(Long profileId, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public GetReviewListResponseDto getReviewListByProfile(Long profileId, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
         List<Review> reviewList = reviewRepository.findAllByProfileAndReviewType(profile, ReviewType.MEMBER_TO_PROFILE);
         return ReviewMapper.toGetReviewListResponseDto(reviewList, profile.getId(), profile.getPetName(), profile.getPetImageUrl(), ReviewMapper.toGetReviewList(reviewList, member));
@@ -66,29 +66,29 @@ public class ReviewService implements ReviewUseCase {
 
     @Transactional(readOnly = true)
     @Override
-    public GetReviewResponseDto getReview(Long reviewId, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    public GetReviewResponseDto getReview(Long reviewId, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         Review review = reviewQueryUseCase.findOrThrow(reviewId);
         return ReviewMapper.toGetReviewResponseDto(review, member);
     }
 
     @Transactional
     @Override
-    public void updateReview(Long reviewId, UpdateReviewDto updateReviewDto, String email) {
-        Review review = findReviewWithAuth(reviewId, email);
+    public void updateReview(Long reviewId, UpdateReviewDto updateReviewDto, Long id) {
+        Review review = findReviewWithAuth(reviewId, id);
         review.update(updateReviewDto);
     }
 
     @Transactional
     @Override
-    public void deleteReview(Long reviewId, String email) {
-        Review review = findReviewWithAuth(reviewId, email);
+    public void deleteReview(Long reviewId, Long id) {
+        Review review = findReviewWithAuth(reviewId, id);
 
         reviewRepository.delete(review.getId());
     }
 
-    private Review findReviewWithAuth(Long reviewId, String email) {
-        Member member = memberQueryUseCase.findOrThrow(email);
+    private Review findReviewWithAuth(Long reviewId, Long id) {
+        Member member = memberQueryUseCase.findOrThrow(id);
         Review review = reviewQueryUseCase.findOrThrow(reviewId);
 
         review.validated(member);
