@@ -46,6 +46,7 @@ public class SecurityConfig {
                 // 임시 비밀번호 발급 후 비밀번호 변경은 TEMPORARY 권한도 허용
                 .mvcMatchers("/members/reset-password").hasAnyRole("USER", "TEMPORARY")
                 //ROLE_안붙여도 spring security가 자동으로 붙여줌
+                //여기서 설정 후 @PreAuthorize 설정 불가능 config에서 막히는게 우선순위가 더 높음
                 .mvcMatchers("/**").hasAnyRole("USER")
                 .anyRequest().authenticated()
                 .and()
