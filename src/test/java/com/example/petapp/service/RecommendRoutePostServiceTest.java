@@ -57,7 +57,7 @@
 //    @BeforeEach
 //    void setUp() {
 //        member = Member.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .name("sunjae")
 //                .email("chltjswo")
 //                .build();

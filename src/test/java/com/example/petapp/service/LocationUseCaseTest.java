@@ -46,20 +46,20 @@
 //    void test1() {
 //        // given
 //        Long walkRecordId = 1L;
-//        Long memberId = 2L;
+//        Long id = 2L;
 //        LocationMessage message = LocationMessage.builder()
 //                .walkRecordId(walkRecordId)
 //                .longitude(127.0)
 //                .latitude(37.0)
 //                .build();
 //
-//        Member walker = Member.builder().memberId(memberId).name("초이선자이").build();
-//        Member owner = Member.builder().memberId(200L).name("작성자").build();
+//        Member walker = Member.builder().id(id).name("초이선자이").build();
+//        Member owner = Member.builder().id(200L).name("작성자").build();
 //
 //        Profile profile = Profile.builder().member(owner).build();
 //
 //        DelegateWalkPost delegateWalkPost = DelegateWalkPost.builder()
-//                .selectedApplicantMemberId(memberId)
+//                .selectedApplicantMemberId(id)
 //                .allowedRadiusMeters(10)
 //                .profile(profile)
 //                .build();
@@ -91,7 +91,7 @@
 //            haversineUtilStatic.when(() -> HaversineUtil.calculateDistanceInMeters(37.0, 127.0, 37.0005, 127.0005)).thenReturn(15.0);
 //
 //            // when
-//            locationServiceImpl.sendLocation(message, memberId.toString());
+//            locationServiceImpl.sendLocation(message, id.toString());
 //
 //            // then
 //            verify(sendNotificationUtil).sendNotification(eq(owner), contains("벗어났습니다"));
@@ -106,12 +106,12 @@
 //    void test2() {
 //        // given
 //        Long walkRecordId = 1L;
-//        String memberId = "100";
+//        String id = "100";
 //        double baseLat = 37.0, baseLon = 127.0;
 //        double walkerLat = 37.001, walkerLon = 127.001;
 //
-//        Member walker = Member.builder().memberId(100L).name("산책자").build();
-//        Member owner = Member.builder().memberId(200L).name("보호자").build();
+//        Member walker = Member.builder().id(100L).name("산책자").build();
+//        Member owner = Member.builder().id(200L).name("보호자").build();
 //        Profile profile = Profile.builder().member(owner).build();
 //
 //        DelegateWalkPost post = DelegateWalkPost.builder()
@@ -153,7 +153,7 @@
 //            haversineUtilStatic.when(() -> HaversineUtil.calculateDistanceInMeters(baseLat, baseLon, walkerLat, walkerLon)).thenReturn(60.0);
 //
 //            // when
-//            locationServiceImpl.sendLocation(message, memberId);
+//            locationServiceImpl.sendLocation(message, id);
 //
 //            // then
 //            verify(sendNotificationUtil).sendNotification(eq(owner), contains("벗어났습니다"));
@@ -184,7 +184,7 @@
 //    @DisplayName("sendLocation_권한이 없는 경우_실패")
 //    void test4() {
 //        // given
-//        String memberId = "2";
+//        String id = "2";
 //
 //        LocationMessage locationMessage = LocationMessage.builder()
 //                .walkRecordId(1L)
@@ -201,7 +201,7 @@
 //        when(walkRecordRepository.findById(locationMessage.getWalkRecordId())).thenReturn(Optional.of(walkRecord));
 //
 //        //when & then
-//        assertThatThrownBy(() -> locationServiceImpl.sendLocation(locationMessage, memberId))
+//        assertThatThrownBy(() -> locationServiceImpl.sendLocation(locationMessage, id))
 //                .isInstanceOf(ForbiddenException.class)
 //                .hasMessage("접근 권한 없음.");
 //    }
@@ -211,10 +211,10 @@
 //    void test5() {
 //        // given
 //        Long walkRecordId = 1L;
-//        String memberId = "100";
+//        String id = "100";
 //
-//        Member walker = Member.builder().memberId(100L).build();
-//        Member owner = Member.builder().memberId(200L).build();
+//        Member walker = Member.builder().id(100L).build();
+//        Member owner = Member.builder().id(200L).build();
 //        Profile profile = Profile.builder().member(owner).build();
 //        DelegateWalkPost post = DelegateWalkPost.builder()
 //                .selectedApplicantMemberId(100L)
@@ -235,7 +235,7 @@
 //        when(walkRecordRepository.findById(walkRecordId)).thenReturn(Optional.of(walkRecord));
 //
 //        // when & then
-//        assertThatThrownBy(() -> locationServiceImpl.sendLocation(message, memberId))
+//        assertThatThrownBy(() -> locationServiceImpl.sendLocation(message, id))
 //                .isInstanceOf(ForbiddenException.class)
 //                .hasMessage("start 권한 없음.");
 //    }

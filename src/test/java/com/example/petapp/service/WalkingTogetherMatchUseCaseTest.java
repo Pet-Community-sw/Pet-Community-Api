@@ -158,7 +158,7 @@
 //
 //        RecommendRoutePost recommendRoutePost = RecommendRoutePost.builder()
 //                .postId(recommendRoutePostId)
-//                .member(Member.builder().memberId(1L).build())
+//                .member(Member.builder().id(1L).build())
 //                .content(new Content("산책길추천 1", "좋은 산책길"))
 //                .build();
 //

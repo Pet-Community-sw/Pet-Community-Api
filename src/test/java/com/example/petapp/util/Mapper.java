@@ -6,7 +6,7 @@
 //public class Mapper {
 //    public static Member createFakeMember() {
 //        return Member.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .name("최선재")
 //                .email("chltjswo789@naver.com")
 //                .password("fpdlswj365!")
@@ -15,9 +15,9 @@
 //                .build();
 //    }
 //
-//    public static Member createFakeMember(Long memberId, String email) {
+//    public static Member createFakeMember(Long id, String email) {
 //        return Member.builder()
-//                .memberId(memberId)
+//                .id(id)
 //                .name("최선재")
 //                .email(email)
 //                .password("fpdlswj365!")

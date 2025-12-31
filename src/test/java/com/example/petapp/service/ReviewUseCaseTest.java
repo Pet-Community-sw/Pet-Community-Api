@@ -62,7 +62,7 @@
 //                .build();
 //
 //        Member member = Member.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .build();
 //
 //        Profile profile = Profile.builder()
@@ -140,11 +140,11 @@
 //                .build();
 //
 //        Member member = Member.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .build();
 //
 //        Member fakeMember = Member.builder()
-//                .memberId(2L)
+//                .id(2L)
 //                .build();
 //
 //        when(walkRecordRepository.findById(anyLong())).thenReturn(Optional.of(WalkRecord.builder().walkStatus(WalkRecord.WalkStatus.FINISH).member(member).build()));
@@ -164,12 +164,12 @@
 //        String email = "test";
 //
 //        Member loginMember = Member.builder()
-//                .memberId(2L)
+//                .id(2L)
 //                .email(email)
 //                .build();
 //
 //        Member targetMember = Member.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .name("리뷰 대상자")
 //                .memberImageUrl("target-image.png")
 //                .build();
@@ -255,7 +255,7 @@
 //        Long reviewId = 1L;
 //
 //        Member member = Member.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .email(email)
 //                .build();
 //
@@ -293,7 +293,7 @@
 //        // given
 //        String email = "test";
 //        Long reviewId = 1L;
-//        Member member = Member.builder().memberId(1L).email(email).build();
+//        Member member = Member.builder().id(1L).email(email).build();
 //
 //        when(memberRepository.findByEmail(email)).thenReturn(Optional.of(member));
 //        when(reviewRepository.findById(reviewId)).thenReturn(Optional.empty());
@@ -312,7 +312,7 @@
 //        Long reviewId = 1L;
 //
 //        Member member = Member.builder()
-//                .memberId(10L)
+//                .id(10L)
 //                .email(email)
 //                .build();
 //
@@ -359,9 +359,9 @@
 //    @DisplayName("updateReview_권한이 없는 경우_실패")
 //    void test12() {
 //        //given
-//        Member member = Member.builder().memberId(1L).build();
+//        Member member = Member.builder().id(1L).build();
 //
-//        Member fakeMember = Member.builder().memberId(2L).build();
+//        Member fakeMember = Member.builder().id(2L).build();
 //
 //        Review review = Review.builder()
 //                .member(fakeMember)
@@ -384,7 +384,7 @@
 //        String email = "test";
 //        Long reviewId = 1L;
 //
-//        Member member = Member.builder().memberId(1L).email(email).build();
+//        Member member = Member.builder().id(1L).email(email).build();
 //
 //        Review review = Review.builder()
 //                .reviewId(reviewId)
@@ -419,9 +419,9 @@
 //    @DisplayName("deleteReview_권한이 없는 경우_실패")
 //    void test16() {
 //        //given
-//        Member member = Member.builder().memberId(1L).build();
+//        Member member = Member.builder().id(1L).build();
 //
-//        Member fakeMember = Member.builder().memberId(2L).build();
+//        Member fakeMember = Member.builder().id(2L).build();
 //
 //        Review review = Review.builder()
 //                .member(fakeMember)

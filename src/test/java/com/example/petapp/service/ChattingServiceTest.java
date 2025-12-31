@@ -102,14 +102,14 @@
 //                .profileId(senderId)
 //                .petName("멍멍이")
 //                .petImageUrl("url")
-//                .member(Member.builder().memberId(100L).build())
+//                .member(Member.builder().id(100L).build())
 //                .build();
 //
 //        Profile anotherProfile = Profile.builder()
 //                .profileId(senderId)
 //                .petName("멍멍이")
 //                .petImageUrl("url")
-//                .member(Member.builder().memberId(10L).build())
+//                .member(Member.builder().id(10L).build())
 //                .build();
 //
 //        ChatRoom room = ChatRoom.builder()
@@ -143,7 +143,7 @@
 //                .messageType(ChatMessage.MessageType.ENTER)
 //                .build();
 //
-//        Member member = Member.builder().memberId(10L).build();
+//        Member member = Member.builder().id(10L).build();
 //        Profile senderProfile = Profile.builder()
 //                .profileId(senderId)
 //                .petName("초코")

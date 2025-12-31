@@ -70,7 +70,7 @@
 //        // given
 //        Long chatRoomId = 1L;
 //        Long senderId = 10L;
-//        Member member = Member.builder().memberId(20L).build();
+//        Member member = Member.builder().id(20L).build();
 //        Profile senderProfile = Profile.builder().profileId(senderId).petName("초코").member(member).build();
 //
 //        ChatRoom chatRoom = ChatRoom.builder()

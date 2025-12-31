@@ -108,7 +108,7 @@
 //        String email = "test";
 //        Double minLon = 127.0, minLat = 37.0, maxLon = 128.0, maxLat = 38.0;
 //        Member member = Member.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .email(email)
 //                .name("테스트")
 //                .build();
@@ -159,7 +159,7 @@
 //                .petImageUrl("as")
 //                .build();
 //        Member member = Member.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .email(email)
 //                .name("테스터")
 //                .build();
@@ -200,7 +200,7 @@
 //                .petImageUrl("b")
 //                .build();
 //        Member member = Member.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .email(email)
 //                .build();
 //        DelegateWalkPost post = DelegateWalkPost.builder()
@@ -267,11 +267,11 @@
 //                .profileId(1L)
 //                .build();
 //        Applicant applicant = Applicant.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .content("잘 할 수있어용")
 //                .build();
 //        Applicant applicant2 = Applicant.builder()
-//                .memberId(2L)
+//                .id(2L)
 //                .content("잘 할 수 있습니데이")
 //                .build();
 //        Set<Applicant> applicants = new HashSet<>();
@@ -348,12 +348,12 @@
 //        String content = "산책 자신 있어요!";
 //        String email = "test";
 //        Member member = Member.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .email(email)
 //                .build();
 //        Profile fakeProfile = Profile.builder()
 //                .profileId(2L)
-//                .member(Member.builder().memberId(3L).name("게시글주인").build())
+//                .member(Member.builder().id(3L).name("게시글주인").build())
 //                .build();
 //        DelegateWalkPost delegateWalkPost = DelegateWalkPost.builder()
 //                .postId(delegateWalkPostId)
@@ -379,7 +379,7 @@
 //    void test13() {
 //        //given
 //        String email = "test";
-//        when(memberRepository.findByEmail(email)).thenReturn(Optional.ofNullable(Member.builder().memberId(1L).build()));
+//        when(memberRepository.findByEmail(email)).thenReturn(Optional.ofNullable(Member.builder().id(1L).build()));
 //        when(delegateWalkPostRepository.findById(1L)).thenReturn(Optional.empty());
 //        //when & then
 //        assertThatThrownBy(() -> delegateWalkPostServiceImpl.applyToDelegateWalkPost(1L, anyString(), email))
@@ -393,7 +393,7 @@
 //        // given
 //        String email = "test";
 //        Long postId = 1L;
-//        Member member = Member.builder().memberId(10L).email(email).build();
+//        Member member = Member.builder().id(10L).email(email).build();
 //        DelegateWalkPost post = DelegateWalkPost.builder()
 //                .postId(postId)
 //                .status(DelegateWalkStatus.RECRUITING)
@@ -416,9 +416,9 @@
 //        // given
 //        String email = "test";
 //        Long postId = 1L;
-//        Long memberId = 2L;
-//        Member member = Member.builder().memberId(memberId).email(email).build();
-//        Applicant applicant = Applicant.builder().memberId(memberId).content("이전에 지원").build();
+//        Long id = 2L;
+//        Member member = Member.builder().id(id).email(email).build();
+//        Applicant applicant = Applicant.builder().id(id).content("이전에 지원").build();
 //        DelegateWalkPost delegateWalkPost = DelegateWalkPost.builder()
 //                .postId(postId)
 //                .status(DelegateWalkStatus.RECRUITING)
@@ -441,7 +441,7 @@
 //        // given
 //        String email = "test";
 //        Long postId = 1L;
-//        Member member = Member.builder().memberId(10L).email(email).build();
+//        Member member = Member.builder().id(10L).email(email).build();
 //        DelegateWalkPost delegateWalkPost = DelegateWalkPost.builder()
 //                .postId(postId)
 //                .status(DelegateWalkStatus.COMPLETED)
@@ -466,17 +466,17 @@
 //        Long applicantMemberId = 2L;
 //        String email = "test";
 //        Member member = Member.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .build();
 //        Member fakeMember = Member.builder()
-//                .memberId(applicantMemberId)
+//                .id(applicantMemberId)
 //                .build();
 //        Profile profile = Profile.builder()
 //                .profileId(3L)
 //                .member(member)
 //                .build();
 //        Applicant applicant = Applicant.builder()
-//                .memberId(applicantMemberId)
+//                .id(applicantMemberId)
 //                .content("지원합니다!")
 //                .build();
 //        DelegateWalkPost post = DelegateWalkPost.builder()
@@ -520,7 +520,7 @@
 //        Long applicantMemberId = 2L;
 //        String email = "test";
 //        Member member = Member.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .email(email)
 //                .build();
 //        when(memberRepository.findByEmail(email)).thenReturn(Optional.of(member));
@@ -538,15 +538,15 @@
 //        Long applicantMemberId = 2L;
 //        String email = "test";
 //        Member fakeMember = Member.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .email("test")
 //                .build();
 //        Member member = Member.builder()
-//                .memberId(2L)
+//                .id(2L)
 //                .email(email)
 //                .build();
 //        Member applicantMember = Member.builder()
-//                .memberId(applicantMemberId)
+//                .id(applicantMemberId)
 //                .build();
 //        Profile profile = Profile.builder()
 //                .profileId(3L)
@@ -557,7 +557,7 @@
 //                .profile(profile)
 //                .status(DelegateWalkStatus.RECRUITING)
 //                .applicants(new HashSet<>(Set.of(
-//                        Applicant.builder().memberId(applicantMemberId).build()
+//                        Applicant.builder().id(applicantMemberId).build()
 //                )))
 //                .build();
 //        when(memberRepository.findByEmail(email)).thenReturn(Optional.of(member));
@@ -575,11 +575,11 @@
 //        Long applicantMemberId = 2L;
 //        String email = "test";
 //        Member member = Member.builder()
-//                .memberId(3L)
+//                .id(3L)
 //                .email(email)
 //                .build();
 //        Member applicantMember = Member.builder()
-//                .memberId(applicantMemberId)
+//                .id(applicantMemberId)
 //                .email("test").build();
 //        Profile postProfile = Profile.builder()
 //                .profileId(4L)
@@ -606,7 +606,7 @@
 //        String email = "test";
 //        Long delegateWalkPostId = 1L;
 //        Member member = Member.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .build();
 //        Profile profile = Profile.builder()
 //                .profileId(3L)
@@ -654,10 +654,10 @@
 //        String email = "test";
 //        Long delegateWalkPostId = 1L;
 //        Member member = Member.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .build();
 //        Member fakeMember = Member.builder()
-//                .memberId(2L)
+//                .id(2L)
 //                .build();
 //        Profile profile = Profile.builder()
 //                .member(fakeMember)
@@ -680,7 +680,7 @@
 //        String email = "test";
 //        Long delegateWalkPostId = 1L;
 //        Member member = Member.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .build();
 //        Profile profile = Profile.builder()
 //                .profileId(3L)
@@ -720,10 +720,10 @@
 //        String email = "test";
 //        Long delegateWalkPostId = 1L;
 //        Member member = Member.builder()
-//                .memberId(1L)
+//                .id(1L)
 //                .build();
 //        Member fakeMember = Member.builder()
-//                .memberId(2L)
+//                .id(2L)
 //                .build();
 //        Profile profile = Profile.builder()
 //                .member(fakeMember)

@@ -52,7 +52,7 @@
 //        LocalDateTime startDateTime = LocalDateTime.of(2025, 6, 1, 0, 0);
 //        LocalDateTime endDateTime = LocalDateTime.of(2025, 6, 30, 23, 59);
 //
-//        Member member = Member.builder().memberId(10L).email("test").build();
+//        Member member = Member.builder().id(10L).email("test").build();
 //        Profile profile = Profile.builder().profileId(profileId).member(member).build();
 //
 //        WalkingTogetherMatch walkPost = WalkingTogetherMatch.builder()

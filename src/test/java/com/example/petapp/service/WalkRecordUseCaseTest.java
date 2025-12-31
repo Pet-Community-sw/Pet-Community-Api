@@ -62,7 +62,7 @@
 //                .build();
 //
 //        Member member = Member.builder()
-//                .memberId(selectedMemberId)
+//                .id(selectedMemberId)
 //                .email("test")
 //                .build();
 //
@@ -71,7 +71,7 @@
 //                .member(member)
 //                .build();
 //
-//        when(memberRepository.find(delegateWalkPost.getSelectedApplicantMemberId())).thenReturn(Optional.of(Member.builder().memberId(1L).build()));
+//        when(memberRepository.find(delegateWalkPost.getSelectedApplicantMemberId())).thenReturn(Optional.of(Member.builder().id(1L).build()));
 //        try (MockedStatic<WalkRecordMapper> mockedStatic = mockStatic(WalkRecordMapper.class)) {
 //            mockedStatic.when(() -> WalkRecordMapper.toEntity(delegateWalkPost, member)).thenReturn(walkRecord);
 //            when(walkRecordRepository.save(any(WalkRecord.class))).thenReturn(WalkRecord.builder().walkRecordId(100L).build());
@@ -217,8 +217,8 @@
 //        String email = "test";
 //        Long walkRecordId = 1L;
 //
-//        Member member = Member.builder().memberId(1L).build();
-//        Member fakeMember = Member.builder().memberId(2L).build();
+//        Member member = Member.builder().id(1L).build();
+//        Member fakeMember = Member.builder().id(2L).build();
 //
 //        Profile profile = Profile.builder()
 //                .member(fakeMember)
@@ -247,16 +247,16 @@
 //        // given
 //        String email = "test";
 //        Long walkRecordId = 1L;
-//        Long memberId = 2L;
+//        Long id = 2L;
 //
 //        Member member = Member.builder()
-//                .memberId(memberId)
+//                .id(id)
 //                .email(email)
 //                .name("초이선자이")
 //                .build();
 //
 //        Member fakeMember = Member.builder()
-//                .memberId(200L)
+//                .id(200L)
 //                .name("작성자")
 //                .build();
 //
@@ -266,7 +266,7 @@
 //
 //        DelegateWalkPost delegateWalkPost = DelegateWalkPost.builder()
 //                .profile(profile)
-//                .selectedApplicantMemberId(memberId)
+//                .selectedApplicantMemberId(id)
 //                .build();
 //
 //        WalkRecord walkRecord = WalkRecord.builder()
@@ -311,11 +311,11 @@
 //        // given
 //        String email = "test@";
 //        Long walkRecordId = 1L;
-//        Long memberId = 1L;
+//        Long id = 1L;
 //        Long fakeMemberId = 2L;
 //
 //        Member member = Member.builder()
-//                .memberId(memberId)
+//                .id(id)
 //                .build();
 //
 //        DelegateWalkPost delegateWalkPost = DelegateWalkPost.builder()
@@ -341,15 +341,15 @@
 //        // given
 //        Long walkRecordId = 1L;
 //        String email = "test";
-//        Long memberId = 2L;
+//        Long id = 2L;
 //
 //        Member member = Member.builder()
-//                .memberId(memberId)
+//                .id(id)
 //                .name("초이선자이")
 //                .build();
 //
 //        Member fakeMember = Member.builder()
-//                .memberId(20L)
+//                .id(20L)
 //                .build();
 //
 //        Profile profile = Profile.builder()
@@ -358,7 +358,7 @@
 //
 //        DelegateWalkPost delegateWalkPost = DelegateWalkPost.builder()
 //                .profile(profile)
-//                .selectedApplicantMemberId(memberId)
+//                .selectedApplicantMemberId(id)
 //                .build();
 //
 //        WalkRecord walkRecord = WalkRecord.builder()
@@ -414,7 +414,7 @@
 //        String email = "test";
 //        Long walkRecordId = 1L;
 //
-//        Member requester = Member.builder().memberId(1L).build();
+//        Member requester = Member.builder().id(1L).build();
 //
 //        DelegateWalkPost post = DelegateWalkPost.builder()
 //                .selectedApplicantMemberId(2L)

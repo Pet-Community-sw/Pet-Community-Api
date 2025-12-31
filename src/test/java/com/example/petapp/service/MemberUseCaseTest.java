@@ -70,10 +70,10 @@
 //                .build();
 //
 //        when(memberRepository.exist(memberSignDto.getEmail())).thenReturn(false);
-//        when(memberRepository.save(any(Member.class))).thenReturn(Member.builder().memberId(100L).build());
+//        when(memberRepository.save(any(Member.class))).thenReturn(Member.builder().id(100L).build());
 /// /        when(memberRepository.save(any(Member.class))).thenAnswer(invocation -> {
 /// /            Member fakeMember = invocation.getArgument(0);
-/// /            return fakeMember.toBuilder().memberId(100L).build();
+/// /            return fakeMember.toBuilder().id(100L).build();
 /// /        });
 //
 //        //when
