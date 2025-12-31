@@ -38,12 +38,12 @@
 //
 //        sseEmitter.onTimeout(() -> {
 //            sseEmitterMap.remove(member.getId());
-//            log.info("[SSE] timeout memberId:{}", member.getId());
+//            log.info("[SSE] timeout id:{}", member.getId());
 //        });
 //
 //        sseEmitter.onError(e -> {
 //            sseEmitterMap.remove(member.getId());
-//            log.error("[SSE] 오류 memberId:{}", member.getId(), e);
+//            log.error("[SSE] 오류 id:{}", member.getId(), e);
 //        });
 //
 //        try {
@@ -57,17 +57,17 @@
 //        return sseEmitter;
 //    }
 //
-//    public void sendNotification(Long memberId, String message) {
-//        SseEmitter sseEmitter = sseEmitterMap.get(memberId);
+//    public void sendNotification(Long id, String message) {
+//        SseEmitter sseEmitter = sseEmitterMap.get(id);
 //        if (sseEmitter != null) {
 //            try {
 //                log.info("알림 전송.");
 //                sseEmitter.send(SseEmitter.event().name("notification").data(message));
 //
 //            } catch (IOException e) {
-//                sseEmitterMap.remove(memberId);
-//                inMemoryService.deleteForeGroundData(memberId);//todo : sse 연결 관리(하트비트)
-//                log.error("[SSE] 오류 notification memberId : {}", memberId, e);
+//                sseEmitterMap.remove(id);
+//                inMemoryService.deleteForeGroundData(id);//todo : sse 연결 관리(하트비트)
+//                log.error("[SSE] 오류 notification id : {}", id, e);
 //            }
 //        }
 //    }

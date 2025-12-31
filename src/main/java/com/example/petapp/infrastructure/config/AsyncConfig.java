@@ -26,6 +26,21 @@ public class AsyncConfig implements AsyncConfigurer {
         return executor;
     }
 
+    @Bean(name = "notificationExecutor")
+    public Executor notificationExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(2);// 기본 스레드 수
+        executor.setMaxPoolSize(5);// 최대 스레드 수
+        executor.setQueueCapacity(500);// 대기 큐 사이즈
+        executor.setThreadNamePrefix("NotificationThread-");
+        executor.initialize();
+        return executor;
+    }
+
+    /**
+     * 비동기 메서드에서 발생한 예외를 처리하기 위한 핸들러 설정
+     * 메인 스레드가 모르는 비동기 작업 중 예외를 처리
+     */
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return new CustomAsyncExceptionHandler();

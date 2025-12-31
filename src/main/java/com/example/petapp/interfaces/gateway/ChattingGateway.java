@@ -19,7 +19,7 @@ public class ChattingGateway {
 
     //일반 메시지 전송
     @MessageMapping("/chat")
-    public void sendToMessage(@Payload ChatMessageDto chatMessage, Principal principal) {//memberId or profileId
+    public void sendToMessage(@Payload ChatMessageDto chatMessage, Principal principal) {//id or profileId
         chattingUseCase.sendToMessage(chatMessage, Long.valueOf(principal.getName()));
     }
 

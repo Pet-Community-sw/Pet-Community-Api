@@ -14,7 +14,7 @@ import java.util.Map;
 @Slf4j
 public class NotificationSubscribeStrategy extends BaseSubscribeTypeStrategy {
 
-    private static final String PATTEN = "/sub/notification/{memberId}";
+    private static final String PATTEN = "/sub/notification/{id}";
 
     private final MemberQueryUseCase useCase;
 
@@ -26,8 +26,8 @@ public class NotificationSubscribeStrategy extends BaseSubscribeTypeStrategy {
     @Override
     public void handle(SubscribeInfo subscribeInfo) {
         Map<String, String> map = patternMap(PATTEN, subscribeInfo.getDestination());
-        Long memberId = Long.valueOf(map.get("memberId"));
+        Long memberId = Long.valueOf(map.get("id"));
         useCase.findOrThrow(memberId);
-        log.info("[STOMP] notification 구독 memberId : {}", memberId);
+        log.info("[STOMP] notification 구독 id : {}", memberId);
     }
 }

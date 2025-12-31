@@ -1,4 +1,4 @@
-package com.example.petapp.infrastructure.smtp;
+package com.example.petapp.infrastructure.event.smtp;
 
 import com.example.petapp.application.in.email.EventEmail;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class SmtpEmailAdapter {
     @EventListener
     @Retryable(
             maxAttempts = 4,// 최대 재시도 횟수(기본값 3)
-            backoff = @Backoff(delay = 2000)// 재시도 간격
+            backoff = @Backoff(delay = 2000, multiplier = 2.0, random = true)// 재시도 간격
     )
     public void handle(EventEmail event) {
         MimeMessage message = javaMailSender.createMimeMessage();

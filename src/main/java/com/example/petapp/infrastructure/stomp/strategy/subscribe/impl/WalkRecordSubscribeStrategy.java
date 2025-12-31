@@ -42,6 +42,6 @@ public class WalkRecordSubscribeStrategy extends BaseSubscribeTypeStrategy {
         }
         //todo : 이거 redis 없냐?
 
-        log.info("[STOMP] 구독 walkRecordId: {}, memberId: {}", walkRecordId, memberId);
+        log.info("[STOMP] 구독 walkRecordId: {}, id: {}", walkRecordId, memberId);
     }
 }
