@@ -1,9 +1,9 @@
 package com.example.petapp.application.service.post;
 
-import com.example.petapp.application.annotation.Notification;
 import com.example.petapp.application.in.chatroom.ChatRoomUseCase;
 import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.notification.dto.NotificationEvent;
 import com.example.petapp.application.in.post.PostQueryUseCase;
 import com.example.petapp.application.in.post.delegate.DelegateWalkPostUseCase;
 import com.example.petapp.application.in.post.delegate.mapper.DelegateWalkPostMapper;
@@ -24,6 +24,7 @@ import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,7 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
     private final ChatRoomUseCase chatRoomUseCase;
     private final PostQueryUseCase<DelegateWalkPost> postQueryUseCase;
     private final PostRepository<DelegateWalkPost> postRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     @Override
@@ -128,13 +130,14 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
         return delegateWalkPost.validatedAndGetApplicants(profileId);
     }
 
-    @Notification(recipient = "@queryService.findByDelegateWalkPost(#p0).profile.member", message = "@queryService.findByMember(#p2).name + '님이 회원님의 대리산책자 게시글에 지원했습니다.'")
     @Transactional
     @Override
     public ApplyToDelegateWalkPostResponseDto applyToDelegateWalkPost(Long delegateWalkPostId, String content, Long id) {
         Member member = memberQueryUseCase.findOrThrow(id);
         DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
         delegateWalkPost.apply(member, content);
+
+        eventPublisher.publishEvent(new NotificationEvent(delegateWalkPost.getProfile().getMember().getId(), member.getName() + "님이 회원님의 대리산책자 게시글에 지원했습니다."));
         return new ApplyToDelegateWalkPostResponseDto(member.getId());
     }
 }

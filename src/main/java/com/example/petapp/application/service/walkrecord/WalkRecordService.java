@@ -1,8 +1,8 @@
 package com.example.petapp.application.service.walkrecord;
 
-import com.example.petapp.application.annotation.Notification;
 import com.example.petapp.application.common.DistanceUtil;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.notification.dto.NotificationEvent;
 import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
 import com.example.petapp.application.in.walkrecord.WalkRecordUseCase;
 import com.example.petapp.application.in.walkrecord.dto.response.CreateWalkRecordResponseDto;
@@ -15,6 +15,7 @@ import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,14 +29,17 @@ public class WalkRecordService implements WalkRecordUseCase {
     private final WalkRecordQueryUseCase walkRecordQueryUseCase;
     private final MemberQueryUseCase memberQueryUseCase;
     private final LocationCachePort port;
+    private final ApplicationEventPublisher eventPublisher;
 
-    @Notification(recipient = "@queryService.findByMember(#p0.selectedApplicantMemberId).member", message = "산책 권한이 부여 되었습니다.")
     @Transactional
     @Override
     public CreateWalkRecordResponseDto createWalkRecord(DelegateWalkPost delegateWalkPost) {
         Member member = memberQueryUseCase.findOrThrow(delegateWalkPost.getSelectedApplicantMemberId());
         WalkRecord walkRecord = WalkRecordMapper.toEntity(delegateWalkPost, member);
         WalkRecord savedWalkRecord = walkRecordRepository.save(walkRecord);
+
+        eventPublisher.publishEvent(new NotificationEvent(member.getId(), "산책 권한이 부여 되었습니다."));
+
         return new CreateWalkRecordResponseDto(savedWalkRecord.getId());
     }
 
@@ -55,8 +59,6 @@ public class WalkRecordService implements WalkRecordUseCase {
         return new GetWalkRecordLocationResponseDto(port.find(walkRecordId));
     }
 
-    @Notification(recipient = "@queryServiceImpl.findByWalkRecord(#p0).delegateWalkPost.profile.member",
-            message = "@queryServiceImpl.findByWalkRecord(#p0).member.name+'님이 산책을 시작하였습니다.'")
     @Transactional
     @Override
     public void updateStartWalkRecord(Long walkRecordId, Long id) {
@@ -64,10 +66,11 @@ public class WalkRecordService implements WalkRecordUseCase {
         WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
         walkRecord.validateMember(member.getId());
         walkRecord.updateWalkStatus(WalkRecord.WalkStatus.START);
+
+        eventPublisher.publishEvent(new NotificationEvent(walkRecord.getDelegateWalkPost().getProfile().getMember().getId(),
+                member.getName() + "님이 산책을 시작하였습니다."));
     }
 
-    @Notification(recipient = "@queryServiceImpl.findByWalkRecord(#p0).delegateWalkPost.profile.member",
-            message = "@queryServiceImpl.findByWalkRecord(#p0).member.name+'님이 산책을 마쳤습니다. 후기를 작성해주세요.'")
     @Transactional//분리를 어떻게 시키면 졸을까
     @Override
     public void finishWalkRecord(Long walkRecordId, Long id) {
@@ -75,6 +78,9 @@ public class WalkRecordService implements WalkRecordUseCase {
         WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
         walkRecord.validateMember(member.getId());
         walkRecord.updateWalkStatus(WalkRecord.WalkStatus.FINISH);
+
+        eventPublisher.publishEvent(new NotificationEvent(walkRecord.getDelegateWalkPost().getProfile().getMember().getId(),
+                member.getName() + "님이 산책을 마쳤습니다. 후기를 작성해주세요."));
 
         updateWalkRecordPathData(walkRecordId, walkRecord);
     }

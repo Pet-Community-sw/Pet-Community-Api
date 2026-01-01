@@ -5,7 +5,7 @@ import com.example.petapp.application.in.chatting.MessageTypeStrategy;
 import com.example.petapp.application.in.chatting.model.dto.SendResponseDto;
 import com.example.petapp.application.in.chatting.model.dto.UpdateListDto;
 import com.example.petapp.application.in.chatting.model.type.CommandType;
-import com.example.petapp.application.in.notification.NotificationUseCase;
+import com.example.petapp.application.in.notification.dto.NotificationEvent;
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.ChatOnlineCachePort;
@@ -18,6 +18,7 @@ import com.example.petapp.domain.chatting.ChatMessageRepository;
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.profile.model.Profile;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
@@ -38,10 +39,10 @@ public class TalkStrategy implements MessageTypeStrategy {
     private final ChatOnlineCachePort chatOnlineCachePort;
     private final ReadMessageCachePort readMessageCachePort;
     private final LastMessageCachePort lastMessageCachePort;
-    private final NotificationUseCase notificationUseCase;
     private final AckInfoRepository ackInfoRepository;
     private final SimpUserRegistry simpUserRegistry;
     private final TaskScheduler resendScheduler;//stompConfig에서 선언해놓았던 스케줄러가 선언이됨.
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public void handle(ChatMessage chatMessage) {
@@ -84,7 +85,8 @@ public class TalkStrategy implements MessageTypeStrategy {
                 .filter(userId -> !onlineUsers.contains(userId.toString()))
                 .forEach(userId -> {
                     Profile profile = profileQueryUseCase.findOrThrow(userId);
-                    notificationUseCase.send(profile.getMember(), message);
+                    eventPublisher.publishEvent(new NotificationEvent(profile.getMember().getId(), message));
+
                     Long profileSeq = readMessageCachePort.find(chatRoomId, profile.getId());
                     sendPort.send("sub/list/" + profile.getMember().getId(),//todo : member와 profile 다르게 해야함.
                             SendResponseDto.builder().commandType(CommandType.LIST_UPDATE).body(new UpdateListDto(chatRoomId, (chatMessage.getSeq() - profileSeq), chatMessage.getMessage(), chatMessage.getMessageTime())).build());

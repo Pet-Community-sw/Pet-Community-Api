@@ -58,6 +58,8 @@ public class NotificationAdapter {
      * 재시도 실패 시 호출
      * 이 후에 로그 db저장 예정
      * 파라미터 첫 번째 예외 객체를 둬야하는 이유?
+     *
+     * @Retryalbe 파라미터와 일치해야힘.
      */
     @Recover
     public void recover(Exception e, NotificationEvent event) {

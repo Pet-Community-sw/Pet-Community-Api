@@ -1,6 +1,5 @@
 package com.example.petapp.application.service.comment;
 
-import com.example.petapp.application.annotation.Notification;
 import com.example.petapp.application.in.comment.CommentQueryUseCase;
 import com.example.petapp.application.in.comment.CommentUseCase;
 import com.example.petapp.application.in.comment.dto.request.CommentDto;
@@ -9,6 +8,7 @@ import com.example.petapp.application.in.comment.dto.response.CreateCommentRespo
 import com.example.petapp.application.in.comment.dto.response.GetCommentsResponseDto;
 import com.example.petapp.application.in.comment.mapper.CommentMapper;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.notification.dto.NotificationEvent;
 import com.example.petapp.application.in.post.PostQueryUseCase;
 import com.example.petapp.domain.comment.CommentRepository;
 import com.example.petapp.domain.comment.model.Comment;
@@ -16,6 +16,7 @@ import com.example.petapp.domain.comment.model.Commentable;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.Post;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ public class CommentService implements CommentUseCase {
     private final CommentQueryUseCase commentQueryUseCase;
     private final MemberQueryUseCase memberQueryUseCase;
     private final PostQueryUseCase<Post> postQueryUseCase;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional(readOnly = true)
     @Override
@@ -39,7 +41,6 @@ public class CommentService implements CommentUseCase {
         return CommentMapper.toGetCommentsResponseDtos((Commentable) post, member);
     }
 
-    @Notification(recipient = "@queryService.findByPost(#p0.postId).member", message = "@queryService.findByMember(#1).name + '님이 회원님의 게시물에 댓글을 남겼습니다.'")
     @Transactional
     @Override
     public CreateCommentResponseDto createComment(CommentDto commentDto, Long id) {
@@ -48,6 +49,9 @@ public class CommentService implements CommentUseCase {
 
         Comment comment = CommentMapper.toEntity(commentDto, post, member);
         commentRepository.save(comment);
+
+        eventPublisher.publishEvent(new NotificationEvent(post.getMember().getId(), member.getName() + "님이 회원님의 게시물에 댓글을 남겼습니다."));
+
         return new CreateCommentResponseDto(comment.getId());
     }
 

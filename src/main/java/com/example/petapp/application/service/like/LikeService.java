@@ -1,9 +1,9 @@
 package com.example.petapp.application.service.like;
 
-import com.example.petapp.application.annotation.Notification;
 import com.example.petapp.application.in.like.LikeUseCase;
 import com.example.petapp.application.in.like.mapper.LikeMapper;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.notification.dto.NotificationEvent;
 import com.example.petapp.application.in.post.PostQueryUseCase;
 import com.example.petapp.application.out.cache.LikeCachePort;
 import com.example.petapp.domain.like.LikeRepository;
@@ -12,6 +12,7 @@ import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.Post;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,18 +27,21 @@ public class LikeService implements LikeUseCase {
     private final MemberQueryUseCase memberQueryUseCase;
     private final LikeCachePort port;
     private final PostQueryUseCase<Post> postQueryUseCase;
+    private final ApplicationEventPublisher eventPublisher;
 
     /*
      *  조회 ->분기 ->저장 : 동시성 이슈 발생할 수 있음. 분기 처리중 저장했다면?
      * redis에서 꺼내서 비교하는게 좋을 듯
      * */
-    @Notification(recipient = "@queryServiceImpl.findByPost(#p0).member", message = "@queryServiceImpl.findByMember(#p1).name + '님이 회원님의 게시물을 좋아합니다.'", condition = "#result == true")
     @Transactional
     @Override
     public boolean createAndDelete(Long postId, Long id) {
         Member member = memberQueryUseCase.findOrThrow(id);
         Post post = postQueryUseCase.findOrThrow(postId);
         Optional<Like> existingLike = post.getLikes().stream().filter(like -> like.getMember().equals(member)).findFirst();
+        
+        eventPublisher.publishEvent(new NotificationEvent(post.getMember().getId(), member.getName() + "님이 회원님의 게시물을 좋아합니다."));
+
         return existingLike.map(like -> delete(like, post)).orElseGet(() -> create(post, member));
     }
 
