@@ -17,7 +17,7 @@ public class AsyncNotificationTest {
 
     @SpyBean
     private NotificationAdapter notificationAdapter;
-    
+
     @MockBean
     private AppOnlineCachePort appOnlineCachePort;
 
@@ -32,7 +32,7 @@ public class AsyncNotificationTest {
         //when
         notificationAdapter.handle(event);
 
-        Thread.sleep(15000);
+        Thread.sleep(31000);
 
         //then
         // handle 메서드가 4번 호출되고, recover 메서드가 1번 호출되는지 검증

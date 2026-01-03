@@ -33,7 +33,7 @@ public class NotificationAdapter {
      * foreground 유저는 sse, background 유저는 fcm --x
      * foreground 유저는 stomp, background 유저는 fcm
      * */
-    @Async("notificationAsyncExecutor")
+    @Async("notificationExecutor")
     @EventListener
     @Retryable(
             //네트워크나 원격 호출 에러, 런타임 에러 시 재시도

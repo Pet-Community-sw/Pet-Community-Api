@@ -26,7 +26,7 @@ public class LocationService implements LocationUseCase {//예외 처리해야�
     private final WalkRecordQueryUseCase walkRecordQueryUseCase;
     private final SendPort sendPort;
     private final ApplicationEventPublisher eventPublisher;
-
+    
     @Override
     public void sendLocation(LocationMessage locationMessage, String memberId) {
         WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(locationMessage.getWalkRecordId());
