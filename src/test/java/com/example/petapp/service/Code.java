@@ -1,20 +1,18 @@
 package com.example.petapp.service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Code {
 
-    public String solution(String s) {
-        int num = s.length() / 2;
-        return s.length() % 2 == 0 ? s.substring(num - 1, num + 1) : s.charAt(num) + "";
-    }
-    
-    public int solution(int[] absolutes, boolean[] signs) {
-        int answer = 0;
+    public int[] solution(int[] numbers) {
+        Set<Integer> set = new HashSet<>();
 
-        for (int i = 0; i < absolutes.length; i++) {
-            answer += signs[i] ? absolutes[i] : -absolutes[i];
+        for (int i = 0; i < numbers.length - 1; i++) {
+            for (int j = i + 1; j < numbers.length - 1; j++) {
+                set.add(numbers[i] + numbers[j]);
+            }
         }
-        return answer;
+        return set.stream().mapToInt(Integer::intValue).sorted().toArray();
     }
-
-
 }
