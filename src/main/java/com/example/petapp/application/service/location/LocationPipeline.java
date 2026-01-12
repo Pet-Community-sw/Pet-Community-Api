@@ -39,7 +39,7 @@ public class LocationPipeline {
             walkRecord.validateMember(Long.valueOf(memberId));
             walkRecord.validateStart();
 
-            /**
+            /*
              * Subject는 thread-safe이 아니라 동시성 이슈가 있을 수 있으므로 toSerialized()로 감싸서 사용해야 함
              * 락 + 큐 방식으로 동작하여 동시성 문제를 해결
              */

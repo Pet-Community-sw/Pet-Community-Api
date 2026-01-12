@@ -1,6 +1,7 @@
 package com.example.petapp.application.service.walkrecord;
 
 import com.example.petapp.application.common.DistanceUtil;
+import com.example.petapp.application.in.location.LocationUseCase;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.notification.dto.NotificationEvent;
 import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
@@ -30,6 +31,7 @@ public class WalkRecordService implements WalkRecordUseCase {
     private final MemberQueryUseCase memberQueryUseCase;
     private final LocationCachePort port;
     private final ApplicationEventPublisher eventPublisher;
+    private final LocationUseCase locationUseCase;
 
     @Transactional
     @Override
@@ -79,6 +81,7 @@ public class WalkRecordService implements WalkRecordUseCase {
         walkRecord.validateMember(member.getId());
         walkRecord.updateWalkStatus(WalkRecord.WalkStatus.FINISH);
 
+        locationUseCase.finishWalkRecord(walkRecordId); //locationPipeline 종료
         eventPublisher.publishEvent(new NotificationEvent(walkRecord.getDelegateWalkPost().getProfile().getMember().getId(),
                 member.getName() + "님이 산책을 마쳤습니다. 후기를 작성해주세요."));
 
