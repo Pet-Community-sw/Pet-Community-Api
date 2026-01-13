@@ -37,6 +37,17 @@ public class AsyncConfig implements AsyncConfigurer {
         return executor;
     }
 
+    @Bean(name = "locationInitExecutor")
+    public Executor locationInitExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(2);
+        executor.setMaxPoolSize(5);
+        executor.setQueueCapacity(500);
+        executor.setThreadNamePrefix("LocationInitThread-");
+        executor.initialize();
+        return executor;
+    }
+
     /**
      * 비동기 메서드에서 발생한 예외를 처리하기 위한 핸들러 설정
      * 메인 스레드가 모르는 비동기 작업 중 예외를 처리

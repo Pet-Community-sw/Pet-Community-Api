@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -29,6 +30,7 @@ public class LocationPipeline {
 
     private final WalkRecordQueryUseCase useCase;
     private final LocationProcessorUseCase processorUseCase;
+    private final Executor locationInitExecutor;
 
     private final Map<Long, CompletableFuture<Subject<LocationMessage>>> initMap = new ConcurrentHashMap<>();
     private final Map<Long, Disposable> pipelineMap = new ConcurrentHashMap<>();
@@ -36,7 +38,7 @@ public class LocationPipeline {
     public void send(LocationMessage message, String memberId) {
         Long walkRecordId = message.getWalkRecordId();
         CompletableFuture<Subject<LocationMessage>> future = initMap.computeIfAbsent(walkRecordId, id ->
-                CompletableFuture.supplyAsync(() -> initializePipeline(message.getWalkRecordId(), memberId)));
+                CompletableFuture.supplyAsync(() -> initializePipeline(walkRecordId, memberId), locationInitExecutor));
 
         try {
             Subject<LocationMessage> subject = future.join();
@@ -45,6 +47,7 @@ public class LocationPipeline {
         } catch (Exception e) {
             initMap.remove(walkRecordId);
             log.error("LocationPipeline init error walkRecordId={}", walkRecordId, e);
+            throw e;
         }
     }
 
