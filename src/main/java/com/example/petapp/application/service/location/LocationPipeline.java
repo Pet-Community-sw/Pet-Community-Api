@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -29,26 +30,37 @@ public class LocationPipeline {
     private final WalkRecordQueryUseCase useCase;
     private final LocationProcessorUseCase processorUseCase;
 
-    private final Map<Long, Subject<LocationMessage>> subjectMap = new ConcurrentHashMap<>();
+    private final Map<Long, CompletableFuture<Subject<LocationMessage>>> initMap = new ConcurrentHashMap<>();
     private final Map<Long, Disposable> pipelineMap = new ConcurrentHashMap<>();
 
     public void send(LocationMessage message, String memberId) {
-        Subject<LocationMessage> subject = subjectMap.computeIfAbsent(message.getWalkRecordId(), id -> {
-            //사용자 검증
-            WalkRecord walkRecord = useCase.findOrThrow(message.getWalkRecordId());
-            walkRecord.validateMember(Long.valueOf(memberId));
-            walkRecord.validateStart();
+        Long walkRecordId = message.getWalkRecordId();
+        CompletableFuture<Subject<LocationMessage>> future = initMap.computeIfAbsent(walkRecordId, id ->
+                CompletableFuture.supplyAsync(() -> initializePipeline(message.getWalkRecordId(), memberId)));
 
-            /*
-             * Subject는 thread-safe이 아니라 동시성 이슈가 있을 수 있으므로 toSerialized()로 감싸서 사용해야 함
-             * 락 + 큐 방식으로 동작하여 동시성 문제를 해결
-             */
-            Subject<LocationMessage> s = PublishSubject.<LocationMessage>create().toSerialized();
-            startPipeline(walkRecord, s);
-            return s;
-        });
-        //동시에 스레드가 onNext를 호출할 수 있음 그래서 toSerialized()
-        subject.onNext(message);
+        try {
+            Subject<LocationMessage> subject = future.join();
+            //동시에 스레드가 onNext를 호출할 수 있음 그래서 toSerialized()
+            subject.onNext(message);
+        } catch (Exception e) {
+            initMap.remove(walkRecordId);
+            log.error("LocationPipeline init error walkRecordId={}", walkRecordId, e);
+        }
+    }
+
+    private Subject<LocationMessage> initializePipeline(Long walkRecordId, String memberId) {
+        //사용자 검증 (io작업은 비동기로 처리)
+        WalkRecord walkRecord = useCase.findOrThrow(walkRecordId);
+        walkRecord.validateMember(Long.valueOf(memberId));
+        walkRecord.validateStart();
+
+        /*
+         * Subject는 thread-safe이 아니라 동시성 이슈가 있을 수 있으므로 toSerialized()로 감싸서 사용해야 함
+         * 락 + 큐 방식으로 동작하여 동시성 문제를 해결
+         */
+        Subject<LocationMessage> subject = PublishSubject.<LocationMessage>create().toSerialized();
+        startPipeline(walkRecord, subject);
+        return subject;
     }
 
     private void startPipeline(WalkRecord walkRecord, Subject<LocationMessage> subject) {
@@ -72,12 +84,13 @@ public class LocationPipeline {
                 )
                 .map(message -> processorUseCase.checkRange(walkRecord, message))
                 .distinctUntilChanged((a, b) -> a.isOutOfRange() == b.isOutOfRange())
+                //동기 호출이긴 하지만 @Async로 비동기 처리를 하여 io스레드로 지정 하지 않음
                 .doOnNext(state -> processorUseCase.sendNotification(walkRecord, state))
                 .subscribe(
                         ok -> {
                         },
                         err -> log.warn("Location pipeline error walkRecordId={}", walkRecord.getId(), err),
-                        () -> cleanup(walkRecord.getId())
+                        () -> clean(walkRecord.getId())
                 );
 
         pipelineMap.put(walkRecord.getId(), disposable);
@@ -85,12 +98,12 @@ public class LocationPipeline {
 
     }
 
-    public void cleanup(Long walkRecordId) {
+    public void clean(Long walkRecordId) {
         Disposable d = pipelineMap.remove(walkRecordId);
         if (d != null && !d.isDisposed()) d.dispose();
 
-        subjectMap.remove(walkRecordId);
-        processorUseCase.cleanup(walkRecordId);
+        initMap.remove(walkRecordId);
+        processorUseCase.clean(walkRecordId);
 
         log.info("Location pipeline clean walkRecordId={}", walkRecordId);
     }

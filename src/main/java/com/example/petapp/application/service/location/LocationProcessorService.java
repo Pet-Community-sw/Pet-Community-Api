@@ -41,7 +41,7 @@ public class LocationProcessorService implements LocationProcessorUseCase {
             eventPublisher.publishEvent(new NotificationEvent(
                     walkRecord.getDelegateWalkPost().getProfile().getMember().getId(),
                     "위험! " + walkRecord.getMember().getName() + "님이 산책범위에 벗어났습니다. 현재 위치는 기준 지점에서 약 "
-                            + (long) state.distance() + "m 떨어져있습니다."
+                            + state.distance() + "m 떨어져있습니다."
             ));
 
             eventPublisher.publishEvent(new NotificationEvent(
@@ -109,8 +109,9 @@ public class LocationProcessorService implements LocationProcessorUseCase {
         return false;
     }
 
+
     @Override
-    public void cleanup(long walkRecordId) {
+    public void clean(Long walkRecordId) {
         lastPointMap.remove(walkRecordId);
     }
 }

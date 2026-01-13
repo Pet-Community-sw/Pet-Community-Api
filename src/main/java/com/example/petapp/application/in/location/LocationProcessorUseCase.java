@@ -13,5 +13,5 @@ public interface LocationProcessorUseCase {
 
     boolean isEnoughMove(LocationMessage message);
 
-    void cleanup(long walkRecordId);
+    void clean(Long walkRecordId);
 }

@@ -20,6 +20,6 @@ public class LocationService implements LocationUseCase {//예외 처리해야�
 
     @Override
     public void finishWalkRecord(Long walkRecordId) {
-        locationPipeline.cleanup(walkRecordId);
+        locationPipeline.clean(walkRecordId);
     }
 }
