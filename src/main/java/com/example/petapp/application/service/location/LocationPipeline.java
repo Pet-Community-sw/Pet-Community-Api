@@ -25,8 +25,8 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class LocationPipeline {
 
-    private static final long TIMEOUT_MINUTES = 10;
-    private static final long THROTTLE_SECONDS = 2;
+    private static final long TIMEOUT_MINUTES = 10;//해당 파이프에 대해 10분동안 이벤트가 없으면 파이프 제거
+    private static final long THROTTLE_SECONDS = 2;//많은 이벤트 중 2초에 한 번 씩 이벤트를 받음.
 
     private final WalkRecordQueryUseCase useCase;
     private final LocationProcessorUseCase processorUseCase;
