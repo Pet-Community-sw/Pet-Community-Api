@@ -14,7 +14,8 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @Configuration
 @RequiredArgsConstructor
 @EnableMongoRepositories(
-        basePackageClasses = {MongoChatMessageRepository.class})
+        basePackages = "com.example.petapp.infrastructure.database.mongo"//Mongo 리포지토리 스캔 위치 지정
+)
 public class MongoConfig {
     @Bean
     public MappingMongoConverter mappingMongoConverter(

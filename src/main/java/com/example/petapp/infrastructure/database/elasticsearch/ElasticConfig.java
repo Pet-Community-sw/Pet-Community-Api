@@ -7,5 +7,5 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 @EnableElasticsearchRepositories(
         basePackages = "com.example.petapp.infrastructure.database.elasticsearch"
 )
-public class ReactiveEsConfig {
+public class ElasticConfig {
 }

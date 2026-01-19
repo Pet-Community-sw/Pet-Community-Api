@@ -56,6 +56,14 @@ spring:
         secret-key: ${AWS_IAM_SECRET_KEY}
       region:
         static: ${AWS_S3_REGION}
+
+  # Elasticsearch Reactive Repositories 오토컨피그 비활성화
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.elasticsearch.ReactiveElasticsearchRepositoriesAutoConfiguration
+
+
+
 logging:
   level:
     org.elasticsearch.client: TRACE
