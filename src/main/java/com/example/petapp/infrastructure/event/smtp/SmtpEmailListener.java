@@ -18,7 +18,7 @@ import javax.mail.internet.MimeMessage;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SmtpEmailAdapter {
+public class SmtpEmailListener {
 
     private final JavaMailSender javaMailSender;
 

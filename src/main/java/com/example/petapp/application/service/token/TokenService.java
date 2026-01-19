@@ -1,9 +1,9 @@
 package com.example.petapp.application.service.token;
 
-import com.example.petapp.application.in.member.dto.request.AccessTokenResponseDto;
-import com.example.petapp.application.in.member.dto.response.LoginResponseDto;
-import com.example.petapp.application.in.member.dto.response.TokenResponseDto;
 import com.example.petapp.application.in.member.mapper.MemberMapper;
+import com.example.petapp.application.in.member.object.dto.request.AccessTokenResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.LoginResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.TokenResponseDto;
 import com.example.petapp.application.in.role.RoleQueryUseCase;
 import com.example.petapp.application.in.token.MemberInfo;
 import com.example.petapp.application.in.token.TokenQueryUseCase;

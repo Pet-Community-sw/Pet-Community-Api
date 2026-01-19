@@ -3,12 +3,13 @@ package com.example.petapp.application.service.member;
 import com.example.petapp.application.in.email.EmailUseCase;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.member.MemberUseCase;
-import com.example.petapp.application.in.member.dto.request.*;
-import com.example.petapp.application.in.member.dto.response.FindByIdResponseDto;
-import com.example.petapp.application.in.member.dto.response.GetMemberResponseDto;
-import com.example.petapp.application.in.member.dto.response.LoginResponseDto;
-import com.example.petapp.application.in.member.dto.response.MemberSignResponseDto;
 import com.example.petapp.application.in.member.mapper.MemberMapper;
+import com.example.petapp.application.in.member.object.MemberSearchEvent;
+import com.example.petapp.application.in.member.object.dto.request.*;
+import com.example.petapp.application.in.member.object.dto.response.FindByIdResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.GetMemberResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.LoginResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.MemberSignResponseDto;
 import com.example.petapp.application.in.role.RoleQueryUseCase;
 import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.application.out.StoragePort;
@@ -21,6 +22,7 @@ import com.example.petapp.domain.role.Role;
 import com.example.petapp.interfaces.exception.ConflictException;
 import com.example.petapp.interfaces.exception.UnAuthorizedException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +42,7 @@ public class MemberService implements MemberUseCase {
     private final FcmTokenService fcmTokenService;
     private final RoleQueryUseCase roleQueryUseCase;
     private final StoragePort storagePort;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     @Override
@@ -50,6 +53,13 @@ public class MemberService implements MemberUseCase {
         String imageFileName = storagePort.uploadFile(memberSignDto.getMemberImageUrl(), FileKind.MEMBER);
         Member member = MemberMapper.toEntity(memberSignDto, passwordEncoder.encode(memberSignDto.getPassword()), imageFileName);
         Member savedMember = memberRepository.save(member);
+        
+        //elasticsearch 문서 저장 이벤트 발생
+        eventPublisher.publishEvent(new MemberSearchEvent(
+                savedMember.getId(),
+                savedMember.getName(),
+                savedMember.getMemberImageUrl()
+        ));
         return new MemberSignResponseDto(savedMember.getId());
     }
 

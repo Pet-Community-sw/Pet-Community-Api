@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class NotificationAdapter {
+public class NotificationListener {
     private final NotificationsCachePort notificationsCachePort;
     private final AppOnlineCachePort appOnlineCachePort;
     private final SendPort sendPort;

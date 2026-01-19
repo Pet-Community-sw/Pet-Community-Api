@@ -1,4 +1,4 @@
-package com.example.petapp.application.in.member.dto.request;
+package com.example.petapp.application.in.member.object.dto.request;
 
 import lombok.*;
 
@@ -9,8 +9,12 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SendEmailDto {
+public class AuthCodeDto {
 
     @NotBlank(message = "이메일은 필수입니다.")
     private String email;
+
+    @NotBlank(message = "인증코드는 필수입니다.")
+    private String code;
+
 }

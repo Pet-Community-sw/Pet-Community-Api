@@ -58,6 +58,8 @@ public class NormalPostController {
         return normalPostUseCase.getPost(postId, AuthUtil.getMemberId(authentication));
     }
 
+    //todo : Elasticsearch 적용 후 검색 API 구현
+
     @Operation(
             summary = "게시물 수정"
     )

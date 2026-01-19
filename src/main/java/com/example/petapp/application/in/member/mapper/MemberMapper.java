@@ -1,8 +1,8 @@
 package com.example.petapp.application.in.member.mapper;
 
-import com.example.petapp.application.in.member.dto.request.MemberSignDto;
-import com.example.petapp.application.in.member.dto.response.GetMemberResponseDto;
-import com.example.petapp.application.in.member.dto.response.LoginResponseDto;
+import com.example.petapp.application.in.member.object.dto.request.MemberSignDto;
+import com.example.petapp.application.in.member.object.dto.response.GetMemberResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.LoginResponseDto;
 import com.example.petapp.domain.member.model.Member;
 
 public class MemberMapper {

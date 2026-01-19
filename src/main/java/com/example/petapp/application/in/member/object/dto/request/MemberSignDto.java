@@ -1,4 +1,4 @@
-package com.example.petapp.application.in.member.dto.request;
+package com.example.petapp.application.in.member.object.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;

@@ -1,6 +1,6 @@
 package com.example.petapp.interfaces;
 
-import com.example.petapp.application.in.member.dto.response.TokenResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.TokenResponseDto;
 import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.application.in.token.dto.ReissueTokenRequestDto;
 import io.swagger.v3.oas.annotations.Operation;

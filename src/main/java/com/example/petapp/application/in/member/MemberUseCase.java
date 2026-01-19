@@ -1,10 +1,10 @@
 package com.example.petapp.application.in.member;
 
-import com.example.petapp.application.in.member.dto.request.*;
-import com.example.petapp.application.in.member.dto.response.FindByIdResponseDto;
-import com.example.petapp.application.in.member.dto.response.GetMemberResponseDto;
-import com.example.petapp.application.in.member.dto.response.LoginResponseDto;
-import com.example.petapp.application.in.member.dto.response.MemberSignResponseDto;
+import com.example.petapp.application.in.member.object.dto.request.*;
+import com.example.petapp.application.in.member.object.dto.response.FindByIdResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.GetMemberResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.LoginResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.MemberSignResponseDto;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
