@@ -47,7 +47,8 @@ public class MemberSearchListener {
     public void updateHandle(MemberUpdateEvent event) {
         MemberSearch document = MemberSearch.builder()
                 .memberId(event.memberId())
-                .memberName(event.name())
+                .memberName(event.memberName())
+                .memberImageUrl(event.memberImageUrl())
                 .build();
         repository.save(document);
     }

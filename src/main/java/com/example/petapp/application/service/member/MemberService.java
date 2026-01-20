@@ -128,14 +128,17 @@ public class MemberService implements MemberUseCase {
     @Transactional
     public void update(UpdateMemberRequestDto requestDto, Long memberId) {
         Member member = memberQueryUseCase.findOrThrow(memberId);
-        member.setName(requestDto.getName());
+        String imageFileName = storagePort.uploadFile(requestDto.getMemberImageUrl(), FileKind.MEMBER);
 
-        eventPublisher.publishEvent(new MemberUpdateEvent(memberId, requestDto.getName()));
+        member.setName(requestDto.getName());
+        member.setMemberImageUrl(imageFileName);
+        
+        eventPublisher.publishEvent(new MemberUpdateEvent(memberId, requestDto.getName(), imageFileName));
     }
 
     @Transactional
     @Override
-    public void delete(Long memberId) {//todo 한번에
+    public void delete(Long memberId) {
         Member member = memberQueryUseCase.findOrThrow(memberId);
         memberRepository.delete(member);
 

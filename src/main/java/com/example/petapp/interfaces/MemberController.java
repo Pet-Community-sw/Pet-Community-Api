@@ -104,8 +104,11 @@ public class MemberController {
     @Operation(
             summary = "회원 수정"
     )
-    @PutMapping("/members")
-    public ResponseEntity<MessageResponse> updateMember(@RequestBody @Valid UpdateMemberRequestDto requestDto, Authentication authentication) {
+    @PutMapping(
+            value = "/members",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<MessageResponse> updateMember(@ModelAttribute @Valid UpdateMemberRequestDto requestDto, Authentication authentication) {
         memberUseCase.update(requestDto, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("수정 했습니다."));
     }
