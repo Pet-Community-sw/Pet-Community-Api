@@ -9,12 +9,10 @@ import com.example.petapp.application.in.member.object.MemberCreateEvent;
 import com.example.petapp.application.in.member.object.MemberDeleteEvent;
 import com.example.petapp.application.in.member.object.MemberUpdateEvent;
 import com.example.petapp.application.in.member.object.dto.request.*;
-import com.example.petapp.application.in.member.object.dto.response.FindByIdResponseDto;
-import com.example.petapp.application.in.member.object.dto.response.GetMemberResponseDto;
-import com.example.petapp.application.in.member.object.dto.response.LoginResponseDto;
-import com.example.petapp.application.in.member.object.dto.response.MemberSignResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.*;
 import com.example.petapp.application.in.role.RoleQueryUseCase;
 import com.example.petapp.application.in.token.TokenUseCase;
+import com.example.petapp.application.out.MemberSearchPort;
 import com.example.petapp.application.out.StoragePort;
 import com.example.petapp.domain.file.FileKind;
 import com.example.petapp.domain.member.MemberRepository;
@@ -30,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 
 @Service
@@ -44,6 +43,8 @@ public class MemberService implements MemberUseCase {
     private final FcmUseCase fcmUseCase;
     private final RoleQueryUseCase roleQueryUseCase;
     private final StoragePort storagePort;
+    private final MemberSearchPort memberSearchPort;
+
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
@@ -132,8 +133,18 @@ public class MemberService implements MemberUseCase {
 
         member.setName(requestDto.getName());
         member.setMemberImageUrl(imageFileName);
-        
+
         eventPublisher.publishEvent(new MemberUpdateEvent(memberId, requestDto.getName(), imageFileName));
+    }
+
+    @Override
+    public List<MemberSearchResponseDto> autoComplete(String keyword, int size) {
+        return memberSearchPort.autoComplete(keyword, size);
+    }
+
+    @Override
+    public List<MemberSearchResponseDto> search(String keyword, int page, int size) {
+        return memberSearchPort.search(keyword, page, size);
     }
 
     @Transactional

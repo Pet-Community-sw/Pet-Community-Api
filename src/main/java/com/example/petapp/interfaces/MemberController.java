@@ -3,10 +3,7 @@ package com.example.petapp.interfaces;
 import com.example.petapp.application.common.AuthUtil;
 import com.example.petapp.application.in.member.MemberUseCase;
 import com.example.petapp.application.in.member.object.dto.request.*;
-import com.example.petapp.application.in.member.object.dto.response.FindByIdResponseDto;
-import com.example.petapp.application.in.member.object.dto.response.GetMemberResponseDto;
-import com.example.petapp.application.in.member.object.dto.response.LoginResponseDto;
-import com.example.petapp.application.in.member.object.dto.response.MemberSignResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.*;
 import com.example.petapp.interfaces.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 
 @Tag(name = "Member")
 @RestController
@@ -120,6 +118,22 @@ public class MemberController {
     public ResponseEntity<MessageResponse> deleteMember(Authentication authentication) {
         memberUseCase.delete(AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("탈퇴 되었습니다."));
+    }
+
+    @Operation(
+            summary = "자동완성 검색"
+    )
+    @GetMapping("/auto-complete")
+    public List<MemberSearchResponseDto> autoComplete(@RequestParam String keyword, @RequestParam(defaultValue = "10") int size) {
+        return memberUseCase.autoComplete(keyword, size);
+    }
+
+    @Operation(
+            summary = "검색"
+    )
+    @GetMapping("/search")
+    public List<MemberSearchResponseDto> search(@RequestParam String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return memberUseCase.search(keyword, page, size);
     }
 
     @Operation(
