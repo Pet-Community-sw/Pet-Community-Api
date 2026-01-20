@@ -1,7 +1,7 @@
 package com.example.petapp.domain.member.model;
 
 import com.example.petapp.domain.BaseEntity;
-import com.example.petapp.domain.fcm.model.entity.FcmToken;
+import com.example.petapp.domain.fcm.model.FcmToken;
 import com.example.petapp.domain.post.model.Post;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.token.model.Token;

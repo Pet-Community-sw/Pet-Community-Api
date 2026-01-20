@@ -1,6 +1,7 @@
 package com.example.petapp.application.service.member;
 
 import com.example.petapp.application.in.email.EmailUseCase;
+import com.example.petapp.application.in.fcm.FcmUseCase;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.member.MemberUseCase;
 import com.example.petapp.application.in.member.mapper.MemberMapper;
@@ -13,7 +14,6 @@ import com.example.petapp.application.in.member.object.dto.response.MemberSignRe
 import com.example.petapp.application.in.role.RoleQueryUseCase;
 import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.application.out.StoragePort;
-import com.example.petapp.domain.fcm.FcmTokenService;
 import com.example.petapp.domain.file.FileKind;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
@@ -39,7 +39,7 @@ public class MemberService implements MemberUseCase {
     private final PasswordEncoder passwordEncoder;
     private final TokenUseCase tokenUseCase;
     private final EmailUseCase emailUseCase;
-    private final FcmTokenService fcmTokenService;
+    private final FcmUseCase fcmUseCase;
     private final RoleQueryUseCase roleQueryUseCase;
     private final StoragePort storagePort;
     private final ApplicationEventPublisher eventPublisher;
@@ -53,7 +53,7 @@ public class MemberService implements MemberUseCase {
         String imageFileName = storagePort.uploadFile(memberSignDto.getMemberImageUrl(), FileKind.MEMBER);
         Member member = MemberMapper.toEntity(memberSignDto, passwordEncoder.encode(memberSignDto.getPassword()), imageFileName);
         Member savedMember = memberRepository.save(member);
-        
+
         //elasticsearch 문서 저장 이벤트 발생
         eventPublisher.publishEvent(new MemberSearchEvent(
                 savedMember.getId(),
@@ -133,7 +133,7 @@ public class MemberService implements MemberUseCase {
     @Override
     public void createFcmToken(FcmTokenDto fcmTokenDto) {
         Member member = memberQueryUseCase.findOrThrow(fcmTokenDto.getMemberId());
-        fcmTokenService.createFcmToken(member, fcmTokenDto.getFcmToken());
+        fcmUseCase.createFcmToken(member, fcmTokenDto.getFcmToken());
     }
 
     private void setRole(Member member, Role role) {

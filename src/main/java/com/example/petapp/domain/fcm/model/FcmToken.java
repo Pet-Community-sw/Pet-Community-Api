@@ -1,4 +1,4 @@
-package com.example.petapp.domain.fcm.model.entity;
+package com.example.petapp.domain.fcm.model;
 
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.member.model.Member;

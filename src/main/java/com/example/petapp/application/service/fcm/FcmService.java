@@ -1,15 +1,17 @@
-package com.example.petapp.domain.fcm;
+package com.example.petapp.application.service.fcm;
 
-import com.example.petapp.domain.fcm.model.entity.FcmToken;
+import com.example.petapp.application.in.fcm.FcmUseCase;
+import com.example.petapp.domain.fcm.FcmRepository;
+import com.example.petapp.domain.fcm.model.FcmToken;
 import com.example.petapp.domain.member.model.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class FcmTokenServiceImpl implements FcmTokenService {
+public class FcmService implements FcmUseCase {
 
-    private final FcmTokenRepository fcmTokenRepository;
+    private final FcmRepository fcmRepository;
 
     @Override
     public void createFcmToken(Member member, String token) {
@@ -17,7 +19,7 @@ public class FcmTokenServiceImpl implements FcmTokenService {
                 .member(member)
                 .fcmToken(token)
                 .build();
-        fcmTokenRepository.save(fcmToken);
+        fcmRepository.save(fcmToken);
     }
 
     //업데이트 로직.
