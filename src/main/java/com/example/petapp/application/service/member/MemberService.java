@@ -5,7 +5,9 @@ import com.example.petapp.application.in.fcm.FcmUseCase;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.member.MemberUseCase;
 import com.example.petapp.application.in.member.mapper.MemberMapper;
-import com.example.petapp.application.in.member.object.MemberSearchEvent;
+import com.example.petapp.application.in.member.object.MemberCreateEvent;
+import com.example.petapp.application.in.member.object.MemberDeleteEvent;
+import com.example.petapp.application.in.member.object.MemberUpdateEvent;
 import com.example.petapp.application.in.member.object.dto.request.*;
 import com.example.petapp.application.in.member.object.dto.response.FindByIdResponseDto;
 import com.example.petapp.application.in.member.object.dto.response.GetMemberResponseDto;
@@ -46,7 +48,7 @@ public class MemberService implements MemberUseCase {
 
     @Transactional
     @Override
-    public MemberSignResponseDto createMember(MemberSignDto memberSignDto) {
+    public MemberSignResponseDto create(MemberSignDto memberSignDto) {
         if (memberRepository.exist(memberSignDto.getEmail())) {
             throw new ConflictException("이미 가입된 회원입니다.");
         }
@@ -55,7 +57,7 @@ public class MemberService implements MemberUseCase {
         Member savedMember = memberRepository.save(member);
 
         //elasticsearch 문서 저장 이벤트 발생
-        eventPublisher.publishEvent(new MemberSearchEvent(
+        eventPublisher.publishEvent(new MemberCreateEvent(
                 savedMember.getId(),
                 savedMember.getName(),
                 savedMember.getMemberImageUrl()
@@ -117,16 +119,27 @@ public class MemberService implements MemberUseCase {
 
     //상세 멤버 프로필 추가랑 어떤거 해야할지 해야됨. 여기에 자기가 쓴 게시물, 산책길 추천, 후기 추가해야할듯.
     @Override
-    public GetMemberResponseDto getMember(Long targetId, Long memberId) {
+    public GetMemberResponseDto get(Long targetId, Long memberId) {
         Member member = memberQueryUseCase.findOrThrow(memberId);
         return MemberMapper.toGetMemberResponseDto(member);
     }
 
+    @Override
+    @Transactional
+    public void update(UpdateMemberRequestDto requestDto, Long memberId) {
+        Member member = memberQueryUseCase.findOrThrow(memberId);
+        member.setName(requestDto.getName());
+
+        eventPublisher.publishEvent(new MemberUpdateEvent(memberId, requestDto.getName()));
+    }
+
     @Transactional
     @Override
-    public void deleteMember(Long memberId) {//todo 한번에
+    public void delete(Long memberId) {//todo 한번에
         Member member = memberQueryUseCase.findOrThrow(memberId);
         memberRepository.delete(member);
+
+        eventPublisher.publishEvent(new MemberDeleteEvent(memberId));
     }
 
     @Transactional

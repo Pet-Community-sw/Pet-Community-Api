@@ -10,9 +10,14 @@ import org.springframework.stereotype.Repository;
 public class MemberSearchRepositoryImpl implements MemberSearchRepository {
 
     private final ElasticMemberSearchRepository repository;
-    
+
     @Override
     public void save(MemberSearch document) {
         repository.save(document);
+    }
+
+    @Override
+    public void delete(Long id) {
+        repository.deleteById(id);
     }
 }

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Service
 public interface MemberUseCase {
-    MemberSignResponseDto createMember(MemberSignDto memberSignDto);
+    MemberSignResponseDto create(MemberSignDto memberSignDto);
 
     LoginResponseDto login(LoginDto loginDto, HttpServletResponse response);
 
@@ -25,9 +25,11 @@ public interface MemberUseCase {
 
     void resetPassword(ResetPasswordDto resetPasswordDto, Long memberId);
 
-    GetMemberResponseDto getMember(Long targetId, Long memberId);
+    GetMemberResponseDto get(Long targetId, Long memberId);
 
-    void deleteMember(Long memberId);
+    void delete(Long memberId);
 
     void createFcmToken(FcmTokenDto fcmTokenDto);
+
+    void update(UpdateMemberRequestDto requestDto, Long memberId);
 }

@@ -39,7 +39,7 @@ public class MemberController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     public ResponseEntity<MemberSignResponseDto> signUp(@ModelAttribute @Validated MemberSignDto memberSignDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(memberUseCase.createMember(memberSignDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(memberUseCase.create(memberSignDto));
     }
 
     @Operation(
@@ -55,7 +55,7 @@ public class MemberController {
     )
     @GetMapping("/{targetId}")
     public GetMemberResponseDto getMember(@PathVariable Long targetId, Authentication authentication) {
-        return memberUseCase.getMember(targetId, AuthUtil.getMemberId(authentication));
+        return memberUseCase.get(targetId, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -102,11 +102,20 @@ public class MemberController {
     }
 
     @Operation(
+            summary = "회원 수정"
+    )
+    @PutMapping("/members")
+    public ResponseEntity<MessageResponse> updateMember(@RequestBody @Valid UpdateMemberRequestDto requestDto, Authentication authentication) {
+        memberUseCase.update(requestDto, AuthUtil.getMemberId(authentication));
+        return ResponseEntity.ok(new MessageResponse("수정 했습니다."));
+    }
+
+    @Operation(
             summary = "회원탈퇴"
     )
     @DeleteMapping()
     public ResponseEntity<MessageResponse> deleteMember(Authentication authentication) {
-        memberUseCase.deleteMember(AuthUtil.getMemberId(authentication));
+        memberUseCase.delete(AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("탈퇴 되었습니다."));
     }
 
