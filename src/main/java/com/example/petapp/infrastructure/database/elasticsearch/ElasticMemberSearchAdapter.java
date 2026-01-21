@@ -31,7 +31,7 @@ public class ElasticMemberSearchAdapter implements MemberSearchPort {
     public List<MemberSearchResponseDto> autoComplete(String keyword) {
 
         BoolQueryBuilder queryBuilder = boolQuery()
-                .should(termQuery("memberName.keyword", keyword).boost(10f))
+                .should(termQuery("memberName", keyword).boost(10f))
                 .should(matchQuery("memberName.prefix", keyword).boost(6f));// matchQuery는 분석을 거친 뒤 매칭
 
         NativeSearchQuery query = new NativeSearchQueryBuilder()
@@ -57,7 +57,7 @@ public class ElasticMemberSearchAdapter implements MemberSearchPort {
         if (keyword.length() < 2) return List.of();
 
         BoolQueryBuilder queryBuilder = boolQuery()
-                .should(termQuery("memberName.keyword", keyword).boost(10f))//keyword는 분석을 안거치므로 termQuery
+                .should(termQuery("memberName", keyword).boost(10f))//keyword는 분석을 안거치므로 termQuery
                 .should(matchQuery("memberName.prefix", keyword).boost(6f))//앞부분 매칭
                 .should(matchQuery("memberName.contains", keyword).boost(2f));//중간 포함
 
@@ -73,7 +73,6 @@ public class ElasticMemberSearchAdapter implements MemberSearchPort {
                 .toList();
     }
 
-    //todo : 캐싱
     private MemberSearchResponseDto toObject(SearchHit<MemberSearch> hit) {
         MemberSearch memberSearch = hit.getContent();
         return MemberSearchResponseDto.builder()
