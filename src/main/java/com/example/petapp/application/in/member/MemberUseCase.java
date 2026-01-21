@@ -31,7 +31,7 @@ public interface MemberUseCase {
 
     void update(UpdateMemberRequestDto requestDto, Long memberId);
 
-    List<MemberSearchResponseDto> autoComplete(String keyword, int size);
+    List<MemberSearchResponseDto> autoComplete(String keyword);
 
-    List<MemberSearchResponseDto> search(String keyword, int page, int size);
+    List<MemberSearchResponseDto> search(String keyword, int page);
 }

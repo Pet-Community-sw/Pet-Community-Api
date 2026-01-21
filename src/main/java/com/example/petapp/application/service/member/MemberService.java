@@ -14,6 +14,7 @@ import com.example.petapp.application.in.role.RoleQueryUseCase;
 import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.application.out.MemberSearchPort;
 import com.example.petapp.application.out.StoragePort;
+import com.example.petapp.application.out.cache.MemberSearchCachePort;
 import com.example.petapp.domain.file.FileKind;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
@@ -22,15 +23,18 @@ import com.example.petapp.domain.role.Role;
 import com.example.petapp.interfaces.exception.ConflictException;
 import com.example.petapp.interfaces.exception.UnAuthorizedException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.Duration;
 import java.util.List;
 
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberService implements MemberUseCase {
@@ -44,6 +48,7 @@ public class MemberService implements MemberUseCase {
     private final RoleQueryUseCase roleQueryUseCase;
     private final StoragePort storagePort;
     private final MemberSearchPort memberSearchPort;
+    private final MemberSearchCachePort memberSearchCachePort;
 
     private final ApplicationEventPublisher eventPublisher;
 
@@ -138,13 +143,28 @@ public class MemberService implements MemberUseCase {
     }
 
     @Override
-    public List<MemberSearchResponseDto> autoComplete(String keyword, int size) {
-        return memberSearchPort.autoComplete(keyword, size);
+    public List<MemberSearchResponseDto> autoComplete(String keyword) {
+        if (keyword.trim().isEmpty()) {
+            throw new IllegalArgumentException("키워드를 입력해주세요.");
+        }
+        /**
+         * 사실 matchQuery만 사용할 때는 필요없으나 termQuery 때문에 핸들 거치고 검색요청해야함.
+         */
+        String key = keyword.replaceAll("\\s+", "").toLowerCase();
+        List<MemberSearchResponseDto> result = memberSearchCachePort.get(key);
+        if (result != null) return result; // 캐시에 있으면 반환
+
+        List<MemberSearchResponseDto> memberSearchResponseDtos = memberSearchPort.autoComplete(key);// 캐시에 없으면 db에서 조회
+        memberSearchCachePort.set(key, memberSearchResponseDtos, Duration.ofSeconds(5));//해당 자동완성에 대해 5초 동안 캐싱
+        return memberSearchResponseDtos;
     }
 
     @Override
-    public List<MemberSearchResponseDto> search(String keyword, int page, int size) {
-        return memberSearchPort.search(keyword, page, size);
+    public List<MemberSearchResponseDto> search(String keyword, int page) {
+        if (keyword.trim().isEmpty()) {
+            throw new IllegalArgumentException("키워드를 입력해주세요.");
+        }
+        return memberSearchPort.search(keyword, page);
     }
 
     @Transactional

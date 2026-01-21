@@ -5,7 +5,7 @@ import com.example.petapp.application.in.member.object.dto.response.MemberSearch
 import java.util.List;
 
 public interface MemberSearchPort {
-    List<MemberSearchResponseDto> autoComplete(String keyword, int size);
+    List<MemberSearchResponseDto> autoComplete(String keyword);
 
-    List<MemberSearchResponseDto> search(String keyword, int page, int size);
+    List<MemberSearchResponseDto> search(String keyword, int page);
 }

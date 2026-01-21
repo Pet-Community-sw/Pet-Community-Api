@@ -24,18 +24,46 @@ public class ElasticMemberSearchAdapter implements MemberSearchPort {
     //Spring Data Elasticsearch가 제공하는 Es에 검색 요청 보내는 객체
     private final ElasticsearchOperations operations;
 
+    /**
+     * 검색창에서 입력값이 바뀔 때마다 자동완성 목적.
+     */
     @Override
-    public List<MemberSearchResponseDto> autoComplete(String keyword, int size) {
-        String word = wordHandle(keyword);
+    public List<MemberSearchResponseDto> autoComplete(String keyword) {
 
         BoolQueryBuilder queryBuilder = boolQuery()
-                .should(matchQuery("memberName.prefix", word).boost(6f))
-                .should(prefixQuery("memberName", word).boost(2f))
-                .minimumShouldMatch(1);
+                .should(termQuery("memberName.keyword", keyword).boost(10f))
+                .should(matchQuery("memberName.prefix", keyword).boost(6f));// matchQuery는 분석을 거친 뒤 매칭
 
         NativeSearchQuery query = new NativeSearchQueryBuilder()
                 .withQuery(queryBuilder)
-                .withPageable(PageRequest.of(0, size))
+                .withPageable(PageRequest.of(0, 10))
+                .build();
+
+        SearchHits<MemberSearch> hits = operations.search(query, MemberSearch.class);
+
+
+        return hits.getSearchHits().stream()
+                .map(this::toObject)
+                .toList();
+    }
+
+    /**
+     * 검색 결과 전체 보기 목적.
+     * 페이지네이션, 중간 포함 매칭 추가.
+     * 사용자가 검색 했을 때 api호출
+     */
+    @Override
+    public List<MemberSearchResponseDto> search(String keyword, int page) {
+        if (keyword.length() < 2) return List.of();
+
+        BoolQueryBuilder queryBuilder = boolQuery()
+                .should(termQuery("memberName.keyword", keyword).boost(10f))//keyword는 분석을 안거치므로 termQuery
+                .should(matchQuery("memberName.prefix", keyword).boost(6f))//앞부분 매칭
+                .should(matchQuery("memberName.contains", keyword).boost(2f));//중간 포함
+
+        NativeSearchQuery query = new NativeSearchQueryBuilder()
+                .withQuery(queryBuilder)
+                .withPageable(PageRequest.of(page, 10))
                 .build();
 
         SearchHits<MemberSearch> hits = operations.search(query, MemberSearch.class);
@@ -45,30 +73,7 @@ public class ElasticMemberSearchAdapter implements MemberSearchPort {
                 .toList();
     }
 
-    @Override
-    public List<MemberSearchResponseDto> search(String keyword, int page, int size) {
-        String word = wordHandle(keyword);
-        if (word.length() < 2) return List.of();
-
-        BoolQueryBuilder queryBuilder = boolQuery()
-                .should(termQuery("memberName.keyword", word).boost(10f))   // 정확히 같으면 최상단
-                .should(matchQuery("memberName.prefix", word).boost(6f))    // 앞부분 매칭
-                .should(matchQuery("memberName.contains", word).boost(2f))  // 중간 포함(보조)
-                .should(matchQuery("memberName", word).boost(1f))           // 기본 검색
-                .minimumShouldMatch(1);
-
-        NativeSearchQuery query = new NativeSearchQueryBuilder()
-                .withQuery(queryBuilder)
-                .withPageable(PageRequest.of(page, size))
-                .build();
-
-        SearchHits<MemberSearch> hits = operations.search(query, MemberSearch.class);
-
-        return hits.getSearchHits().stream()
-                .map(this::toObject)
-                .toList();
-    }
-
+    //todo : 캐싱
     private MemberSearchResponseDto toObject(SearchHit<MemberSearch> hit) {
         MemberSearch memberSearch = hit.getContent();
         return MemberSearchResponseDto.builder()
@@ -76,9 +81,5 @@ public class ElasticMemberSearchAdapter implements MemberSearchPort {
                 .memberName(memberSearch.getMemberName())
                 .memberImageUrl(memberSearch.getMemberImageUrl())
                 .build();
-    }
-
-    private String wordHandle(String keyword) {
-        return keyword.replaceAll("\\s+", "").toLowerCase();
     }
 }
