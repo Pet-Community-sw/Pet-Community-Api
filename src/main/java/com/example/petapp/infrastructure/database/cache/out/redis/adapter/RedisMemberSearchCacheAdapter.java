@@ -23,7 +23,7 @@ public class RedisMemberSearchCacheAdapter implements MemberSearchCachePort {
     }
 
     @Override
-    public void set(String keyword, List<MemberSearchResponseDto> memberSearchResponseDtos, Duration duration) {
+    public void create(String keyword, List<MemberSearchResponseDto> memberSearchResponseDtos, Duration duration) {
         redisTemplate.opsForValue().set(getKey(keyword), memberSearchResponseDtos, duration);
     }
 

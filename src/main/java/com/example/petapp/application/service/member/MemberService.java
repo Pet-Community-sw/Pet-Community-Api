@@ -14,6 +14,7 @@ import com.example.petapp.application.in.role.RoleQueryUseCase;
 import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.application.out.MemberSearchPort;
 import com.example.petapp.application.out.StoragePort;
+import com.example.petapp.application.out.cache.MemberRecentViewCachePort;
 import com.example.petapp.application.out.cache.MemberSearchCachePort;
 import com.example.petapp.domain.file.FileKind;
 import com.example.petapp.domain.member.MemberRepository;
@@ -49,6 +50,7 @@ public class MemberService implements MemberUseCase {
     private final StoragePort storagePort;
     private final MemberSearchPort memberSearchPort;
     private final MemberSearchCachePort memberSearchCachePort;
+    private final MemberRecentViewCachePort memberRecentViewCachePort;
 
     private final ApplicationEventPublisher eventPublisher;
 
@@ -123,10 +125,12 @@ public class MemberService implements MemberUseCase {
         }
     }
 
-    //상세 멤버 프로필 추가랑 어떤거 해야할지 해야됨. 여기에 자기가 쓴 게시물, 산책길 추천, 후기 추가해야할듯.
     @Override
     public GetMemberResponseDto get(Long targetId, Long memberId) {
         Member member = memberQueryUseCase.findOrThrow(memberId);
+
+        memberRecentViewCachePort.create(memberId, targetId); // 최근 본 회원 캐시에 저장
+
         return MemberMapper.toGetMemberResponseDto(member);
     }
 
@@ -155,7 +159,7 @@ public class MemberService implements MemberUseCase {
         if (result != null) return result; // 캐시에 있으면 반환
 
         List<MemberSearchResponseDto> memberSearchResponseDtos = memberSearchPort.autoComplete(key);// 캐시에 없으면 db에서 조회
-        memberSearchCachePort.set(key, memberSearchResponseDtos, Duration.ofSeconds(5));//해당 자동완성에 대해 5초 동안 캐싱
+        memberSearchCachePort.create(key, memberSearchResponseDtos, Duration.ofSeconds(5));//해당 자동완성에 대해 5초 동안 캐싱
         return memberSearchResponseDtos;
     }
 

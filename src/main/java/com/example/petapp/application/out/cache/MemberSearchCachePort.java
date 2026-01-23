@@ -9,6 +9,6 @@ public interface MemberSearchCachePort {
 
     List<MemberSearchResponseDto> get(String keyword);
 
-    void set(String keyword, List<MemberSearchResponseDto> memberSearchResponseDtos, Duration duration);
+    void create(String keyword, List<MemberSearchResponseDto> memberSearchResponseDtos, Duration duration);
 
 }
