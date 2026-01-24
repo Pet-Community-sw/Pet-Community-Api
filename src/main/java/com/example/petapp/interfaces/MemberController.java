@@ -51,9 +51,9 @@ public class MemberController {
     @Operation(
             summary = "유저 상세 조회"
     )
-    @GetMapping("/{targetId}")
-    public GetMemberResponseDto getMember(@PathVariable Long targetId, Authentication authentication) {
-        return memberUseCase.get(targetId, AuthUtil.getMemberId(authentication));
+    @GetMapping("/{memberId}")
+    public GetMemberResponseDto getMember(@PathVariable Long memberId, Authentication authentication) {
+        return memberUseCase.get(memberId, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(

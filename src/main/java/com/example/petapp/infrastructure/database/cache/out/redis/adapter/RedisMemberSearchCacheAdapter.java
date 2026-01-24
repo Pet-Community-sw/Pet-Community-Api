@@ -2,6 +2,8 @@ package com.example.petapp.infrastructure.database.cache.out.redis.adapter;
 
 import com.example.petapp.application.in.member.object.dto.response.MemberSearchResponseDto;
 import com.example.petapp.application.out.cache.MemberSearchCachePort;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,10 +18,13 @@ import java.util.List;
 public class RedisMemberSearchCacheAdapter implements MemberSearchCachePort {
 
     private final RedisTemplate<String, List<MemberSearchResponseDto>> redisTemplate;
+    private final ObjectMapper objectMapper;
 
     @Override
     public List<MemberSearchResponseDto> get(String keyword) {
-        return redisTemplate.opsForValue().get(getKey(keyword));
+        //매퍼 필요 객체-> 객체 convertValue
+        return objectMapper.convertValue(redisTemplate.opsForValue().get(getKey(keyword)), new TypeReference<>() {
+        });
     }
 
     @Override

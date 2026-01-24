@@ -128,7 +128,7 @@ public class MemberService implements MemberUseCase {
 
     @Override
     public GetMemberResponseDto get(Long targetId, Long memberId) {
-        Member member = memberQueryUseCase.findOrThrow(memberId);
+        Member member = memberQueryUseCase.findOrThrow(targetId);
 
         memberRecentViewCachePort.create(memberId, targetId); // 최근 본 회원 캐시에 저장
 
