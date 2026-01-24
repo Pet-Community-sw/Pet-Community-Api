@@ -35,7 +35,7 @@ public class MemberController {
     @PostMapping(
             value = "/signup",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-    )
+    )//Todo : validated, valid
     public ResponseEntity<MemberSignResponseDto> signUp(@ModelAttribute @Validated MemberSignDto memberSignDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(memberUseCase.create(memberSignDto));
     }
@@ -124,16 +124,16 @@ public class MemberController {
             summary = "자동완성 검색"
     )
     @GetMapping("/auto-complete")
-    public List<MemberSearchResponseDto> autoComplete(@RequestParam String keyword, @RequestParam(defaultValue = "10") int size) {
-        return memberUseCase.autoComplete(keyword, size);
+    public List<MemberSearchResponseDto> autoComplete(@RequestParam String keyword, Authentication authentication) {
+        return memberUseCase.autoComplete(keyword, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
             summary = "검색"
     )
     @GetMapping("/search")
-    public List<MemberSearchResponseDto> search(@RequestParam String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        return memberUseCase.search(keyword, page, size);
+    public List<MemberSearchResponseDto> search(@RequestParam String keyword, @RequestParam(defaultValue = "0") int page, Authentication authentication) {
+        return memberUseCase.search(keyword, page, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(

@@ -29,10 +29,10 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.View;
 
 import javax.servlet.http.HttpServletResponse;
-import java.time.Duration;
-import java.util.List;
+import java.util.*;
 
 
 @Slf4j
@@ -53,6 +53,7 @@ public class MemberService implements MemberUseCase {
     private final MemberRecentViewCachePort memberRecentViewCachePort;
 
     private final ApplicationEventPublisher eventPublisher;
+    private final View view;
 
     @Transactional
     @Override
@@ -146,31 +147,6 @@ public class MemberService implements MemberUseCase {
         eventPublisher.publishEvent(new MemberUpdateEvent(memberId, requestDto.getName(), imageFileName));
     }
 
-    @Override
-    public List<MemberSearchResponseDto> autoComplete(String keyword) {
-        if (keyword.trim().isEmpty()) {
-            throw new IllegalArgumentException("키워드를 입력해주세요.");
-        }
-        /**
-         * 사실 matchQuery만 사용할 때는 필요없으나 termQuery 때문에 핸들 거치고 검색요청해야함.
-         */
-        String key = keyword.replaceAll("\\s+", "").toLowerCase();
-        List<MemberSearchResponseDto> result = memberSearchCachePort.get(key);
-        if (result != null) return result; // 캐시에 있으면 반환
-
-        List<MemberSearchResponseDto> memberSearchResponseDtos = memberSearchPort.autoComplete(key);// 캐시에 없으면 db에서 조회
-        memberSearchCachePort.create(key, memberSearchResponseDtos, Duration.ofSeconds(5));//해당 자동완성에 대해 5초 동안 캐싱
-        return memberSearchResponseDtos;
-    }
-
-    @Override
-    public List<MemberSearchResponseDto> search(String keyword, int page) {
-        if (keyword.trim().isEmpty()) {
-            throw new IllegalArgumentException("키워드를 입력해주세요.");
-        }
-        return memberSearchPort.search(keyword, page);
-    }
-
     @Transactional
     @Override
     public void delete(Long memberId) {
@@ -185,6 +161,57 @@ public class MemberService implements MemberUseCase {
     public void createFcmToken(FcmTokenDto fcmTokenDto) {
         Member member = memberQueryUseCase.findOrThrow(fcmTokenDto.getMemberId());
         fcmUseCase.createFcmToken(member, fcmTokenDto.getFcmToken());
+    }
+
+    @Override
+    public List<MemberSearchResponseDto> autoComplete(String keyword, Long memberId) {
+        if (keyword.trim().isEmpty()) {
+            throw new IllegalArgumentException("키워드를 입력해주세요.");
+        }
+        /**
+         * 사실 matchQuery만 사용할 때는 필요없으나 termQuery 때문에 핸들 거치고 검색요청해야함.
+         */
+        String key = keyword.replaceAll("\\s+", "").toLowerCase();
+        List<MemberSearchResponseDto> result = memberSearchCachePort.get(key);
+
+        if (result == null) {
+            result = memberSearchPort.autoComplete(key);// 캐시 미스면 db에서 조회
+            memberSearchCachePort.create(key, result);//해당 자동완성에 캐싱
+
+        }
+        if (result == null || result.isEmpty()) return result;
+
+        List<Long> viewList = memberRecentViewCachePort.findList(memberId);
+        if (viewList == null || viewList.isEmpty()) return result; //최근 본 회원이 없으면 바로 반환
+
+        Map<Long, MemberSearchResponseDto> map = new HashMap<>(result.size());
+        for (MemberSearchResponseDto dto : result) {
+            map.put(dto.getMemberId(), dto);
+        }
+
+        List<MemberSearchResponseDto> list = new ArrayList<>(result.size());
+        Set<Long> picked = new HashSet<>();
+
+        //최근 본 회원을 앞으로 정렬
+        for (Long id : viewList) {
+            MemberSearchResponseDto dto = map.get(id);
+            if (dto != null && picked.add(id)) list.add(dto);
+        }
+
+        //나머지는 엘라스틱서치에서 정렬된 순서대로 추가
+        for (MemberSearchResponseDto dto : result) {
+            if (picked.add(dto.getMemberId())) list.add(dto);
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<MemberSearchResponseDto> search(String keyword, int page, Long memberId) {
+        if (keyword.trim().isEmpty()) {
+            throw new IllegalArgumentException("키워드를 입력해주세요.");
+        }
+        return memberSearchPort.search(keyword, page);
     }
 
     private void setRole(Member member, Role role) {

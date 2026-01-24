@@ -2,7 +2,7 @@ package com.example.petapp.service;
 
 import com.example.petapp.application.in.notification.dto.NotificationEvent;
 import com.example.petapp.application.out.cache.AppOnlineCachePort;
-import com.example.petapp.infrastructure.event.notification.NotificationAdapter;
+import com.example.petapp.infrastructure.event.notification.NotificationListener;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
 public class AsyncNotificationTest {
 
     @SpyBean
-    private NotificationAdapter notificationAdapter;
+    private NotificationListener notificationListener;
 
     @MockBean
     private AppOnlineCachePort appOnlineCachePort;
@@ -30,13 +30,13 @@ public class AsyncNotificationTest {
         when(appOnlineCachePort.exist(any())).thenThrow(new RuntimeException("redis 에러"));
 
         //when
-        notificationAdapter.handle(event);
+        notificationListener.handle(event);
 
         Thread.sleep(31000);
 
         //then
         // handle 메서드가 4번 호출되고, recover 메서드가 1번 호출되는지 검증
-        verify(notificationAdapter, times(4)).handle(event);
-        verify(notificationAdapter, times(1)).recover(any(RuntimeException.class), eq(event));
+        verify(notificationListener, times(4)).handle(event);
+        verify(notificationListener, times(1)).recover(any(RuntimeException.class), eq(event));
     }
 }

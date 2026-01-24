@@ -6,6 +6,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Repository
@@ -25,6 +27,18 @@ public class RedisMemberRecentViewCacheAdapter implements MemberRecentViewCacheP
             long removeCount = size - 50;
             redisTemplate.opsForZSet().removeRange(key, 0, removeCount - 1);
         }
+    }
+
+    @Override
+    public List<Long> findList(Long memberId) {
+        Set<String> ids = redisTemplate.opsForZSet().reverseRange(getKey(memberId), 0, -1);
+
+        if (ids == null) return List.of();
+
+        return ids.stream()
+                .map(Long::parseLong)
+                .toList();
+
     }
 
     private String getKey(Long memberId) {
