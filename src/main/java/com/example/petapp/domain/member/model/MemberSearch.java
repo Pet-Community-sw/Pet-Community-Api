@@ -21,8 +21,12 @@ public class MemberSearch {
     @Field(type = FieldType.Text)
     private String memberName;
 
+    @Field(type = FieldType.Text)
+    private String memberNameChosung;
+
     @Field(type = FieldType.Keyword)
     private String memberImageUrl;
+
 }
 
 

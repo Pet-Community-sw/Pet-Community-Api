@@ -1,0 +1,16 @@
+{
+  "actions": [
+    {
+      "remove": {
+        "index": "members_v3",
+        "alias": "members"
+      }
+    },
+    {
+      "add": {
+        "index": "members_v4",
+        "alias": "members"
+      }
+    }
+  ]
+}

@@ -33,6 +33,7 @@ public class MemberSearchListener {
         MemberSearch document = MemberSearch.builder()
                 .memberId(event.memberId())
                 .memberName(event.memberName())
+                .memberNameChosung(event.memberNameChosung())
                 .memberImageUrl(event.memberImageUrl())
                 .build();
         repository.save(document);
@@ -48,6 +49,7 @@ public class MemberSearchListener {
         MemberSearch document = MemberSearch.builder()
                 .memberId(event.memberId())
                 .memberName(event.memberName())
+                .memberNameChosung(event.memberNameChosung())
                 .memberImageUrl(event.memberImageUrl())
                 .build();
         repository.save(document);

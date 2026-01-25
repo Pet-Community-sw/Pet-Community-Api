@@ -6,9 +6,9 @@ public class NameChosungUtil {
             'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
     };
 
-    public static String getChosung(String text) {
+    public static String getChosung(String name) {
         StringBuilder sb = new StringBuilder();
-        for (char c : text.toCharArray()) {
+        for (char c : name.toCharArray()) {
             if (c >= CHOSUNG_START && c <= 0xD7A3) {
                 // 한글인 경우 초성 추출
                 int index = (c - CHOSUNG_START) / 588;
@@ -19,5 +19,9 @@ public class NameChosungUtil {
             }
         }
         return sb.toString().replaceAll("\\s+", "").toLowerCase();
+    }
+
+    public static boolean isChosung(String keyword) {
+        return keyword.matches("^[ㄱ-ㅎㄲㄸㅃㅆㅉ]+$");
     }
 }

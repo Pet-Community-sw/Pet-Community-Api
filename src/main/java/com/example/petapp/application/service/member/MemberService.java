@@ -1,5 +1,6 @@
 package com.example.petapp.application.service.member;
 
+import com.example.petapp.application.common.NameChosungUtil;
 import com.example.petapp.application.in.email.EmailUseCase;
 import com.example.petapp.application.in.fcm.FcmUseCase;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
@@ -70,8 +71,10 @@ public class MemberService implements MemberUseCase {
         eventPublisher.publishEvent(new MemberCreateEvent(
                 savedMember.getId(),
                 savedMember.getName(),
+                savedMember.getNameChosung(),
                 savedMember.getMemberImageUrl()
         ));
+
         return new MemberSignResponseDto(savedMember.getId());
     }
 
@@ -141,9 +144,11 @@ public class MemberService implements MemberUseCase {
         String imageFileName = storagePort.uploadFile(requestDto.getMemberImageUrl(), FileKind.MEMBER);
 
         member.setName(requestDto.getName());
+        String chosung = NameChosungUtil.getChosung(requestDto.getName());
+        member.setNameChosung(chosung);
         member.setMemberImageUrl(imageFileName);
 
-        eventPublisher.publishEvent(new MemberUpdateEvent(memberId, requestDto.getName(), imageFileName));
+        eventPublisher.publishEvent(new MemberUpdateEvent(memberId, requestDto.getName(), chosung, imageFileName));
     }
 
     @Transactional

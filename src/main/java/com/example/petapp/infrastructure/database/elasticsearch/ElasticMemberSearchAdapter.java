@@ -1,12 +1,12 @@
 package com.example.petapp.infrastructure.database.elasticsearch;
 
+import com.example.petapp.application.common.NameChosungUtil;
 import com.example.petapp.application.in.member.object.dto.response.MemberSearchResponseDto;
 import com.example.petapp.application.out.MemberSearchPort;
 import com.example.petapp.domain.member.model.MemberSearch;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -26,15 +26,6 @@ public class ElasticMemberSearchAdapter implements MemberSearchPort {
     //Spring Data Elasticsearch가 제공하는 Es에 검색 요청 보내는 객체
     private final ElasticsearchOperations operations;
 
-    @NotNull
-    private static NativeSearchQuery buildQuery(int page, BoolQueryBuilder queryBuilder) {
-        NativeSearchQuery query = new NativeSearchQueryBuilder()
-                .withQuery(queryBuilder)
-                .withPageable(PageRequest.of(page, 10))
-                .build();
-        return query;
-    }
-
     /**
      * 검색창에서 입력값이 바뀔 때마다 자동완성 목적.
      */
@@ -45,10 +36,16 @@ public class ElasticMemberSearchAdapter implements MemberSearchPort {
                 .should(termQuery("memberName", keyword).boost(10f))
                 .should(matchQuery("memberName.prefix", keyword).boost(6f));// matchQuery는 분석을 거친 뒤 매칭
 
+        // 초성 검색어일 경우 초성 필드 검색
+        if (NameChosungUtil.isChosung(keyword)) {
+            queryBuilder.should(termQuery("memberNameChosung", keyword).boost(10f));
+            queryBuilder.should(matchQuery("memberNameChosung.prefix", keyword).boost(8f));
+        }
+
         NativeSearchQuery query = buildQuery(0, queryBuilder);
 
         SearchHits<MemberSearch> hits = operations.search(query, MemberSearch.class);
-        
+
         return hits.getSearchHits().stream()
                 .map(this::toObject)
                 .toList();
@@ -63,14 +60,19 @@ public class ElasticMemberSearchAdapter implements MemberSearchPort {
     public List<MemberSearchResponseDto> search(String keyword, int page) {
         BoolQueryBuilder queryBuilder = boolQuery()
                 .should(termQuery("memberName", keyword).boost(10f))//keyword는 분석을 안거치므로 termQuery
-                .should(matchQuery("memberName.prefix", keyword).boost(6f));//앞부분 매칭
+                .should(matchQuery("memberName.prefix", keyword).boost(8f));//앞부분 매칭
 
 
         /**
          * 키워드가 2글자 이상일 경우에만 중간 포함 매칭
          */
         if (keyword.length() > 1) {
-            queryBuilder.should(matchQuery("memberName.contains", keyword).boost(2f));//중간 포함
+            queryBuilder.should(matchQuery("memberName.contains", keyword).boost(6f));//중간 포함
+        }
+
+        if (NameChosungUtil.isChosung(keyword)) {
+            queryBuilder.should(termQuery("memberNameChosung", keyword).boost(10f));
+            queryBuilder.should(matchQuery("memberNameChosung.prefix", keyword).boost(8f));
         }
 
         SearchHits<MemberSearch> hits = operations.search(buildQuery(page, queryBuilder), MemberSearch.class);
@@ -103,6 +105,13 @@ public class ElasticMemberSearchAdapter implements MemberSearchPort {
                 .memberId(memberSearch.getMemberId())
                 .memberName(memberSearch.getMemberName())
                 .memberImageUrl(memberSearch.getMemberImageUrl())
+                .build();
+    }
+
+    private NativeSearchQuery buildQuery(int page, BoolQueryBuilder queryBuilder) {
+        return new NativeSearchQueryBuilder()
+                .withQuery(queryBuilder)
+                .withPageable(PageRequest.of(page, 10))
                 .build();
     }
 }
