@@ -41,6 +41,10 @@ public class Member extends BaseEntity {//수정 필요
     private String name;
 
     @Setter
+    @Column(nullable = false)
+    private String nameChosung;
+
+    @Setter
     @NotBlank
     @Column(nullable = false)
     private String email;
@@ -54,6 +58,7 @@ public class Member extends BaseEntity {//수정 필요
     @Setter
     @Column(nullable = false)
     private String memberImageUrl;
+
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Token token;
