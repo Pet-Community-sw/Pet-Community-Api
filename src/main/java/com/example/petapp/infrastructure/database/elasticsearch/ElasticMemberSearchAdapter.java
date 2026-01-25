@@ -48,8 +48,7 @@ public class ElasticMemberSearchAdapter implements MemberSearchPort {
         NativeSearchQuery query = buildQuery(0, queryBuilder);
 
         SearchHits<MemberSearch> hits = operations.search(query, MemberSearch.class);
-
-
+        
         return hits.getSearchHits().stream()
                 .map(this::toObject)
                 .toList();

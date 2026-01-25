@@ -5,9 +5,7 @@ import com.example.petapp.application.in.member.object.dto.response.MemberSearch
 import java.util.List;
 
 public interface MemberSearchCachePort {
+    void create(String key, int page, List<MemberSearchResponseDto> dtos);
 
-    List<MemberSearchResponseDto> get(String keyword);
-
-    void create(String keyword, List<MemberSearchResponseDto> memberSearchResponseDtos);
-
+    List<MemberSearchResponseDto> get(String key, int page);
 }

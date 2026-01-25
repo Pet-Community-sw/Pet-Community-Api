@@ -14,6 +14,7 @@ import com.example.petapp.application.in.role.RoleQueryUseCase;
 import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.application.out.MemberSearchPort;
 import com.example.petapp.application.out.StoragePort;
+import com.example.petapp.application.out.cache.MemberAutoCompleteSearchCachePort;
 import com.example.petapp.application.out.cache.MemberRecentViewCachePort;
 import com.example.petapp.application.out.cache.MemberSearchCachePort;
 import com.example.petapp.domain.file.FileKind;
@@ -29,7 +30,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.View;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
@@ -50,10 +50,11 @@ public class MemberService implements MemberUseCase {
     private final StoragePort storagePort;
     private final MemberSearchPort memberSearchPort;
     private final MemberSearchCachePort memberSearchCachePort;
+    private final MemberAutoCompleteSearchCachePort memberAutoCompleteSearchCachePort;
     private final MemberRecentViewCachePort memberRecentViewCachePort;
 
     private final ApplicationEventPublisher eventPublisher;
-    private final View view;
+
 
     @Transactional
     @Override
@@ -108,12 +109,10 @@ public class MemberService implements MemberUseCase {
         emailUseCase.send(member.getEmail());
     }
 
-
     @Override
     public void logout(String accessToken) {
         tokenUseCase.delete(accessToken);
     }
-
 
     @Transactional
     @Override
@@ -171,12 +170,12 @@ public class MemberService implements MemberUseCase {
         /**
          * 사실 matchQuery만 사용할 때는 필요없으나 termQuery 때문에 핸들 거치고 검색요청해야함.
          */
-        String key = keyword.replaceAll("\\s+", "").toLowerCase();
-        List<MemberSearchResponseDto> result = memberSearchCachePort.get(key);
+        String key = keywordFilter(keyword);
+        List<MemberSearchResponseDto> result = memberAutoCompleteSearchCachePort.get(key);
 
         if (result == null) {
             result = memberSearchPort.autoComplete(key);// 캐시 미스면 db에서 조회
-            memberSearchCachePort.create(key, result);//해당 자동완성에 캐싱
+            memberAutoCompleteSearchCachePort.create(key, result);//해당 자동완성에 캐싱
 
         }
         if (result == null || result.isEmpty()) return result;
@@ -211,7 +210,13 @@ public class MemberService implements MemberUseCase {
         if (keyword.trim().isEmpty()) {
             throw new IllegalArgumentException("키워드를 입력해주세요.");
         }
-        return memberSearchPort.search(keyword, page);
+        String key = keywordFilter(keyword);
+        List<MemberSearchResponseDto> reuslt = memberSearchCachePort.get(key, page);
+        if (reuslt == null) {
+            reuslt = memberSearchPort.search(key, page);
+            memberSearchCachePort.create(key, page, reuslt);
+        }
+        return reuslt;
     }
 
     private void setRole(Member member, Role role) {
@@ -220,5 +225,10 @@ public class MemberService implements MemberUseCase {
                 .role(role)
                 .build();
         member.addRole(memberRole);
+    }
+
+
+    private String keywordFilter(String keyword) {
+        return keyword.replaceAll("\\s+", "").toLowerCase();
     }
 }
