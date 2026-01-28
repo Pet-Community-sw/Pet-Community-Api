@@ -3,7 +3,7 @@ jwt:
   refreshKey: ${REFRESH_KEY}
 spring:
   elasticsearch:
-    uris: http://localhost:9200
+    uris: http://localhost:80
   datasource:
     url: jdbc:mysql://localhost:3306/${MYSQL_DATABASE}?useUnicode=true&serverTimezone=Asia/Seoul
     username: ${MYSQL_USER}

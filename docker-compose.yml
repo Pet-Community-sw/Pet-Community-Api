@@ -1,4 +1,17 @@
 services:
+  nginx:
+    image: nginx:latest
+    container_name: pet-app-nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - es01
+      - es02
+      - es03
+
   mysql:
     image: mysql:8.0
     container_name: pet-app-mysql
@@ -58,7 +71,7 @@ services:
 
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.18
-    container_name: es01
+    container_name: pet-app-es01
     environment:
       - node.name=es01
       - cluster.name=pet-cluster
@@ -73,7 +86,7 @@ services:
 
   es02:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.18
-    container_name: es02
+    container_name: pet-app-es02
     environment:
       - node.name=es02
       - cluster.name=pet-cluster
@@ -89,7 +102,7 @@ services:
 
   es03:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.18
-    container_name: es03
+    container_name: pet-app-es03
     environment:
       - node.name=es03
       - cluster.name=pet-cluster
