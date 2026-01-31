@@ -73,16 +73,40 @@
           "prefix": {
             "type": "text",
             "analyzer": "member_prefix",
-            "search_analyzer": "member_prefix_search"
+            "search_analyzer": "member_prefix_search",
+            "index_options": "docs",
+            "norms": false
           },
           "contains": {
             "type": "text",
-            "analyzer": "member_contains"
+            "analyzer": "member_contains",
+            "index_options": "docs",
+            "norms": false
+          },
+          "fuzzy": {
+            "type": "text",
+            "analyzer": "member_prefix_search",
+            "index_options": "docs",
+            "norms": false
+          }
+        }
+      },
+      "memberNameChosung": {
+        "type": "keyword",
+        "fields": {
+          "prefix": {
+            "type": "text",
+            "analyzer": "member_prefix",
+            "search_analyzer": "member_prefix_search",
+            "index_options": "docs",
+            "norms": false
           }
         }
       },
       "memberImageUrl": {
-        "type": "keyword"
+        "type": "keyword",
+        "index": false,
+        "doc_values": false
       }
     }
   }

@@ -1,7 +1,7 @@
 {
   "settings": {
     "index": {
-      "max_ngram_diff": 5
+      "max_ngram_diff": 6
     },
     "analysis": {
       "char_filter": {
@@ -27,16 +27,6 @@
         }
       },
       "analyzer": {
-        "member_base": {
-          "type": "custom",
-          "char_filter": [
-            "remove_space"
-          ],
-          "tokenizer": "standard",
-          "filter": [
-            "lowercase"
-          ]
-        },
         "member_prefix": {
           "type": "custom",
           "char_filter": [
@@ -46,6 +36,16 @@
           "filter": [
             "lowercase",
             "edge_1_7"
+          ]
+        },
+        "member_prefix_search": {
+          "type": "custom",
+          "char_filter": [
+            "remove_space"
+          ],
+          "tokenizer": "keyword",
+          "filter": [
+            "lowercase"
           ]
         },
         "member_contains": {
@@ -68,19 +68,30 @@
         "type": "keyword"
       },
       "memberName": {
-        "type": "text",
-        "analyzer": "member_base",
+        "type": "keyword",
         "fields": {
-          "keyword": {
-            "type": "keyword"
-          },
           "prefix": {
             "type": "text",
-            "analyzer": "member_prefix"
+            "analyzer": "member_prefix",
+            "search_analyzer": "member_prefix_search"
           },
           "contains": {
             "type": "text",
             "analyzer": "member_contains"
+          },
+          "fuzzy": {
+            "type": "text",
+            "analyzer": "member_prefix_search"
+          }
+        }
+      },
+      "memberNameChosung": {
+        "type": "keyword",
+        "fields": {
+          "prefix": {
+            "type": "text",
+            "analyzer": "member_prefix",
+            "search_analyzer": "member_prefix_search"
           }
         }
       },
