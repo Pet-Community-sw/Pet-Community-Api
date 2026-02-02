@@ -115,6 +115,26 @@ services:
     volumes:
       - es-data03:/usr/share/elasticsearch/data
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: pet-app-rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"# RabbitMQ 서버 포트
+      - "15672:15672"# 관리 UI 포트
+    environment:
+      RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE} # 클러스터링 시 동일한 값으로 설정
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      TZ: Asia/Seoul
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "check_port_connectivity" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
 
 volumes:
   mysql-data:
@@ -124,5 +144,6 @@ volumes:
   es-data01:
   es-data02:
   es-data03:
+  rabbitmq-data:
 
 
