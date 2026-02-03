@@ -1,14 +1,11 @@
-package com.example.petapp.infrastructure.event.smtp;
+package com.example.petapp.infrastructure.mail;
 
 import com.example.petapp.application.in.email.EventEmail;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.event.EventListener;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.mail.Message;
@@ -17,21 +14,18 @@ import javax.mail.internet.MimeMessage;
 
 @Slf4j
 @Component
+@ConditionalOnProperty(name = "mail.provider", havingValue = "smtp")
 @RequiredArgsConstructor
-public class SmtpEmailListener {
+public class SmtpProvider implements MailProvider {
 
     private final JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
     private String email;
 
-    @Async("mailExecutor")
-    @EventListener
-    @Retryable(
-            maxAttempts = 4,// 최대 재시도 횟수(기본값 3)
-            backoff = @Backoff(delay = 2000, multiplier = 2.0, random = true)// 재시도 간격
-    )
-    public void handle(EventEmail event) {
+    @Override
+    public void send(EventEmail event) {
+
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
             message.setRecipients(Message.RecipientType.TO, event.toEmail());

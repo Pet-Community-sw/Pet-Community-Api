@@ -2,10 +2,10 @@ package com.example.petapp.application.service.email;
 
 import com.example.petapp.application.in.email.EmailUseCase;
 import com.example.petapp.application.in.email.EventEmail;
+import com.example.petapp.application.out.EmailSendPort;
 import com.example.petapp.application.out.cache.EmailCachePort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
@@ -16,7 +16,7 @@ import java.util.Random;
 public class EmailService implements EmailUseCase {
 
     private final EmailCachePort emailCachePort;
-    private final ApplicationEventPublisher eventPublisher;
+    private final EmailSendPort emailSendPort;
 
     @Override
     public void send(String toEmail) {
@@ -26,7 +26,8 @@ public class EmailService implements EmailUseCase {
         String code = buildCode();
         emailCachePort.createWithDuration(toEmail, code, 3 * 60L);
 
-        eventPublisher.publishEvent(new EventEmail(toEmail, "멍냥로드 인증코드 안내입니다.", code));
+        emailSendPort.send(new EventEmail(toEmail, "멍냥로드 인증코드 안내입니다.", code));
+
     }
 
     @Override
