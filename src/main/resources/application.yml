@@ -13,7 +13,6 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        show_sql: true
         format_sql: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
@@ -30,6 +29,15 @@ spring:
           starttls:
             enable: true
     default-encoding: UTF-8
+
+  rabbitmq:
+    addresses: localhost:5672
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+    listener:
+      simple:
+        prefetch: 1 # 한 번에 하나의 메시지 처리
+        acknowledge-mode: auto
 
   data:
     mongodb:
@@ -62,7 +70,8 @@ spring:
     exclude:
       - org.springframework.boot.autoconfigure.data.elasticsearch.ReactiveElasticsearchRepositoriesAutoConfiguration
 
-
+mail:
+  provider: smtp
 
 logging:
   level:

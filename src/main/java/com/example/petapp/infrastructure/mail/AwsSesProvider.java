@@ -4,18 +4,26 @@
 //import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
 //import org.springframework.beans.factory.annotation.Value;
+//import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 //import org.springframework.context.event.EventListener;
 //import org.springframework.retry.annotation.Backoff;
 //import org.springframework.retry.annotation.Retryable;
 //import org.springframework.scheduling.annotation.Async;
+//import org.springframework.stereotype.Component;
 //import software.amazon.awssdk.services.ses.SesClient;
 //import software.amazon.awssdk.services.ses.model.SendEmailRequest;
 //
 /// **
-// * AWS SES를 이용한 이메일 전송 어댑터 배포 시 사용 예정.
+// * AWS SES를
+// * 이용한 이메일
+// * 전송 어댑터
+// * 배포 시
+// * 사용 예정.
 // */
+//
 //@Slf4j
-/// /@Component
+//@Component
+//@ConditionalOnProperty(name = "mail.provider", havingValue = "ses")
 //@RequiredArgsConstructor
 //public class AwsSesAdapter {
 //
