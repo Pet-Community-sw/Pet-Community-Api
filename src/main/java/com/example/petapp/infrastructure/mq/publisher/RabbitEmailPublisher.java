@@ -1,14 +1,15 @@
-package com.example.petapp.infrastructure.mq;
+package com.example.petapp.infrastructure.mq.publisher;
 
 import com.example.petapp.application.in.email.EventEmail;
 import com.example.petapp.application.out.EmailSendPort;
+import com.example.petapp.infrastructure.mq.RabbitConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class EmailAdapter implements EmailSendPort {
+public class RabbitEmailPublisher implements EmailSendPort {
 
     private final RabbitTemplate template;
 

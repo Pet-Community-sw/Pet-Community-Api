@@ -1,4 +1,4 @@
-package com.example.petapp.infrastructure.listner;
+package com.example.petapp.infrastructure.mq.publisher;
 
 import com.example.petapp.application.in.member.object.MemberEvent;
 import com.example.petapp.infrastructure.mq.RabbitConfig;
@@ -10,7 +10,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
-public class MemberListener {
+public class RabbitMemberPublisher {
 
     private final RabbitTemplate template;
 
