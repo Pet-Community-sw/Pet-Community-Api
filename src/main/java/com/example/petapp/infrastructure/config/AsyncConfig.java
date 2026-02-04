@@ -15,17 +15,6 @@ import java.util.concurrent.Executor;
 @EnableRetry// 재시도 활성화
 public class AsyncConfig implements AsyncConfigurer {
 
-    @Bean(name = "mailExecutor")
-    public Executor mailExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(2);// 기본 스레드 수
-        executor.setMaxPoolSize(5);// 최대 스레드 수
-        executor.setQueueCapacity(500);// 대기 큐 사이즈
-        executor.setThreadNamePrefix("MailThread-");
-        executor.initialize();
-        return executor;
-    }
-
     @Bean(name = "notificationExecutor")
     public Executor notificationExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -44,17 +33,6 @@ public class AsyncConfig implements AsyncConfigurer {
         executor.setMaxPoolSize(5);
         executor.setQueueCapacity(500);
         executor.setThreadNamePrefix("LocationInitThread-");
-        executor.initialize();
-        return executor;
-    }
-
-    @Bean(name = "elasticExecutor")
-    public Executor elasticExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(2);
-        executor.setMaxPoolSize(5);
-        executor.setQueueCapacity(500);
-        executor.setThreadNamePrefix("ElasticSearchThread-");
         executor.initialize();
         return executor;
     }

@@ -1,30 +1,27 @@
 package com.example.petapp.infrastructure.mq.consumer;
 
-import com.example.petapp.application.in.email.EventEmail;
-import com.example.petapp.infrastructure.mail.MailProvider;
+import com.example.petapp.application.in.member.MemberSearchUseCase;
+import com.example.petapp.application.in.member.object.MemberEvent;
 import com.example.petapp.infrastructure.mq.RabbitConfig;
 import com.example.petapp.infrastructure.mq.RabbitRetryHandler;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
-public class RabbitEmailConsumer {
+public class RabbitMemberConsumer {
 
+    private final MemberSearchUseCase useCase;
     private final RabbitRetryHandler rabbitRetryHandler;
-    private final MailProvider mailProvider;
 
-    @RabbitListener(queues = RabbitConfig.MAIL_QUEUE)
-    public void handle(EventEmail event, Message message) {//메시지 본문과 메타데이터를 받음
+    @RabbitListener(queues = RabbitConfig.MEMBER_QUEUE)
+    public void hande(MemberEvent event, Message message) {
         try {
-            mailProvider.send(event);
+            useCase.handle(event);
         } catch (Exception e) {
             rabbitRetryHandler.handle(event, message, e);
         }
     }
-
 }

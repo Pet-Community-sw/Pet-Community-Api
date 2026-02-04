@@ -1,4 +1,4 @@
-package com.example.petapp.infrastructure.event.notification;
+package com.example.petapp.infrastructure.listner;
 
 import com.example.petapp.application.in.chatting.model.dto.NotificationDto;
 import com.example.petapp.application.in.chatting.model.dto.SendResponseDto;

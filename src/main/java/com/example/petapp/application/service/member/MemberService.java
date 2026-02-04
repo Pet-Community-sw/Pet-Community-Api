@@ -6,9 +6,8 @@ import com.example.petapp.application.in.fcm.FcmUseCase;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.member.MemberUseCase;
 import com.example.petapp.application.in.member.mapper.MemberMapper;
-import com.example.petapp.application.in.member.object.MemberCreateEvent;
-import com.example.petapp.application.in.member.object.MemberDeleteEvent;
-import com.example.petapp.application.in.member.object.MemberUpdateEvent;
+import com.example.petapp.application.in.member.object.MemberEvent;
+import com.example.petapp.application.in.member.object.MethodType;
 import com.example.petapp.application.in.member.object.dto.request.*;
 import com.example.petapp.application.in.member.object.dto.response.*;
 import com.example.petapp.application.in.role.RoleQueryUseCase;
@@ -68,12 +67,14 @@ public class MemberService implements MemberUseCase {
         Member savedMember = memberRepository.save(member);
 
         //elasticsearch 문서 저장 이벤트 발생
-        eventPublisher.publishEvent(new MemberCreateEvent(
-                savedMember.getId(),
-                savedMember.getName(),
-                savedMember.getNameChosung(),
-                savedMember.getMemberImageUrl()
-        ));
+        eventPublisher.publishEvent(MemberEvent.builder()
+                .methodType(MethodType.CREATE)
+                .memberId(savedMember.getId())
+                .memberName(savedMember.getName())
+                .memberNameChosung(savedMember.getNameChosung())
+                .memberImageUrl(savedMember.getMemberImageUrl())
+                .build()
+        );
 
         return new MemberSignResponseDto(savedMember.getId());
     }
@@ -148,7 +149,14 @@ public class MemberService implements MemberUseCase {
         member.setNameChosung(chosung);
         member.setMemberImageUrl(imageFileName);
 
-        eventPublisher.publishEvent(new MemberUpdateEvent(memberId, requestDto.getName(), chosung, imageFileName));
+        eventPublisher.publishEvent(MemberEvent.builder()
+                .methodType(MethodType.UPDATE)
+                .memberId(memberId)
+                .memberName(requestDto.getName())
+                .memberNameChosung(chosung)
+                .memberImageUrl(imageFileName)
+                .build()
+        );
     }
 
     @Transactional
@@ -157,7 +165,11 @@ public class MemberService implements MemberUseCase {
         Member member = memberQueryUseCase.findOrThrow(memberId);
         memberRepository.delete(member);
 
-        eventPublisher.publishEvent(new MemberDeleteEvent(memberId));
+        eventPublisher.publishEvent(MemberEvent.builder()
+                .methodType(MethodType.DELETE)
+                .memberId(memberId)
+                .build()
+        );
     }
 
     @Transactional
