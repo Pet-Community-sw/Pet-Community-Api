@@ -19,14 +19,14 @@ public class EmailService implements EmailUseCase {
     private final EmailSendPort emailSendPort;
 
     @Override
-    public void send(String toEmail) {
+    public void send(Long id, String toEmail) {
         if (emailCachePort.exist(toEmail)) {
             emailCachePort.delete(toEmail);
         }
         String code = buildCode();
         emailCachePort.createWithDuration(toEmail, code, 3 * 60L);
 
-        emailSendPort.send(new EventEmail(toEmail, "멍냥로드 인증코드 안내입니다.", code));
+        emailSendPort.send(new EventEmail(id, toEmail, "멍냥로드 인증코드 안내입니다.", code));
 
     }
 

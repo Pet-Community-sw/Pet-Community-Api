@@ -110,7 +110,7 @@ public class MemberService implements MemberUseCase {
     @Override
     public void sendEmail(SendEmailDto sendEmailDto) {
         Member member = memberQueryUseCase.findOrThrow(sendEmailDto.getEmail());
-        emailUseCase.send(member.getEmail());
+        emailUseCase.send(member.getId(), member.getEmail());
     }
 
     @Override
