@@ -5,6 +5,8 @@ import com.example.petapp.domain.outboxevent.model.OutboxEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class OutboxEventRepositoryImpl implements OutboxEventRepository {
@@ -12,7 +14,12 @@ public class OutboxEventRepositoryImpl implements OutboxEventRepository {
     private final JpaOutboxRepository repository;
 
     @Override
-    public void save(OutboxEvent outboxEvent) {
-        repository.save(outboxEvent);
+    public OutboxEvent save(OutboxEvent outboxEvent) {
+        return repository.save(outboxEvent);
+    }
+
+    @Override
+    public Optional<OutboxEvent> find(Long outboxId) {
+        return repository.findById(outboxId);
     }
 }

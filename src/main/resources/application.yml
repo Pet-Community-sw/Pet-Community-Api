@@ -27,7 +27,7 @@ spring:
         smtp:
           auth: true
           starttls:
-            enable: true
+            enable:® true
     default-encoding: UTF-8
 
   rabbitmq:
@@ -38,6 +38,7 @@ spring:
       simple:
         prefetch: 1 # 한 번에 하나의 메시지 처리
         acknowledge-mode: auto
+    publisher-confirm-type: correlated #해당 메시지 전송 확인
 
   data:
     mongodb:

@@ -4,6 +4,7 @@ import com.example.petapp.domain.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +23,7 @@ public class OutboxEvent extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Setter
     private OutboxStatus outboxStatus;
 
     @Column(nullable = false)
@@ -29,4 +31,5 @@ public class OutboxEvent extends BaseEntity {
 
     @Column(nullable = false, columnDefinition = "json") //저장에 유연
     private String payload;
+
 }
