@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.mq.publisher;
 
 import com.example.petapp.application.in.notification.dto.NotificationEvent;
-import com.example.petapp.infrastructure.mq.RabbitConfig;
+import com.example.petapp.infrastructure.mq.RabbitKeys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.event.EventListener;
@@ -15,6 +15,6 @@ public class RabbitNotificationPublisher {
 
     @EventListener
     public void handle(NotificationEvent event) {
-        template.convertAndSend(RabbitConfig.MAIN_EXCHANGE, RabbitConfig.NOTIFICATION_ROUTING_KEY, event);
+        template.convertAndSend(RabbitKeys.MAIN_EXCHANGE, RabbitKeys.NOTIFICATION_ROUTING_KEY, event);
     }
 }

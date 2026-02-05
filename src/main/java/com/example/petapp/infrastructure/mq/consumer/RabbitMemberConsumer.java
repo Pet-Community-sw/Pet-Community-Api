@@ -2,7 +2,7 @@ package com.example.petapp.infrastructure.mq.consumer;
 
 import com.example.petapp.application.in.member.MemberSearchUseCase;
 import com.example.petapp.application.in.member.object.MemberEvent;
-import com.example.petapp.infrastructure.mq.RabbitConfig;
+import com.example.petapp.infrastructure.mq.RabbitKeys;
 import com.example.petapp.infrastructure.mq.RabbitRetryHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Message;
@@ -16,7 +16,7 @@ public class RabbitMemberConsumer {
     private final MemberSearchUseCase useCase;
     private final RabbitRetryHandler rabbitRetryHandler;
 
-    @RabbitListener(queues = RabbitConfig.MEMBER_QUEUE)
+    @RabbitListener(queues = RabbitKeys.MEMBER_QUEUE)
     public void hande(MemberEvent event, Message message) {
         try {
             useCase.handle(event);

@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.mq.publisher;
 
 import com.example.petapp.application.in.member.object.MemberEvent;
-import com.example.petapp.infrastructure.mq.RabbitConfig;
+import com.example.petapp.infrastructure.mq.RabbitKeys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
@@ -16,6 +16,6 @@ public class RabbitMemberPublisher {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handle(MemberEvent event) {
-        template.convertAndSend(RabbitConfig.MAIN_EXCHANGE, RabbitConfig.MEMBER_ROUTING_KEY, event);
+        template.convertAndSend(RabbitKeys.MAIN_EXCHANGE, RabbitKeys.MEMBER_ROUTING_KEY, event);
     }
 }

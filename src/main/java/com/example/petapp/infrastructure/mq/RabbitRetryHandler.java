@@ -34,7 +34,7 @@ public class RabbitRetryHandler {
         } else {
             // 3회차 이상 실패 시 DLQ로 이동
             log.error("메일 전송 실패 error: {}", e.getMessage());
-            rabbitTemplate.convertAndSend(RabbitConfig.DLX_EXCHANGE, "dead.letter", object);
+            rabbitTemplate.convertAndSend(RabbitKeys.DLX_EXCHANGE, "dead.letter", object);
         }
     }
 
@@ -43,7 +43,7 @@ public class RabbitRetryHandler {
      * 재시도 전용 큐로 전송
      */
     private void sendToWaitQueue(Object payload, String waitKey, String originalRoutingKey, int retryCount) {
-        rabbitTemplate.convertAndSend(RabbitConfig.RETRY_EXCHANGE, waitKey, payload, msg -> {
+        rabbitTemplate.convertAndSend(RabbitKeys.RETRY_EXCHANGE, waitKey, payload, msg -> {
             msg.getMessageProperties().getHeaders().put("x-retry-count", retryCount + 1);
             //재시도 횟수 저장
 
