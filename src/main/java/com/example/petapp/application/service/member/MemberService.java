@@ -1,5 +1,6 @@
 package com.example.petapp.application.service.member;
 
+import com.example.petapp.application.common.JsonUtil;
 import com.example.petapp.application.common.NameChosungUtil;
 import com.example.petapp.application.in.email.EmailUseCase;
 import com.example.petapp.application.in.fcm.FcmUseCase;
@@ -10,6 +11,7 @@ import com.example.petapp.application.in.member.object.MemberEvent;
 import com.example.petapp.application.in.member.object.MethodType;
 import com.example.petapp.application.in.member.object.dto.request.*;
 import com.example.petapp.application.in.member.object.dto.response.*;
+import com.example.petapp.application.in.outbox.OutboxEventUseCase;
 import com.example.petapp.application.in.role.RoleQueryUseCase;
 import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.application.out.MemberSearchPort;
@@ -52,6 +54,8 @@ public class MemberService implements MemberUseCase {
     private final MemberSearchCachePort memberSearchCachePort;
     private final MemberAutoCompleteSearchCachePort memberAutoCompleteSearchCachePort;
     private final MemberRecentViewCachePort memberRecentViewCachePort;
+    private final OutboxEventUseCase useCase;
+    private final JsonUtil jsonUtil;
 
     private final ApplicationEventPublisher eventPublisher;
 
@@ -66,7 +70,7 @@ public class MemberService implements MemberUseCase {
         Member member = MemberMapper.toEntity(memberSignDto, passwordEncoder.encode(memberSignDto.getPassword()), imageFileName);
         Member savedMember = memberRepository.save(member);
 
-        //elasticsearch 문서 저장 이벤트 발생
+        //outbox 이벤트 발행
         eventPublisher.publishEvent(MemberEvent.builder()
                 .methodType(MethodType.CREATE)
                 .memberId(savedMember.getId())

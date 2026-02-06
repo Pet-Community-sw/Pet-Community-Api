@@ -6,6 +6,7 @@ import com.example.petapp.domain.outboxevent.model.OutboxEvent;
 import com.example.petapp.domain.outboxevent.model.OutboxStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +19,7 @@ public class OutboxEventService implements OutboxEventUseCase {
         return repository.save(outboxEvent);
     }
 
+    @Transactional
     @Override
     public void update(Long outboxId, OutboxStatus outboxStatus) {
         repository.find(outboxId).ifPresent(event -> event.setOutboxStatus(outboxStatus));

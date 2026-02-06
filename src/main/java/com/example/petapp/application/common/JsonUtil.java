@@ -17,4 +17,12 @@ public class JsonUtil {
             throw new RuntimeException("JSON 직렬화 실패", e);
         }
     }
+
+    public <T> T fromJson(String json, Class<T> tClass) {
+        try {
+            return objectMapper.readValue(json, tClass);
+        } catch (Exception e) {
+            throw new RuntimeException("JSON 역직렬화 실패", e);
+        }
+    }
 }

@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.mq.consumer;
 
-import com.example.petapp.application.in.email.EventEmail;
+import com.example.petapp.application.in.email.EmailEvent;
 import com.example.petapp.infrastructure.mail.MailProvider;
 import com.example.petapp.infrastructure.mq.RabbitKeys;
 import com.example.petapp.infrastructure.mq.RabbitRetryHandler;
@@ -19,7 +19,7 @@ public class RabbitEmailConsumer {
     private final MailProvider mailProvider;
 
     @RabbitListener(queues = RabbitKeys.MAIL_QUEUE)
-    public void handle(EventEmail event, Message message) {//메시지 본문과 메타데이터를 받음
+    public void handle(EmailEvent event, Message message) {//메시지 본문과 메타데이터를 받음
         try {
             mailProvider.send(event);
         } catch (Exception e) {

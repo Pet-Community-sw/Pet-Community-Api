@@ -1,4 +1,4 @@
-package com.example.petapp.infrastructure.mq.publisher;
+package com.example.petapp.application.listener;
 
 import com.example.petapp.application.common.JsonUtil;
 import com.example.petapp.application.in.member.object.MemberEvent;
@@ -6,33 +6,29 @@ import com.example.petapp.application.in.outbox.OutboxEventUseCase;
 import com.example.petapp.domain.outboxevent.model.OutboxEvent;
 import com.example.petapp.domain.outboxevent.model.OutboxEventType;
 import com.example.petapp.domain.outboxevent.model.OutboxStatus;
-import com.example.petapp.infrastructure.mq.RabbitKeys;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.rabbit.connection.CorrelationData;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionPhase;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
-public class RabbitMemberPublisher {
+public class MemberListener {
 
-    private final RabbitTemplate template;
     private final OutboxEventUseCase useCase;
     private final JsonUtil jsonUtil;
+    private final ApplicationEventPublisher publisher;
 
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @EventListener
     public void handle(MemberEvent event) {
-        OutboxEvent saved = useCase.save(OutboxEvent.builder()
+        OutboxEvent outboxEvent = useCase.save(OutboxEvent.builder()
                 .outboxStatus(OutboxStatus.SENDING)
                 .outboxEventType(OutboxEventType.MEMBER)
                 .aggregateId(event.getMemberId())
                 .payload(jsonUtil.toJson(event))
                 .build()
         );
-        CorrelationData correlationData = new CorrelationData(String.valueOf(saved.getId()));
-        //어떤 메시지에 대한 콜백인지 알기 위해 id 설정
-        template.convertAndSend(RabbitKeys.MAIN_EXCHANGE, RabbitKeys.MEMBER_ROUTING_KEY, event, correlationData);
+        //mq 이벤트 발행
+        publisher.publishEvent(outboxEvent);
     }
 }

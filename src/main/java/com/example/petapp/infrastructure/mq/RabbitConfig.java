@@ -23,6 +23,7 @@ public class RabbitConfig {
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
 
+        template.setMessageConverter(messageConverter());
         template.setConfirmCallback(((correlationData, ack, cause) -> {
 
             Long outboxId = Long.valueOf(correlationData.getId());
@@ -135,7 +136,7 @@ public class RabbitConfig {
     }
 
     @Bean
-    public MessageConverter jackson2JsonMessageConverter() {
+    public MessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 }

@@ -1,7 +1,7 @@
 package com.example.petapp.application.in.member;
 
-import com.example.petapp.application.in.member.object.MemberEvent;
+import com.example.petapp.domain.outboxevent.model.OutboxEvent;
 
 public interface MemberSearchUseCase {
-    void handle(MemberEvent event);
+    void handle(OutboxEvent event);
 }

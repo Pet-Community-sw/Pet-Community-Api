@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.mq.consumer;
 
 import com.example.petapp.application.in.member.MemberSearchUseCase;
-import com.example.petapp.application.in.member.object.MemberEvent;
+import com.example.petapp.domain.outboxevent.model.OutboxEvent;
 import com.example.petapp.infrastructure.mq.RabbitKeys;
 import com.example.petapp.infrastructure.mq.RabbitRetryHandler;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class RabbitMemberConsumer {
     private final RabbitRetryHandler rabbitRetryHandler;
 
     @RabbitListener(queues = RabbitKeys.MEMBER_QUEUE)
-    public void hande(MemberEvent event, Message message) {
+    public void hande(OutboxEvent event, Message message) {
         try {
             useCase.handle(event);
         } catch (Exception e) {

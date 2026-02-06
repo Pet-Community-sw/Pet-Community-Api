@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.mail;
 
-import com.example.petapp.application.in.email.EventEmail;
+import com.example.petapp.application.in.email.EmailEvent;
 
 public interface MailProvider {
-    void send(EventEmail event);
+    void send(EmailEvent event);
 }

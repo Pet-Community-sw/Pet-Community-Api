@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.mail;
 
-import com.example.petapp.application.in.email.EventEmail;
+import com.example.petapp.application.in.email.EmailEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +24,7 @@ public class SmtpProvider implements MailProvider {
     private String email;
 
     @Override
-    public void send(EventEmail event) {
+    public void send(EmailEvent event) {
 
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
