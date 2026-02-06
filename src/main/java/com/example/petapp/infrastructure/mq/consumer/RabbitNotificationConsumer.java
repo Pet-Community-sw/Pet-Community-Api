@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.mq.consumer;
 
 import com.example.petapp.application.in.notification.NotificationUseCase;
-import com.example.petapp.application.in.notification.dto.NotificationEvent;
+import com.example.petapp.domain.outboxevent.model.OutboxEvent;
 import com.example.petapp.infrastructure.mq.RabbitKeys;
 import com.example.petapp.infrastructure.mq.RabbitRetryHandler;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class RabbitNotificationConsumer {
     private final RabbitRetryHandler handler;
 
     @RabbitListener(queues = RabbitKeys.NOTIFICATION_QUEUE)
-    public void handle(NotificationEvent event, Message message) {
+    public void handle(OutboxEvent event, Message message) {
         try {
             useCase.send(event);
         } catch (Exception e) {

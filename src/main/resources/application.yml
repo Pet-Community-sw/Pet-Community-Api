@@ -27,7 +27,7 @@ spring:
         smtp:
           auth: true
           starttls:
-            enable:® true
+            enable: true
     default-encoding: UTF-8
 
   rabbitmq:

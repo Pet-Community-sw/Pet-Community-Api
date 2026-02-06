@@ -27,10 +27,10 @@ public class RabbitRetryHandler {
 
         if (retryCount == 0) {
             log.info("5초 대기 큐로 이동");
-            sendToWaitQueue(object, "5s", routingKey, retryCount);
+            sendToWaitQueue(object, RabbitKeys.RETRY_5S_ROUTING_KEY, routingKey, retryCount);
         } else if (retryCount == 1) {
             log.info("30초 대기 큐로 이동");
-            sendToWaitQueue(object, "30s", routingKey, retryCount);
+            sendToWaitQueue(object, RabbitKeys.RETRY_30S_ROUTING_KEY, routingKey, retryCount);
         } else {
             // 3회차 이상 실패 시 DLQ로 이동
             log.error("메일 전송 실패 error: {}", e.getMessage());

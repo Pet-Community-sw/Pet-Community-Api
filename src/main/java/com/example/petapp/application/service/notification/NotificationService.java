@@ -1,5 +1,6 @@
 package com.example.petapp.application.service.notification;
 
+import com.example.petapp.application.common.JsonUtil;
 import com.example.petapp.application.in.chatting.model.dto.NotificationDto;
 import com.example.petapp.application.in.chatting.model.dto.SendResponseDto;
 import com.example.petapp.application.in.chatting.model.type.CommandType;
@@ -10,6 +11,7 @@ import com.example.petapp.application.in.notification.dto.NotificationListDto;
 import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.AppOnlineCachePort;
 import com.example.petapp.application.out.cache.NotificationsCachePort;
+import com.example.petapp.domain.outboxevent.model.OutboxEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ public class NotificationService implements NotificationUseCase {
     private final AppOnlineCachePort appOnlineCachePort;
     private final MemberQueryUseCase useCase;
     private final SendPort sendPort;
+    private final JsonUtil jsonUtil;
     //    private final FcmService fcmService;
 
 
@@ -41,15 +44,16 @@ public class NotificationService implements NotificationUseCase {
      * foreground 유저는 stomp, background 유저는 fcm
      * */
     @Override
-    public void send(NotificationEvent event) {
-        if (appOnlineCachePort.exist(event.id())) {
-            sendPort.send("/sub/notification/" + event.id(),
-                    SendResponseDto.builder().commandType(CommandType.NOTIFICATION).body(new NotificationDto(event.id(), event.message())).build());
+    public void send(OutboxEvent event) {
+        NotificationEvent notificationEvent = jsonUtil.fromJson(event.getPayload(), NotificationEvent.class);
+        if (appOnlineCachePort.exist(notificationEvent.id())) {
+            sendPort.send("/sub/notification/" + notificationEvent.id(),
+                    SendResponseDto.builder().commandType(CommandType.NOTIFICATION).body(new NotificationDto(notificationEvent.id(), notificationEvent.message())).build());
         } else {
             log.info("backGroundMember");
 //            fcmService.sendNotification(member.getFcmToken().getFcmToken(), "명냥로드", message);
         }
-        notificationsCachePort.create(event.id(), new NotificationListDto(event.message(), LocalDateTime.now()), 3);
+        notificationsCachePort.create(notificationEvent.id(), new NotificationListDto(notificationEvent.message(), LocalDateTime.now()), 3);
     }
 }
 
