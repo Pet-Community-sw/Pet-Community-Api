@@ -10,15 +10,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
 public class EmailListener {
 
-    public final ApplicationEventPublisher publisher;
+    private final ApplicationEventPublisher publisher;
     private final OutboxEventUseCase useCase;
     private final JsonUtil jsonUtil;
 
+    @Transactional
     @EventListener
     public void handle(EmailEvent event) {
         OutboxEvent outboxEvent = useCase.save(OutboxEvent.builder()
