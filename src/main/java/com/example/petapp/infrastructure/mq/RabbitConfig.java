@@ -26,6 +26,8 @@ public class RabbitConfig {
         template.setMessageConverter(messageConverter());
         template.setConfirmCallback(((correlationData, ack, cause) -> {
 
+            if (correlationData == null) return;
+            
             Long outboxId = Long.valueOf(correlationData.getId());
             if (ack) useCase.update(outboxId, OutboxStatus.COMPLETED);
             else useCase.update(outboxId, OutboxStatus.PENDING);
