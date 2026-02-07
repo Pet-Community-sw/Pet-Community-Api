@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class OutboxEventService implements OutboxEventUseCase {
@@ -23,5 +25,11 @@ public class OutboxEventService implements OutboxEventUseCase {
     @Override
     public void update(Long outboxId, OutboxStatus outboxStatus) {
         repository.find(outboxId).ifPresent(event -> event.setOutboxStatus(outboxStatus));
+    }
+
+    @Override
+    public List<OutboxEvent> findByStatus(OutboxStatus status) {
+
+        return repository.findByStatus(status);
     }
 }

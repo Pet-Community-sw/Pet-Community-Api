@@ -12,7 +12,6 @@ import javax.persistence.*;
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Getter
 public class OutboxEvent extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
