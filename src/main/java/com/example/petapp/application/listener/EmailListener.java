@@ -24,7 +24,7 @@ public class EmailListener {
     @EventListener
     public void handle(EmailEvent event) {
         OutboxEvent outboxEvent = useCase.save(OutboxEvent.builder()
-                .outboxStatus(OutboxStatus.SENDING)
+                .outboxStatus(OutboxStatus.SENDING) //스케줄링 시 중복 발송 방지
                 .outboxEventType(OutboxEventType.EMAIL)
                 .aggregateId(event.id())
                 .payload(jsonUtil.toJson(event))

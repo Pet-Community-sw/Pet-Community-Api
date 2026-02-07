@@ -3,12 +3,12 @@ package com.example.petapp.domain.outboxevent.model;
 import com.example.petapp.domain.BaseEntity;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
 
 @Entity
+@Table(indexes = {
+        @Index(name = "idx_outbox_event_status", columnList = "outboxStatus")
+})
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
