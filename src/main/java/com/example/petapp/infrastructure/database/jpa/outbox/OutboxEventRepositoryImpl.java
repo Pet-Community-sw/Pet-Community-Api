@@ -2,7 +2,6 @@ package com.example.petapp.infrastructure.database.jpa.outbox;
 
 import com.example.petapp.domain.outboxevent.OutboxEventRepository;
 import com.example.petapp.domain.outboxevent.model.OutboxEvent;
-import com.example.petapp.domain.outboxevent.model.OutboxStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -26,7 +25,7 @@ public class OutboxEventRepositoryImpl implements OutboxEventRepository {
     }
 
     @Override
-    public List<OutboxEvent> findByStatus(OutboxStatus status) {
-        return repository.findAllByOutboxStatus(status);
+    public List<OutboxEvent> findAllFailed() {
+        return repository.findAllFailed();
     }
 }

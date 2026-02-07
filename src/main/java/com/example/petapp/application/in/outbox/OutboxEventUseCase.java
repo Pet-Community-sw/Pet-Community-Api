@@ -10,5 +10,5 @@ public interface OutboxEventUseCase {
 
     void update(Long outboxId, OutboxStatus outboxStatus);
 
-    List<OutboxEvent> findByStatus(OutboxStatus status);
+    List<OutboxEvent> findAllFailed();
 }

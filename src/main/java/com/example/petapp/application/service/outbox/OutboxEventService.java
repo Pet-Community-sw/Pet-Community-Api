@@ -28,8 +28,8 @@ public class OutboxEventService implements OutboxEventUseCase {
     }
 
     @Override
-    public List<OutboxEvent> findByStatus(OutboxStatus status) {
+    public List<OutboxEvent> findAllFailed() {
 
-        return repository.findByStatus(status);
+        return repository.findAllFailed();
     }
 }
