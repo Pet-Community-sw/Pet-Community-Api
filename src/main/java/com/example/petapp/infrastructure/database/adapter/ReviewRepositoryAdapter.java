@@ -1,9 +1,10 @@
-package com.example.petapp.infrastructure.database.jpa.review;
+package com.example.petapp.infrastructure.database.adapter;
 
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.review.ReviewRepository;
 import com.example.petapp.domain.review.model.Review;
+import com.example.petapp.infrastructure.database.jpa.review.JpaReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class ReviewRepositoryImpl implements ReviewRepository {
+public class ReviewRepositoryAdapter implements ReviewRepository {
 
     private final JpaReviewRepository repository;
 

@@ -1,7 +1,8 @@
-package com.example.petapp.infrastructure.database.jpa.comment;
+package com.example.petapp.infrastructure.database.adapter;
 
 import com.example.petapp.domain.comment.CommentRepository;
 import com.example.petapp.domain.comment.model.Comment;
+import com.example.petapp.infrastructure.database.jpa.comment.JpaCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class CommentRepositoryImpl implements CommentRepository {
+public class CommentRepositoryAdapter implements CommentRepository {
 
     private final JpaCommentRepository repository;
 

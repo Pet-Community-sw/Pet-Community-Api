@@ -1,7 +1,8 @@
-package com.example.petapp.infrastructure.database.jpa.member;
+package com.example.petapp.infrastructure.database.adapter;
 
 import com.example.petapp.domain.role.Role;
 import com.example.petapp.domain.role.RoleRepository;
+import com.example.petapp.infrastructure.database.jpa.member.JpaRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class RoleRepositoryImpl implements RoleRepository {
+public class RoleRepositoryAdapter implements RoleRepository {
 
     private final JpaRoleRepository repository;
 

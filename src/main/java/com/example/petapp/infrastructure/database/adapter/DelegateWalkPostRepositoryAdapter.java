@@ -1,7 +1,8 @@
-package com.example.petapp.infrastructure.database.jpa.post;
+package com.example.petapp.infrastructure.database.adapter;
 
 import com.example.petapp.domain.post.DelegateWalkPostRepository;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
+import com.example.petapp.infrastructure.database.jpa.post.JpaDelegateWalkPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class DelegateWalkPostRepositoryImpl implements DelegateWalkPostRepository {
+public class DelegateWalkPostRepositoryAdapter implements DelegateWalkPostRepository {
 
     private final JpaDelegateWalkPostRepository repository;
 

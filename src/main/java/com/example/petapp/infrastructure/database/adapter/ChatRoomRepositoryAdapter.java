@@ -1,9 +1,10 @@
-package com.example.petapp.infrastructure.database.jpa.chatroom;
+package com.example.petapp.infrastructure.database.adapter;
 
 import com.example.petapp.application.in.chatting.model.type.ChatRoomType;
 import com.example.petapp.domain.chatroom.ChatRoomRepository;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
+import com.example.petapp.infrastructure.database.jpa.chatroom.JpaChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class ChatRoomRepositoryImpl implements ChatRoomRepository {
+public class ChatRoomRepositoryAdapter implements ChatRoomRepository {
 
     private final JpaChatRoomRepository repository;
 

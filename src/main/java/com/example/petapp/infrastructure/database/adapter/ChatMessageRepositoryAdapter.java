@@ -1,7 +1,8 @@
-package com.example.petapp.infrastructure.database.mongo;
+package com.example.petapp.infrastructure.database.adapter;
 
 import com.example.petapp.domain.chatting.ChatMessageRepository;
 import com.example.petapp.domain.chatting.model.ChatMessage;
+import com.example.petapp.infrastructure.database.mongo.MongoChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
-public class ChatMessageRepositoryImpl implements ChatMessageRepository {
+public class ChatMessageRepositoryAdapter implements ChatMessageRepository {
 
     private final MongoChatMessageRepository repository;
 

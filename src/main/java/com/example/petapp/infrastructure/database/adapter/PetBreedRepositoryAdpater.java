@@ -1,8 +1,9 @@
-package com.example.petapp.infrastructure.database.jpa.petbreed;
+package com.example.petapp.infrastructure.database.adapter;
 
 import com.example.petapp.application.in.petbreed.dto.PetBreedGetListDto;
 import com.example.petapp.domain.petbreed.PetBreedRepository;
 import com.example.petapp.domain.petbreed.model.PetBreed;
+import com.example.petapp.infrastructure.database.jpa.petbreed.JpaPetBreedRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class PetBreedRepositoryImpl implements PetBreedRepository {
+public class PetBreedRepositoryAdpater implements PetBreedRepository {
 
     private final JpaPetBreedRepository repository;
 

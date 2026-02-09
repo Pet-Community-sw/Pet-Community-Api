@@ -1,4 +1,4 @@
-package com.example.petapp.infrastructure.database.cache.in;
+package com.example.petapp.infrastructure.database.adapter;
 
 import com.example.petapp.domain.chatting.AckInfoRepository;
 import org.springframework.stereotype.Repository;
@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 @Repository
-public class AckInfoRepositoryImpl implements AckInfoRepository {
+public class AckInfoRepositoryAdapter implements AckInfoRepository {
 
     private final ConcurrentMap<String, Set<Long>> sendUsers = new ConcurrentHashMap<>();
 

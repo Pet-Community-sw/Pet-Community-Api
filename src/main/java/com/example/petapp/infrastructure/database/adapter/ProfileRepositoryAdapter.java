@@ -1,8 +1,9 @@
-package com.example.petapp.infrastructure.database.jpa.profile;
+package com.example.petapp.infrastructure.database.adapter;
 
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;
+import com.example.petapp.infrastructure.database.jpa.profile.JpaProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class ProfileRepositoryImpl implements ProfileRepository {
+public class ProfileRepositoryAdapter implements ProfileRepository {
 
     private final JpaProfileRepository repository;
 
@@ -19,7 +20,7 @@ public class ProfileRepositoryImpl implements ProfileRepository {
     public List<Profile> findList(Member member) {
         return repository.findByMember(member);
     }
-    
+
     @Override
     public Optional<Profile> find(Long id) {
         return repository.findById(id);

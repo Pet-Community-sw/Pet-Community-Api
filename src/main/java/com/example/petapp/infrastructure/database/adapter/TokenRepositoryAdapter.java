@@ -1,7 +1,8 @@
-package com.example.petapp.infrastructure.database.jpa.token;
+package com.example.petapp.infrastructure.database.adapter;
 
 import com.example.petapp.domain.token.TokenRepository;
 import com.example.petapp.domain.token.model.Token;
+import com.example.petapp.infrastructure.database.jpa.token.JpaTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class TokenRepositoryImpl implements TokenRepository {
+public class TokenRepositoryAdapter implements TokenRepository {
 
     private final JpaTokenRepository repository;
 

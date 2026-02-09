@@ -1,7 +1,8 @@
-package com.example.petapp.infrastructure.database.jpa.member;
+package com.example.petapp.infrastructure.database.adapter;
 
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.infrastructure.database.jpa.member.JpaMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class MemberRepositoryImpl implements MemberRepository {
+public class MemberRepositoryAdapter implements MemberRepository {
 
     private final JpaMemberRepository repository;
 

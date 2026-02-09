@@ -1,7 +1,8 @@
-package com.example.petapp.infrastructure.database.jpa.post;
+package com.example.petapp.infrastructure.database.adapter;
 
 import com.example.petapp.domain.post.PostRepository;
 import com.example.petapp.domain.post.model.Post;
+import com.example.petapp.infrastructure.database.jpa.post.JpaPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class PostRepositoryImpl<T extends Post> implements PostRepository<T> {
+public class PostRepositoryAdapter<T extends Post> implements PostRepository<T> {
 
     private final JpaPostRepository<T> repository;
 

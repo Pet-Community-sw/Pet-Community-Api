@@ -1,9 +1,10 @@
-package com.example.petapp.infrastructure.database.jpa.match;
+package com.example.petapp.infrastructure.database.adapter;
 
 import com.example.petapp.domain.post.model.RecommendRoutePost;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogethermatch.WalkingTogetherMatchRepository;
 import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
+import com.example.petapp.infrastructure.database.jpa.match.JpaWalkingTogetherMatchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class WalkingTogetherMatchRepositoryImpl implements WalkingTogetherMatchRepository {
+public class WalkingTogetherMatchRepositoryAdapter implements WalkingTogetherMatchRepository {
 
     private final JpaWalkingTogetherMatchRepository repository;
 
