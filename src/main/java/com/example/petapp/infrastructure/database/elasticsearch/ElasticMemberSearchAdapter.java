@@ -109,6 +109,7 @@ public class ElasticMemberSearchAdapter implements MemberSearchPort {
     }
 
     private NativeSearchQuery buildQuery(int page, BoolQueryBuilder queryBuilder) {
+        queryBuilder.filter(termQuery("isDeleted", false));//소프트 딜리트 필터링
         return new NativeSearchQueryBuilder()
                 .withQuery(queryBuilder)
                 .withPageable(PageRequest.of(page, 10))

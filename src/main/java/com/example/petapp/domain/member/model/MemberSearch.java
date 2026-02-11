@@ -29,6 +29,10 @@ public class MemberSearch {
 
     @Field(type = FieldType.Long)
     private Long outboxEventId;
+
+    @Builder.Default
+    @Field(type = FieldType.Boolean)
+    private boolean isDeleted = false;
 }
 
 
