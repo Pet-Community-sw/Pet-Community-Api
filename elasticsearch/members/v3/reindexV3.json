@@ -1,0 +1,8 @@
+{
+  "source": {
+    "index": "members_v2"
+  },
+  "dest": {
+    "index": "members_v3"
+  }
+}
