@@ -27,6 +27,8 @@ public class MemberSearch {
     @Field(type = FieldType.Keyword)
     private String memberImageUrl;
 
+    @Field(type = FieldType.Long)
+    private Long outboxEventId;
 }
 
 

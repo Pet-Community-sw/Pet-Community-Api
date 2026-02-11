@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Slf4j
 @Repository
 @RequiredArgsConstructor
@@ -15,14 +17,17 @@ public class MemberSearchRepositoryAdapter implements MemberSearchRepository {
     private final ElasticMemberSearchRepository repository;
 
     @Override
+    public Optional<MemberSearch> find(Long id) {
+        return repository.findById(id);
+    }
+
+    @Override
     public void save(MemberSearch document) {
         repository.save(document);
     }
 
     @Override
     public void delete(Long id) {
-        log.info("삭제 요청");
-
         repository.deleteById(id);
     }
 }
