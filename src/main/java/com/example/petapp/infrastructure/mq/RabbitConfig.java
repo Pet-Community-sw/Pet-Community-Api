@@ -1,11 +1,8 @@
 package com.example.petapp.infrastructure.mq;
 
 import com.example.petapp.application.in.outbox.OutboxEventUseCase;
-import com.example.petapp.domain.outboxevent.model.OutboxStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
@@ -19,20 +16,21 @@ public class RabbitConfig {
 
     public final OutboxEventUseCase useCase;
 
-    @Bean
-    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-        RabbitTemplate template = new RabbitTemplate(connectionFactory);
-
-        template.setMessageConverter(messageConverter());
-        template.setConfirmCallback(((correlationData, ack, cause) -> {
-            if (correlationData == null) return;
-
-            Long outboxId = Long.valueOf(correlationData.getId());
-
-            useCase.update(outboxId, ack ? OutboxStatus.COMPLETED : OutboxStatus.PENDING);
-        }));
-        return template;
-    }
+    //cdc로 변경
+//    @Bean
+//    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+//        RabbitTemplate template = new RabbitTemplate(connectionFactory);
+//
+//        template.setMessageConverter(messageConverter());
+//        template.setConfirmCallback(((correlationData, ack, cause) -> {
+//            if (correlationData == null) return;
+//
+//            Long outboxId = Long.valueOf(correlationData.getId());
+//
+//            useCase.update(outboxId, ack ? OutboxStatus.COMPLETED : OutboxStatus.PENDING);
+//        }));
+//        return template;
+//    }
 
     //Exchange
     @Bean

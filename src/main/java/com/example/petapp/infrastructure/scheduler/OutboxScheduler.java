@@ -1,7 +1,6 @@
 package com.example.petapp.infrastructure.scheduler;
 
 import com.example.petapp.application.in.outbox.OutboxEventUseCase;
-import com.example.petapp.domain.outboxevent.model.OutboxStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -27,7 +26,7 @@ public class OutboxScheduler {
     @Transactional
     public void scheduleOutboxEvent() {
         useCase.findAllFailed().forEach(event -> {
-            event.setOutboxStatus(OutboxStatus.SENDING);
+//            event.setOutboxStatus(OutboxStatus.SENDING);
             publisher.publishEvent(event);
         });
 
