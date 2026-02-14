@@ -6,19 +6,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionPhase;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 @Slf4j
-@Component
+//@Component
 @RequiredArgsConstructor
 public class RabbitMessageProducer {
 
     private final RabbitTemplate template;
 
-    //outbox 커밋 이후에 실행
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    /**
+     * 본 로직은 비즈니스 로직에서 직접 이벤트를 발행하는 형태
+     * <p>
+     * cdc로 변경 예정
+     */
+//    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT) outbox 커밋 이후에 실행
     public void publish(OutboxEvent event) {
         CorrelationData correlationData = new CorrelationData(String.valueOf(event.getId()));
         //어떤 메시지에 대한 콜백인지 알기 위해 id 설정

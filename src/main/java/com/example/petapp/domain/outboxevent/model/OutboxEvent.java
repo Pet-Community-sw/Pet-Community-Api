@@ -14,6 +14,12 @@ import javax.persistence.*;
 @Builder
 public class OutboxEvent extends BaseEntity {
 
+    @Column(nullable = false)
+    private String exchangeKey;
+
+    @Column(nullable = false)
+    private String routingKey;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Getter
