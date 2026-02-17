@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.mail;
 
-import com.example.petapp.domain.outboxevent.model.OutboxEvent;
+import com.example.petapp.infrastructure.mq.consumer.OutboxMessage;
 
 public interface MailProvider {
-    void send(OutboxEvent event);
+    void send(OutboxMessage outboxMessage);
 }

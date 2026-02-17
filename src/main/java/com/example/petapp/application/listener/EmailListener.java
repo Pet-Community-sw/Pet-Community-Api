@@ -23,11 +23,10 @@ public class EmailListener {
     @EventListener
     public void handle(EmailEvent event) {
         OutboxEvent outboxEvent = useCase.save(OutboxEvent.builder()
-                        .exchangeKey(RabbitKeys.MAIN_EXCHANGE)
-                        .routingKey(RabbitKeys.MAIL_ROUTING_KEY)
 //                .outboxStatus(OutboxStatus.SENDING) //스케줄링 시 중복 발송 방지
 //                .outboxEventType(OutboxEventType.EMAIL)
-                        .aggregateId(event.id())
+                        .aggregateid(String.valueOf(event.getId()))
+                        .aggregatetype(RabbitKeys.MAIL_ROUTING_KEY)
                         .payload(jsonUtil.toJson(event))
                         .build()
         );

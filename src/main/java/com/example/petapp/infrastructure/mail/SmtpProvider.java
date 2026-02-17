@@ -2,7 +2,7 @@ package com.example.petapp.infrastructure.mail;
 
 import com.example.petapp.application.common.JsonUtil;
 import com.example.petapp.application.in.email.EmailEvent;
-import com.example.petapp.domain.outboxevent.model.OutboxEvent;
+import com.example.petapp.infrastructure.mq.consumer.OutboxMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,13 +27,13 @@ public class SmtpProvider implements MailProvider {
     private String email;
 
     @Override
-    public void send(OutboxEvent event) {
-        EmailEvent mailEvent = jsonUtil.fromJson(event.getPayload(), EmailEvent.class);
+    public void send(OutboxMessage outboxMessage) {
+        EmailEvent event = jsonUtil.fromJson(outboxMessage.getPayload(), EmailEvent.class);
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
-            message.setRecipients(Message.RecipientType.TO, mailEvent.toEmail());
-            message.setSubject(mailEvent.subject());
-            message.setText(buildBody(mailEvent.code()), "utf-8", "html");
+            message.setRecipients(Message.RecipientType.TO, event.getToEmail());
+            message.setSubject(event.getSubject());
+            message.setText(buildBody(event.getCode()), "utf-8", "html");
             message.setFrom(new InternetAddress(email, "멍냥로드"));
             //InternetAddress: 이메일 주소를 RFC 표준 형식으로 감싸는 객체
             javaMailSender.send(message);

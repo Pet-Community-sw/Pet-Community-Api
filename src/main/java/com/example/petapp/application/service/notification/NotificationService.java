@@ -11,7 +11,7 @@ import com.example.petapp.application.in.notification.dto.NotificationListDto;
 import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.AppOnlineCachePort;
 import com.example.petapp.application.out.cache.NotificationsCachePort;
-import com.example.petapp.domain.outboxevent.model.OutboxEvent;
+import com.example.petapp.infrastructure.mq.consumer.OutboxMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,8 +44,8 @@ public class NotificationService implements NotificationUseCase {
      * foreground 유저는 stomp, background 유저는 fcm
      * */
     @Override
-    public void send(OutboxEvent event) {
-        NotificationEvent notificationEvent = jsonUtil.fromJson(event.getPayload(), NotificationEvent.class);
+    public void send(OutboxMessage outboxMessage) {
+        NotificationEvent notificationEvent = jsonUtil.fromJson(outboxMessage.getPayload(), NotificationEvent.class);
         if (appOnlineCachePort.exist(notificationEvent.id())) {
             sendPort.send("/sub/notification/" + notificationEvent.id(),
                     SendResponseDto.builder().commandType(CommandType.NOTIFICATION).body(new NotificationDto(notificationEvent.id(), notificationEvent.message())).build());

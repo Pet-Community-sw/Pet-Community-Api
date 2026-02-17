@@ -5,7 +5,7 @@ import com.example.petapp.application.in.member.MemberSearchUseCase;
 import com.example.petapp.application.in.member.mapper.MemberMapper;
 import com.example.petapp.application.in.member.object.MemberEvent;
 import com.example.petapp.domain.member.MemberSearchRepository;
-import com.example.petapp.domain.outboxevent.model.OutboxEvent;
+import com.example.petapp.infrastructure.mq.consumer.OutboxMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,12 +19,12 @@ public class MemberSearchService implements MemberSearchUseCase {
     private final JsonUtil jsonUtil;
 
     @Override
-    public void handle(OutboxEvent event) {
-        MemberEvent memberEvent = jsonUtil.fromJson(event.getPayload(), MemberEvent.class);
+    public void handle(OutboxMessage outboxMessage) {
+        MemberEvent memberEvent = jsonUtil.fromJson(outboxMessage.getPayload(), MemberEvent.class);
         switch (memberEvent.getMethodType()) {
-            case CREATE -> create(memberEvent, event.getId());
-            case UPDATE -> update(memberEvent, event.getId());
-            case DELETE -> delete(memberEvent, event.getId());
+            case CREATE -> create(memberEvent, outboxMessage.getId());
+            case UPDATE -> update(memberEvent, outboxMessage.getId());
+            case DELETE -> delete(memberEvent, outboxMessage.getId());
         }
     }
 

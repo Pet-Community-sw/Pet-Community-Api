@@ -1,10 +1,18 @@
 package com.example.petapp.application.in.email;
 
-// 이벤트 객체(불변)
-public record EmailEvent(
-        Long id,
-        String toEmail,
-        String subject,
-        String code
-) {
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class EmailEvent {
+    Long id;
+    String toEmail;
+    String subject;
+    String code;
 }

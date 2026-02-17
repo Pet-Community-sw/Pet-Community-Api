@@ -18,12 +18,6 @@ import javax.persistence.Entity;
 @Builder
 public class OutboxEvent extends BaseEntity {
 
-    @Column(nullable = false)
-    private String exchangeKey;
-
-    @Column(nullable = false)
-    private String routingKey;
-
     //cdc에서는 상태 필요 x
 //    @Enumerated(EnumType.STRING)
 //    @Column(nullable = false)
@@ -36,8 +30,12 @@ public class OutboxEvent extends BaseEntity {
 //    @Getter
 //    private OutboxStatus outboxStatus;
 
+
     @Column(nullable = false)
-    private Long aggregateId;
+    private String aggregateid; //debezium 싱크
+
+    @Column(nullable = false)
+    private String aggregatetype;
 
     @Column(nullable = false, columnDefinition = "json") //저장에 유연
     @Getter

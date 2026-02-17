@@ -21,11 +21,10 @@ public class MemberListener {
     @EventListener
     public void handle(MemberEvent event) {
         OutboxEvent outboxEvent = useCase.save(OutboxEvent.builder()
-                        .exchangeKey(RabbitKeys.MAIN_EXCHANGE)
-                        .routingKey(RabbitKeys.MEMBER_ROUTING_KEY)
 //                      .outboxStatus(OutboxStatus.SENDING)
 //                      .outboxEventType(OutboxEventType.MEMBER)
-                        .aggregateId(event.getMemberId())
+                        .aggregateid(String.valueOf(event.getMemberId()))
+                        .aggregatetype(RabbitKeys.MEMBER_ROUTING_KEY)
                         .payload(jsonUtil.toJson(event))
                         .build()
         );
