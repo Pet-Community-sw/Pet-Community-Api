@@ -100,18 +100,18 @@ public class RabbitConfig {
     //Binding
     @Bean
     public Binding mailBinding() {
-        return BindingBuilder.bind(mailQueue()).to(mainExchange()).with(PREFIX_ROUTING_KEY + MAIL_ROUTING_KEY);
+        return BindingBuilder.bind(mailQueue()).to(mainExchange()).with(MAIL_ROUTING_KEY);
     }
 
     @Bean
     public Binding notificationBinding() {
-        return BindingBuilder.bind(notificationQueue()).to(mainExchange()).with(PREFIX_ROUTING_KEY + NOTIFICATION_ROUTING_KEY);
+        return BindingBuilder.bind(notificationQueue()).to(mainExchange()).with(NOTIFICATION_ROUTING_KEY);
     }
 
     //ES 바인딩
     @Bean
     public Binding elasticBinding() {
-        return BindingBuilder.bind(elasticQueue()).to(mainExchange()).with(PREFIX_ROUTING_KEY + MEMBER_ROUTING_KEY);
+        return BindingBuilder.bind(elasticQueue()).to(mainExchange()).with(MEMBER_ROUTING_KEY);
     }
 
     @Bean

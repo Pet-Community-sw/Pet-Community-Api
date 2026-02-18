@@ -32,10 +32,7 @@ public class OutboxEvent extends BaseEntity {
 
 
     @Column(nullable = false)
-    private String aggregateid; //debezium 싱크
-
-    @Column(nullable = false)
-    private String aggregatetype;
+    private String routingKey;
 
     @Column(nullable = false, columnDefinition = "json") //저장에 유연
     @Getter

@@ -25,8 +25,7 @@ public class NotificationListener {
         OutboxEvent outboxEvent = useCase.save(OutboxEvent.builder()
 //                .outboxStatus(OutboxStatus.SENDING)
 //                .outboxEventType(OutboxEventType.NOTIFICATION)
-                        .aggregateid(String.valueOf(event.id()))
-                        .aggregatetype(RabbitKeys.NOTIFICATION_ROUTING_KEY)
+                        .routingKey(RabbitKeys.NOTIFICATION_ROUTING_KEY)
                         .payload(jsonUtil.toJson(event))
                         .build()
         );

@@ -23,8 +23,7 @@ public class MemberListener {
         OutboxEvent outboxEvent = useCase.save(OutboxEvent.builder()
 //                      .outboxStatus(OutboxStatus.SENDING)
 //                      .outboxEventType(OutboxEventType.MEMBER)
-                        .aggregateid(String.valueOf(event.getMemberId()))
-                        .aggregatetype(RabbitKeys.MEMBER_ROUTING_KEY)
+                        .routingKey(RabbitKeys.MEMBER_ROUTING_KEY)
                         .payload(jsonUtil.toJson(event))
                         .build()
         );

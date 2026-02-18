@@ -137,7 +137,7 @@ services:
       retries: 10
 
   debezium:
-    image: debezium/server:2.5
+    image: quay.io/debezium/server:3.4
     container_name: pet-app-debezium
     restart: always
     depends_on:
@@ -155,11 +155,9 @@ services:
       - DEBEZIUM_SINK_RABBITMQ_CONNECTION_USERNAME=${RABBITMQ_USERNAME}
       - DEBEZIUM_SINK_RABBITMQ_CONNECTION_PASSWORD=${RABBITMQ_PASSWORD}
       - DEBEZIUM_SINK_RABBITMQ_EXCHANGE=ex.main
-      - DEBEZIUM_SINK_RABBITMQ_ROUTINGKEYFROMTOPICNAME=true #토픽 이름으로 라우팅키 설정
+      - DEBEZIUM_SINK_RABBITMQ_ROUTINGKEY_SOURCE=key #key 값을 라우팅 키로 설정
 
-      # converter 설정
-      - DEBEZIUM_SOURCE_KEY_CONVERTER=org.apache.kafka.connect.json.JsonConverter
-      - DEBEZIUM_SOURCE_KEY_CONVERTER_SCHEMAS_ENABLE=false #스키마 정보 포함 x, 메시지 크기가 커지는 것을 방지
+      - DEBEZIUM_FORMAT_KEY=simplestring #schema 없이 단순 문자열로 key를 전달하기 위한 설정
       - DEBEZIUM_SOURCE_VALUE_CONVERTER=org.apache.kafka.connect.json.JsonConverter
       - DEBEZIUM_SOURCE_VALUE_CONVERTER_SCHEMAS_ENABLE=false
 
@@ -167,10 +165,9 @@ services:
       - DEBEZIUM_SOURCE_TRANSFORMS=outbox #outbox라는 이름으로 smt 설정
       - DEBEZIUM_SOURCE_TRANSFORMS_OUTBOX_TYPE=io.debezium.transforms.outbox.EventRouter #공식 outbox smt 사용
       - DEBEZIUM_SOURCE_TRANSFORMS_OUTBOX_TABLE_FIELD_EVENT_ID=id #id 필드를 이벤트 id로 지정
-      - DEBEZIUM_SOURCE_TRANSFORMS_OUTBOX_TABLE_FIELD_EVENT_KEY=aggregateid #aggregateid 필드를 이벤트 키로 지정
-      - DEBEZIUM_SOURCE_TRANSFORMS_OUTBOX_TABLE_FIELD_EVENT_TYPE=aggregatetype #aggregatetype 필드를 이벤트 종류를 구분하기 위함
+      - DEBEZIUM_SOURCE_TRANSFORMS_OUTBOX_TABLE_FIELD_EVENT_KEY=routing_key #routingKey 필드를 이벤트 키로 지정
       - DEBEZIUM_SOURCE_TRANSFORMS_OUTBOX_TABLE_FIELD_EVENT_PAYLOAD=payload #실제 전달해야 할 데이터
-      - DEBEZIUM_SOURCE_TRANSFORMS_OUTBOX_ROUTE_BY_FIELD=aggregatetype #라우팅키를 aggregatetype으로 설정하기 위한 필드
+      - DEBEZIUM_SOURCE_TRANSFORMS_OUTBOX_ROUTE_BY_FIELD=routing_key #라우팅 키로 사용할 필드 지정
       - DEBEZIUM_SOURCE_TRANSFORMS_OUTBOX_TABLE_FIELDS_ADDITIONAL_PLACEMENT=id:envelope #id필드 추가(envlope: 부가 정보를 추가)
 
       # mysql 설정

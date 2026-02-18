@@ -25,8 +25,7 @@ public class EmailListener {
         OutboxEvent outboxEvent = useCase.save(OutboxEvent.builder()
 //                .outboxStatus(OutboxStatus.SENDING) //스케줄링 시 중복 발송 방지
 //                .outboxEventType(OutboxEventType.EMAIL)
-                        .aggregateid(String.valueOf(event.getId()))
-                        .aggregatetype(RabbitKeys.MAIL_ROUTING_KEY)
+                        .routingKey(RabbitKeys.MAIL_ROUTING_KEY)
                         .payload(jsonUtil.toJson(event))
                         .build()
         );
