@@ -160,6 +160,7 @@ services:
       - DEBEZIUM_FORMAT_KEY=simplestring #schema 없이 단순 문자열로 key를 전달하기 위한 설정
       - DEBEZIUM_SOURCE_VALUE_CONVERTER=org.apache.kafka.connect.json.JsonConverter
       - DEBEZIUM_SOURCE_VALUE_CONVERTER_SCHEMAS_ENABLE=false
+      - DEBEZIUM_SOURCE_EXTENDED_HEADERS_ENABLED=false #debezium이 제공하는 확장 헤더 기능을 비활성화, 확장 헤더는 이벤트에 추가적인 메타데이터를 포함하지만 필요없어서 용량 줄임
 
       # smt 설정
       - DEBEZIUM_SOURCE_TRANSFORMS=outbox #outbox라는 이름으로 smt 설정
