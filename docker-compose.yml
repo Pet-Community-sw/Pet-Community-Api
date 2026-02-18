@@ -137,6 +137,8 @@ services:
       retries: 10
 
   debezium:
+    env_file: # 환경변수 파일을 사용하여 설정값을 관리할 수 있도록 env_file 옵션 추가
+      - .env
     image: quay.io/debezium/server:3.4
     container_name: pet-app-debezium
     restart: always
@@ -146,54 +148,8 @@ services:
       rabbitmq:
         condition: service_healthy
     volumes:
-      - ./debezium/conf:/debezium/conf
+      - ./debezium/config:/debezium/conf
       - ./debezium/data:/debezium/data
-    environment:
-      - DEBEZIUM_SINK_TYPE=rabbitmq
-      - DEBEZIUM_SINK_RABBITMQ_CONNECTION_HOST=rabbitmq
-      - DEBEZIUM_SINK_RABBITMQ_CONNECTION_PORT=${RABBITMQ_PORT}
-      - DEBEZIUM_SINK_RABBITMQ_CONNECTION_USERNAME=${RABBITMQ_USERNAME}
-      - DEBEZIUM_SINK_RABBITMQ_CONNECTION_PASSWORD=${RABBITMQ_PASSWORD}
-      - DEBEZIUM_SINK_RABBITMQ_EXCHANGE=ex.main
-      - DEBEZIUM_SINK_RABBITMQ_ROUTINGKEY_SOURCE=key #key 값을 라우팅 키로 설정
-
-      - DEBEZIUM_FORMAT_KEY=simplestring #schema 없이 단순 문자열로 key를 전달하기 위한 설정
-      - DEBEZIUM_SOURCE_VALUE_CONVERTER=org.apache.kafka.connect.json.JsonConverter
-      - DEBEZIUM_SOURCE_VALUE_CONVERTER_SCHEMAS_ENABLE=false
-      - DEBEZIUM_SOURCE_EXTENDED_HEADERS_ENABLED=false #debezium이 제공하는 확장 헤더 기능을 비활성화, 확장 헤더는 이벤트에 추가적인 메타데이터를 포함하지만 필요없어서 용량 줄임
-
-      # smt 설정
-      - DEBEZIUM_SOURCE_TRANSFORMS=outbox #outbox라는 이름으로 smt 설정
-      - DEBEZIUM_SOURCE_TRANSFORMS_OUTBOX_TYPE=io.debezium.transforms.outbox.EventRouter #공식 outbox smt 사용
-      - DEBEZIUM_SOURCE_TRANSFORMS_OUTBOX_TABLE_FIELD_EVENT_ID=id #id 필드를 이벤트 id로 지정
-      - DEBEZIUM_SOURCE_TRANSFORMS_OUTBOX_TABLE_FIELD_EVENT_KEY=routing_key #routingKey 필드를 이벤트 키로 지정
-      - DEBEZIUM_SOURCE_TRANSFORMS_OUTBOX_TABLE_FIELD_EVENT_PAYLOAD=payload #실제 전달해야 할 데이터
-      - DEBEZIUM_SOURCE_TRANSFORMS_OUTBOX_ROUTE_BY_FIELD=routing_key #라우팅 키로 사용할 필드 지정
-      - DEBEZIUM_SOURCE_TRANSFORMS_OUTBOX_TABLE_FIELDS_ADDITIONAL_PLACEMENT=id:envelope #id필드 추가(envlope: 부가 정보를 추가)
-
-      # mysql 설정
-      - DEBEZIUM_SOURCE_CONNECTOR_CLASS=io.debezium.connector.mysql.MySqlConnector
-      - DEBEZIUM_SOURCE_OFFSET_STORAGE=org.apache.kafka.connect.storage.FileOffsetBackingStore #오프셋 정보를 파일로 저장하기 위한 설정
-      - DEBEZIUM_SOURCE_OFFSET_STORAGE_FILE_FILENAME=/debezium/data/offsets.dat #오프셋 정보를 저장할 파일 경로
-      - DEBEZIUM_SOURCE_DATABASE_HOSTNAME=mysql
-      - DEBEZIUM_SOURCE_DATABASE_PORT=${MYSQL_PORT}
-      - DEBEZIUM_SOURCE_DATABASE_USER=${MYSQL_USER}
-      - DEBEZIUM_SOURCE_DATABASE_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - DEBEZIUM_SOURCE_DATABASE_SERVER_ID=${DEBEZIUM_SOURCE_DATABASE_SERVER_ID}
-      - DEBEZIUM_SOURCE_TABLE_INCLUDE_LIST=${MYSQL_DATABASE}.outbox_event #모니터링할 테이블 설정, outbox_event 테이블의 변경사항을 모니터링
-      - DEBEZIUM_SOURCE_TOPIC_PREFIX=outbox #토픽 접두사 설정
-
-      # 성능 설정
-      - DEBEZIUM_SOURCE_MAX_BATCH_SIZE=1000 #배치 사이즈 설정, 한번에 최대 1000개의 이벤트를 처리(기본값은 2048)
-      - DEBEZIUM_SOURCE_POLL_INTERVAL_MS=500 #0.5초마다
-      # 에러 처리
-      - DEBEZIUM_SOURCE_EVENT_PROCESSING_FAILURE_HANDLING_MODE=fail #에러 발생 시 debeizium 서버 중단
-
-
-      - DEBEZIUM_SOURCE_SCHEMA_HISTORY_INTERNAL=io.debezium.storage.file.history.FileSchemaHistory #스키마 변경 이력을 파일로 저장하기 위한 설정
-      - DEBEZIUM_SOURCE_SCHEMA_HISTORY_INTERNAL_FILE_FILENAME=/debezium/data/history.dat #스키마 변경 이력을 저장할 파일 경로
-      - DEBEZIUM_SOURCE_INCLUDE_SCHEMA_CHANGES=false #스키마 변경 이벤트를 토픽에 포함하지 않도록 설정, 스키마 변경 이벤트는 일반적으로 필요하지 않으므로 false로 설정하여 불필요한 이벤트 생성을 방지
-      - DEBEZIUM_SOURCE_SNAPSHOT_MODE=initial #스냅샷 모드
 
 volumes:
   mysql-data:
