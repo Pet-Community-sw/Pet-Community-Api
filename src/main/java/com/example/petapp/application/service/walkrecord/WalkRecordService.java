@@ -15,6 +15,7 @@ import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
+import com.example.petapp.domain.walkrecord.model.WalkStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -57,7 +58,7 @@ public class WalkRecordService implements WalkRecordUseCase {
     public GetWalkRecordLocationResponseDto getWalkRecordLocation(Long walkRecordId, Long id) {
         Member member = memberQueryUseCase.findOrThrow(id);
         WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
-        walkRecord.validateMember(member);
+        walkRecord.validateMember(member.getId());
         return new GetWalkRecordLocationResponseDto(port.find(walkRecordId));
     }
 
@@ -67,7 +68,7 @@ public class WalkRecordService implements WalkRecordUseCase {
         Member member = memberQueryUseCase.findOrThrow(id);
         WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
         walkRecord.validateMember(member.getId());
-        walkRecord.updateWalkStatus(WalkRecord.WalkStatus.START);
+        walkRecord.updateWalkStatus(WalkStatus.START);
 
         eventPublisher.publishEvent(new NotificationEvent(walkRecord.getDelegateWalkPost().getProfile().getMember().getId(),
                 member.getName() + "님이 산책을 시작하였습니다."));
@@ -79,7 +80,7 @@ public class WalkRecordService implements WalkRecordUseCase {
         Member member = memberQueryUseCase.findOrThrow(id);
         WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
         walkRecord.validateMember(member.getId());
-        walkRecord.updateWalkStatus(WalkRecord.WalkStatus.FINISH);
+        walkRecord.updateWalkStatus(WalkStatus.FINISH);
 
         locationUseCase.finishWalkRecord(walkRecordId); //locationPipeline 종료
         eventPublisher.publishEvent(new NotificationEvent(walkRecord.getDelegateWalkPost().getProfile().getMember().getId(),

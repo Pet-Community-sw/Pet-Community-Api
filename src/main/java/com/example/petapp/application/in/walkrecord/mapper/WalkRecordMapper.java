@@ -5,12 +5,13 @@ import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordRe
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
+import com.example.petapp.domain.walkrecord.model.WalkStatus;
 
 public class WalkRecordMapper {
 
     public static WalkRecord toEntity(DelegateWalkPost delegateWalkPost, Member member) {
         return WalkRecord.builder()
-                .walkStatus(WalkRecord.WalkStatus.READY)
+                .walkStatus(WalkStatus.READY)
                 .delegateWalkPost(delegateWalkPost)
                 .member(member)
                 .build();

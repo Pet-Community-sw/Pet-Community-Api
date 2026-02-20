@@ -5,14 +5,11 @@ import com.example.petapp.application.in.token.MemberInfo;
 import com.example.petapp.application.out.TokenPort;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.token.model.TokenType;
-import com.example.petapp.infrastructure.stomp.dto.User;
 import com.example.petapp.infrastructure.stomp.strategy.command.StompCommandStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 /*
@@ -45,9 +42,9 @@ public class ConnectStrategy implements StompCommandStrategy {
         Member member = memberQueryUseCase.findOrThrow(info.getMemberId());
 
         //검증이 끝난 유저의 인증 객체 생성
-        Authentication authentication = new UsernamePasswordAuthenticationToken(new User(info.getMemberId(), member.getName()), null);
+//        Authentication authentication = new UsernamePasswordAuthenticationToken(new User(info.getMemberId(), member.getName()), null);
 
-        accessor.setUser(authentication);
+        accessor.setUser(() -> member.getId().toString());
     }
 
     @Override

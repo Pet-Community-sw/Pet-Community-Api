@@ -16,7 +16,17 @@ public class WalkRecordQueryService implements WalkRecordQueryUseCase {
     private final WalkRecordRepository repository;
 
     @Override
+    @Transactional(readOnly = true)
     public WalkRecord findOrThrow(Long id) {
         return repository.find(id).orElseThrow(() -> new NotFoundException("해당 산책기록은 없습니다."));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public WalkRecord findAndValidate(Long id, Long memberId) {
+        WalkRecord walkRecord = findOrThrow(id);
+        walkRecord.validateMember(memberId);
+        walkRecord.validateStart();
+        return walkRecord;
     }
 }
