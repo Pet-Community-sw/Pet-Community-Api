@@ -37,6 +37,7 @@ public class LocationPipeline {
 
     public void send(LocationMessage message, String memberId) {
         Long walkRecordId = message.getWalkRecordId();
+
         CompletableFuture<Subject<LocationMessage>> future = initMap.computeIfAbsent(walkRecordId, id ->
                 CompletableFuture.supplyAsync(() -> initializePipeline(walkRecordId, memberId), locationInitExecutor));
 
@@ -52,10 +53,8 @@ public class LocationPipeline {
     }
 
     private Subject<LocationMessage> initializePipeline(Long walkRecordId, String memberId) {
-        //사용자 검증 (io작업은 비동기로 처리)
-        WalkRecord walkRecord = useCase.findOrThrow(walkRecordId);
-        walkRecord.validateMember(Long.valueOf(memberId));
-        walkRecord.validateStart();
+        //파이프라인 초기화 전에 호출 시 매번 DB조회가 발생 함으로 여기에 위치
+        WalkRecord walkRecord = useCase.findAndValidate(walkRecordId, Long.valueOf(memberId));
 
         /*
          * Subject는 thread-safe이 아니라 동시성 이슈가 있을 수 있으므로 toSerialized()로 감싸서 사용해야 함

@@ -5,6 +5,12 @@ spring:
   elasticsearch:
     uris: http://localhost:80
   datasource:
+    hikari:
+      maximum-pool-size: 30
+      minimum-idle: 10
+      connection-timeout: 3000
+      validation-timeout: 1000
+      leak-detection-threshold: 5000
     url: jdbc:mysql://localhost:3306/${MYSQL_DATABASE}?useUnicode=true&serverTimezone=Asia/Seoul
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
@@ -36,8 +42,10 @@ spring:
     password: ${RABBITMQ_PASSWORD}
     listener:
       simple:
-        prefetch: 1 # 한 번에 하나의 메시지 처리
+        prefetch: 10
         acknowledge-mode: auto
+        concurrency: 4
+        max-concurrency: 8
     publisher-confirm-type: correlated #해당 메시지 전송 확인
 
   data:
@@ -91,6 +99,8 @@ management:
         http:
           server:
             requests: true
+    enable:
+      all: true
   endpoints:
     web:
       exposure:
