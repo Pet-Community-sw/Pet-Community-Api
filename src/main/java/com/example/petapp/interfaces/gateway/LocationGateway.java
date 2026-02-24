@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import java.security.Principal;
 
 @Controller
-@RequiredArgsConstructor//서버에서 클라이언트에게만 보냄으로 sse로 해야됨.
+@RequiredArgsConstructor
 public class LocationGateway {
     private final LocationUseCase locationUseCase;
 

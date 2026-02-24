@@ -71,7 +71,6 @@ public class TalkStrategy implements MessageTypeStrategy {
         return CommandType.TALK;
     }
 
-    //todo : 업데이트 로직 정리해야됨.
     private void sendChatNotificationAndUpdateList(ChatMessage chatMessage) {
         Long chatRoomId = chatMessage.getChatRoomId();
         Long senderId = chatMessage.getSenderId();
@@ -103,7 +102,7 @@ public class TalkStrategy implements MessageTypeStrategy {
         ackInfoRepository.save(chatMessage.getClientMessageId(), sendUsers);
 
         resendScheduler.schedule(
-                () -> retrySend(chatMessage),                              // 실행할 작업
+                () -> retrySend(chatMessage),// 실행할 작업
                 new Date(System.currentTimeMillis() + 1000) // 1초 후 실행
         );
     }

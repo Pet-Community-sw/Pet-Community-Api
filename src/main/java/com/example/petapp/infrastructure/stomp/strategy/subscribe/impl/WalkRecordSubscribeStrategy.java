@@ -40,7 +40,6 @@ public class WalkRecordSubscribeStrategy extends BaseSubscribeTypeStrategy {
         if (!ownerMemberId.equals(memberId)) {
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }
-        //todo : 이거 redis 없냐?
 
         log.info("[STOMP] 구독 walkRecordId: {}, id: {}", walkRecordId, memberId);
     }
