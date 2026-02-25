@@ -47,6 +47,7 @@ spring:
         concurrency: 4
         max-concurrency: 8
     publisher-confirm-type: correlated #해당 메시지 전송 확인
+    requested-heartbeat: 30
 
   data:
     mongodb:

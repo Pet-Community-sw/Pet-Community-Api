@@ -39,8 +39,8 @@ public class RabbitConfig {
     }
 
     @Bean
-    DirectExchange retryExchange() {
-        return new DirectExchange(RETRY_EXCHANGE);
+    HeadersExchange retryExchange() {
+        return new HeadersExchange(RETRY_EXCHANGE);
     }
 
     @Bean
@@ -65,33 +65,21 @@ public class RabbitConfig {
     }
 
     @Bean
-    public Queue wait5sQueue() {
-        return QueueBuilder.durable(WAIT_5S_QUEUE)
-                .withArgument("x-dead-letter-exchange", RETRY_EXCHANGE)
-                .withArgument("x-dead-letter-routing-key", REPUBLISH_ROUTING_KEY)
-                .withArgument("x-message-ttl", 5000)
+    public Queue retry5sQueue() {
+        return QueueBuilder.durable(RETRY_5S_QUEUE)
+                .deadLetterExchange(MAIN_EXCHANGE)
+                .ttl(5000)
                 .build();
     }
 
     @Bean
-    public Queue wait30sQueue() {
-        return QueueBuilder.durable(WAIT_30S_QUEUE)
-                .withArgument("x-dead-letter-exchange", RETRY_EXCHANGE)
-                .withArgument("x-dead-letter-routing-key", REPUBLISH_ROUTING_KEY)
-                .withArgument("x-message-ttl", 30000)
+    public Queue retry30sQueue() {
+        return QueueBuilder.durable(RETRY_30S_QUEUE)
+                .deadLetterExchange(MAIN_EXCHANGE)
+                .ttl(30000)
                 .build();
     }
-
-    /**
-     * 딜레이 큐에서 메인큐의 원래 큐로 복귀할 때 사용하는 큐(서비스 별로 큐를 생성하지 않음)
-     */
-    @Bean
-    public Queue republishQueue() {
-        return QueueBuilder.durable(REPUBLISH_QUEUE)
-                .withArgument("x-dead-letter-exchange", MAIN_EXCHANGE)
-                .build();
-    }
-
+    
     @Bean
     public Queue deadLetterQueue() {
         return QueueBuilder.durable(DEAD_LETTER_QUEUE).build();
@@ -116,17 +104,12 @@ public class RabbitConfig {
 
     @Bean
     public Binding retry5sBinding() {
-        return BindingBuilder.bind(wait5sQueue()).to(retryExchange()).with(RETRY_5S_ROUTING_KEY);
+        return BindingBuilder.bind(retry5sQueue()).to(retryExchange()).where("retry-type").matches(RETRY_5S_ROUTING_KEY);
     }
 
     @Bean
     public Binding retry30sBinding() {
-        return BindingBuilder.bind(wait30sQueue()).to(retryExchange()).with(RETRY_30S_ROUTING_KEY);
-    }
-
-    @Bean
-    public Binding republishBinding() {
-        return BindingBuilder.bind(republishQueue()).to(retryExchange()).with(REPUBLISH_ROUTING_KEY);
+        return BindingBuilder.bind(retry30sQueue()).to(retryExchange()).where("retry-type").matches(RETRY_30S_ROUTING_KEY);
     }
 
     @Bean

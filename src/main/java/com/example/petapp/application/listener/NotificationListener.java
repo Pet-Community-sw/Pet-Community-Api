@@ -6,7 +6,6 @@ import com.example.petapp.application.in.outbox.OutboxEventUseCase;
 import com.example.petapp.domain.outboxevent.model.OutboxEvent;
 import com.example.petapp.infrastructure.mq.RabbitKeys;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +16,7 @@ public class NotificationListener {
 
     private final JsonUtil jsonUtil;
     private final OutboxEventUseCase useCase;
-    private final ApplicationEventPublisher publisher;
+//    private final ApplicationEventPublisher publisher;
 
     @Transactional
     @EventListener
@@ -29,6 +28,6 @@ public class NotificationListener {
                         .payload(jsonUtil.toJson(event))
                         .build()
         );
-        publisher.publishEvent(outboxEvent);
+//        publisher.publishEvent(outboxEvent);
     }
 }

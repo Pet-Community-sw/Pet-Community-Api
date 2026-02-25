@@ -34,7 +34,7 @@ public class RabbitRetryHandler {
         } else {
             // 3회차 이상 실패 시 DLQ로 이동
             log.error("메일 전송 실패 error: {}", e.getMessage());
-            rabbitTemplate.convertAndSend(RabbitKeys.DLX_EXCHANGE, "dead.letter", object);
+            rabbitTemplate.convertAndSend(RabbitKeys.DLX_EXCHANGE, RabbitKeys.DEAD_LETTER_ROUTING_KEY, object);
         }
     }
 
@@ -42,13 +42,10 @@ public class RabbitRetryHandler {
     /**
      * 재시도 전용 큐로 전송
      */
-    private void sendToWaitQueue(Object payload, String waitKey, String originalRoutingKey, int retryCount) {
-        rabbitTemplate.convertAndSend(RabbitKeys.RETRY_EXCHANGE, waitKey, payload, msg -> {
-            msg.getMessageProperties().getHeaders().put("x-retry-count", retryCount + 1);
-            //재시도 횟수 저장
-
-            msg.getMessageProperties().getHeaders().put("x-orig-routing-key", originalRoutingKey);
-            //원래 라우팅 키 저장해서 재발행 큐에서 사용하기 위함
+    private void sendToWaitQueue(Object payload, String retryKey, String originalRoutingKey, int retryCount) {
+        rabbitTemplate.convertAndSend(RabbitKeys.RETRY_EXCHANGE, originalRoutingKey, payload, msg -> {
+            msg.getMessageProperties().getHeaders().put("x-retry-count", retryCount + 1);//재시도 횟수 저장
+            msg.getMessageProperties().getHeaders().put("retry-type", retryKey); // 큐 결정용 헤더
             return msg;
         });
     }
