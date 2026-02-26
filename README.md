@@ -1,4 +1,4 @@
-# 🐾 멍냥로드
+# 🐶 멍냥로드
 
 ## 📌 프로젝트 소개
 
@@ -10,10 +10,3 @@
 - Java, Spring Boot, Spring Data JPA, Websocket(STOMP), Redis, MySQL, MongoDB, Elasticsearch, Debezium, RabbitMQ
 
 ---
-
-- [포트폴리오 (Notion)]( https://www.notion.so/1d2f281abffa807199c7d12a8c86665e?source=copy_link)
-- [API 명세서 (Notion)](https://www.notion.so/15936f5e5e3380a28972f06c63c44d13?source=copy_link)
-
----
-
-ㅣ
