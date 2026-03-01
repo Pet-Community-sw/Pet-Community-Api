@@ -69,14 +69,14 @@ public class LocationPipeline {
         Disposable disposable = subject
                 //백프레셔 이슈 발생 시 최신 데이터만 처리 서버가 죽는 것 보단 최신 데이터만 처리하는게 나아보임.
                 .toFlowable(BackpressureStrategy.LATEST)
-                .throttleFirst(THROTTLE_SECONDS, TimeUnit.SECONDS) //백프레셔 문제 없을 듯
                 .observeOn(Schedulers.computation())
+                .throttleFirst(THROTTLE_SECONDS, TimeUnit.SECONDS) //백프레셔 문제 없을 듯
                 .timeout(TIMEOUT_MINUTES, TimeUnit.MINUTES)
                 .doOnError(error -> log.error("Location Pipeline Error walkRecordId: {}, error : {} ", walkRecord.getId(), error.toString()))
                 .onErrorComplete()//스레드 i/o는 io 계산만 computation으로 해야함
                 .filter(processorUseCase::isEnoughMove)
                 .concatMap(message -> Flowable.fromCallable(() -> {
-                                    processorUseCase.saveAndBroadcast(message);
+                                    processorUseCase.saveAndSend(message);
                                     return message;
                                 }).subscribeOn(Schedulers.io())
                                 .onErrorResumeNext(err -> {

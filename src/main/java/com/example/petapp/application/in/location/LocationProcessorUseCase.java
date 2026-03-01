@@ -9,7 +9,7 @@ public interface LocationProcessorUseCase {
 
     WalkRangeStatus checkRange(WalkRecord walkRecord, LocationMessage message);
 
-    void saveAndBroadcast(LocationMessage message);
+    void saveAndSend(LocationMessage message);
 
     boolean isEnoughMove(LocationMessage message);
 

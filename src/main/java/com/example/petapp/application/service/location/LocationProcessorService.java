@@ -62,7 +62,9 @@ public class LocationProcessorService implements LocationProcessorUseCase {
 
     }
 
-
+    /**
+     * HaversineUtil을 사용하여 두 지점 간의 거리를 계산하고, 산책 범위의 반경과 비교하여 범위 내에 있는지 여부를 판단
+     */
     @Override
     public WalkRangeStatus checkRange(WalkRecord walkRecord, LocationMessage message) {
         double distance = HaversineUtil.calculateDistanceInMeters(
@@ -77,7 +79,7 @@ public class LocationProcessorService implements LocationProcessorUseCase {
 
 
     @Override
-    public void saveAndBroadcast(LocationMessage message) {
+    public void saveAndSend(LocationMessage message) {
         String location = message.getLongitude() + "," + message.getLatitude();
         port.create(message.getWalkRecordId(), location);
 

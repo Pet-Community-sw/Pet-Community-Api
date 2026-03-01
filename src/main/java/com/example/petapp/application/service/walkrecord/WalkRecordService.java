@@ -46,14 +46,12 @@ public class WalkRecordService implements WalkRecordUseCase {
         return new CreateWalkRecordResponseDto(savedWalkRecord.getId());
     }
 
-    @Transactional(readOnly = true)
     @Override
     public GetWalkRecordResponseDto getWalkRecord(Long walkRecordId, Long id) {
         WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
         return WalkRecordMapper.toGetWalkRecordResponseDto(walkRecord);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public GetWalkRecordLocationResponseDto getWalkRecordLocation(Long walkRecordId, Long id) {
         Member member = memberQueryUseCase.findOrThrow(id);
