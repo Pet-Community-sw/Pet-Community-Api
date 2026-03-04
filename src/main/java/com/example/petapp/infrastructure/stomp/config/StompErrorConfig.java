@@ -10,7 +10,8 @@ import org.springframework.web.socket.messaging.StompSubProtocolErrorHandler;
 
 import java.nio.charset.StandardCharsets;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
+
 public class StompErrorConfig {
 
     @Bean

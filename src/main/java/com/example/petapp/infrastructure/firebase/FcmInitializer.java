@@ -12,7 +12,7 @@
 //
 //import javax.annotation.PostConstruct;
 //
-//@Configuration
+//@Configuration(proxyBeanMethods = false)
 //public class FcmInitializer {
 //
 //    @Value("${firebase.service-account-file}")

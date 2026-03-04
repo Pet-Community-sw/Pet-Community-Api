@@ -14,7 +14,7 @@ import org.springframework.messaging.support.MessageHeaderAccessor;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @Slf4j
 public class StompInterceptor implements ChannelInterceptor {
 

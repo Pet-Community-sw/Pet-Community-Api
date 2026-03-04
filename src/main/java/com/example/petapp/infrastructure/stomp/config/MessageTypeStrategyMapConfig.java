@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class MessageTypeStrategyMapConfig {
     @Bean(name = "messageTypeMap")
     public Map<CommandType, MessageTypeStrategy> messageTypeMap(List<MessageTypeStrategy> strategies) {

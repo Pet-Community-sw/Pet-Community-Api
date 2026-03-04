@@ -13,7 +13,8 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @RequiredArgsConstructor
 @EnableWebSocketMessageBroker
-@Configuration
+@Configuration(proxyBeanMethods = false)
+
 public class StompConfig implements WebSocketMessageBrokerConfigurer {
 
     private final StompInterceptor stompInterceptor;
@@ -31,8 +32,6 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-stomp")
                 .setAllowedOriginPatterns("*");
-//                .withSockJS();//지워야함.
-
     }
 
     @Override

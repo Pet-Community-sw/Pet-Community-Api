@@ -10,7 +10,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableAsync// 비동기 활성화
 @EnableRetry// 재시도 활성화
 public class AsyncConfig implements AsyncConfigurer {

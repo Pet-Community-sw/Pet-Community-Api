@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableJpaRepositories(
         basePackages = "com.example.petapp.infrastructure.database.jpa"//JPA 리포지토리 스캔 위치 지정
 )

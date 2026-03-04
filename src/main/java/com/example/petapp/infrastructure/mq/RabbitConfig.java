@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import static com.example.petapp.infrastructure.mq.RabbitKeys.*;
 
 @RequiredArgsConstructor
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class RabbitConfig {
 
     public final OutboxEventUseCase useCase;
@@ -79,7 +79,7 @@ public class RabbitConfig {
                 .ttl(30000)
                 .build();
     }
-    
+
     @Bean
     public Queue deadLetterQueue() {
         return QueueBuilder.durable(DEAD_LETTER_QUEUE).build();

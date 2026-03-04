@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
 @EnableMongoRepositories(
         basePackages = "com.example.petapp.infrastructure.database.mongo"//Mongo 리포지토리 스캔 위치 지정

@@ -9,9 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
+
 public class StompStrategyMapConfig {
-   
+
     @Bean("commandStrategyMap")
     public Map<StompCommand, StompCommandStrategy> commandStrategyMap(List<StompCommandStrategy> strategies) {
         Map<StompCommand, StompCommandStrategy> map = new HashMap<>();
