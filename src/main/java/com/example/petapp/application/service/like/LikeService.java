@@ -9,6 +9,7 @@ import com.example.petapp.application.out.cache.LikeCachePort;
 import com.example.petapp.domain.like.LikeRepository;
 import com.example.petapp.domain.like.model.Like;
 import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.post.PostRepository;
 import com.example.petapp.domain.post.model.Post;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ public class LikeService implements LikeUseCase {
     private final MemberQueryUseCase memberQueryUseCase;
     private final LikeCachePort port;
     private final PostQueryUseCase<Post> postQueryUseCase;
+    private final PostRepository<Post> postRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     /*
@@ -39,7 +41,7 @@ public class LikeService implements LikeUseCase {
         Member member = memberQueryUseCase.findOrThrow(id);
         Post post = postQueryUseCase.findOrThrow(postId);
         Optional<Like> existingLike = post.getLikes().stream().filter(like -> like.getMember().equals(member)).findFirst();
-        
+
         eventPublisher.publishEvent(new NotificationEvent(post.getMember().getId(), member.getName() + "님이 회원님의 게시물을 좋아합니다."));
 
         return existingLike.map(like -> delete(like, post)).orElseGet(() -> create(post, member));
@@ -48,16 +50,16 @@ public class LikeService implements LikeUseCase {
     private boolean delete(Like like, Post post) {
         post.removeLikes(like);
         repository.delete(like);
-        log.info("좋아요 삭제");
+        postRepository.decrementLikeCount(post.getId());
         port.delete(like.getMember().getId(), like.getPost().getId());
         return false;
     }
 
     public boolean create(Post post, Member member) {
-        log.info("좋아요 생성");
         Like like = LikeMapper.toEntity(member, post);
         post.countUpLike(like);
         repository.save(like);
+        postRepository.incrementLikeCount(post.getId());
         port.create(member.getId(), post.getId());
         return true;
     }

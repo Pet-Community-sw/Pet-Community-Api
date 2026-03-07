@@ -1,6 +1,7 @@
 package com.example.petapp.application.service.post;
 
 import com.example.petapp.application.in.post.PostQueryUseCase;
+import com.example.petapp.application.in.post.normal.dto.response.PostResponseDto;
 import com.example.petapp.domain.post.PostRepository;
 import com.example.petapp.domain.post.model.Post;
 import com.example.petapp.interfaces.exception.NotFoundException;
@@ -23,14 +24,12 @@ public class PostQueryService<T extends Post> implements PostQueryUseCase<T> {
     }
 
     @Override
-    public Page<T> findList(Pageable pageable) {
-        return repository.findList(pageable);
+    public Page<PostResponseDto> findListByMember(Long targetId, Long id, Pageable pageable) {
+        return repository.findListByMember(targetId, id, pageable);
     }
 
     @Override
-    public Page<T> findList(Long memberId, Pageable pageable) {
-        return repository.findList(memberId, pageable);
+    public Page<PostResponseDto> findList(Long id, Pageable pageable) {
+        return repository.findList(id, pageable);
     }
-
-
 }

@@ -13,8 +13,6 @@ import com.example.petapp.domain.post.model.NormalPost;
 import com.example.petapp.domain.post.model.Post;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class NormalPostMapper {
 
@@ -26,22 +24,8 @@ public class NormalPostMapper {
                 .build();
     }
 
-    public static <T extends Post> List<PostResponseDto> toPostListResponseDto(List<T> posts, Map<Long, Long> likeCountMap, Member member) {
-        return posts.stream()
-                .map(post -> PostResponseDto.builder()
-                        .postId(post.getId())
-                        .postImageUrl(post.getPostImageUrl())
-                        .memberId(post.getMember().getId())
-                        .memberName(post.getMember().getName())
-                        .memberImageUrl(post.getMember().getMemberImageUrl())
-                        .createdAt(TimeUtil.getTimeAgo(post.getCreatedAt()))
-                        .viewCount(post.getViewCount())
-                        .likeCount(likeCountMap.getOrDefault(post.getId(), 0L))
-                        .title(post.getContent().getTitle())
-                        .like(post.getLikes().stream().anyMatch(like -> like.getMember().getId().equals(member.getId())))
-                        .build()
-                )
-                .collect(Collectors.toList());
+    public static void toPostListResponseDto(List<PostResponseDto> posts) {
+        posts.forEach(dto -> dto.setPostBeforeTime(TimeUtil.getTimeAgo(dto.getCreatedAt())));
     }
 
     public static GetPostResponseDto toGetPostResponseDto(Post post,
@@ -57,7 +41,7 @@ public class NormalPostMapper {
                 .memberId(post.getMember().getId())
                 .memberName(post.getMember().getName())
                 .memberImageUrl(post.getMember().getMemberImageUrl())
-                .createdAt(TimeUtil.getTimeAgo(post.getCreatedAt()))
+                .postBeforeTime(TimeUtil.getTimeAgo(post.getCreatedAt()))
                 .like(isLike)
                 .build();
         List<GetCommentsResponseDto> commentsResponseDtos = CommentMapper.toGetCommentsResponseDtos((Commentable) post, member);

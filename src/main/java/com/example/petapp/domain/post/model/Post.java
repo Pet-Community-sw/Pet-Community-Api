@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "post", indexes = {
+        @Index(name = "idx_post_member_id", columnList = "member_id")
+})
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -38,8 +41,12 @@ public abstract class Post extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    @Min(0)
+    @Column(nullable = false)
+    private long likeCount;
+
     @Builder.Default
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @BatchSize(size = 100)
     private List<Like> likes = new ArrayList<>();
 //    public abstract Like createLike(Member member);//게시글에서 Like생성 책임 위임

@@ -34,22 +34,23 @@ public class NormalPostService implements NormalPostUseCase {
     private final StoragePort storagePort;
 
 
-    @Transactional(readOnly = true)
     @Override
     public List<PostResponseDto> getPosts(int page, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
+        memberQueryUseCase.findOrThrow(id);
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "id"));
-        List<NormalPost> normalPosts = postQueryUseCase.findList(pageRequest).getContent();
-        return NormalPostMapper.toPostListResponseDto(normalPosts, likeQueryUseCase.getCountMap(normalPosts), member);
+        List<PostResponseDto> posts = postQueryUseCase.findList(id, pageRequest).getContent();
+        NormalPostMapper.toPostListResponseDto(posts);
+        return posts;
     }
 
     @Override
     public List<PostResponseDto> getPostsByMember(Long memberId, int page, Long id) {
         memberQueryUseCase.findOrThrow(memberId);
-        Member member = memberQueryUseCase.findOrThrow(id);
+        memberQueryUseCase.findOrThrow(id);
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "id"));
-        List<NormalPost> normalPosts = postQueryUseCase.findList(memberId, pageRequest).getContent();
-        return NormalPostMapper.toPostListResponseDto(normalPosts, likeQueryUseCase.getCountMap(normalPosts), member);
+        List<PostResponseDto> posts = postQueryUseCase.findListByMember(memberId, id, pageRequest).getContent();
+        NormalPostMapper.toPostListResponseDto(posts);
+        return posts;
     }
 
     @Transactional
