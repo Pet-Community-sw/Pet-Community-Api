@@ -148,7 +148,7 @@ services:
       rabbitmq:
         condition: service_healthy
     volumes:
-      - ./debezium/config:/debezium/conf
+      - ./debezium/config:/debezium/config
       - ./debezium/data:/debezium/data
 
   prometheus:
