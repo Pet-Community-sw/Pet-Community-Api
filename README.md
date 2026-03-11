@@ -36,6 +36,7 @@
 ## 기술적 고민과 해결
 
 ### 1. 대용량 트래픽 환경에서 응답 지연을 줄이기 위한 비동기 처리 구조 도입
+<img width="676" height="452" alt="스크린샷 2026-02-26 20 10 10" src="https://github.com/user-attachments/assets/b3c75c95-d749-4e7d-8d87-0c2de00b9fb2" />
 
 초기에는 알림, 메일, 검색 색인과 같은 부가 기능도 주요 비즈니스 로직과 같은 동기 흐름에서 처리했습니다.  
 이 구조에서는 트래픽이 증가할수록 부가 로직의 지연이 전체 응답 시간에 영향을 주고, 스레드 풀 및 DB 커넥션 고갈로 이어질 위험이 있었습니다.
@@ -48,10 +49,12 @@
 - 최종 개선: CDC 기반 구조로 전환하여 폴링 부하를 줄이고 실시간성을 높임
 
 이를 통해 요청-응답 흐름과 부가 작업을 분리하고 장애 상황에서도 이벤트 유실 가능성을 줄이며 실패 케이스만 별도로 처리하는 구조를 설계했습니다.
+<img width="1114" height="560" alt="스크린샷 2026-02-25 22 19 54" src="https://github.com/user-attachments/assets/8e4ecd0f-1d31-4126-97a6-b74d98a53e2a" />
 
 ---
 
 ### 2. 초 단위 위치 이벤트로 인한 서버 부하 및 중복 처리 문제
+<img width="913" height="815" alt="스크린샷 2026-03-01 21 56 30" src="https://github.com/user-attachments/assets/4b08d92e-55b3-461c-bd46-aadd4588477d" />
 
 위치 이벤트는 단건 요청이 아니라 연속적으로 유입되는 스트림 데이터이기 때문에,
 일반적인 요청 처리 방식보다 이벤트 폭주 제어, 순서 보장, 중복 제거가 중요했습니다.
@@ -84,6 +87,11 @@
 
 그 결과 동일 데이터 1만 건 기준으로 프라이머리 인덱스 저장 용량을 약 20% 절감했습니다.  
 또한 반복 호출이 많은 자동완성 특성을 고려해 Redis 캐시를 적용하여 p99 응답시간을 약 60% 개선했습니다.
+<img width="1087" height="59" alt="스크린샷 2026-03-08 21 09 03" src="https://github.com/user-attachments/assets/537b482d-6ee9-4fff-8ba5-3d478a0a5dfc" />
+
+<img width="1279" height="406" alt="스크린샷 2026-03-07 14 21 22" src="https://github.com/user-attachments/assets/63138de8-e715-4697-ae61-66bd86f7e727" />
+
+<img width="1277" height="412" alt="스크린샷 2026-03-07 14 19 49" src="https://github.com/user-attachments/assets/14f7c918-dfa6-4cc0-bfd5-33390f8adf5f" />
 
 ---
 
