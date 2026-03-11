@@ -4,9 +4,9 @@ import java.util.Set;
 
 public interface ChatOnlineCachePort {
 
-    void create(Long chatroomId, Long profileId);
+    void create(String chatroomId, String profileId);
 
-    void delete(Long chatRoomId, Long profileId);
+    void delete(String chatRoomId, String profileId);
 
     Set<String> find(Long id);
 }

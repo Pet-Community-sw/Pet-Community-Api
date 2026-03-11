@@ -24,7 +24,7 @@ public class StompInterceptor implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
         if (accessor == null) {
-            log.warn("[STOMP] accessor is null");
+            log.warn("[STOMP] accessor 없음.");
             return message;
         }
         log.info("[STOMP] command : {}, destination : {}", accessor.getCommand(), accessor.getDestination());
@@ -32,7 +32,7 @@ public class StompInterceptor implements ChannelInterceptor {
         if (strategy != null) {
             strategy.handle(accessor);
         } else {
-            log.info("[STOMP] command 외 요청");
+            throw new IllegalArgumentException("지원하지 않는 command");
         }
         return message;
     }

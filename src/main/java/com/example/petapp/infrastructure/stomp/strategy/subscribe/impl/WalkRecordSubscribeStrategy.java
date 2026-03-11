@@ -10,10 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-/*
- *  todo : 다시 한 번 봐야됨.
- *
- * */
 @Component
 @RequiredArgsConstructor
 @Slf4j

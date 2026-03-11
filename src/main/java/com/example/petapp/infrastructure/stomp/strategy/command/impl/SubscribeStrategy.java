@@ -1,6 +1,5 @@
 package com.example.petapp.infrastructure.stomp.strategy.command.impl;
 
-import com.example.petapp.infrastructure.stomp.DestinationCachePort;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.command.StompCommandStrategy;
 import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;
@@ -19,7 +18,6 @@ import java.util.List;
 public class SubscribeStrategy implements StompCommandStrategy {
 
     private final List<SubscribeTypeStrategy> handlers;
-    private final DestinationCachePort port;
 
     @Override
     public void handle(StompHeaderAccessor accessor) {
@@ -32,9 +30,8 @@ public class SubscribeStrategy implements StompCommandStrategy {
             throw new IllegalArgumentException("destination 또는 user 정보가 없습니다.");
         }
 
-        port.create(accessor.getSubscriptionId(), destination);
-
         SubscribeInfo subscribeInfo = SubscribeInfo.builder()
+                .subscriptionId(accessor.getSubscriptionId())
                 .destination(destination)
                 .principal(user)
                 .build();

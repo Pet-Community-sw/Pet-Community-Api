@@ -13,23 +13,22 @@ public class RedisChatOnlineCacheAdapter implements ChatOnlineCachePort {
 
     private final StringRedisTemplate redisTemplate;
 
-    // Online users in chat room
-    public static String getKey(long chatRoomId) {
-        return "chatRoomId:" + chatRoomId + ":onlineUsers";
+    @Override
+    public void create(String chatRoomId, String profileId) {
+        redisTemplate.opsForSet().add(getKey(chatRoomId), profileId);
     }
 
     @Override
-    public void create(Long chatRoomId, Long profileId) {
-        redisTemplate.opsForSet().add(getKey(chatRoomId), profileId.toString());
-    }
-
-    @Override
-    public void delete(Long chatRoomId, Long profileId) {
-        redisTemplate.opsForSet().remove(getKey(chatRoomId), profileId.toString());
+    public void delete(String chatRoomId, String profileId) {
+        redisTemplate.opsForSet().remove(getKey(chatRoomId), profileId);
     }
 
     @Override
     public Set<String> find(Long id) {
-        return redisTemplate.opsForSet().members(getKey(id));
+        return redisTemplate.opsForSet().members(getKey(String.valueOf(id)));
+    }
+
+    private String getKey(String chatRoomId) {
+        return "chatRoomId:" + chatRoomId + ":onlineUsers";
     }
 }

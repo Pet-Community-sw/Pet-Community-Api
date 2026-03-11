@@ -13,6 +13,8 @@ import java.security.Principal;
 @Builder
 public class SubscribeInfo {
 
+    private String subscriptionId;
+
     private String destination;
 
     private Principal principal;

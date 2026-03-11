@@ -13,10 +13,6 @@ public class RedisLocationCacheAdapter implements LocationCachePort {
 
     private final StringRedisTemplate template;
 
-    private String getKey(Long id) {
-        return "walk:path:" + id;
-    }
-
     @Override
     public void create(Long key, String value) {
         template.opsForList().rightPush(getKey(key), value);
@@ -38,5 +34,9 @@ public class RedisLocationCacheAdapter implements LocationCachePort {
     @Override
     public void delete(Long key) {
         template.delete(getKey(key));
+    }
+
+    private String getKey(Long id) {
+        return "walk:path:" + id;
     }
 }
