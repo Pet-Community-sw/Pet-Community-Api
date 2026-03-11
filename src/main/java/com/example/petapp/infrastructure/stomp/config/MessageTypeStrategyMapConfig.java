@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Configuration(proxyBeanMethods = false)
 public class MessageTypeStrategyMapConfig {
-    @Bean(name = "messageTypeMap")
+    @Bean
     public Map<CommandType, MessageTypeStrategy> messageTypeMap(List<MessageTypeStrategy> strategies) {
         Map<CommandType, MessageTypeStrategy> map = new HashMap<>();
         for (MessageTypeStrategy strategy : strategies) {

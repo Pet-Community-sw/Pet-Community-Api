@@ -6,7 +6,6 @@ import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -37,7 +36,7 @@ public abstract class Post extends BaseEntity {
     @Column(nullable = false)
     private long viewCount;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
@@ -47,7 +46,6 @@ public abstract class Post extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @BatchSize(size = 100)
     private List<Like> likes = new ArrayList<>();
 //    public abstract Like createLike(Member member);//게시글에서 Like생성 책임 위임
 

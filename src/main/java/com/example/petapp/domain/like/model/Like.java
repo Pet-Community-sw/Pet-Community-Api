@@ -24,15 +24,11 @@ import javax.persistence.*;
 @Getter
 public class Like extends BaseEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
-
-//    public Like(Member member) {
-//        this.member = member;
-//    }
 }

@@ -5,7 +5,6 @@ import com.example.petapp.application.in.like.mapper.LikeMapper;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.notification.dto.NotificationEvent;
 import com.example.petapp.application.in.post.PostQueryUseCase;
-import com.example.petapp.application.out.cache.LikeCachePort;
 import com.example.petapp.domain.like.LikeRepository;
 import com.example.petapp.domain.like.model.Like;
 import com.example.petapp.domain.member.model.Member;
@@ -26,7 +25,6 @@ public class LikeService implements LikeUseCase {
 
     private final LikeRepository repository;
     private final MemberQueryUseCase memberQueryUseCase;
-    private final LikeCachePort port;
     private final PostQueryUseCase<Post> postQueryUseCase;
     private final PostRepository<Post> postRepository;
     private final ApplicationEventPublisher eventPublisher;
@@ -51,7 +49,6 @@ public class LikeService implements LikeUseCase {
         post.removeLikes(like);
         repository.delete(like);
         postRepository.decrementLikeCount(post.getId());
-        port.delete(like.getMember().getId(), like.getPost().getId());
         return false;
     }
 
@@ -60,7 +57,6 @@ public class LikeService implements LikeUseCase {
         post.countUpLike(like);
         repository.save(like);
         postRepository.incrementLikeCount(post.getId());
-        port.create(member.getId(), post.getId());
         return true;
     }
 }

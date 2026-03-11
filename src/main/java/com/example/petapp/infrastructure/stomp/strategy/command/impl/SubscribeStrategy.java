@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SubscribeStrategy implements StompCommandStrategy {
 
-    private final List<SubscribeTypeStrategy> handlers;  //스프링이 구현체 다 넣어줌 ㅋㅋㅋㅋㅋ
+    private final List<SubscribeTypeStrategy> handlers;
     private final DestinationCachePort port;
 
     @Override

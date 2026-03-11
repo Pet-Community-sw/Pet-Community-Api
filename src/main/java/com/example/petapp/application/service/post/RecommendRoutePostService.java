@@ -44,7 +44,7 @@ public class RecommendRoutePostService implements RecommendRoutePostUseCase {
         return new CreateRecommendRoutePostResponseDto(savedRecommendRoutePost.getId());
     }
 
-    @Transactional(readOnly = true)//페이징 처리를 해야됨. 40개 정도 내보내면 프론트가 페이지 처리할 수 있으려나?
+    @Transactional(readOnly = true)
     @Override
     public List<GetRecommendRoutePostsResponseDto> getRecommendRoutePosts(Double minLongitude, Double minLatitude, Double maxLongitude, Double maxLatitude, int page, Long id) {
         Member member = memberQueryUseCase.findOrThrow(id);
@@ -66,7 +66,6 @@ public class RecommendRoutePostService implements RecommendRoutePostUseCase {
         return RecommendRoutePostMapper.toRecommendRoutePostsList(recommendRoutePosts, likeQueryUseCase.getCountMap(recommendRoutePosts), memberIds, member);
     }
 
-    @Transactional()
     @Override
     public GetRecommendPostResponseDto getRecommendRoutePost(Long recommendRoutePostId, Long id) {
         Member member = memberQueryUseCase.findOrThrow(id);

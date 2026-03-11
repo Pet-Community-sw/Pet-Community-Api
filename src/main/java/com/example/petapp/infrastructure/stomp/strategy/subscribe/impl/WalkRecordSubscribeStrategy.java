@@ -19,7 +19,7 @@ import java.util.Map;
 @Slf4j
 public class WalkRecordSubscribeStrategy extends BaseSubscribeTypeStrategy {
 
-    private static final String PATTERN = "/sub/walk-record/location/{walkRecordId}";
+    private static final String PATTERN = "/sub/walk/{walkRecordId}";
 
     private final WalkRecordQueryUseCase useCase;
 

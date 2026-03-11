@@ -41,9 +41,6 @@ public class ConnectStrategy implements StompCommandStrategy {
         MemberInfo info = port.getInfo(TokenType.ACCESS, accessToken);
         Member member = memberQueryUseCase.findOrThrow(info.getMemberId());
 
-        //검증이 끝난 유저의 인증 객체 생성
-//        Authentication authentication = new UsernamePasswordAuthenticationToken(new User(info.getMemberId(), member.getName()), null);
-
         accessor.setUser(() -> member.getId().toString());
     }
 

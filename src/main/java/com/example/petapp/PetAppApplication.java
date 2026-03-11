@@ -7,6 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PetAppApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(PetAppApplication.class, args);//내부에서 컨테이너 자동 생성
+        SpringApplication.run(PetAppApplication.class, args);
     }
 }
