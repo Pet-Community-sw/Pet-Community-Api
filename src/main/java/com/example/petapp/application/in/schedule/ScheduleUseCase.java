@@ -1,12 +1,9 @@
-package com.example.petapp.domain.schedule;
+package com.example.petapp.application.in.schedule;
 
 import com.example.petapp.domain.schedule.model.dto.response.GetSchedulesResponseDto;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public interface ScheduleService {
-
+public interface ScheduleUseCase {
     List<GetSchedulesResponseDto> getSchedules(String start, String finish, Long profileId);
 }

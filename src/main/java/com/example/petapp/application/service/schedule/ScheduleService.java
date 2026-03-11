@@ -1,6 +1,7 @@
-package com.example.petapp.domain.schedule;
+package com.example.petapp.application.service.schedule;
 
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
+import com.example.petapp.application.in.schedule.ScheduleUseCase;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.DelegateWalkPostRepository;
@@ -26,7 +27,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ScheduleServiceImpl implements ScheduleService {
+public class ScheduleService implements ScheduleUseCase {
 
     private final ProfileQueryUseCase profileQueryUseCase;
     private final MemberRepository memberRepository;

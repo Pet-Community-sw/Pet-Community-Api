@@ -1,4 +1,4 @@
-package com.example.petapp.interfaces;
+package com.example.petapp.interfaces.controller;
 
 import com.example.petapp.application.in.member.object.dto.response.TokenResponseDto;
 import com.example.petapp.application.in.token.TokenUseCase;

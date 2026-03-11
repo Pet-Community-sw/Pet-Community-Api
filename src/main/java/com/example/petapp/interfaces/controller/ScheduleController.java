@@ -1,7 +1,8 @@
-package com.example.petapp.domain.schedule;
+package com.example.petapp.interfaces.controller;
 
 
 import com.example.petapp.application.common.AuthUtil;
+import com.example.petapp.application.in.schedule.ScheduleUseCase;
 import com.example.petapp.domain.schedule.model.dto.response.GetSchedulesResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,19 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Schedule")
+@Tag(name = "Schedules")
 @RequiredArgsConstructor
 @RestController()
 @RequestMapping("/schedules")
 public class ScheduleController {
 
-    private final ScheduleService scheduleService;
+    private final ScheduleUseCase scheduleUseCase;
 
     @Operation(
             summary = "일정 목록 조회"
     )
     @GetMapping()
     public List<GetSchedulesResponseDto> getSchedules(@RequestParam String start, @RequestParam String end, Authentication authentication) {
-        return scheduleService.getSchedules(start, end, AuthUtil.getProfileId(authentication));
+        return scheduleUseCase.getSchedules(start, end, AuthUtil.getProfileId(authentication));
     }
 }

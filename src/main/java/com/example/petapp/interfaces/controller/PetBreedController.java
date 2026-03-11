@@ -1,4 +1,4 @@
-package com.example.petapp.interfaces;
+package com.example.petapp.interfaces.controller;
 
 import com.example.petapp.application.in.petbreed.PetBreedQueryUseCase;
 import com.example.petapp.application.in.petbreed.dto.PetBreedGetListDto;
