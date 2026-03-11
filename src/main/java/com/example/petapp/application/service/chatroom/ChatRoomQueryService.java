@@ -27,4 +27,9 @@ public class ChatRoomQueryService implements ChatRoomQueryUseCase {
     public Optional<ChatRoom> find(WalkingTogetherMatch walkingTogetherMatch) {
         return repository.find(walkingTogetherMatch);
     }
+
+    @Override
+    public boolean isExist(Long chatRoomId, Long profileId) {
+        return repository.existAndContain(chatRoomId, profileId);
+    }
 }

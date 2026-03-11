@@ -9,4 +9,6 @@ public interface ChatRoomQueryUseCase {
     ChatRoom find(Long id);
 
     Optional<ChatRoom> find(WalkingTogetherMatch walkingTogetherMatch);
+
+    boolean isExist(Long chatRoomId, Long profileId);
 }

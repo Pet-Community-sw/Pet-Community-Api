@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.stomp.strategy.subscribe.impl;
 
+import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.out.cache.ChatOnlineCachePort;
-import com.example.petapp.domain.chatroom.ChatRoomRepository;
 import com.example.petapp.infrastructure.stomp.DestinationCachePort;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;
@@ -18,7 +18,7 @@ public class ChatRoomSubscribeStrategy extends SubscribeTypeStrategy {
 
     private static final String PATTERN = "/sub/chat/{chatRoomId}";
 
-    private final ChatRoomRepository chatRoomRepository;
+    private final ChatRoomQueryUseCase chatRoomQueryUseCase;
     private final ChatOnlineCachePort chatOnlineCachePort;
     private final DestinationCachePort destinationCachePort;
 
@@ -33,7 +33,7 @@ public class ChatRoomSubscribeStrategy extends SubscribeTypeStrategy {
         String chatRoomId = map.get("chatRoomId");
         String profileId = subscribeInfo.getPrincipal().getName();
 
-        if (!chatRoomRepository.existAndContain(Long.valueOf(chatRoomId), Long.valueOf(profileId))) {
+        if (!chatRoomQueryUseCase.isExist(Long.valueOf(chatRoomId), Long.valueOf(profileId))) {
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }
         chatOnlineCachePort.create(chatRoomId, profileId);
