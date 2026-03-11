@@ -28,7 +28,8 @@
 - Framework: Spring Boot, Spring Data JPA
 - Database / Cache: MySQL, Redis
 - Search Engine: Elasticsearch
-- Message Broker / CDC: RabbitMQ, Debezium
+- Message Broker: RabbitMQ
+- CDC: Debezium
 - Realtime: WebSocket
 
 ---
@@ -49,7 +50,7 @@
 - 추가 개선: Outbox Pattern 적용으로 DB 저장과 이벤트 발행 간 유실 가능성 완화
 - 최종 개선: CDC 기반 구조로 전환하여 폴링 부하를 줄이고 실시간성을 높임
 
-이를 통해 요청-응답 흐름과 부가 작업을 분리하고 장애 상황에서도 이벤트 유실 가능성을 줄이며 실패 케이스만 별도로 처리하는 구조를 설계했습니다.
+이를 통해 요청-응답 흐름과 부가 작업을 분리하고 장애 상황에서도 이벤트 유실 가능성을 줄이며 실패 케이스만 별도로 처리하는 구조를 구현했습니다.
 
 - Sequence Diagram
 
@@ -109,18 +110,16 @@
 
 ### 4. STOMP 메시지 처리 시 분기 로직 복잡도 증가 문제
 
-실시간 채팅 기능에서는 STOMP 요청이 CONNECT, SUBSCRIBE, SEND, DISCONNECT 등 command 종류에 따라 다르게 동작하며,  
-특히 SUBSCRIBE는 destination 경로에 따라 또 다른 세부 로직이 필요했습니다.
+실시간 채팅 기능에서는 STOMP 요청이 CONNECT, SUBSCRIBE, SEND, DISCONNECT 등 command 종류에 따라 다르게 동작하며,
+특히 SUBSCRIBE의 경우에도 destination이 고정값이 아니라 /sub/chat/{chatRoomId} 와 같이 path variable을 포함한 가변 경로 형태였기 때문에,
+단순 문자열 비교만으로는 분기 처리에 한계가 있었습니다.
 
 초기에는 switch 기반 분기 구조를 고려했지만, command와 경로가 늘어날수록 유지보수성이 급격히 떨어질 수 있다고 판단했습니다.
 
-이를 해결하기 위해
+이를 해결하기 위해 다음과 같은 방식으로 구조를 개선했습니다.
 
 - command 단위는 전략 패턴으로 분리
-- SUBSCRIBE 내부 destination 분기는 SubscribeTypeStrategy로 분리
-- 가변 경로 매칭은 AntPathMatcher를 활용
-
-하도록 설계했습니다.
+- SUBSCRIBE 내부 destination 가변 경로는 AntPathMatcher를 활용한 전략 패턴으로 분리
 
 이 구조를 통해 새로운 command나 구독 경로가 추가되더라도 기존 코드를 크게 수정하지 않고 확장 가능하도록 개선했습니다.
 
