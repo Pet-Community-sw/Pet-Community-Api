@@ -93,6 +93,7 @@
 - 사용하지 않는 필드에 대해 index: false, doc_values: false 적용
 
 그 결과 동일 데이터 1만 건 기준으로 프라이머리 인덱스 저장 용량을 약 20% 절감했습니다.
+<img width="884" height="60" alt="스크린샷 2026-02-20 23 00 49" src="https://github.com/user-attachments/assets/2e5b0240-91f2-49bd-9f9f-51e8dc454d17" />
 
 또한 반복 호출이 많은 자동완성 특성을 고려해 Redis 캐시를 적용하여 p99 응답시간을 약 60% 개선했습니다.
 
