@@ -4,7 +4,7 @@ import com.example.petapp.application.out.cache.ChatOnlineCachePort;
 import com.example.petapp.domain.chatroom.ChatRoomRepository;
 import com.example.petapp.infrastructure.stomp.DestinationCachePort;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
-import com.example.petapp.infrastructure.stomp.strategy.subscribe.BaseSubscribeTypeStrategy;
+import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class ChatRoomSubscribeStrategy extends BaseSubscribeTypeStrategy {
+public class ChatRoomSubscribeStrategy extends SubscribeTypeStrategy {
 
     private static final String PATTERN = "/sub/chat/{chatRoomId}";
 
@@ -29,7 +29,7 @@ public class ChatRoomSubscribeStrategy extends BaseSubscribeTypeStrategy {
 
     @Override
     public void handle(SubscribeInfo subscribeInfo) {
-        Map<String, String> map = patternMap(PATTERN, subscribeInfo.getDestination());
+        Map<String, String> map = pathMap(PATTERN, subscribeInfo.getDestination());
         String chatRoomId = map.get("chatRoomId");
         String profileId = subscribeInfo.getPrincipal().getName();
 

@@ -2,7 +2,7 @@ package com.example.petapp.infrastructure.stomp.strategy.subscribe.impl;
 
 import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
-import com.example.petapp.infrastructure.stomp.strategy.subscribe.BaseSubscribeTypeStrategy;
+import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;
 import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class RoomListSubscribeStrategy extends BaseSubscribeTypeStrategy {
+public class RoomListSubscribeStrategy extends SubscribeTypeStrategy {
 
     private static final String PATTERN = "/sub/list/{userId}";
 
@@ -26,10 +26,9 @@ public class RoomListSubscribeStrategy extends BaseSubscribeTypeStrategy {
 
     @Override
     public void handle(SubscribeInfo subscribeInfo) {
-        Map<String, String> map = patternMap(PATTERN, subscribeInfo.getDestination());
+        Map<String, String> map = pathMap(PATTERN, subscribeInfo.getDestination());
         Long userId = Long.valueOf(map.get("userId"));
-        Long principalId = principalId(subscribeInfo);
-        if (userId.equals(principalId)) {
+        if (userId.equals(Long.valueOf(subscribeInfo.getPrincipal().getName()))) {
             useCase.findOrThrow(userId);
         } else {
             throw new ForbiddenException("[STOMP] userId가 다릅니다.");
