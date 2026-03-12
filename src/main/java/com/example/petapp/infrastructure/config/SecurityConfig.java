@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .mvcMatchers("/error", "/error/**").permitAll()
                 .antMatchers(
-                        "/swagger-ui.html",
+                        "/swagger",
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/v3/api-docs.yaml",

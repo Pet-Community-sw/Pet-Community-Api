@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Aspect
-@Slf4j//todo : aop적용안되는중 봐야함.
+@Slf4j
 public class LogAspect {
     @Around("execution(* com.example.petapp.application.service..*Service.*(..))")
     public Object logTrace(ProceedingJoinPoint joinPoint) throws Throwable {
