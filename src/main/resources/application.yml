@@ -3,7 +3,7 @@ jwt:
   refreshKey: ${REFRESH_KEY}
 spring:
   elasticsearch:
-    uris: http://localhost:80
+    uris: ${ELASTICSEARCH_URI}
   datasource:
     hikari:
       maximum-pool-size: 30
@@ -11,7 +11,7 @@ spring:
       connection-timeout: 3000
       validation-timeout: 1000
       leak-detection-threshold: 5000
-    url: jdbc:mysql://localhost:3306/${MYSQL_DATABASE}?useUnicode=true&serverTimezone=Asia/Seoul
+    url: ${MYSQL_URL}
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
   jpa:
@@ -39,7 +39,7 @@ spring:
     default-encoding: UTF-8
 
   rabbitmq:
-    addresses: localhost:5672
+    addresses: ${RABBITMQ_HOST}:${RABBITMQ_PORT}
     username: ${RABBITMQ_USERNAME}
     password: ${RABBITMQ_PASSWORD}
     listener:
@@ -53,7 +53,7 @@ spring:
 
   data:
     mongodb:
-      uri: ${MONGO_URI}
+      uri: ${MONGO_URL}
       username: ${MONGO_USERNAME}
       password: ${MONGO_PASSWORD}
     redis:
@@ -61,8 +61,8 @@ spring:
         enabled: false
 
   redis:
-    host: 127.0.0.1
-    port: 6379
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
 
   servlet:
     multipart:
@@ -81,6 +81,10 @@ spring:
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.data.elasticsearch.ReactiveElasticsearchRepositoriesAutoConfiguration
+
+springdoc:
+  swagger-ui:
+    path: /swagger
 
 mail:
   provider: smtp
