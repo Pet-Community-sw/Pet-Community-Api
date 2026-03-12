@@ -1,12 +1,5 @@
 # 🐶 멍냥로드
 
-반려견 보호자들을 위한 커뮤니티 및 산책 매칭 서비스의 백엔드 서버입니다.  
-사용자 인증, 게시글, 실시간 채팅, 알림, 위치 이벤트 처리, 검색 기능을 제공합니다.
-
----
-
-## 프로젝트 소개
-
 이 프로젝트는 반려견 보호자들이 정보를 공유하고, 함께 산책할 사용자를 찾고, 실시간으로 소통할 수 있도록 지원하는 서비스입니다.  
 백엔드에서는 단순 CRUD를 넘어, 실시간 채팅, 비동기 이벤트 처리, 위치 이벤트 스트림 제어, 검색 최적화와 같은 문제를 해결하는 데 중점을 두었습니다.
 
@@ -31,6 +24,56 @@
 - Message Broker: RabbitMQ
 - CDC: Debezium
 - Realtime: WebSocket
+
+---
+
+## 시작하기
+
+### 사전 요구사항
+
+- Java 17
+- Docker
+
+### 설치 방법
+
+### 1. 저장소 클론
+
+```bash
+git clone https://github.com/Pet-Community-sw/Pet-Community-Api.git
+cd Pet-Community-Api
+```
+
+### 2. 환경 변수 파일 생성
+
+`.env.example` 파일을 복사한 뒤, 환경에 맞게 값을 입력해주세요.
+
+```bash
+cp .env.example .env
+```
+
+### 3. 실행 스크립트 권한 부여
+
+```bash
+chmod +x ./init-script.sh
+```
+
+### 4. 인프라 실행 및 Elasticsearch 인덱스 생성
+
+아래 명령어를 실행하면 Docker 컨테이너가 실행되고, Elasticsearch가 준비될 때까지 대기한 뒤 인덱스를 생성합니다.
+
+```bash
+./init-script.sh
+```
+
+### 5. Spring Boot 애플리케이션 실행
+
+```bash
+./gradlew bootRun
+```
+
+## Swagger
+
+- Swagger UI: `http://localhost:8080/swagger`
 
 ---
 
