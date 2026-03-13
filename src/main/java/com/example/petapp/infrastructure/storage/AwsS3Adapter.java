@@ -18,7 +18,7 @@ import java.util.UUID;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(name = "storage.type", havingValue = "aws")
+@ConditionalOnProperty(name = "storage.type", havingValue = "s3")
 public class AwsS3Adapter implements StoragePort {
 
     private final S3Client s3Client;
