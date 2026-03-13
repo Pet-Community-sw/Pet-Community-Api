@@ -96,11 +96,14 @@ logging:
     org.hibernate: warn
     org.elasticsearch.client: TRACE
 
+storage:
+  type: ${STORAGE_TYPE:local}
+
 aws:
   s3:
-    bucket: ${AWS_S3_BUCKET}
+    bucket: ${AWS_S3_BUCKET:}
   cloudfront:
-    domain: ${AWS_CLOUD_FRONT}
+    domain: ${AWS_CLOUD_FRONT:}
 
 management:
   metrics:
