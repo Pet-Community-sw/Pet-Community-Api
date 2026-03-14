@@ -21,10 +21,11 @@ public class MemberSearchService implements MemberSearchUseCase {
     @Override
     public void handle(OutboxMessage outboxMessage) {
         MemberEvent memberEvent = jsonUtil.fromJson(outboxMessage.getPayload(), MemberEvent.class);
+        Long id = outboxMessage.getId();
         switch (memberEvent.getMethodType()) {
-            case CREATE -> create(memberEvent, outboxMessage.getId());
-            case UPDATE -> update(memberEvent, outboxMessage.getId());
-            case DELETE -> delete(memberEvent, outboxMessage.getId());
+            case CREATE -> create(memberEvent, id);
+            case UPDATE -> update(memberEvent, id);
+            case DELETE -> delete(memberEvent, id);
         }
     }
 
