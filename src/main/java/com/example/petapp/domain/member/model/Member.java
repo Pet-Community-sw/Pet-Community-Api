@@ -1,17 +1,18 @@
 package com.example.petapp.domain.member.model;
 
 import com.example.petapp.domain.BaseEntity;
-import com.example.petapp.domain.fcm.model.FcmToken;
 import com.example.petapp.domain.post.model.Post;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.domain.token.model.Token;
 import com.example.petapp.interfaces.exception.ForbiddenException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,10 +42,6 @@ public class Member extends BaseEntity {//수정 필요
     private String name;
 
     @Setter
-    @Column(nullable = false)
-    private String nameChosung;
-
-    @Setter
     @NotBlank
     @Column(nullable = false)
     private String email;
@@ -58,13 +55,6 @@ public class Member extends BaseEntity {//수정 필요
     @Setter
     @Column(nullable = false)
     private String memberImageUrl;
-
-
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Token token;
-
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private FcmToken fcmToken;
 
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)

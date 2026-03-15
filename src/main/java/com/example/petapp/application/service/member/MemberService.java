@@ -71,7 +71,7 @@ public class MemberService implements MemberUseCase {
                 .methodType(MethodType.CREATE)
                 .memberId(savedMember.getId())
                 .memberName(savedMember.getName())
-                .memberNameChosung(savedMember.getNameChosung())
+                .memberNameChosung(NameChosungUtil.getChosung(memberSignDto.getName()))
                 .memberImageUrl(savedMember.getMemberImageUrl())
                 .build()
         );
@@ -146,7 +146,6 @@ public class MemberService implements MemberUseCase {
 
         member.setName(requestDto.getName());
         String chosung = NameChosungUtil.getChosung(requestDto.getName());
-        member.setNameChosung(chosung);
         member.setMemberImageUrl(imageFileName);
 
         eventPublisher.publishEvent(MemberEvent.builder()
