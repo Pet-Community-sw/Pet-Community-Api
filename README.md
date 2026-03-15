@@ -109,7 +109,7 @@ chmod +x ./init-script.sh
 <img width="913" height="815" alt="스크린샷 2026-03-01 21 56 30" src="https://github.com/user-attachments/assets/4b08d92e-55b3-461c-bd46-aadd4588477d" />
 
 위치 이벤트는 단건 요청이 아니라 연속적으로 유입되는 스트림 데이터이기 때문에,
-일반적인 요청 처리 방식보다 이벤트 폭주 제어, 순서 보장, 중복 제거가 중요했습니다.
+일반적인 요청 처리 방식보다 이벤트 폭주 제어, 최신 상태 우선 반영, 중복 처리 방지가 중요했습니다.
 
 이를 위해 RxJava 기반 비동기 스트림 파이프라인을 설계했습니다.
 
@@ -129,7 +129,7 @@ chmod +x ./init-script.sh
 초기에는 MySQL LIKE 기반 검색을 사용했지만, 부분 포함 검색 시 인덱스 전체 스캔이 발생해 데이터 증가에 따라 검색 비용이 커지는 문제가 있었습니다.  
 이를 해결하기 위해 Elasticsearch를 도입했습니다.
 
-다만 자동완성, 부분 포함 검색, 초성 검색 등을 위해 edge_ngram, ngram 기반 분석기를 적용하자 토큰 수 증가로 인해 인덱스 저장 비용이 커지는 문제가 발생했습니다.
+다만 ngram 분석기를 적용하면서 토큰 수가 크게 늘어났고, 그에 따라 인덱스 저장 비용도 함께 증가하는 문제가 있었습니다.
 
 이를 개선하기 위해 다음과 같은 최적화를 적용했습니다.
 
@@ -155,7 +155,7 @@ chmod +x ./init-script.sh
 ### 4. STOMP 메시지 처리 시 분기 로직 복잡도 증가 문제
 
 실시간 채팅 기능에서는 STOMP 요청이 CONNECT, SUBSCRIBE, SEND, DISCONNECT 등 command 종류에 따라 다르게 동작하며,
-특히 SUBSCRIBE의 경우에도 destination이 고정값이 아니라 /sub/chat/{chatRoomId} 와 같이 path variable을 포함한 가변 경로 형태였기 때문에,
+특히 SUBSCRIBE의 경우에도 destination이 고정값이 아니라 /sub/chat/{chatRoomId}와 같이 path variable을 포함한 가변 경로 형태였기 때문에,
 단순 문자열 비교만으로는 분기 처리에 한계가 있었습니다.
 
 초기에는 switch 기반 분기 구조를 고려했지만, command와 경로가 늘어날수록 유지보수성이 급격히 떨어질 수 있다고 판단했습니다.
@@ -165,7 +165,7 @@ chmod +x ./init-script.sh
 - command 단위는 전략 패턴으로 분리
 - SUBSCRIBE 내부 destination 가변 경로는 AntPathMatcher를 활용한 전략 패턴으로 분리
 
-이 구조를 통해 새로운 command나 구독 경로가 추가되더라도 기존 코드를 크게 수정하지 않고 확장 가능하도록 개선했습니다.
+이 구조를 통해 새로운 command나 구독 경로가 추가되더라도 기존 코드를 수정하지 않고 확장 가능하도록 개선했습니다.
 
 ---
 
@@ -174,8 +174,7 @@ chmod +x ./init-script.sh
 게시글 목록 조회 과정에서 작성자 정보, 좋아요 여부 등 연관 데이터를 함께 조회해야 했고,
 지연 로딩된 엔티티에 반복 접근하면서 N+1 문제가 발생했습니다.
 
-처음에는 fetch join을 고려했지만,
-목록 API는 페이지 단위 조회가 필요했고 1:N 관계에서 fetch join과 pagination을 함께 사용할 경우 메모리 페이징 문제가 발생할 수 있었습니다.
+목록 API는 페이지 단위 조회가 필요했는데, 1:N 관계에서 fetch join과 페이징을 함께 사용할 경우 DB 레벨이 아닌 애플리케이션 메모리에서 페이징이 수행될 수 있었습니다.
 
 따라서 최종적으로는 화면에 필요한 값만 직접 조회하는 Projection 기반 조회 방식으로 전환했습니다.
 
@@ -187,7 +186,7 @@ chmod +x ./init-script.sh
 
 프로젝트의 상세한 설계 배경, 문제 해결 과정, 성능 개선 내용은 아래 문서에 정리했습니다.
 
-### [📘포트폴리오]( https://www.notion.so/Project-Portforlio-320efd57b2f780dabdaee6f3e50f4c13?source=copy_link )
+### [📘포트폴리오]( https://www.notion.so/Project-Portfolio-324efd57b2f7809f9a0dd340993ff4e1?source=copy_link )
 
 
 
