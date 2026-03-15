@@ -9,8 +9,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 public interface JpaPostRepository<T extends Post> extends JpaRepository<T, Long> {
 
     @Query(value = """
@@ -56,14 +54,7 @@ public interface JpaPostRepository<T extends Post> extends JpaRepository<T, Long
     )
     Page<PostResponseDto> findAllByMemberId(@Param("targetId") Long targetId, @Param("id") Long id, Pageable pageable);
 
-    @Query("""
-                select p
-                from Post p
-                left join fetch p.likes
-                order by p.id desc
-            """)
-    List<Post> findAllWithLikes(Pageable pageable);
-
+    
     @Modifying
     @Query("update Post  p set p.viewCount = p.viewCount+1 where p.id = :id")
     void incrementViewCount(@Param("id") Long id);
