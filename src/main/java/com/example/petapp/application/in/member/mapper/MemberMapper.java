@@ -1,6 +1,5 @@
 package com.example.petapp.application.in.member.mapper;
 
-import com.example.petapp.application.common.NameChosungUtil;
 import com.example.petapp.application.in.member.object.MemberEvent;
 import com.example.petapp.application.in.member.object.dto.request.MemberSignDto;
 import com.example.petapp.application.in.member.object.dto.response.GetMemberResponseDto;
@@ -13,7 +12,6 @@ public class MemberMapper {
     public static Member toEntity(MemberSignDto memberSignDto, String encodedPassword, String imageFileName) {
         return Member.builder()
                 .name(memberSignDto.getName())
-                .nameChosung(NameChosungUtil.getChosung(memberSignDto.getName()))
                 .email(memberSignDto.getEmail())
                 .password(encodedPassword)
                 .phoneNumber(memberSignDto.getPhoneNumber())
