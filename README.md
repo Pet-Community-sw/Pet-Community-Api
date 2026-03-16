@@ -184,7 +184,7 @@ chmod +x ./init-script.sh
 
 ## 포트폴리오
 
-프로젝트의 상세한 설계 배경, 문제 해결 과정, 성능 개선 내용은 아래 문서에 정리했습니다.
+프로젝트의 상세한 기술 선정 이유, 설계 배경, 문제 해결 과정, 성능 개선 내용은 아래 문서에 정리했습니다.
 
 ### [📘포트폴리오]( https://www.notion.so/Project-Portfolio-324efd57b2f7809f9a0dd340993ff4e1?source=copy_link )
 
