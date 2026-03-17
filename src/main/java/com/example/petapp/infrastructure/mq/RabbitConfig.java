@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import static com.example.petapp.infrastructure.mq.RabbitKeys.*;
 
 @RequiredArgsConstructor
-@Configuration(proxyBeanMethods = false)
+@Configuration
 public class RabbitConfig {
 
     public final OutboxEventUseCase useCase;
