@@ -3,7 +3,7 @@ package com.example.petapp.application.service.chatroom;
 import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.domain.chatroom.ChatRoomRepository;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
-import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
+import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
 import com.example.petapp.interfaces.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,8 +24,8 @@ public class ChatRoomQueryService implements ChatRoomQueryUseCase {
     }
 
     @Override
-    public Optional<ChatRoom> find(WalkingTogetherMatch walkingTogetherMatch) {
-        return repository.find(walkingTogetherMatch);
+    public Optional<ChatRoom> find(WalkingTogetherPost walkingTogetherPost) {
+        return repository.find(walkingTogetherPost);
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.example.petapp.domain.post.model;
 
 import com.example.petapp.domain.comment.model.Comment;
 import com.example.petapp.domain.comment.model.Commentable;
-import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
+import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +25,7 @@ public class RecommendRoutePost extends Post implements Commentable {
     private Location location;
 
     @OneToMany(mappedBy = "recommendRoutePost", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WalkingTogetherMatch> walkingTogetherMatches;
+    private List<WalkingTogetherPost> walkingTogetherPosts;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;

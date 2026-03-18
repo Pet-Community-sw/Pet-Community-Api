@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Tag(name = "Review")
+@Tag(name = "Reviews")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/reviews")
@@ -36,7 +36,7 @@ public class ReviewController {
     @Operation(
             summary = "리뷰 목록 조회 by-member"
     )
-    @GetMapping("/{memberId}/list/member")
+    @GetMapping("/{memberId}")
     public GetReviewListResponseDto getReviewListByMember(@PathVariable Long memberId, Authentication authentication) {
         return reviewUseCase.getReviewListByMember(memberId, AuthUtil.getMemberId(authentication));
     }
@@ -44,7 +44,7 @@ public class ReviewController {
     @Operation(
             summary = "리뷰 목록 조회 by-profile"
     )
-    @GetMapping("/{profileId}/list/profile")
+    @GetMapping("/{profileId}")
     public GetReviewListResponseDto getReviewListByProfile(@PathVariable Long profileId, Authentication authentication) {
         return reviewUseCase.getReviewListByProfile(profileId, AuthUtil.getMemberId(authentication));
     }

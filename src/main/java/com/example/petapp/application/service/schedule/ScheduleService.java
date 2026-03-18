@@ -10,8 +10,8 @@ import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.schedule.mapper.ScheduleMapper;
 import com.example.petapp.domain.schedule.model.dto.request.TimeDto;
 import com.example.petapp.domain.schedule.model.dto.response.GetSchedulesResponseDto;
-import com.example.petapp.domain.walkingtogethermatch.WalkingTogetherMatchRepository;
-import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
+import com.example.petapp.domain.walkingtogetherPost.WalkingTogetherPostRepository;
+import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +31,7 @@ public class ScheduleService implements ScheduleUseCase {
 
     private final ProfileQueryUseCase profileQueryUseCase;
     private final MemberRepository memberRepository;
-    private final WalkingTogetherMatchRepository walkingTogetherMatchRepository;
+    private final WalkingTogetherPostRepository walkingTogetherPostRepository;
     private final DelegateWalkPostRepository delegateWalkPostRepository;
 
     @NotNull
@@ -50,9 +50,9 @@ public class ScheduleService implements ScheduleUseCase {
         Optional<Profile> profile = profileQueryUseCase.find(profileId);
 
         if (profile.isPresent()) {
-            List<WalkingTogetherMatch> walkingTogetherMatchList =
-                    walkingTogetherMatchRepository.findAllByProfileContainsAndScheduledTimeBetween(profile.get(), timeDto.getStart(), timeDto.getEnd());
-            List<GetSchedulesResponseDto> list = walkingTogetherMatchList.stream()
+            List<WalkingTogetherPost> walkingTogetherPostList =
+                    walkingTogetherPostRepository.findAllByProfileContainsAndScheduledTimeBetween(profile.get(), timeDto.getStart(), timeDto.getEnd());
+            List<GetSchedulesResponseDto> list = walkingTogetherPostList.stream()
                     .map(walkingTogetherPost -> ScheduleMapper.toGetSchedulesResponseDto(profile.get(), walkingTogetherPost)
                     ).toList();
             getSchedulesResponseDtos.addAll(list);

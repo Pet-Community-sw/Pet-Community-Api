@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "PetBreed")
+@Tag(name = "PetBreeds")
 @RestController
 @RequestMapping("/pet-breeds")
 @RequiredArgsConstructor

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Profile")
+@Tag(name = "Profiles")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/profiles")

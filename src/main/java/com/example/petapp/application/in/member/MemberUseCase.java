@@ -1,25 +1,19 @@
 package com.example.petapp.application.in.member;
 
-import com.example.petapp.application.in.member.object.dto.request.*;
-import com.example.petapp.application.in.member.object.dto.response.*;
-import org.springframework.stereotype.Service;
+import com.example.petapp.application.in.member.object.dto.request.MemberSignDto;
+import com.example.petapp.application.in.member.object.dto.request.ResetPasswordDto;
+import com.example.petapp.application.in.member.object.dto.request.UpdateMemberRequestDto;
+import com.example.petapp.application.in.member.object.dto.response.FindByIdResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.GetMemberResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.MemberSearchResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.MemberSignResponseDto;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-@Service
 public interface MemberUseCase {
     MemberSignResponseDto create(MemberSignDto memberSignDto);
 
-    LoginResponseDto login(LoginDto loginDto, HttpServletResponse response);
-
     FindByIdResponseDto findById(String phoneNumber);
-
-    void sendEmail(SendEmailDto sendEmailDto);
-
-    void logout(String accessToken);
-
-    AccessTokenResponseDto verifyCode(AuthCodeDto authCodeDto);
 
     void resetPassword(ResetPasswordDto resetPasswordDto, Long memberId);
 
@@ -27,11 +21,11 @@ public interface MemberUseCase {
 
     void delete(Long memberId);
 
-    void createFcmToken(FcmTokenDto fcmTokenDto);
+//    void createFcmToken(FcmTokenDto fcmTokenDto);
 
     void update(UpdateMemberRequestDto requestDto, Long memberId);
 
-    List<MemberSearchResponseDto> autoComplete(String keyword, Long memberId);
+    List<MemberSearchResponseDto> searchSuggestions(String keyword, Long memberId);
 
-    List<MemberSearchResponseDto> search(String keyword, int page, Long memberId);
+    List<MemberSearchResponseDto> searchMembers(String keyword, int page, Long memberId);
 }

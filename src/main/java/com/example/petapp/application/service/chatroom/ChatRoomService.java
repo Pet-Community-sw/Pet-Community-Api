@@ -20,7 +20,7 @@ import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
+import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -59,15 +59,15 @@ public class ChatRoomService implements ChatRoomUseCase {
 
     @Transactional
     @Override
-    public CreateChatRoomResponseDto createChatRoom(WalkingTogetherMatch walkingTogetherMatch, Profile profile) {
-        Optional<ChatRoom> chatRoom = chatRoomQueryUseCase.find(walkingTogetherMatch);
+    public CreateChatRoomResponseDto createChatRoom(WalkingTogetherPost walkingTogetherPost, Profile profile) {
+        Optional<ChatRoom> chatRoom = chatRoomQueryUseCase.find(walkingTogetherPost);
         if (chatRoom.isEmpty()) {//채팅방이 없으면 새로운생성 있으면 profiles에 신청자 Profile 추가
-            ChatRoom savedChatRoom = chatRoomRepository.save(ChatRoomMapper.toEntity(walkingTogetherMatch, profile));
+            ChatRoom savedChatRoom = chatRoomRepository.save(ChatRoomMapper.toEntity(walkingTogetherPost, profile));
             return new CreateChatRoomResponseDto(savedChatRoom.getId(), true);
         } else {
             ChatRoom realChatRoom = chatRoom.get();
             realChatRoom.checkUser(profile.getId());
-            walkingTogetherMatch.checkLimitCount(realChatRoom);
+            walkingTogetherPost.checkLimitCount(realChatRoom);
             realChatRoom.addUser(profile.getId());
             return new CreateChatRoomResponseDto(realChatRoom.getId(), false);
         }

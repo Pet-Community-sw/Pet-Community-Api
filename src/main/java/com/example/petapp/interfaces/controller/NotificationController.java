@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Notification")
+@Tag(name = "Notifications")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/notifications")

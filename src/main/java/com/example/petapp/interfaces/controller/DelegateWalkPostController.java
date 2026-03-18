@@ -23,7 +23,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
-@Tag(name = "DelegateWalkPost")
+@Tag(name = "DelegateWalkPosts")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/delegate-walk-posts")

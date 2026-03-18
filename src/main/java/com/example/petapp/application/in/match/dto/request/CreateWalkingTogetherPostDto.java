@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateWalkingTogetherMatchDto {
+public class CreateWalkingTogetherPostDto {
 
     @NotNull(message = "산책길추천id는 필수입니다.")
     private Long recommendRoutePostId;

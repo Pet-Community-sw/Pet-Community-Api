@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpdateWalkingTogetherMatchDto {
+public class UpdateWalkingTogetherPostDto {
 
     @NotNull(message = "함께 산책해요 시간은 필수입니다.")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")

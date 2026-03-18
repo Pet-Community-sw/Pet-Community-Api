@@ -3,7 +3,7 @@ package com.example.petapp.infrastructure.database.adapter;
 import com.example.petapp.application.in.chatting.model.type.ChatRoomType;
 import com.example.petapp.domain.chatroom.ChatRoomRepository;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
-import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
+import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
 import com.example.petapp.infrastructure.database.jpa.chatroom.JpaChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -28,8 +28,8 @@ public class ChatRoomRepositoryAdapter implements ChatRoomRepository {
     }
 
     @Override
-    public Optional<ChatRoom> find(WalkingTogetherMatch walkingTogetherMatch) {
-        return repository.findByWalkingTogetherMatch(walkingTogetherMatch);
+    public Optional<ChatRoom> find(WalkingTogetherPost walkingTogetherPost) {
+        return repository.findByWalkingTogetherPost(walkingTogetherPost);
     }
 
     @Override
