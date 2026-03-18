@@ -1,6 +1,5 @@
 package com.example.petapp.application.in.member;
 
-import com.example.petapp.application.in.member.object.dto.request.FcmTokenDto;
 import com.example.petapp.application.in.member.object.dto.request.MemberSignDto;
 import com.example.petapp.application.in.member.object.dto.request.ResetPasswordDto;
 import com.example.petapp.application.in.member.object.dto.request.UpdateMemberRequestDto;
@@ -22,7 +21,7 @@ public interface MemberUseCase {
 
     void delete(Long memberId);
 
-    void createFcmToken(FcmTokenDto fcmTokenDto);
+//    void createFcmToken(FcmTokenDto fcmTokenDto);
 
     void update(UpdateMemberRequestDto requestDto, Long memberId);
 

@@ -2,7 +2,6 @@ package com.example.petapp.interfaces.controller;
 
 import com.example.petapp.application.common.AuthUtil;
 import com.example.petapp.application.in.member.MemberUseCase;
-import com.example.petapp.application.in.member.object.dto.request.FcmTokenDto;
 import com.example.petapp.application.in.member.object.dto.request.MemberSignDto;
 import com.example.petapp.application.in.member.object.dto.request.ResetPasswordDto;
 import com.example.petapp.application.in.member.object.dto.request.UpdateMemberRequestDto;
@@ -90,7 +89,7 @@ public class MemberController {
     }
 
     @Operation(
-            summary = "자동완성 검색"
+            summary = "검색 추천"
     )
     @GetMapping("/search-suggestions")
     public List<MemberSearchResponseDto> searchSuggestions(@RequestParam String keyword, Authentication authentication) {
@@ -105,12 +104,12 @@ public class MemberController {
         return memberUseCase.searchMembers(keyword, page, AuthUtil.getMemberId(authentication));
     }
 
-    @Operation(
-            summary = "fcm토큰 생성"
-    )
-    @PostMapping("/fcm-token")
-    public ResponseEntity<MessageResponse> createFcmToken(@RequestBody @Valid FcmTokenDto fcmTokenDto) {
-        memberUseCase.createFcmToken(fcmTokenDto);
-        return ResponseEntity.ok(new MessageResponse("fcm토큰 생성완료."));
-    }
+//    @Operation(
+//            summary = "fcm토큰 생성"
+//    )
+//    @PostMapping("/fcm-token")
+//    public ResponseEntity<MessageResponse> createFcmToken(@RequestBody @Valid FcmTokenDto fcmTokenDto) {
+//        memberUseCase.createFcmToken(fcmTokenDto);
+//        return ResponseEntity.ok(new MessageResponse("fcm토큰 생성완료."));
+//    }
 }

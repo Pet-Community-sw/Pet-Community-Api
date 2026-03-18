@@ -1,13 +1,11 @@
 package com.example.petapp.application.service.member;
 
 import com.example.petapp.application.common.NameChosungUtil;
-import com.example.petapp.application.in.fcm.FcmUseCase;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.member.MemberUseCase;
 import com.example.petapp.application.in.member.mapper.MemberMapper;
 import com.example.petapp.application.in.member.object.MemberEvent;
 import com.example.petapp.application.in.member.object.MethodType;
-import com.example.petapp.application.in.member.object.dto.request.FcmTokenDto;
 import com.example.petapp.application.in.member.object.dto.request.MemberSignDto;
 import com.example.petapp.application.in.member.object.dto.request.ResetPasswordDto;
 import com.example.petapp.application.in.member.object.dto.request.UpdateMemberRequestDto;
@@ -42,7 +40,7 @@ public class MemberService implements MemberUseCase {
     private final MemberQueryUseCase memberQueryUseCase;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final FcmUseCase fcmUseCase;
+    //    private final FcmUseCase fcmUseCase;
     private final StoragePort storagePort;
     private final MemberSearchPort memberSearchPort;
     private final MemberSearchCachePort memberSearchCachePort;
@@ -134,12 +132,12 @@ public class MemberService implements MemberUseCase {
         );
     }
 
-    @Transactional
-    @Override
-    public void createFcmToken(FcmTokenDto fcmTokenDto) {
-        Member member = memberQueryUseCase.findOrThrow(fcmTokenDto.getMemberId());
-        fcmUseCase.createFcmToken(member, fcmTokenDto.getFcmToken());
-    }
+//    @Transactional
+//    @Override
+//    public void createFcmToken(FcmTokenDto fcmTokenDto) {
+//        Member member = memberQueryUseCase.findOrThrow(fcmTokenDto.getMemberId());
+//        fcmUseCase.createFcmToken(member, fcmTokenDto.getFcmToken());
+//    }
 
     @Override
     public List<MemberSearchResponseDto> searchSuggestions(String keyword, Long memberId) {
