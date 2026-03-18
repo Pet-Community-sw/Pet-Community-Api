@@ -12,10 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "WalkRecord")
+@Tag(name = "WalkRecords")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/walk-record")//삭제도 있어야하나?
+@RequestMapping("/walk-records")
 public class WalkRecordController {
     private final WalkRecordUseCase walkRecordUseCase;
 
@@ -35,10 +35,12 @@ public class WalkRecordController {
         return walkRecordUseCase.getWalkRecordLocation(walkRecordId, AuthUtil.getMemberId(authentication));
     }
 
+
     @Operation(
             summary = "산책 기록 시작"
     )
-    @PutMapping("/{walkRecordId}/start")
+    @PostMapping("/{walkRecordId}/start")
+
     public ResponseEntity<MessageResponse> updateStartWalkRecord(@PathVariable Long walkRecordId, Authentication authentication) {
         walkRecordUseCase.updateStartWalkRecord(walkRecordId, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("start"));
@@ -47,7 +49,7 @@ public class WalkRecordController {
     @Operation(
             summary = "산책 기록 끝"
     )
-    @PutMapping("/{walkRecordId}/finish")
+    @PostMapping("/{walkRecordId}/finish")
     public ResponseEntity<MessageResponse> updateFinishWalkRecord(@PathVariable Long walkRecordId, Authentication authentication) {
         walkRecordUseCase.finishWalkRecord(walkRecordId, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("finish"));

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "NormalPost")
+@Tag(name = "NormalPosts")
 @RestController
 @RequestMapping("/posts")
 @RequiredArgsConstructor
@@ -37,7 +37,7 @@ public class NormalPostController {
     @Operation(
             summary = "게시글 목록 조회 by-member"
     )
-    @GetMapping("/{memberId}/by-member")
+    @GetMapping("/{memberId}")
     public List<PostResponseDto> getPostsByMember(@PathVariable Long memberId, @RequestParam(defaultValue = "1") int page, Authentication authentication) {
         return normalPostUseCase.getPostsByMember(memberId, page, AuthUtil.getMemberId(authentication));
     }
@@ -57,8 +57,6 @@ public class NormalPostController {
     public GetPostResponseDto getPost(@PathVariable Long postId, Authentication authentication) {
         return normalPostUseCase.getPost(postId, AuthUtil.getMemberId(authentication));
     }
-
-    //todo : Elasticsearch 적용 후 검색 API 구현
 
     @Operation(
             summary = "게시물 수정"

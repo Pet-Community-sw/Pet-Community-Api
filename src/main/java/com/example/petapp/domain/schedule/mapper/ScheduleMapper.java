@@ -5,14 +5,14 @@ import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.schedule.model.dto.response.GetSchedulesResponseDto;
 import com.example.petapp.domain.schedule.model.dto.response.ScheduleType;
-import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
+import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
 
 public class ScheduleMapper {
 
-    public static GetSchedulesResponseDto toGetSchedulesResponseDto(Profile profile, WalkingTogetherMatch walkingTogetherMatch) {
+    public static GetSchedulesResponseDto toGetSchedulesResponseDto(Profile profile, WalkingTogetherPost walkingTogetherPost) {
         return GetSchedulesResponseDto.builder()
                 .memberId(profile.getMember().getId())
-                .scheduleDate(walkingTogetherMatch.getScheduledTime())
+                .scheduleDate(walkingTogetherPost.getScheduledTime())
                 .scheduleType(ScheduleType.WALKING_TOGETHER)
                 .build();
     }

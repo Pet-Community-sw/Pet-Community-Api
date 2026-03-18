@@ -1,17 +1,20 @@
 package com.example.petapp.application.service.member;
 
 import com.example.petapp.application.common.NameChosungUtil;
-import com.example.petapp.application.in.email.EmailUseCase;
 import com.example.petapp.application.in.fcm.FcmUseCase;
 import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.member.MemberUseCase;
 import com.example.petapp.application.in.member.mapper.MemberMapper;
 import com.example.petapp.application.in.member.object.MemberEvent;
 import com.example.petapp.application.in.member.object.MethodType;
-import com.example.petapp.application.in.member.object.dto.request.*;
-import com.example.petapp.application.in.member.object.dto.response.*;
-import com.example.petapp.application.in.role.RoleQueryUseCase;
-import com.example.petapp.application.in.token.TokenUseCase;
+import com.example.petapp.application.in.member.object.dto.request.FcmTokenDto;
+import com.example.petapp.application.in.member.object.dto.request.MemberSignDto;
+import com.example.petapp.application.in.member.object.dto.request.ResetPasswordDto;
+import com.example.petapp.application.in.member.object.dto.request.UpdateMemberRequestDto;
+import com.example.petapp.application.in.member.object.dto.response.FindByIdResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.GetMemberResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.MemberSearchResponseDto;
+import com.example.petapp.application.in.member.object.dto.response.MemberSignResponseDto;
 import com.example.petapp.application.out.MemberSearchPort;
 import com.example.petapp.application.out.StoragePort;
 import com.example.petapp.application.out.cache.MemberAutoCompleteSearchCachePort;
@@ -20,10 +23,7 @@ import com.example.petapp.application.out.cache.MemberSearchCachePort;
 import com.example.petapp.domain.file.FileKind;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.member.model.MemberRole;
-import com.example.petapp.domain.role.Role;
 import com.example.petapp.interfaces.exception.ConflictException;
-import com.example.petapp.interfaces.exception.UnAuthorizedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -31,7 +31,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 
@@ -43,10 +42,7 @@ public class MemberService implements MemberUseCase {
     private final MemberQueryUseCase memberQueryUseCase;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final TokenUseCase tokenUseCase;
-    private final EmailUseCase emailUseCase;
     private final FcmUseCase fcmUseCase;
-    private final RoleQueryUseCase roleQueryUseCase;
     private final StoragePort storagePort;
     private final MemberSearchPort memberSearchPort;
     private final MemberSearchCachePort memberSearchCachePort;
@@ -79,43 +75,10 @@ public class MemberService implements MemberUseCase {
         return new MemberSignResponseDto(savedMember.getId());
     }
 
-    @Transactional
-    @Override
-    public LoginResponseDto login(LoginDto loginDto, HttpServletResponse response) {
-        Member member = memberQueryUseCase.findOrThrow(loginDto.getEmail());
-        if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
-            throw new UnAuthorizedException("이메일 혹은 비밀번호가 일치하지 않습니다.");
-        }
-        Role role = roleQueryUseCase.findUserRole();
-        setRole(member, role);
-        return tokenUseCase.save(member, role);
-    }
-
-    /**
-     * 인증코드 검증 후 비밀번호 재설정용 임시 JWT 발급
-     */
-    @Override
-    public AccessTokenResponseDto verifyCode(AuthCodeDto authCodeDto) {//sendEmail할 때 이메일 유효성 검사 했으므로 안해줘도 됨.
-        emailUseCase.verifyCode(authCodeDto.getEmail(), authCodeDto.getCode());//todo : name을 email로?
-        Member member = memberQueryUseCase.findOrThrow(authCodeDto.getEmail());
-        return tokenUseCase.createResetPasswordJwt(member);
-    }
-
     @Override
     public FindByIdResponseDto findById(String phoneNumber) {
         Member member = memberQueryUseCase.findOrThrowByPhoneNumber(phoneNumber);
         return new FindByIdResponseDto(member.getEmail());
-    }
-
-    @Override
-    public void sendEmail(SendEmailDto sendEmailDto) {
-        Member member = memberQueryUseCase.findOrThrow(sendEmailDto.getEmail());
-        emailUseCase.send(member.getId(), member.getEmail());
-    }
-
-    @Override
-    public void logout(String accessToken) {
-        tokenUseCase.delete(accessToken);
     }
 
     @Transactional
@@ -179,7 +142,7 @@ public class MemberService implements MemberUseCase {
     }
 
     @Override
-    public List<MemberSearchResponseDto> autoComplete(String keyword, Long memberId) {
+    public List<MemberSearchResponseDto> searchSuggestions(String keyword, Long memberId) {
         if (keyword.trim().isEmpty()) {
             throw new IllegalArgumentException("키워드를 입력해주세요.");
         }
@@ -222,7 +185,7 @@ public class MemberService implements MemberUseCase {
     }
 
     @Override
-    public List<MemberSearchResponseDto> search(String keyword, int page, Long memberId) {
+    public List<MemberSearchResponseDto> searchMembers(String keyword, int page, Long memberId) {
         if (keyword.trim().isEmpty()) {
             throw new IllegalArgumentException("키워드를 입력해주세요.");
         }
@@ -233,14 +196,6 @@ public class MemberService implements MemberUseCase {
             memberSearchCachePort.create(key, page, reuslt);
         }
         return reuslt;
-    }
-
-    private void setRole(Member member, Role role) {
-        MemberRole memberRole = MemberRole.builder()
-                .member(member)
-                .role(role)
-                .build();
-        member.addRole(memberRole);
     }
 
 

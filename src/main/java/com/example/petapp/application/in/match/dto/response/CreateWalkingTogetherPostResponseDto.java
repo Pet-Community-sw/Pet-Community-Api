@@ -7,6 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateWalkingTogetherMatchResponseDto {
+public class CreateWalkingTogetherPostResponseDto {
     private Long walkingTogetherPostId;
 }

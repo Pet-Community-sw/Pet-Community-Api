@@ -10,10 +10,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Token")
+@Tag(name = "Tokens")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/token")
+@RequestMapping("/tokens")
 public class TokenController {
 
     private final TokenUseCase tokenUseCase;

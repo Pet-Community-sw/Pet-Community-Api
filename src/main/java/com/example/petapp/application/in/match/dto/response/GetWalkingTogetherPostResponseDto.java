@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GetWalkingTogetherMatchResponseDto {
+public class GetWalkingTogetherPostResponseDto {
     private Long walkingTogetherPostId;
 
     private LocalDateTime scheduledTime;

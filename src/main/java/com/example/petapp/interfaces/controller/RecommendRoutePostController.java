@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@Tag(name = "RecommendRoutePost")
+@Tag(name = "RecommendRoutePosts")
 @RestController
 @RequestMapping("/recommend-route-posts")
 @RequiredArgsConstructor
@@ -38,7 +38,7 @@ public class RecommendRoutePostController {
     @Operation(
             summary = "산책길 추천 게시글 목록 조회(위치 범위)"
     )
-    @GetMapping("/by-location")
+    @GetMapping("/by-range")
     private List<GetRecommendRoutePostsResponseDto> getRecommendRoutePosts(@RequestParam Double minLongitude,
                                                                            @RequestParam Double minLatitude,
                                                                            @RequestParam Double maxLongitude,
@@ -51,7 +51,7 @@ public class RecommendRoutePostController {
     @Operation(
             summary = "산책길 추천 게시글 목록 조회(위치 반경 내)"
     )
-    @GetMapping("/by-place")
+    @GetMapping("/by-radius")
     private List<GetRecommendRoutePostsResponseDto> getRecommendRoutePosts(@RequestParam Double longitude,
                                                                            @RequestParam Double latitude,
                                                                            @RequestParam(required = false, defaultValue = "1") int page,

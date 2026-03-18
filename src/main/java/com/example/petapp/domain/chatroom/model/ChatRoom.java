@@ -3,7 +3,7 @@ package com.example.petapp.domain.chatroom.model;
 import com.example.petapp.application.in.chatting.model.type.ChatRoomType;
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
+import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
 import com.example.petapp.interfaces.exception.ConflictException;
 import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.*;
@@ -38,7 +38,7 @@ public class ChatRoom extends BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "walking_together_post_id")
-    private WalkingTogetherMatch walkingTogetherMatch;
+    private WalkingTogetherPost walkingTogetherPost;
 
     @Setter
     @ElementCollection
@@ -57,7 +57,7 @@ public class ChatRoom extends BaseEntity {
     }
 
     public void validateChatOwner(Profile profile) {
-        if (!walkingTogetherMatch.getProfile().equals(profile)) {
+        if (!walkingTogetherPost.getProfile().equals(profile)) {
             throw new ForbiddenException("권한이 없습니다.");
         }
     }

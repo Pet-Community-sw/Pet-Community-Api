@@ -9,7 +9,7 @@ import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
+import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,15 +18,15 @@ import java.util.stream.Collectors;
 
 public class ChatRoomMapper {
 
-    public static ChatRoom toEntity(WalkingTogetherMatch walkingTogetherMatch, Profile profile) {
+    public static ChatRoom toEntity(WalkingTogetherPost walkingTogetherPost, Profile profile) {
         ChatRoom chatRoom = ChatRoom.builder()
-                .name(walkingTogetherMatch.getProfile().getPetName() + "님의 방")
-                .limitCount(walkingTogetherMatch.getLimitCount())//나중에 게시물에서 인원 수를 고정.
-                .walkingTogetherMatch(walkingTogetherMatch)
+                .name(walkingTogetherPost.getProfile().getPetName() + "님의 방")
+                .limitCount(walkingTogetherPost.getLimitCount())//나중에 게시물에서 인원 수를 고정.
+                .walkingTogetherPost(walkingTogetherPost)
                 .chatRoomType(ChatRoomType.MANY)//todo : 다시봐야함.
                 //이게 수정에서 가능하려나?
                 .build();
-        chatRoom.addUser(walkingTogetherMatch.getProfile().getId());//글 작성자.
+        chatRoom.addUser(walkingTogetherPost.getProfile().getId());//글 작성자.
         chatRoom.addUser(profile.getId());//신청하는사람.
         return chatRoom;
     }
@@ -56,7 +56,7 @@ public class ChatRoomMapper {
                 .lastMessage(lastMessageInfoDto.getLastMessage())
                 .unReadCount(unReadCount)
                 .lastMessageTime(lastMessageInfoDto.getLastMessageTime().isBlank() ? null : LocalDateTime.parse(lastMessageInfoDto.getLastMessageTime()))
-                .isOwner(chatRoom.getWalkingTogetherMatch().getProfile().getId().equals(userId))
+                .isOwner(chatRoom.getWalkingTogetherPost().getProfile().getId().equals(userId))
                 .build();
     }
 

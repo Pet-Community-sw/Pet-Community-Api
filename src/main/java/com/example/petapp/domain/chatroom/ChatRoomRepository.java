@@ -2,7 +2,7 @@ package com.example.petapp.domain.chatroom;
 
 import com.example.petapp.application.in.chatting.model.type.ChatRoomType;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
-import com.example.petapp.domain.walkingtogethermatch.model.WalkingTogetherMatch;
+import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +12,7 @@ public interface ChatRoomRepository {
 
     List<ChatRoom> findAll(Long id, ChatRoomType chatRoomType);
 
-    Optional<ChatRoom> find(WalkingTogetherMatch walkingTogetherMatch);
+    Optional<ChatRoom> find(WalkingTogetherPost walkingTogetherPost);
 
     boolean existAndContain(Long id, Long userId);
 

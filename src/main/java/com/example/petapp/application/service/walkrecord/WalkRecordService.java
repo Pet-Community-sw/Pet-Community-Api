@@ -72,7 +72,7 @@ public class WalkRecordService implements WalkRecordUseCase {
                 member.getName() + "님이 산책을 시작하였습니다."));
     }
 
-    @Transactional//분리를 어떻게 시키면 졸을까
+    @Transactional
     @Override
     public void finishWalkRecord(Long walkRecordId, Long id) {
         Member member = memberQueryUseCase.findOrThrow(id);
@@ -95,5 +95,4 @@ public class WalkRecordService implements WalkRecordUseCase {
         port.delete(walkRecordId);
     }
 
-    //todo : delete 있어야함.
 }
