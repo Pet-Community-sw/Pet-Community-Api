@@ -15,17 +15,6 @@ import java.util.concurrent.Executor;
 @EnableRetry// 재시도 활성화
 public class AsyncConfig implements AsyncConfigurer {
 
-    @Bean(name = "notificationExecutor")
-    public Executor notificationExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(2);// 기본 스레드 수
-        executor.setMaxPoolSize(5);// 최대 스레드 수
-        executor.setQueueCapacity(500);// 대기 큐 사이즈
-        executor.setThreadNamePrefix("NotificationThread-");
-        executor.initialize();
-        return executor;
-    }
-
     @Bean(name = "locationInitExecutor")
     public Executor locationInitExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
