@@ -43,7 +43,7 @@ public class ChatRoomController {
     @Operation(
             summary = "유저가 마지막으로 읽은 메세지 이후 메시지 조회"
     )
-    @GetMapping("/{chatRoomId}/after-messages")
+    @GetMapping("/{chatRoomId}/messages")
     public ChatMessageResponseDto getAfterMessages(@PathVariable Long chatRoomId, @RequestParam Long lastSeq, Authentication authentication) {
         return chatRoomUseCase.getAfterMessages(chatRoomId, lastSeq, AuthUtil.getProfileId(authentication));
     }

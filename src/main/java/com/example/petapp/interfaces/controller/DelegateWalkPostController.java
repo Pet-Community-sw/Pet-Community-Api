@@ -52,7 +52,7 @@ public class DelegateWalkPostController {
     @Operation(
             summary = "대리 산책 게시글 목록 조회(위치 범위)"
     )
-    @GetMapping("/by-location")
+    @GetMapping("/by-range")
     public List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByLocation(@RequestParam Double minLongitude,
                                                                                 @RequestParam Double minLatitude,
                                                                                 @RequestParam Double maxLongitude,
@@ -65,7 +65,7 @@ public class DelegateWalkPostController {
     @Operation(
             summary = "대리 산책 게시글 목록 조회(위치 반경 내)"
     )
-    @GetMapping("/by-place")
+    @GetMapping("/by-radius")
     public List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByPlace(@RequestParam Double longitude,
                                                                              @RequestParam Double latitude,
                                                                              @RequestParam(defaultValue = "1", required = false) int page,
@@ -84,7 +84,7 @@ public class DelegateWalkPostController {
     @Operation(
             summary = "대리 산책 게시글 지원자 조회"
     )
-    @GetMapping("/applicants/{delegateWalkPostId}")
+    @GetMapping("/{delegateWalkPostId}/applicants")
     public Set<Applicant> getApplicants(@PathVariable Long delegateWalkPostId, Authentication authentication) {
         return delegateWalkPostUseCase.getApplicants(delegateWalkPostId, AuthUtil.getProfileId(authentication));
     }
@@ -93,7 +93,7 @@ public class DelegateWalkPostController {
     @Operation(
             summary = "대리 산책자 산책 시작권한 부여"
     )
-    @PutMapping("/{delegateWalkPostId}/start-authorized")//산책 시작권한을 줌.
+    @PutMapping("/{delegateWalkPostId}/authorizations")//산책 시작권한을 줌.
     public CreateWalkRecordResponseDto grantAuthorize(@PathVariable Long delegateWalkPostId, Authentication authentication) {
         return delegateWalkPostUseCase.grantAuthorize(delegateWalkPostId, AuthUtil.getProfileId(authentication));
     }
@@ -119,7 +119,7 @@ public class DelegateWalkPostController {
     @Operation(
             summary = "대리 산책자 지원자 선정"
     )
-    @PostMapping("/{delegateWalkPostId}/select-applicant")
+    @PostMapping("/{delegateWalkPostId}/applicants")
     public CreateChatRoomResponseDto selectApplicant(@PathVariable Long delegateWalkPostId, @RequestBody Long memberId, Authentication authentication) {
         return delegateWalkPostUseCase.selectApplicant(delegateWalkPostId, memberId, AuthUtil.getMemberId(authentication));
     }
