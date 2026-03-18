@@ -4,6 +4,7 @@ set -a
 source .env
 set +a
 
+ELASTICSEARCH_URI="http://localhost:80"
 INDEX_NAME="members"
 MAPPING_FILE="elasticsearch/members/v5/indexV5.json"
 
