@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import static com.example.petapp.infrastructure.mq.RabbitKeys.*;
 
 @RequiredArgsConstructor
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class RabbitConfig {
 
     public final OutboxEventUseCase useCase;
@@ -87,34 +87,34 @@ public class RabbitConfig {
 
     //Binding
     @Bean
-    public Binding mailBinding() {
-        return BindingBuilder.bind(mailQueue()).to(mainExchange()).with(MAIL_ROUTING_KEY);
+    public Binding mailBinding(Queue mailQueue, DirectExchange mainExchange) {
+        return BindingBuilder.bind(mailQueue).to(mainExchange).with(MAIL_ROUTING_KEY);
     }
 
     @Bean
-    public Binding notificationBinding() {
-        return BindingBuilder.bind(notificationQueue()).to(mainExchange()).with(NOTIFICATION_ROUTING_KEY);
+    public Binding notificationBinding(Queue notificationQueue, DirectExchange mainExchange) {
+        return BindingBuilder.bind(notificationQueue).to(mainExchange).with(NOTIFICATION_ROUTING_KEY);
     }
 
     //ES 바인딩
     @Bean
-    public Binding elasticBinding() {
-        return BindingBuilder.bind(elasticQueue()).to(mainExchange()).with(MEMBER_ROUTING_KEY);
+    public Binding elasticBinding(Queue elasticQueue, DirectExchange mainExchange) {
+        return BindingBuilder.bind(elasticQueue).to(mainExchange).with(MEMBER_ROUTING_KEY);
     }
 
     @Bean
-    public Binding retry5sBinding() {
-        return BindingBuilder.bind(retry5sQueue()).to(retryExchange()).where("retry-type").matches(RETRY_5S_ROUTING_KEY);
+    public Binding retry5sBinding(Queue retry5sQueue, HeadersExchange retryExchange) {
+        return BindingBuilder.bind(retry5sQueue).to(retryExchange).where("retry-type").matches(RETRY_5S_ROUTING_KEY);
     }
 
     @Bean
-    public Binding retry30sBinding() {
-        return BindingBuilder.bind(retry30sQueue()).to(retryExchange()).where("retry-type").matches(RETRY_30S_ROUTING_KEY);
+    public Binding retry30sBinding(Queue retry30sQueue, HeadersExchange retryExchange) {
+        return BindingBuilder.bind(retry30sQueue).to(retryExchange).where("retry-type").matches(RETRY_30S_ROUTING_KEY);
     }
 
     @Bean
-    public Binding dlqBinding() {
-        return BindingBuilder.bind(deadLetterQueue()).to(dlxExchange()).with(DEAD_LETTER_ROUTING_KEY);
+    public Binding dlqBinding(Queue deadLetterQueue, DirectExchange dlxExchange) {
+        return BindingBuilder.bind(deadLetterQueue).to(dlxExchange).with(DEAD_LETTER_ROUTING_KEY);
     }
 
     @Bean
