@@ -11,8 +11,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.concurrent.Executor;
 
 @Configuration(proxyBeanMethods = false)
-@EnableAsync// 비동기 활성화
-@EnableRetry// 재시도 활성화
+@EnableAsync(order = 1) //@EnableAsync와 @EnableRetry의 order 속성을 설정하여 우선순위를 지정
+@EnableRetry(order = 2)
 public class AsyncConfig implements AsyncConfigurer {
 
     @Bean(name = "locationInitExecutor")
@@ -35,3 +35,4 @@ public class AsyncConfig implements AsyncConfigurer {
         return new CustomAsyncExceptionHandler();
     }
 }
+

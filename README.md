@@ -186,7 +186,7 @@ chmod +x ./init-script.sh
 
 프로젝트의 상세한 기술 선정 이유, 설계 배경, 문제 해결 과정, 성능 개선 내용은 아래 문서에 정리했습니다.
 
-### [📘포트폴리오]( https://www.notion.so/Project-Portfolio-324efd57b2f7809f9a0dd340993ff4e1?source=copy_link )
+### [📘포트폴리오]( https://www.notion.so/Project-Portfolio-329efd57b2f78066a524e7942a8756e2?source=copy_link )
 
 
 
