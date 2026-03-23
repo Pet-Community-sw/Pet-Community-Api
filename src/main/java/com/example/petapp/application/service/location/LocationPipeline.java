@@ -41,15 +41,14 @@ public class LocationPipeline {
         CompletableFuture<Subject<LocationMessage>> future = initMap.computeIfAbsent(walkRecordId, id ->
                 CompletableFuture.supplyAsync(() -> initializePipeline(walkRecordId, memberId), locationInitExecutor));
 
-        try {
-            Subject<LocationMessage> subject = future.join();
-            //동시에 스레드가 onNext를 호출할 수 있음 그래서 toSerialized()
+        future.thenAccept(subject -> {
             subject.onNext(message);
-        } catch (Exception e) {
+        }).exceptionally(e -> {
             initMap.remove(walkRecordId);
-            log.error("LocationPipeline init error walkRecordId={}", walkRecordId, e);
-            throw e;
-        }
+            log.error("LocationPipeline initial error walkRecordId={}", walkRecordId, e);
+            return null;
+        });
+
     }
 
     private Subject<LocationMessage> initializePipeline(Long walkRecordId, String memberId) {
