@@ -42,7 +42,8 @@ public class SecurityConfig {
                 ).permitAll()
                 .antMatchers("/image/profiles/**", "/image/members/**", "/image/posts/**", "/image/basic/**", "/favicon.ico").permitAll()
                 .mvcMatchers("/ws-stomp/**", "/pub/**", "/sub/**").permitAll()
-                .mvcMatchers("/members/signup", "/members/login", "/members/find-id", "/members/send-email", "/members/verify-code").permitAll()
+                .mvcMatchers("/members", "/members/login").permitAll()
+                .mvcMatchers("/auth", "/auth/emails", "/auth/emails/verify").permitAll()
                 .mvcMatchers("/token").permitAll()
                 // 임시 비밀번호 발급 후 비밀번호 변경은 TEMPORARY 권한도 허용
                 .mvcMatchers("/members/reset-password").hasAnyRole("USER", "TEMPORARY")
