@@ -16,8 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @Slf4j
@@ -31,7 +31,7 @@ public class LocationProcessorService implements LocationProcessorUseCase {
     private final SendPort sendPort;
 
 
-    private final Map<Long, LastPoint> lastPointMap = new ConcurrentHashMap<>();
+    private final Map<Long, LastPoint> lastPointMap = new HashMap<>();
 
 
     @Override
@@ -61,7 +61,7 @@ public class LocationProcessorService implements LocationProcessorUseCase {
         }
 
     }
-
+    
     /**
      * HaversineUtil을 사용하여 두 지점 간의 거리를 계산하고, 산책 범위의 반경과 비교하여 범위 내에 있는지 여부를 판단
      */
@@ -76,7 +76,6 @@ public class LocationProcessorService implements LocationProcessorUseCase {
         boolean isOutOfRange = distance > walkRecord.getDelegateWalkPost().getAllowedRadiusMeters();
         return new WalkRangeStatus(distance, isOutOfRange);
     }
-
 
     @Override
     public void saveAndSend(LocationMessage message) {
