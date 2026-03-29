@@ -102,8 +102,9 @@ chmod +x ./init-script.sh
 성능 측면에서도 최종 구조는 기존 동기 처리 방식 대비 p99 응답시간을 약 13% 개선했습니다. 동시에 이벤트 유실 가능성을 낮추고, 장애 발생 시에도 실패한 작업만 재처리할 수 있는 구조를 마련했습니다
 
 - 개선 전
-
+<img width="1281" height="394" alt="동기" src="https://github.com/user-attachments/assets/14086d75-8dd1-4a06-b0bd-c98628ea55bb" />
 - 개선 후
+<img width="1270" height="382" alt="최신 구조" src="https://github.com/user-attachments/assets/9356383f-ca08-466c-b8ef-f91896cdfeea" />
 
 ---
 
