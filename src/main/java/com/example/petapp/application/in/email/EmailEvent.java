@@ -14,5 +14,4 @@ public class EmailEvent {
     Long id;
     String toEmail;
     String subject;
-    String code;
 }
