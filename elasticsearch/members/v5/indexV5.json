@@ -40,16 +40,6 @@
             "edge_1_7"
           ]
         },
-        "member_prefix_search": {
-          "type": "custom",
-          "char_filter": [
-            "remove_space"
-          ],
-          "tokenizer": "keyword",
-          "filter": [
-            "lowercase"
-          ]
-        },
         "member_contains": {
           "type": "custom",
           "char_filter": [
@@ -73,23 +63,18 @@
       },
       "memberName": {
         "type": "keyword",
+        "index_options": "docs",
+        "norms": false,
         "fields": {
           "prefix": {
             "type": "text",
             "analyzer": "member_prefix",
-            "search_analyzer": "member_prefix_search",
             "index_options": "docs",
             "norms": false
           },
           "contains": {
             "type": "text",
             "analyzer": "member_contains",
-            "index_options": "docs",
-            "norms": false
-          },
-          "fuzzy": {
-            "type": "text",
-            "analyzer": "member_prefix_search",
             "index_options": "docs",
             "norms": false
           }
@@ -101,7 +86,6 @@
           "prefix": {
             "type": "text",
             "analyzer": "member_prefix",
-            "search_analyzer": "member_prefix_search",
             "index_options": "docs",
             "norms": false
           }
