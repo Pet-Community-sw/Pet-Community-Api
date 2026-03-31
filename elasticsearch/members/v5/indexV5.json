@@ -67,7 +67,9 @@
   "mappings": {
     "properties": {
       "memberId": {
-        "type": "keyword"
+        "type": "keyword",
+        "index": false,
+        "doc_values": false
       },
       "memberName": {
         "type": "keyword",
