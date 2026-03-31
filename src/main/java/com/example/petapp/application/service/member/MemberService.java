@@ -151,7 +151,7 @@ public class MemberService implements MemberUseCase {
         List<MemberSearchResponseDto> result = memberAutoCompleteSearchCachePort.get(key);
 
         if (result == null) {
-            result = memberSearchPort.autoComplete(key);// 캐시 미스면 db에서 조회
+            result = memberSearchPort.searchSuggestions(key);// 캐시 미스면 db에서 조회
             memberAutoCompleteSearchCachePort.create(key, result);//해당 자동완성에 캐싱
 
         }

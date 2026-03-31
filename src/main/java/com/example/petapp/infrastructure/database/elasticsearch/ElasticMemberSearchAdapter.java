@@ -30,16 +30,16 @@ public class ElasticMemberSearchAdapter implements MemberSearchPort {
      * 검색창에서 입력값이 바뀔 때마다 자동완성 목적.
      */
     @Override
-    public List<MemberSearchResponseDto> autoComplete(String keyword) {
+    public List<MemberSearchResponseDto> searchSuggestions(String keyword) {
 
         BoolQueryBuilder queryBuilder = boolQuery()
                 .should(termQuery("memberName", keyword).boost(10f))
-                .should(matchQuery("memberName.prefix", keyword).boost(6f));// matchQuery는 분석을 거친 뒤 매칭
+                .should(termQuery("memberName.prefix", keyword).boost(6f));// matchQuery는 분석을 거친 뒤 매칭
 
         // 초성 검색어일 경우 초성 필드 검색
         if (NameChosungUtil.isChosung(keyword)) {
             queryBuilder.should(termQuery("memberNameChosung", keyword).boost(10f));
-            queryBuilder.should(matchQuery("memberNameChosung.prefix", keyword).boost(8f));
+            queryBuilder.should(termQuery("memberNameChosung.prefix", keyword).boost(8f));
         }
 
         NativeSearchQuery query = buildQuery(0, queryBuilder);
@@ -60,7 +60,7 @@ public class ElasticMemberSearchAdapter implements MemberSearchPort {
     public List<MemberSearchResponseDto> search(String keyword, int page) {
         BoolQueryBuilder queryBuilder = boolQuery()
                 .should(termQuery("memberName", keyword).boost(10f))//keyword는 분석을 안거치므로 termQuery
-                .should(matchQuery("memberName.prefix", keyword).boost(8f));//앞부분 매칭
+                .should(termQuery("memberName.prefix", keyword).boost(8f));//앞부분 매칭
 
 
         /**
@@ -72,7 +72,7 @@ public class ElasticMemberSearchAdapter implements MemberSearchPort {
 
         if (NameChosungUtil.isChosung(keyword)) {
             queryBuilder.should(termQuery("memberNameChosung", keyword).boost(10f));
-            queryBuilder.should(matchQuery("memberNameChosung.prefix", keyword).boost(8f));
+            queryBuilder.should(termQuery("memberNameChosung.prefix", keyword).boost(8f));
         }
 
         SearchHits<MemberSearch> hits = operations.search(buildQuery(page, queryBuilder), MemberSearch.class);
@@ -83,7 +83,7 @@ public class ElasticMemberSearchAdapter implements MemberSearchPort {
          * 검색 결과가 3개 이하일 때만 오타교정 (결과가 많으면 오타가 아닐 확률이 높기 때문)
          */
         if (page == 0 && hits.getTotalHits() <= 3 && keyword.matches("^[A-Za-z]+$")) {
-            queryBuilder.should(matchQuery("memberName.fuzzy", keyword)
+            queryBuilder.should(fuzzyQuery("memberName", keyword)
                     .fuzziness(Fuzziness.AUTO)
                     .prefixLength(1)
                     .maxExpansions(10) //후보군 최대 개수
