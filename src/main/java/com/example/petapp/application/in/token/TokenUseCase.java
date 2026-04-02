@@ -10,6 +10,8 @@ import com.example.petapp.domain.role.Role;
 public interface TokenUseCase {
     void delete(String authorization);
 
+    void delete(Long memberId);
+
     LoginResponseDto save(Member member, Role role);
 
     AccessTokenResponseDto createResetPasswordJwt(Member member);
