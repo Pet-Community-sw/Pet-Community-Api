@@ -107,6 +107,11 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
         blacklistAccessToken(accessToken);
     }
 
+    @Override
+    public void delete(Long memberId) {
+        tokenRepository.delete(memberId);
+    }
+
     private TokenResponseDto createNewToken(Token token) {
         MemberInfo info = tokenPort.getInfo(TokenType.REFRESH, token.getRefreshToken());
         List<String> roles = info.getRoles();

@@ -13,6 +13,7 @@ import com.example.petapp.application.in.member.object.dto.response.FindByIdResp
 import com.example.petapp.application.in.member.object.dto.response.GetMemberResponseDto;
 import com.example.petapp.application.in.member.object.dto.response.MemberSearchResponseDto;
 import com.example.petapp.application.in.member.object.dto.response.MemberSignResponseDto;
+import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.application.out.MemberSearchPort;
 import com.example.petapp.application.out.StoragePort;
 import com.example.petapp.application.out.cache.MemberAutoCompleteSearchCachePort;
@@ -41,6 +42,7 @@ public class MemberService implements MemberUseCase {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     //    private final FcmUseCase fcmUseCase;
+    private final TokenUseCase tokenUseCase;
     private final StoragePort storagePort;
     private final MemberSearchPort memberSearchPort;
     private final MemberSearchCachePort memberSearchCachePort;
@@ -123,6 +125,7 @@ public class MemberService implements MemberUseCase {
     @Override
     public void delete(Long memberId) {
         Member member = memberQueryUseCase.findOrThrow(memberId);
+        tokenUseCase.delete(memberId);
         memberRepository.delete(member);
 
         eventPublisher.publishEvent(MemberEvent.builder()

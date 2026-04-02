@@ -1,16 +1,4 @@
 services:
-  #  nginx:
-  #    image: nginx:latest
-  #    container_name: pet-app-nginx
-  #    restart: always
-  #    ports:
-  #      - "80:80"
-  #    volumes:
-  #      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-  #    depends_on:
-  #      - es01
-  #      - es02
-  #      - es03
 
   mysql:
     image: mysql:8.0
@@ -79,53 +67,6 @@ services:
       - "9200:9200"
     volumes:
       - es-data:/usr/share/elasticsearch/data
-
-
-  #  es01:
-  #    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.18
-  #    container_name: pet-app-es01
-  #    environment:
-  #      - node.name=es01
-  #      - cluster.name=pet-cluster
-  #      - discovery.seed_hosts=es02,es03 #재배포시 다른 노드들도 추가해줘야함.
-  #      - cluster.initial_master_nodes=es01,es02,es03 # 초기 마스터 노드 설정, 재배포시 노드 추가해서 초기 마스터노드가 자기뿐만 아닌 클러스터에 있는 모든 노드를 넣고 재배포해야함.
-  #      - xpack.security.enabled=false #비번 없이 접속하기 위해 false로 설정
-  #      - ES_JAVA_OPTS=-Xms256m -Xmx256m #힙 메모리 설정 es는 jvm 기반이라 메모리 설정 필요
-  #    ports:
-  #      - "9200:9200"
-  #    volumes:
-  #      - es-data01:/usr/share/elasticsearch/data
-
-  #  es02:
-  #    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.18
-  #    container_name: pet-app-es02
-  #    environment:
-  #      - node.name=es02
-  #      - cluster.name=pet-cluster
-  #      - discovery.seed_hosts=es01,es03 # 클러스터 내 다른 노드들 설정 부트 당시 어느 노드로가야하는지
-  #      - cluster.initial_master_nodes=es01 #운영중 노드 추가이기 때문에 초기 노드는 그대로 설정
-  #      - xpack.security.enabled=false
-  #      - ES_JAVA_OPTS=-Xms256m -Xmx256m
-  #    ports:
-  #      - "9201:9200"
-  #    volumes:
-  #      - es-data02:/usr/share/elasticsearch/data
-  #
-  #
-  #  es03:
-  #    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.18
-  #    container_name: pet-app-es03
-  #    environment:
-  #      - node.name=es03
-  #      - cluster.name=pet-cluster
-  #      - discovery.seed_hosts=es01,es02
-  #      - cluster.initial_master_nodes=es01
-  #      - xpack.security.enabled=false
-  #      - ES_JAVA_OPTS=-Xms256m -Xmx256m
-  #    ports:
-  #      - "9202:9200"
-  #    volumes:
-  #      - es-data03:/usr/share/elasticsearch/data
 
   rabbitmq:
     image: rabbitmq:3-management

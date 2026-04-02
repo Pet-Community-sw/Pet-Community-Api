@@ -1,10 +1,10 @@
 #!/bin/bash
 
-ES_URL="localhost:80"
+ES_URL="localhost:9200"
 ALIAS_NAME="members"
-NEW_INDEX="member_v5"
-OLD_INDEX="member_v4"
-NEW_INDEX_FILE="elasticsearch/members/v5/indexV5.json"
+NEW_INDEX="member_v6"
+OLD_INDEX="member_v5"
+NEW_INDEX_FILE="elasticsearch/members/v6/indexV6.json"
 
 echo "1. 새로운 인덱스 생성 ($NEW_INDEX)"
 curl -X PUT "$ES_URL/$NEW_INDEX" \
