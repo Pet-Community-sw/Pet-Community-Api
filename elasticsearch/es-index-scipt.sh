@@ -1,8 +1,8 @@
 #!/bin/bash
 
-ES_URL="localhost:80"
-NEW_INDEX="members_v5"
-NEW_INDEX_FILE="elasticsearch/members/v5/indexV5.json"
+ES_URL="localhost:9200"
+NEW_INDEX="members_v6"
+NEW_INDEX_FILE="elasticsearch/members/v6/indexV6.json"
 ALIAS_NAME="members"
 
 

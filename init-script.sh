@@ -4,12 +4,13 @@ set -a
 source .env
 set +a
 
-ELASTICSEARCH_URI="http://localhost:80"
+COMPOSE_FILE="docker-compose.prod.yml"
+ELASTICSEARCH_URI="http://localhost:9200"
 INDEX_NAME="members"
-MAPPING_FILE="elasticsearch/members/v5/indexV5.json"
+MAPPING_FILE="elasticsearch/members/v6/indexV6.json"
 
 echo "1. MySQL 먼저 실행"
-docker compose up -d mysql
+docker compose -f"$COMPOSE_FILE" up -d mysql
 
 echo "2. MySQL 준비 대기"
 until docker exec pet-app-mysql mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent >/dev/null 2>&1; do
@@ -26,11 +27,11 @@ FLUSH PRIVILEGES;
 SQL
 
 echo "4. 나머지 컨테이너 실행"
-docker compose up -d
+docker compose -f"$COMPOSE_FILE" up -d
 
 echo "5. Elasticsearch 준비 대기"
 until curl -s "$ELASTICSEARCH_URI" >/dev/null; do
-  echo "Elasticsearch/Nginx가 아직 준비되지 않았습니다. 대기 중..."
+  echo "Elasticsearch 아직 준비되지 않았습니다. 대기 중..."
   sleep 2
 done
 
