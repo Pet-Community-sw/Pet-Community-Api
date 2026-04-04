@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -e
 set -a
-source .env
+source .env.dev
 set +a
 
-COMPOSE_FILE="docker-compose.prod.yml"
+COMPOSE_FILE="docker-compose-dev.yml"
 ELASTICSEARCH_URI="http://localhost:9200"
 INDEX_NAME="members"
 MAPPING_FILE="elasticsearch/members/v6/indexV6.json"

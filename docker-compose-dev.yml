@@ -1,32 +1,8 @@
 services:
 
-  mysql:
-    image: mysql:8.0
-    container_name: pet-app-mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      TZ: Asia/Seoul
-    ports:
-      - "3306:3306"
-    command:
-      - --default-authentication-plugin=mysql_native_password
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
-      - --default-time-zone=Asia/Seoul
-    volumes:
-      - mysql-data:/var/lib/mysql
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD}" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-
   mongodb:
     image: mongo:latest
     container_name: pet-app-mongo
-    restart: always
     ports:
       - "27017:27017"
     environment:
@@ -35,45 +11,34 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
     volumes:
       - mongo-data:/data/db
-    healthcheck:
-      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
+
 
   redis:
     image: redis:7-alpine
     container_name: pet-app-redis
-    restart: always
     ports:
       - "6379:6379"
     command: [ "redis-server", "--appendonly", "yes" ]
     volumes:
       - redis-data:/data
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
 
   es:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.18
     container_name: pet-app-es
+    ports:
+      - "9200:9200"
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false #비번 없이 접속하기 위해 false로 설정
       - ES_JAVA_OPTS=-Xms256m -Xmx256m #힙 메모리 설정 es는 jvm 기반이라 메모리 설정 필요
-    ports:
-      - "9200:9200"
     volumes:
       - es-data:/usr/share/elasticsearch/data
 
   rabbitmq:
     image: rabbitmq:3-management
     container_name: pet-app-rabbitmq
-    restart: always
     ports:
-      - "5672:5672"# RabbitMQ 서버 포트
+      - "5672:5672" # AMQP 포트
       - "15672:15672"# 관리 UI 포트
     environment:
       RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE} # 클러스터링 시 동일한 값으로 설정
@@ -82,48 +47,20 @@ services:
       TZ: Asia/Seoul
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
-    healthcheck:
-      test: [ "CMD", "rabbitmq-diagnostics", "check_port_connectivity" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
 
   debezium:
     env_file: # 환경변수 파일을 사용하여 설정값을 관리할 수 있도록 env_file 옵션 추가
-      - .env
+      - .env.dev
     image: quay.io/debezium/server:3.4
     container_name: pet-app-debezium
-    restart: always
     depends_on:
-      mysql:
-        condition: service_healthy
       rabbitmq:
         condition: service_healthy
     volumes:
       - ./debezium/config:/debezium/config
       - ./debezium/data:/debezium/data
 
-  prometheus:
-    image: prom/prometheus:v2.51.2
-    container_name: prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-
-  grafana:
-    image: grafana/grafana:10.4.2
-    container_name: grafana
-    ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_USER=${GRAFANA_SECURITY_ADMIN_USER}
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_SECURITY_ADMIN_PASSWORD}
-    depends_on:
-      - prometheus
-
 volumes:
-  mysql-data:
   mongo-data:
   redis-data:
   es-data:
