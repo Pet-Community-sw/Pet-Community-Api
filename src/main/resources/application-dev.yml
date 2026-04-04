@@ -1,0 +1,98 @@
+jwt:
+  accessKey: ${ACCESS_KEY}
+  refreshKey: ${REFRESH_KEY}
+spring:
+  elasticsearch:
+    uris: ${ELASTICSEARCH_URI}
+  datasource:
+    hikari:
+      maximum-pool-size: 30
+      minimum-idle: 10
+      connection-timeout: 3000
+      validation-timeout: 1000
+      leak-detection-threshold: 5000
+    url: ${MYSQL_URL}
+    username: ${MYSQL_ROOT_USERNAME}
+    password: ${MYSQL_ROOT_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    open-in-view: false
+
+  mail:
+    host: ${SMTP_HOST}
+    port: ${SMTP_PORT}
+    username: ${SMTP_EMAIL}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    default-encoding: UTF-8
+
+  rabbitmq:
+    addresses: ${RABBITMQ_HOST}:${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+    listener:
+      simple:
+        prefetch: 10
+        acknowledge-mode: auto
+        concurrency: 4
+        max-concurrency: 8
+    publisher-confirm-type: correlated #해당 메시지 전송 확인
+    requested-heartbeat: 30
+
+  data:
+    mongodb:
+      uri: ${MONGO_URL}
+      username: ${MONGO_USERNAME}
+      password: ${MONGO_PASSWORD}
+    redis:
+      repositories:
+        enabled: false
+
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_IAM_ACCESS_KEY}
+        secret-key: ${AWS_IAM_SECRET_KEY}
+      region:
+        static: ${AWS_S3_REGION}
+
+  # Elasticsearch Reactive Repositories 오토컨피그 비활성화
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.elasticsearch.ReactiveElasticsearchRepositoriesAutoConfiguration
+
+springdoc:
+  swagger-ui:
+    path: /swagger
+
+mail:
+  provider: smtp
+
+storage:
+  type: s3
+
+aws:
+  s3:
+    bucket: ${AWS_S3_BUCKET}
+  cloudfront:
+    domain: ${AWS_CLOUD_FRONT}
+
+server:
+  address: 0.0.0.0
+  port: 8080
