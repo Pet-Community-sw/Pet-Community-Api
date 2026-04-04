@@ -47,10 +47,15 @@ services:
       TZ: Asia/Seoul
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "check_port_connectivity" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   debezium:
     env_file: # 환경변수 파일을 사용하여 설정값을 관리할 수 있도록 env_file 옵션 추가
-      - .env.dev
+      - .env
     image: quay.io/debezium/server:3.4
     container_name: pet-app-debezium
     depends_on:
