@@ -74,6 +74,9 @@ chmod +x ./init-script.sh
 ## Swagger
 
 - Swagger UI: `http://localhost:8080/swagger`
+---
+## System Architecture
+<img width="1154" height="746" alt="스크린샷 2026-04-05 20 36 11" src="https://github.com/user-attachments/assets/68a07ae8-fb04-46c2-a0ef-8d39569f6c30" />
 
 ---
 
