@@ -1,44 +1,74 @@
 services:
 
+  app:
+    image: sunjaegood/pet-community:dev
+    container_name: pet-app
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      es:
+        condition: service_healthy
+    environment:
+      TZ: Asia/Seoul
+      SPRING_PROFILES_ACTIVE: dev
+
+
   mongodb:
     image: mongo:latest
     container_name: pet-app-mongo
-    ports:
-      - "27017:27017"
     environment:
       - MONGO_INITDB_DATABASE=${MONGO_DATABASE}
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
     volumes:
       - mongo-data:/data/db
+    healthcheck:
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
 
   redis:
     image: redis:7-alpine
     container_name: pet-app-redis
-    ports:
-      - "6379:6379"
     command: [ "redis-server", "--appendonly", "yes" ]
     volumes:
       - redis-data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   es:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.18
     container_name: pet-app-es
-    ports:
-      - "9200:9200"
     environment:
       - discovery.type=single-node
-      - xpack.security.enabled=false #비번 없이 접속하기 위해 false로 설정
-      - ES_JAVA_OPTS=-Xms256m -Xmx256m #힙 메모리 설정 es는 jvm 기반이라 메모리 설정 필요
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
     volumes:
       - es-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -fs http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s >/dev/null || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
 
   rabbitmq:
     image: rabbitmq:3-management
     container_name: pet-app-rabbitmq
     ports:
-      - "5672:5672" # AMQP 포트
       - "15672:15672"# 관리 UI 포트
     environment:
       RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE} # 클러스터링 시 동일한 값으로 설정
