@@ -3,6 +3,7 @@ package com.example.petapp.application.service.location;
 import com.example.petapp.application.in.location.LocationProcessorUseCase;
 import com.example.petapp.application.in.location.dto.request.LocationMessage;
 import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
+import com.example.petapp.application.service.location.object.PipelineContext;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
@@ -32,17 +34,22 @@ public class LocationPipeline {
     private final LocationProcessorUseCase processorUseCase;
     private final Executor locationInitExecutor;
 
-    private final Map<Long, CompletableFuture<Subject<LocationMessage>>> initMap = new ConcurrentHashMap<>();
+    private final Map<Long, CompletableFuture<PipelineContext>> initMap = new ConcurrentHashMap<>();
     private final Map<Long, Disposable> pipelineMap = new ConcurrentHashMap<>();
 
     public void send(LocationMessage message, String memberId) {
         Long walkRecordId = message.getWalkRecordId();
 
-        CompletableFuture<Subject<LocationMessage>> future = initMap.computeIfAbsent(walkRecordId, id ->
+        CompletableFuture<PipelineContext> future = initMap.computeIfAbsent(walkRecordId, id ->
                 CompletableFuture.supplyAsync(() -> initializePipeline(walkRecordId, memberId), locationInitExecutor));
 
-        future.thenAccept(subject -> {
-            subject.onNext(message);
+        future.thenAccept(context -> {
+            if (!Objects.equals(context.memberId(), memberId)) {
+                log.warn("LocationPipeline member mismatch walkRecordId={}, ownerMemberId={}, currentMemberId={}",
+                        walkRecordId, context.memberId(), memberId);
+                return;
+            }
+            context.subject().onNext(message);
         }).exceptionally(e -> {
             initMap.remove(walkRecordId);
             log.error("LocationPipeline initial error walkRecordId={}", walkRecordId, e);
@@ -51,7 +58,7 @@ public class LocationPipeline {
 
     }
 
-    private Subject<LocationMessage> initializePipeline(Long walkRecordId, String memberId) {
+    private PipelineContext initializePipeline(Long walkRecordId, String memberId) {
         //파이프라인 초기화 전에 호출 시 매번 DB조회가 발생 함으로 여기에 위치
         WalkRecord walkRecord = useCase.findAndValidate(walkRecordId, Long.valueOf(memberId));
 
@@ -61,7 +68,7 @@ public class LocationPipeline {
          */
         Subject<LocationMessage> subject = PublishSubject.<LocationMessage>create().toSerialized();
         startPipeline(walkRecord, subject);
-        return subject;
+        return new PipelineContext(memberId, subject);
     }
 
     private void startPipeline(WalkRecord walkRecord, Subject<LocationMessage> subject) {
@@ -108,5 +115,4 @@ public class LocationPipeline {
 
         log.info("Location pipeline clean walkRecordId={}", walkRecordId);
     }
-
 }
