@@ -46,7 +46,7 @@ public class Profile extends BaseEntity {
     @Setter
     @NotNull
     @JoinColumn(name = "pet_breed_id", nullable = false)
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private PetBreed petBreed;
 
     @Setter
