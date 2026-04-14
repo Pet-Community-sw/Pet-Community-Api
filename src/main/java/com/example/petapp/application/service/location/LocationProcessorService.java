@@ -61,7 +61,7 @@ public class LocationProcessorService implements LocationProcessorUseCase {
         }
 
     }
-    
+
     /**
      * HaversineUtil을 사용하여 두 지점 간의 거리를 계산하고, 산책 범위의 반경과 비교하여 범위 내에 있는지 여부를 판단
      */
@@ -83,7 +83,7 @@ public class LocationProcessorService implements LocationProcessorUseCase {
         port.create(message.getWalkRecordId(), location);
 
         sendPort.send(
-                "/sub/walk-record/location/" + message.getWalkRecordId(),
+                "/sub/walk/" + message.getWalkRecordId(),
                 SendResponseDto.builder().commandType(CommandType.LOCATION).body(message).build());
     }
 
