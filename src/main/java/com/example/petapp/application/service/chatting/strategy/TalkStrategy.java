@@ -87,7 +87,7 @@ public class TalkStrategy implements MessageTypeStrategy {
                     eventPublisher.publishEvent(new NotificationEvent(profile.getMember().getId(), message));
 
                     Long profileSeq = readMessageCachePort.find(chatRoomId, profile.getId());
-                    sendPort.send("sub/list/" + profile.getMember().getId(),//todo : member와 profile 다르게 해야함.
+                    sendPort.send("/sub/list/" + profile.getMember().getId(),
                             SendResponseDto.builder().commandType(CommandType.LIST_UPDATE).body(new UpdateListDto(chatRoomId, (chatMessage.getSeq() - profileSeq), chatMessage.getMessage(), chatMessage.getMessageTime())).build());
                 });
     }
