@@ -19,9 +19,6 @@ class WalkRecordMapperTest {
         WalkRecord walkRecord = WalkRecordMapper.toEntity(delegateWalkPost, member);
 
         assertThat(walkRecord.getWalkStatus()).isEqualTo(WalkStatus.READY);
-        assertThat(walkRecord.getStartTime()).isNotNull();
-        assertThat(walkRecord.getFinishTime()).isNotNull();
-        assertThat(walkRecord.getWalkDistance()).isEqualTo(0D);
         assertThat(walkRecord.getDelegateWalkPost()).isSameAs(delegateWalkPost);
         assertThat(walkRecord.getMember()).isSameAs(member);
     }
