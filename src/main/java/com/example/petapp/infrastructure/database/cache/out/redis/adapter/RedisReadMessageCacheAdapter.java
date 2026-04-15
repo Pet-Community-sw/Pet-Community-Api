@@ -29,7 +29,15 @@ public class RedisReadMessageCacheAdapter implements ReadMessageCachePort {
     @Override
     public Long find(Long chatRoomId, Long userId) {
         Object seq = redisTemplate.opsForHash().get(getKey(chatRoomId), String.valueOf(userId));
-        return seq == null ? 0 : (Long) seq;
+        if (seq == null) {
+            return 0L;
+        }
+
+        try {
+            return Long.parseLong(seq.toString());
+        } catch (NumberFormatException e) {
+            return 0L;
+        }
     }
 
     @Override
