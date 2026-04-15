@@ -70,7 +70,7 @@ public class ReaderService implements ReaderUseCase {
      * 채팅 내역 조회시 채팅 메세지의 안읽은 수 업데이트
      */
     private void updateMessagesUnReadCount(Long chatRoomId, Long userId) {
-        LastMessageInfoDto lastMessageInfoDto = lastMessageCachePort.find(userId);
+        LastMessageInfoDto lastMessageInfoDto = lastMessageCachePort.find(chatRoomId);
         Long startSeq = readMessageCachePort.find(chatRoomId, userId);
         Long endSeq = lastMessageInfoDto.getLastSeq();
         mongoService.updateMessages(chatRoomId, userId, startSeq, endSeq);
