@@ -34,7 +34,7 @@ public class WalkingTogetherPost extends BaseEntity {
     @JoinColumn(name = "recommend_route_post_id")
     private RecommendRoutePost recommendRoutePost;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
@@ -93,5 +93,4 @@ public class WalkingTogetherPost extends BaseEntity {
         }
     }
 }
-
 

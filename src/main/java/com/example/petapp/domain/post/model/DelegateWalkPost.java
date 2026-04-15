@@ -1,6 +1,8 @@
 package com.example.petapp.domain.post.model;
 
 import com.example.petapp.application.in.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
+import com.example.petapp.domain.comment.model.Comment;
+import com.example.petapp.domain.comment.model.Commentable;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.interfaces.exception.ConflictException;
@@ -12,7 +14,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -22,7 +26,7 @@ import java.util.Set;
 @Getter
 @SuperBuilder
 @AllArgsConstructor
-public class DelegateWalkPost extends Post {
+public class DelegateWalkPost extends Post implements Commentable {
 
     @Setter
     @Embedded
@@ -71,6 +75,15 @@ public class DelegateWalkPost extends Post {
     @ElementCollection
     @CollectionTable(name = "walker_post_applicants")
     private Set<Applicant> applicants = new HashSet<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
+
+    @Override
+    public List<Comment> getComments() {
+        return comments;
+    }
 
     public boolean filtering(Member member) {
         if (isRequireProfile()) {
@@ -141,4 +154,3 @@ public class DelegateWalkPost extends Post {
         setSelectedApplicantMemberId(selectedMemberId);
     }
 }
-

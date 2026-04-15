@@ -79,7 +79,12 @@ public class WalkRecord extends BaseEntity {
 
     public void updateWalkStatus(WalkStatus walkStatus) {
         setWalkStatus(walkStatus);
-        setStartTime(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        if (walkStatus == WalkStatus.START) {
+            setStartTime(now);
+        } else if (walkStatus == WalkStatus.FINISH) {
+            setFinishTime(now);
+        }
     }
 
     public void validateStart() {

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 @RequiredArgsConstructor
@@ -19,6 +20,11 @@ public class ProfileRepositoryAdapter implements ProfileRepository {
     @Override
     public List<Profile> findList(Member member) {
         return repository.findByMember(member);
+    }
+
+    @Override
+    public List<Profile> findAllByIds(Set<Long> ids) {
+        return repository.findAllById(ids);
     }
 
     @Override

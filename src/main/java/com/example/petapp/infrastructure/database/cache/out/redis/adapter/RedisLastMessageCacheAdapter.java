@@ -33,9 +33,9 @@ public class RedisLastMessageCacheAdapter implements LastMessageCachePort {
     @Override
     public LastMessageInfoDto find(Long id) {
         Map<Object, Object> lastMessageInfo = redisTemplate.opsForHash().entries(key(id));
-        String lastMessage = (String) lastMessageInfo.getOrDefault("lastMessage", "");
-        String lastMessageTime = (String) lastMessageInfo.getOrDefault("lastMessageTime", "");
-        Long lastSeq = (Long) lastMessageInfo.getOrDefault("seq", 0);
+        String lastMessage = toStringOrEmpty(lastMessageInfo.get("lastMessage"));
+        String lastMessageTime = toStringOrEmpty(lastMessageInfo.get("lastMessageTime"));
+        Long lastSeq = toLongOrZero(lastMessageInfo.get("seq"));
         return LastMessageInfoDto.builder()
                 .lastSeq(lastSeq)
                 .lastMessage(lastMessage)
@@ -46,5 +46,21 @@ public class RedisLastMessageCacheAdapter implements LastMessageCachePort {
     @Override
     public void delete(Long chatRoomId) {
         redisTemplate.delete(key(chatRoomId));
+    }
+
+    private String toStringOrEmpty(Object value) {
+        return value == null ? "" : value.toString();
+    }
+
+    private Long toLongOrZero(Object value) {
+        if (value == null) {
+            return 0L;
+        }
+
+        try {
+            return Long.parseLong(value.toString());
+        } catch (NumberFormatException e) {
+            return 0L;
+        }
     }
 }

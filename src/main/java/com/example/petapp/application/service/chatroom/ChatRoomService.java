@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -52,8 +53,17 @@ public class ChatRoomService implements ChatRoomUseCase {
     @Override
     public List<ChatRoomResponseDto> getChatRooms(Long profileId) {//todo : 나중에 One으로도 같이 내보내면 될듯?
         List<ChatRoom> chatRoomList = chatRoomRepository.findAll(profileId, ChatRoomType.MANY);//나중에 타입 파라미터로 방아야함
+        if (chatRoomList.isEmpty()) {
+            return List.of();
+        }
+
+        Set<Long> profileIds = chatRoomList.stream()
+                .flatMap(chatRoom -> chatRoom.getUsers().stream())
+                .collect(Collectors.toSet());
+        Map<Long, Profile> profileMap = profileQueryUseCase.findMapOrThrow(profileIds);
+
         return chatRoomList.stream()
-                .map(chatRoom -> toChatRoomsResponseDtoWithRedis(chatRoom, profileId))
+                .map(chatRoom -> toChatRoomsResponseDtoWithRedis(chatRoom, profileId, profileMap))
                 .collect(Collectors.toList());
     }
 
@@ -127,12 +137,12 @@ public class ChatRoomService implements ChatRoomUseCase {
         return readerUseCase.getAfterMessages(chatRoomId, lastSeq, userId);
     }
 
-    private ChatRoomResponseDto toChatRoomsResponseDtoWithRedis(ChatRoom chatRoom, Long userId) {
+    private ChatRoomResponseDto toChatRoomsResponseDtoWithRedis(ChatRoom chatRoom, Long userId, Map<Long, Profile> profileMap) {
         Long userSeq = readMessageCachePort.find(chatRoom.getId(), userId);
         LastMessageInfoDto lastMessageInfoDto = lastMessageCachePort.find(chatRoom.getId());
         long unReadCount = Math.max(lastMessageInfoDto.getLastSeq() - userSeq, 0);
         Set<ChatRoomUsersResponseDto> users = chatRoom.getUsers().stream().map(id ->
-                        ChatRoomMapper.toChatRoomUsersResponseDto(profileQueryUseCase.findOrThrow(id))
+                        ChatRoomMapper.toChatRoomUsersResponseDto(profileMap.get(id))
                 )//Member일 때도 구현해야할듯.
                 .collect(Collectors.toSet());
         return ChatRoomMapper.toChatRoomsResponseDto(chatRoom, userId, lastMessageInfoDto, unReadCount, users);
