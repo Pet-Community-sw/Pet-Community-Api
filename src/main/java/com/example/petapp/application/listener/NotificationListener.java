@@ -16,18 +16,14 @@ public class NotificationListener {
 
     private final JsonUtil jsonUtil;
     private final OutboxEventUseCase useCase;
-//    private final ApplicationEventPublisher publisher;
 
     @Transactional
     @EventListener
     public void handle(NotificationEvent event) {
-        OutboxEvent outboxEvent = useCase.save(OutboxEvent.builder()
-//                .outboxStatus(OutboxStatus.SENDING)
-//                .outboxEventType(OutboxEventType.NOTIFICATION)
-                        .routingKey(RabbitKeys.NOTIFICATION_ROUTING_KEY)
-                        .payload(jsonUtil.toJson(event))
-                        .build()
+        useCase.save(OutboxEvent.builder()
+                .routingKey(RabbitKeys.NOTIFICATION_ROUTING_KEY)
+                .payload(jsonUtil.toJson(event))
+                .build()
         );
-//        publisher.publishEvent(outboxEvent);
     }
 }
