@@ -6,7 +6,6 @@ import com.example.petapp.application.in.outbox.OutboxEventUseCase;
 import com.example.petapp.domain.outboxevent.model.OutboxEvent;
 import com.example.petapp.infrastructure.mq.RabbitKeys;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -16,18 +15,13 @@ public class MemberListener {
 
     private final OutboxEventUseCase useCase;
     private final JsonUtil jsonUtil;
-    private final ApplicationEventPublisher publisher;
 
     @EventListener
     public void handle(MemberEvent event) {
-        OutboxEvent outboxEvent = useCase.save(OutboxEvent.builder()
-//                      .outboxStatus(OutboxStatus.SENDING)
-//                      .outboxEventType(OutboxEventType.MEMBER)
-                        .routingKey(RabbitKeys.MEMBER_ROUTING_KEY)
-                        .payload(jsonUtil.toJson(event))
-                        .build()
+        useCase.save(OutboxEvent.builder()
+                .routingKey(RabbitKeys.MEMBER_ROUTING_KEY)
+                .payload(jsonUtil.toJson(event))
+                .build()
         );
-        //mq 이벤트 발행
-        publisher.publishEvent(outboxEvent);
     }
 }

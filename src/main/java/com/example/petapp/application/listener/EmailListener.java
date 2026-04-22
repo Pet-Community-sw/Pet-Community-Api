@@ -18,7 +18,7 @@ public class EmailListener {
 
     @EventListener
     public void handle(EmailEvent event) {
-        OutboxEvent outboxEvent = useCase.save(OutboxEvent.builder()
+        useCase.save(OutboxEvent.builder()
                 .routingKey(RabbitKeys.MAIL_ROUTING_KEY)
                 .payload(jsonUtil.toJson(event))
                 .build()
