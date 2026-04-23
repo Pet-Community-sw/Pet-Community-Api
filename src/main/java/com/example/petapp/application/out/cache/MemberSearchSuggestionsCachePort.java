@@ -4,7 +4,7 @@ import com.example.petapp.application.in.member.object.dto.response.MemberSearch
 
 import java.util.List;
 
-public interface MemberAutoCompleteSearchCachePort {
+public interface MemberSearchSuggestionsCachePort {
 
     List<MemberSearchResponseDto> get(String keyword);
 
