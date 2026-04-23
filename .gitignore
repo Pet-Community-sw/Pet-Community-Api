@@ -8,6 +8,11 @@ build/
 .env.dev
 .DS_Store
 
+# codex
+AGENTS.md
+codex-progress.txt
+feature_list.json
+
 ### STS ###
 .apt_generated
 .classpath
