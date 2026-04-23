@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.database.cache.out.redis.adapter;
 
 import com.example.petapp.application.in.member.object.dto.response.MemberSearchResponseDto;
-import com.example.petapp.application.out.cache.MemberAutoCompleteSearchCachePort;
+import com.example.petapp.application.out.cache.MemberSearchSuggestionsCachePort;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class RedisMemberAutoCompleteSearchCacheAdapter implements MemberAutoCompleteSearchCachePort {
+public class RedisMemberSearchSuggestionsCacheAdapter implements MemberSearchSuggestionsCachePort {
 
     private final RedisTemplate<String, List<MemberSearchResponseDto>> redisTemplate;
     private final ObjectMapper objectMapper;
@@ -29,11 +29,11 @@ public class RedisMemberAutoCompleteSearchCacheAdapter implements MemberAutoComp
 
     @Override
     public void create(String keyword, List<MemberSearchResponseDto> memberSearchResponseDtos) {
-        redisTemplate.opsForValue().set(getKey(keyword), memberSearchResponseDtos, Duration.ofSeconds(15));
+        redisTemplate.opsForValue().set(getKey(keyword), memberSearchResponseDtos, Duration.ofMinutes(1));
     }
 
     private String getKey(String keyword) {
-        return "ac:member:" + keyword;
+        return "search:member:" + keyword;
     }
 
 }

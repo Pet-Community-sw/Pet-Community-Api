@@ -16,9 +16,9 @@ import com.example.petapp.application.in.member.object.dto.response.MemberSignRe
 import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.application.out.MemberSearchPort;
 import com.example.petapp.application.out.StoragePort;
-import com.example.petapp.application.out.cache.MemberAutoCompleteSearchCachePort;
 import com.example.petapp.application.out.cache.MemberRecentViewCachePort;
 import com.example.petapp.application.out.cache.MemberSearchCachePort;
+import com.example.petapp.application.out.cache.MemberSearchSuggestionsCachePort;
 import com.example.petapp.domain.file.FileKind;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
@@ -46,7 +46,7 @@ public class MemberService implements MemberUseCase {
     private final StoragePort storagePort;
     private final MemberSearchPort memberSearchPort;
     private final MemberSearchCachePort memberSearchCachePort;
-    private final MemberAutoCompleteSearchCachePort memberAutoCompleteSearchCachePort;
+    private final MemberSearchSuggestionsCachePort memberSearchSuggestionsCachePort;
     private final MemberRecentViewCachePort memberRecentViewCachePort;
 
     private final ApplicationEventPublisher eventPublisher;
@@ -151,11 +151,11 @@ public class MemberService implements MemberUseCase {
          * 사실 matchQuery만 사용할 때는 필요없으나 termQuery 때문에 핸들 거치고 검색요청해야함.
          */
         String key = keywordFilter(keyword);
-        List<MemberSearchResponseDto> result = memberAutoCompleteSearchCachePort.get(key);
+        List<MemberSearchResponseDto> result = memberSearchSuggestionsCachePort.get(key);
 
         if (result == null) {
             result = memberSearchPort.searchSuggestions(key);// 캐시 미스면 db에서 조회
-            memberAutoCompleteSearchCachePort.create(key, result);//해당 자동완성에 캐싱
+            memberSearchSuggestionsCachePort.create(key, result);//해당 자동완성에 캐싱
 
         }
         if (result == null || result.isEmpty()) return result;
