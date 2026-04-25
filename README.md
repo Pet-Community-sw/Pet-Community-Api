@@ -151,14 +151,14 @@ chmod +x ./init-script.sh
 <img width="884" height="60" alt="스크린샷 2026-02-20 23 00 49" src="https://github.com/user-attachments/assets/2e5b0240-91f2-49bd-9f9f-51e8dc454d17" />
 
 또한 반복 호출이 많은 자동완성 특성을 고려해 Redis 캐시를 적용하여 p99 응답시간을 약 60% 개선했습니다.
+- MySQL LIKE 
+<img width="1230" height="389" alt="mysql 그라파나 성능" src="https://github.com/user-attachments/assets/97ddc311-9361-465d-9ec7-6a237cddaf58" />
 
-- Redis 도입 전
+- Elasticsearch
+<img width="1264" height="391" alt="es 그라파나 성능" src="https://github.com/user-attachments/assets/1f9bf1a6-3c5d-44fe-ab3d-da5fe45d94be" />
 
-<img width="1277" height="412" alt="스크린샷 2026-03-07 14 19 49" src="https://github.com/user-attachments/assets/14f7c918-dfa6-4cc0-bfd5-33390f8adf5f" />
-
-- Redis 도입 후
-
-<img width="1279" height="406" alt="스크린샷 2026-03-07 14 21 22" src="https://github.com/user-attachments/assets/63138de8-e715-4697-ae61-66bd86f7e727" />
+- Elasticsearch + Redis
+<img width="1254" height="413" alt="es redis 성능" src="https://github.com/user-attachments/assets/0d6ba99c-38fe-4bc0-9696-24b86b8828b3" />
 
 ---
 
