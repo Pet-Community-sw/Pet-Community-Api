@@ -5,8 +5,7 @@ import com.example.petapp.application.in.location.dto.request.LocationMessage;
 import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
 import com.example.petapp.application.service.location.object.PipelineContext;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
-import io.reactivex.rxjava3.core.BackpressureStrategy;
-import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.PublishSubject;
@@ -73,26 +72,23 @@ public class LocationPipeline {
 
     private void startPipeline(WalkRecord walkRecord, Subject<LocationMessage> subject) {
         Disposable disposable = subject
-                //백프레셔 이슈 발생 시 최신 데이터만 처리 서버가 죽는 것 보단 최신 데이터만 처리하는게 나아보임.
-                .toFlowable(BackpressureStrategy.LATEST)
                 .observeOn(Schedulers.computation())
-                .throttleFirst(THROTTLE_SECONDS, TimeUnit.SECONDS) //백프레셔 문제 없을 듯
+                .throttleFirst(THROTTLE_SECONDS, TimeUnit.SECONDS)
                 .timeout(TIMEOUT_MINUTES, TimeUnit.MINUTES)
                 .doOnError(error -> log.error("Location Pipeline Error walkRecordId: {}, error : {} ", walkRecord.getId(), error.toString()))
-                .onErrorComplete()//스레드 i/o는 io 계산만 computation으로 해야함
+                .onErrorComplete()
                 .filter(processorUseCase::isEnoughMove)
-                .concatMap(message -> Flowable.fromCallable(() -> {
+                .concatMap(message -> Observable.fromCallable(() -> {
                                     processorUseCase.saveAndSend(message);
                                     return message;
                                 }).subscribeOn(Schedulers.io())
                                 .onErrorResumeNext(err -> {
                                     log.error("saveAndBroadcast error walkRecordId={}", walkRecord.getId(), err);
-                                    return Flowable.empty();
-                                })//io작업 중 에러처리
+                                    return Observable.empty();
+                                })
                 )
                 .map(message -> processorUseCase.checkRange(walkRecord, message))
                 .distinctUntilChanged((a, b) -> a.isOutOfRange() == b.isOutOfRange())
-                //동기 호출이긴 하지만 @Async로 비동기 처리를 하여 io스레드로 지정 하지 않음
                 .doOnNext(state -> processorUseCase.sendNotification(walkRecord, state))
                 .subscribe(
                         ok -> {

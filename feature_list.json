@@ -1,0 +1,20 @@
+[
+  {
+    "name": "의미 있는 테스트만 유지하도록 테스트 스위트 정리",
+    "description": "단순 조회, 단순 위임, 단순 매퍼 테스트를 제거하고 복잡한 분기, 상태 전이, 캐시/파싱 회귀를 막는 테스트만 유지한다.",
+    "passes": true,
+    "notes": "위치 파이프라인, 채팅 재전송/읽음 처리, 산책 상태 전이, Redis 파싱, 댓글 회귀, 채팅방 프로필 배치 조회 테스트만 유지했고 ./gradlew test 통과를 확인했다."
+  },
+  {
+    "name": "TDD 전환용 테스트 우선순위 분석",
+    "description": "현재 남아 있는 테스트를 기준으로 복잡한 분기와 버그 가능성이 높은 영역의 테스트 추가 우선순위를 정리한다.",
+    "passes": true,
+    "notes": "우선순위는 ProfileService update 회귀, ScheduleService profile 미존재 경로, WalkRecordService 종료 처리, TokenService 재발급/로그아웃, STOMP 구독 권한 검증, ChatRoomService 생성/삭제 분기, TypingIndicatorService, Member 검색 캐시/정렬 흐름 순으로 정리했다."
+  },
+  {
+    "name": "LocationPipeline 백프레셔 단순화",
+    "description": "LocationPipeline에서 중복 성격이 강한 백프레셔 전략을 제거하고 throttle 기반 제어만 유지한다.",
+    "passes": true,
+    "notes": "BackpressureStrategy.LATEST를 제거하고 Observable 체인으로 변경했다. LocationPipelineTest와 전체 테스트가 모두 통과했다."
+  }
+]
