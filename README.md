@@ -1,17 +1,19 @@
 # 🐶 멍냥로드
 
-이 프로젝트는 반려견 보호자들이 정보를 공유하고, 함께 산책할 사용자를 찾고, 실시간으로 소통할 수 있도록 지원하는 서비스입니다.  
-백엔드에서는 단순 CRUD를 넘어, 실시간 채팅, 비동기 이벤트 처리, 위치 이벤트 스트림 제어, 검색 최적화와 같은 문제를 해결하는 데 중점을 두었습니다.
+멍냥로드는 반려견 보호자들이 정보를 공유하고, 함께 산책할 사용자를 찾으며, 실시간으로 소통할 수 있도록 지원하는 반려동물 커뮤니티 서비스입니다.
+
+프론트엔드 1명, 백엔드 1명이 함께 진행한 팀 프로젝트이며, 저는 백엔드 개발을 담당했습니다.
 
 ---
 
 ## 주요 기능
 
 - 게시글, 댓글, 좋아요 기반 커뮤니티 기능
+- 산책 친구 모집 및 신청 기능
 - 1:1 및 그룹 실시간 채팅
-- 사용자 위치 이벤트 처리
-- 회원 검색 및 자동완성
-- 실시간 알림
+- 사용자 위치 이벤트 처리 및 실시간 위치 공유
+- 알림 기능
+- 회원 검색 기능
 
 ---
 
@@ -19,11 +21,10 @@
 
 - Language: Java
 - Framework: Spring Boot, Spring Data JPA
-- Database / Cache: MySQL, Redis
-- Search Engine: Elasticsearch
+- Database: MySQL, Redis, Elasticsearch
 - Message Broker: RabbitMQ
 - CDC: Debezium
-- Realtime: WebSocket
+- Realtime: WebSocket, STOMP
 
 ---
 
@@ -74,8 +75,11 @@ chmod +x ./init-script.sh
 ## Swagger
 
 - Swagger UI: `http://localhost:8080/swagger`
+
 ---
+
 ## System Architecture
+
 <img width="858" height="534" alt="system architecture" src="https://github.com/user-attachments/assets/6554e787-95e6-4056-8631-e291fae932ed" />
 
 
@@ -83,7 +87,7 @@ chmod +x ./init-script.sh
 
 ## 기술적 고민과 해결
 
-### 1. 부가 작업 처리로 인해 응답 시간이 불규칙하고 예측이 어려운 문제.
+### 1. 부가 작업 처리로 인해 응답 시간이 불규칙하고 예측이 어려운 문제
 
 - Architecture
 
@@ -134,31 +138,40 @@ chmod +x ./init-script.sh
 
 ---
 
-### 3. RDBMS 기반 부분 검색의 풀 스캔으로 인한 검색 성능 저하 문제.
+### 3. RDBMS 기반 부분 검색의 풀 스캔으로 인한 검색 성능 저하 문제
 
-초기에는 MySQL LIKE 기반 검색을 사용했지만, 부분 포함 검색 시 인덱스 전체 스캔이 발생해 데이터 증가에 따라 검색 비용이 커지는 문제가 있었습니다.  
-이를 해결하기 위해 Elasticsearch를 도입했습니다.
+회원 검색 기능에서는 사용자가 이름 전체를 정확히 입력하지 않아도 원하는 사용자를 찾을 수 있도록 prefix 검색, 부분 포함 검색, 초성 검색을 지원하고자 했습니다.
 
-다만 ngram 분석기를 적용하면서 토큰 수가 크게 늘어났고, 그에 따라 인덱스 저장 비용도 함께 증가하는 문제가 있었습니다.
+초기에는 MySQL LIKE 기반으로 검색을 구현했지만 부분 포함 검색(LIKE '%keyword%')에서는 인덱스의 시작 지점을 특정할 수 없어 인덱스 전체 스캔이 발생했습니다. 이로 인해 데이터가
+증가할수록 검색 비용이 함께 증가하는 한계가 있었습니다.
 
-이를 개선하기 위해 다음과 같은 최적화를 적용했습니다.
+이를 해결하기 위해 검색 전용 엔진인 Elasticsearch를 도입하고 edge_ngram, ngram 분석기를 적용해 prefix 검색과 부분 검색을 처리하도록 개선했습니다.
 
-- norms: false
-- index_options: docs
-- 사용하지 않는 필드에 대해 index: false, doc_values: false 적용
+다만 ngram 분석기는 문자열을 여러 토큰으로 분해해 저장하기 때문에 검색 기능은 개선되었지만 인덱스 저장 용량이 증가하는 문제가 있었습니다. 이를 줄이기 위해 다음과 같이 매핑을 최적화했습니다.
+
+- 스코어 계산이 필요하지 않은 필드에 norms: false 적용
+- 위치 정보가 필요하지 않은 필드에 index_options: docs 적용
+- 검색, 정렬, 집계에 사용하지 않는 필드에 index: false, doc_values: false 적용
 
 그 결과 동일 데이터 1만 건 기준으로 프라이머리 인덱스 저장 용량을 약 20% 절감했습니다.
 <img width="884" height="60" alt="스크린샷 2026-02-20 23 00 49" src="https://github.com/user-attachments/assets/2e5b0240-91f2-49bd-9f9f-51e8dc454d17" />
 
-또한 반복 호출이 많은 자동완성 특성을 고려해 Redis 캐시를 적용하여 p99 응답시간을 약 60% 개선했습니다.
-- MySQL LIKE 
-<img width="1230" height="389" alt="mysql 그라파나 성능" src="https://github.com/user-attachments/assets/97ddc311-9361-465d-9ec7-6a237cddaf58" />
+또한 자동완성 검색은 사용자가 입력할 때마다 짧은 주기로 반복 호출되는 특성이 있어 동일하거나 유사한 요청이 자주 발생했습니다.
+Elasticsearch로 전달되는 반복 요청을 줄이고 응답 시간을 개선하기 위해 Redis 캐시를 추가로 적용했습니다.
 
-- Elasticsearch
-<img width="1264" height="391" alt="es 그라파나 성능" src="https://github.com/user-attachments/assets/1f9bf1a6-3c5d-44fe-ab3d-da5fe45d94be" />
+- MySQL LIKE 기반 검색
+  <img width="1230" height="389" alt="mysql 그라파나 성능" src="https://github.com/user-attachments/assets/97ddc311-9361-465d-9ec7-6a237cddaf58" />
+  부분 포함 검색에서 인덱스 풀 스캔으로 인해 p99 응답시간이 약 0.149초까지 상승했습니다.
 
-- Elasticsearch + Redis
-<img width="1254" height="413" alt="es redis 성능" src="https://github.com/user-attachments/assets/0d6ba99c-38fe-4bc0-9696-24b86b8828b3" />
+
+- Elasticsearch 기반 검색
+  <img width="1264" height="391" alt="es 그라파나 성능" src="https://github.com/user-attachments/assets/1f9bf1a6-3c5d-44fe-ab3d-da5fe45d94be" />
+  Elasticsearch 도입으로 p99 응답시간을 약 0.088초까지 낮췄습니다. 이는 MySQL 대비 약 41% 개선했습니다.
+
+
+- Elasticsearch + Redis 캐시 적용
+  <img width="1254" height="413" alt="es redis 성능" src="https://github.com/user-attachments/assets/0d6ba99c-38fe-4bc0-9696-24b86b8828b3" />
+  Redis 캐시를 적용해 p99 응답시간을 약 0.05초까지 낮췄습니다. 이는 Elasticsearch 대비 약 43%, MySQL 대비 약 66% 개선된 수치입니다.
 
 ---
 
