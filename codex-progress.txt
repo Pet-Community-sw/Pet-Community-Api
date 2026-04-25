@@ -19,3 +19,7 @@
 이번 세션 추가 작업
 - `LocationPipeline`에서 `BackpressureStrategy.LATEST`를 제거하고 `Observable` 체인으로 단순화했다.
 - `throttleFirst` 기반 이벤트 제한은 유지한 상태로 `LocationPipelineTest`, 전체 `./gradlew test` 통과를 확인했다.
+
+이번 세션 추가 작업
+- `LocationPipeline`의 timeout 및 파이프 에러를 `subscribe`의 에러 consumer에서 로그 후 `clean()` 하도록 단순화했다.
+- `doOnError`, `onErrorComplete`, `onComplete` 기반 정리를 제거하고 `LocationPipelineTest`, 전체 `./gradlew test` 통과를 확인했다.

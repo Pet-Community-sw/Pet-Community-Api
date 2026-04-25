@@ -75,8 +75,6 @@ public class LocationPipeline {
                 .observeOn(Schedulers.computation())
                 .throttleFirst(THROTTLE_SECONDS, TimeUnit.SECONDS)
                 .timeout(TIMEOUT_MINUTES, TimeUnit.MINUTES)
-                .doOnError(error -> log.error("Location Pipeline Error walkRecordId: {}, error : {} ", walkRecord.getId(), error.toString()))
-                .onErrorComplete()
                 .filter(processorUseCase::isEnoughMove)
                 .concatMap(message -> Observable.fromCallable(() -> {
                                     processorUseCase.saveAndSend(message);
@@ -93,8 +91,10 @@ public class LocationPipeline {
                 .subscribe(
                         ok -> {
                         },
-                        err -> log.warn("Location pipeline error walkRecordId={}", walkRecord.getId(), err),
-                        () -> clean(walkRecord.getId())
+                        err -> {
+                            log.warn("Location pipeline error walkRecordId={}", walkRecord.getId(), err);
+                            clean(walkRecord.getId());
+                        }
                 );
 
         pipelineMap.put(walkRecord.getId(), disposable);

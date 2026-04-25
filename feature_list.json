@@ -16,5 +16,11 @@
     "description": "LocationPipeline에서 중복 성격이 강한 백프레셔 전략을 제거하고 throttle 기반 제어만 유지한다.",
     "passes": true,
     "notes": "BackpressureStrategy.LATEST를 제거하고 Observable 체인으로 변경했다. LocationPipelineTest와 전체 테스트가 모두 통과했다."
+  },
+  {
+    "name": "LocationPipeline 에러 종료 처리 단순화",
+    "description": "LocationPipeline의 timeout 및 파이프 에러를 subscribe의 에러 consumer에서 일관되게 정리하도록 변경한다.",
+    "passes": true,
+    "notes": "doOnError, onErrorComplete, onComplete 기반 정리를 제거하고 subscribe error consumer에서 로그 후 clean() 하도록 변경했다. LocationPipelineTest와 전체 테스트가 모두 통과했다."
   }
 ]
