@@ -31,7 +31,7 @@ public class LocationPipeline {
 
     private final WalkRecordQueryUseCase useCase;
     private final LocationProcessorUseCase processorUseCase;
-    private final Executor locationInitExecutor;
+    private final Executor locationPipelineExecutor;
 
     private final Map<Long, CompletableFuture<PipelineContext>> initMap = new ConcurrentHashMap<>();
     private final Map<Long, Disposable> pipelineMap = new ConcurrentHashMap<>();
@@ -40,16 +40,16 @@ public class LocationPipeline {
         Long walkRecordId = message.getWalkRecordId();
 
         CompletableFuture<PipelineContext> future = initMap.computeIfAbsent(walkRecordId, id ->
-                CompletableFuture.supplyAsync(() -> initializePipeline(walkRecordId, memberId), locationInitExecutor));
+                CompletableFuture.supplyAsync(() -> initPipeline(walkRecordId, memberId), locationPipelineExecutor));
 
-        future.thenAccept(context -> {
+        future.thenAcceptAsync(context -> {
             if (!Objects.equals(context.memberId(), memberId)) {
-                log.warn("LocationPipeline member mismatch walkRecordId={}, ownerMemberId={}, currentMemberId={}",
+                log.error("LocationPipeline member mismatch walkRecordId={}, ownerMemberId={}, currentMemberId={}",
                         walkRecordId, context.memberId(), memberId);
                 return;
             }
             context.subject().onNext(message);
-        }).exceptionally(e -> {
+        }, locationPipelineExecutor).exceptionally(e -> {
             initMap.remove(walkRecordId);
             log.error("LocationPipeline initial error walkRecordId={}", walkRecordId, e);
             return null;
@@ -57,7 +57,7 @@ public class LocationPipeline {
 
     }
 
-    private PipelineContext initializePipeline(Long walkRecordId, String memberId) {
+    private PipelineContext initPipeline(Long walkRecordId, String memberId) {
         //파이프라인 초기화 전에 호출 시 매번 DB조회가 발생 함으로 여기에 위치
         WalkRecord walkRecord = useCase.findAndValidate(walkRecordId, Long.valueOf(memberId));
 
