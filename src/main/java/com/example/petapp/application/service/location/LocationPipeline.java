@@ -31,7 +31,7 @@ public class LocationPipeline {
 
     private final WalkRecordQueryUseCase useCase;
     private final LocationProcessorUseCase processorUseCase;
-    private final Executor locationInitExecutor;
+    private final Executor locationPipelineExecutor;
 
     private final Map<Long, CompletableFuture<PipelineContext>> initMap = new ConcurrentHashMap<>();
     private final Map<Long, Disposable> pipelineMap = new ConcurrentHashMap<>();
@@ -40,11 +40,11 @@ public class LocationPipeline {
         Long walkRecordId = message.getWalkRecordId();
 
         CompletableFuture<PipelineContext> future = initMap.computeIfAbsent(walkRecordId, id ->
-                CompletableFuture.supplyAsync(() -> initializePipeline(walkRecordId, memberId), locationInitExecutor));
+                CompletableFuture.supplyAsync(() -> initializePipeline(walkRecordId, memberId), locationPipelineExecutor));
 
         future.thenAccept(context -> {
             if (!Objects.equals(context.memberId(), memberId)) {
-                log.warn("LocationPipeline member mismatch walkRecordId={}, ownerMemberId={}, currentMemberId={}",
+                log.error("LocationPipeline member mismatch walkRecordId={}, ownerMemberId={}, currentMemberId={}",
                         walkRecordId, context.memberId(), memberId);
                 return;
             }

@@ -15,13 +15,13 @@ import java.util.concurrent.Executor;
 @EnableRetry(order = 2)
 public class AsyncConfig implements AsyncConfigurer {
 
-    @Bean(name = "locationInitExecutor")
-    public Executor locationInitExecutor() {
+    @Bean(name = "locationPipelineExecutor")
+    public Executor locationPipelineExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(2);
         executor.setMaxPoolSize(5);
         executor.setQueueCapacity(500);
-        executor.setThreadNamePrefix("LocationInitThread-");
+        executor.setThreadNamePrefix("LocationPipelineThread-");
         executor.initialize();
         return executor;
     }
@@ -35,4 +35,3 @@ public class AsyncConfig implements AsyncConfigurer {
         return new CustomAsyncExceptionHandler();
     }
 }
-
