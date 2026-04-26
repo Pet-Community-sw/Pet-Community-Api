@@ -129,7 +129,6 @@ chmod +x ./init-script.sh
 
 - 사용자별 파이프라인을 1회만 생성하도록 동시성 제어
 - 2초 단위 throttling 적용
-- Backpressure(LATEST)로 최신 이벤트만 반영
 - 이동 거리 임계값 기반 필터링으로 의미 없는 GPS 오차 제거
 - 상태 변화 시점에만 알림이 발생하도록 distinctUntilChanged 적용
 - timeout 기반 자동 정리로 메모리 누수 방지
