@@ -25,6 +25,9 @@
 - Message Broker: RabbitMQ
 - CDC: Debezium
 - Realtime: WebSocket, STOMP
+- Cloud: AWS EC2, Amazon RDS, Amazon S3, Amazon CloudFront
+- CI/CD: GitHub Actions
+
 
 ---
 
