@@ -40,7 +40,7 @@ public class LocationPipeline {
         Long walkRecordId = message.getWalkRecordId();
 
         CompletableFuture<PipelineContext> future = initMap.computeIfAbsent(walkRecordId, id ->
-                CompletableFuture.supplyAsync(() -> initializePipeline(walkRecordId, memberId), locationPipelineExecutor));
+                CompletableFuture.supplyAsync(() -> initPipeline(walkRecordId, memberId), locationPipelineExecutor));
 
         future.thenAcceptAsync(context -> {
             if (!Objects.equals(context.memberId(), memberId)) {
@@ -57,7 +57,7 @@ public class LocationPipeline {
 
     }
 
-    private PipelineContext initializePipeline(Long walkRecordId, String memberId) {
+    private PipelineContext initPipeline(Long walkRecordId, String memberId) {
         //파이프라인 초기화 전에 호출 시 매번 DB조회가 발생 함으로 여기에 위치
         WalkRecord walkRecord = useCase.findAndValidate(walkRecordId, Long.valueOf(memberId));
 
