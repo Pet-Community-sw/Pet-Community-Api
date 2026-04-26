@@ -42,14 +42,14 @@ public class LocationPipeline {
         CompletableFuture<PipelineContext> future = initMap.computeIfAbsent(walkRecordId, id ->
                 CompletableFuture.supplyAsync(() -> initializePipeline(walkRecordId, memberId), locationPipelineExecutor));
 
-        future.thenAccept(context -> {
+        future.thenAcceptAsync(context -> {
             if (!Objects.equals(context.memberId(), memberId)) {
                 log.error("LocationPipeline member mismatch walkRecordId={}, ownerMemberId={}, currentMemberId={}",
                         walkRecordId, context.memberId(), memberId);
                 return;
             }
             context.subject().onNext(message);
-        }).exceptionally(e -> {
+        }, locationPipelineExecutor).exceptionally(e -> {
             initMap.remove(walkRecordId);
             log.error("LocationPipeline initial error walkRecordId={}", walkRecordId, e);
             return null;

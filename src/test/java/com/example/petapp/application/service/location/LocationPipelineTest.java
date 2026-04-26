@@ -287,7 +287,7 @@ class LocationPipelineTest {
     }
 
     @Test
-    void 초기화된_이후_위치_이벤트는_호출_스레드에서_필터링되고_저장부터는_IO_스레드에서_처리된다() throws InterruptedException {
+    void 초기화된_이후_위치_이벤트도_파이프라인_스레드에서_필터링되고_저장부터는_IO_스레드에서_처리된다() throws InterruptedException {
         ExecutorService pipelineExecutor = Executors.newSingleThreadExecutor(runnable -> new Thread(runnable, "location-pipeline-thread"));
         ExecutorService ioExecutor = Executors.newSingleThreadExecutor(runnable -> new Thread(runnable, "location-io-thread"));
         AtomicReference<String> 이동검증_스레드 = new AtomicReference<>();
@@ -343,7 +343,7 @@ class LocationPipelineTest {
                     pipeline.send(위치메시지를_생성한다(1L, 37.2, 127.2), "1"));
 
             assertTrue(두번째이벤트_완료대기.await(3, TimeUnit.SECONDS));
-            assertEquals("stomp-thread", 이동검증_스레드.get());
+            assertEquals("location-pipeline-thread", 이동검증_스레드.get());
             assertEquals("location-io-thread", 저장_스레드.get());
             assertEquals("location-io-thread", 범위계산_스레드.get());
             assertEquals("location-io-thread", 알림_스레드.get());
