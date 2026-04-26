@@ -120,7 +120,8 @@ chmod +x ./init-script.sh
 
 - Sequence Diagram
 
-<img width="913" height="815" alt="스크린샷 2026-03-01 21 56 30" src="https://github.com/user-attachments/assets/4b08d92e-55b3-461c-bd46-aadd4588477d" />
+<img width="844" height="696" alt="rxjava" src="https://github.com/user-attachments/assets/4b46f1d0-982d-42c2-9ff5-44bb284661ea" />
+
 
 위치 이벤트는 사용자의 한 번의 요청으로 끝나는 단건이 아니라 산책 중 짧은 주기로 계속 유입되는 연속 이벤트였습니다.
 
