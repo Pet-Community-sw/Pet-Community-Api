@@ -72,7 +72,6 @@ public class LocationPipeline {
 
     private void startPipeline(WalkRecord walkRecord, Subject<LocationMessage> subject) {
         Disposable disposable = subject
-                .observeOn(Schedulers.computation())
                 .throttleFirst(THROTTLE_SECONDS, TimeUnit.SECONDS)
                 .timeout(TIMEOUT_MINUTES, TimeUnit.MINUTES)
                 .filter(processorUseCase::isEnoughMove)
@@ -92,7 +91,7 @@ public class LocationPipeline {
                         ok -> {
                         },
                         err -> {
-                            log.warn("Location pipeline error walkRecordId={}", walkRecord.getId(), err);
+                            log.error("Location pipeline error walkRecordId={}", walkRecord.getId(), err);
                             clean(walkRecord.getId());
                         }
                 );
