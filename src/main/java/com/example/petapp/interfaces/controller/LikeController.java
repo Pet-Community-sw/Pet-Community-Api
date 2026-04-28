@@ -2,7 +2,6 @@ package com.example.petapp.interfaces.controller;
 
 
 import com.example.petapp.application.common.AuthUtil;
-import com.example.petapp.application.in.like.LikeQueryUseCase;
 import com.example.petapp.application.in.like.LikeUseCase;
 import com.example.petapp.application.in.like.dto.response.LikeResponseDto;
 import com.example.petapp.interfaces.dto.MessageResponse;
@@ -24,14 +23,13 @@ import org.springframework.web.bind.annotation.*;
 public class LikeController {
 
     private final LikeUseCase likeUseCase;
-    private final LikeQueryUseCase likeQueryUseCase;
 
     @Operation(
             summary = "좋아요 목록 조회"
     )
     @GetMapping("/{postId}")//api 명세서 수정해야함.
     public LikeResponseDto getLikes(@PathVariable Long postId) {
-        return likeQueryUseCase.get(postId);
+        return likeUseCase.get(postId);
     }
 
     @Operation(

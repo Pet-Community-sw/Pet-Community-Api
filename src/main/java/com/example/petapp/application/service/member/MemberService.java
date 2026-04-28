@@ -1,7 +1,6 @@
 package com.example.petapp.application.service.member;
 
 import com.example.petapp.application.common.NameChosungUtil;
-import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.in.member.MemberUseCase;
 import com.example.petapp.application.in.member.mapper.MemberMapper;
 import com.example.petapp.application.in.member.object.MemberEvent;
@@ -23,6 +22,7 @@ import com.example.petapp.domain.file.FileKind;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.interfaces.exception.ConflictException;
+import com.example.petapp.interfaces.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -38,7 +38,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class MemberService implements MemberUseCase {
 
-    private final MemberQueryUseCase memberQueryUseCase;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     //    private final FcmUseCase fcmUseCase;
@@ -77,14 +76,14 @@ public class MemberService implements MemberUseCase {
 
     @Override
     public FindByIdResponseDto findById(String phoneNumber) {
-        Member member = memberQueryUseCase.findOrThrowByPhoneNumber(phoneNumber);
+        Member member = findOrThrowByPhoneNumber(phoneNumber);
         return new FindByIdResponseDto(member.getEmail());
     }
 
     @Transactional
     @Override
     public void resetPassword(ResetPasswordDto resetPasswordDto, Long memberId) {
-        Member member = memberQueryUseCase.findOrThrow(memberId);
+        Member member = findOrThrow(memberId);
         if (member.isSamePassword(passwordEncoder, resetPasswordDto.getNewPassword())) {
             throw new IllegalArgumentException("전 비밀번호와 다르게 설정해야합니다.");
         } else {
@@ -94,7 +93,7 @@ public class MemberService implements MemberUseCase {
 
     @Override
     public GetMemberResponseDto get(Long targetId, Long memberId) {
-        Member member = memberQueryUseCase.findOrThrow(targetId);
+        Member member = findOrThrow(targetId);
 
         memberRecentViewCachePort.create(memberId, targetId); // 최근 본 회원 캐시에 저장
 
@@ -104,7 +103,7 @@ public class MemberService implements MemberUseCase {
     @Override
     @Transactional
     public void update(UpdateMemberRequestDto requestDto, Long memberId) {
-        Member member = memberQueryUseCase.findOrThrow(memberId);
+        Member member = findOrThrow(memberId);
         String imageFileName = storagePort.uploadFile(requestDto.getMemberImageUrl(), FileKind.MEMBER);
 
         member.setName(requestDto.getName());
@@ -124,7 +123,7 @@ public class MemberService implements MemberUseCase {
     @Transactional
     @Override
     public void delete(Long memberId) {
-        Member member = memberQueryUseCase.findOrThrow(memberId);
+        Member member = findOrThrow(memberId);
         tokenUseCase.delete(memberId);
         memberRepository.delete(member);
 
@@ -138,7 +137,7 @@ public class MemberService implements MemberUseCase {
 //    @Transactional
 //    @Override
 //    public void createFcmToken(FcmTokenDto fcmTokenDto) {
-//        Member member = memberQueryUseCase.findOrThrow(fcmTokenDto.getMemberId());
+//        Member member = findOrThrow(fcmTokenDto.getMemberId());
 //        fcmUseCase.createFcmToken(member, fcmTokenDto.getFcmToken());
 //    }
 
@@ -202,5 +201,29 @@ public class MemberService implements MemberUseCase {
 
     private String keywordFilter(String keyword) {
         return keyword.replaceAll("\\s+", "").toLowerCase();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Member findOrThrow(String email) {
+        return memberRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("해당 유저는 없습니다."));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Member findOrThrow(Long id) {
+        return memberRepository.find(id).orElseThrow(() -> new NotFoundException("해당 유저는 없습니다."));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Member findOrThrowByPhoneNumber(String phoneNumber) {
+        return memberRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new NotFoundException("해당 유저는 없는 유저입니다. 회원가입 해주세요."));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<String> findNamesOrThrowByIds(List<Long> ids) {
+        return memberRepository.findAllByIds(ids);
     }
 }

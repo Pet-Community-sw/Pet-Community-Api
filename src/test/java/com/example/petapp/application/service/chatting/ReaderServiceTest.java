@@ -1,6 +1,6 @@
 package com.example.petapp.application.service.chatting;
 
-import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
+import com.example.petapp.application.in.chatroom.ChatRoomUseCase;
 import com.example.petapp.application.in.chatting.model.dto.LastMessageInfoDto;
 import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -28,7 +29,9 @@ class ReaderServiceTest {
     @Mock
     private ChatMessageRepository chatMessageRepository;
     @Mock
-    private ChatRoomQueryUseCase chatRoomQueryUseCase;
+    private ChatRoomUseCase chatRoomUseCase;
+    @Mock
+    private ObjectProvider<ChatRoomUseCase> chatRoomUseCaseProvider;
     @Mock
     private SendPort sendPort;
     @Mock
@@ -47,7 +50,8 @@ class ReaderServiceTest {
         Long userId = 2L;
 
         ChatRoom chatRoom = org.mockito.Mockito.mock(ChatRoom.class);
-        when(chatRoomQueryUseCase.find(chatRoomId)).thenReturn(chatRoom);
+        when(chatRoomUseCaseProvider.getObject()).thenReturn(chatRoomUseCase);
+        when(chatRoomUseCase.find(chatRoomId)).thenReturn(chatRoom);
         when(chatMessageRepository.findAll(eq(chatRoomId), any(Pageable.class))).thenReturn(Page.empty());
         when(readMessageCachePort.find(chatRoomId, userId)).thenReturn(3L);
         when(lastMessageCachePort.find(chatRoomId)).thenReturn(

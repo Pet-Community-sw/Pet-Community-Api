@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.stomp.strategy.subscribe.impl;
 
-import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
+import com.example.petapp.application.in.walkrecord.WalkRecordUseCase;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;
@@ -17,7 +17,7 @@ public class WalkRecordSubscribeStrategy extends SubscribeTypeStrategy {
 
     private static final String PATTERN = "/sub/walk/{walkRecordId}";
 
-    private final WalkRecordQueryUseCase useCase;
+    private final WalkRecordUseCase useCase;
 
     @Override
     public boolean isHandler(String destination) {

@@ -7,6 +7,7 @@ import com.example.petapp.application.in.member.object.dto.response.FindByIdResp
 import com.example.petapp.application.in.member.object.dto.response.GetMemberResponseDto;
 import com.example.petapp.application.in.member.object.dto.response.MemberSearchResponseDto;
 import com.example.petapp.application.in.member.object.dto.response.MemberSignResponseDto;
+import com.example.petapp.domain.member.model.Member;
 
 import java.util.List;
 
@@ -28,4 +29,12 @@ public interface MemberUseCase {
     List<MemberSearchResponseDto> searchSuggestions(String keyword, Long memberId);
 
     List<MemberSearchResponseDto> searchMembers(String keyword, int page, Long memberId);
+
+    Member findOrThrow(String email);
+
+    Member findOrThrow(Long id);
+
+    Member findOrThrowByPhoneNumber(String phoneNumber);
+
+    List<String> findNamesOrThrowByIds(List<Long> ids);
 }

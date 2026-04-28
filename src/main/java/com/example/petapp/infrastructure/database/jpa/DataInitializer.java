@@ -1,6 +1,5 @@
 package com.example.petapp.infrastructure.database.jpa;
 
-import com.example.petapp.application.in.petbreed.PetBreedQueryUseCase;
 import com.example.petapp.application.in.petbreed.PetBreedUseCase;
 import com.example.petapp.domain.petbreed.model.PetBreed;
 import com.example.petapp.domain.role.Role;
@@ -20,7 +19,6 @@ import java.util.List;
 public class DataInitializer implements CommandLineRunner {
 
     private final RoleRepository roleRepository;
-    private final PetBreedQueryUseCase petBreedQueryUseCase;
     private final PetBreedUseCase petBreedUseCase;
 
     @Override
@@ -32,7 +30,7 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void seedBreeds() {
-        if (petBreedQueryUseCase.count() == 0) {
+        if (petBreedUseCase.count() == 0) {
             List<String> breeds = List.of("푸들", "불독", "리트리버", "웰시코기", "도베르만", "시바이누", "말티즈", "치와와", "비글", "골든리트리버",
                     "보더콜리", "시츄", "요크셔테리어", "삽살개", "진돗개",
                     "그레이하운드", "허스키", "로트와일러", "달마시안", "페키니즈",

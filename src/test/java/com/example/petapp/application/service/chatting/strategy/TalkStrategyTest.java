@@ -1,7 +1,7 @@
 package com.example.petapp.application.service.chatting.strategy;
 
-import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
-import com.example.petapp.application.in.profile.ProfileQueryUseCase;
+import com.example.petapp.application.in.chatroom.ChatRoomUseCase;
+import com.example.petapp.application.in.profile.ProfileUseCase;
 import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.ChatOnlineCachePort;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
@@ -36,9 +36,9 @@ import static org.mockito.Mockito.when;
 class TalkStrategyTest {
 
     @Mock
-    private ChatRoomQueryUseCase chatRoomQueryUseCase;
+    private ChatRoomUseCase chatRoomUseCase;
     @Mock
-    private ProfileQueryUseCase profileQueryUseCase;
+    private ProfileUseCase profileUseCase;
     @Mock
     private SendPort sendPort;
     @Mock
@@ -77,7 +77,7 @@ class TalkStrategyTest {
 
         ChatRoom chatRoom = org.mockito.Mockito.mock(ChatRoom.class);
         when(chatRoom.getUsers()).thenReturn(Set.of(1L));
-        when(chatRoomQueryUseCase.find(10L)).thenReturn(chatRoom);
+        when(chatRoomUseCase.find(10L)).thenReturn(chatRoom);
         when(seqCachePort.exist(10L)).thenReturn(false);
         when(chatMessageRepository.findCurrent(10L)).thenReturn(Optional.empty());
         when(seqCachePort.increment(10L)).thenReturn(1L);
@@ -116,7 +116,7 @@ class TalkStrategyTest {
         ChatRoom chatRoom = org.mockito.Mockito.mock(ChatRoom.class);
         SimpUser simpUser = org.mockito.Mockito.mock(SimpUser.class);
         when(chatRoom.getUsers()).thenReturn(Set.of(2L));
-        when(chatRoomQueryUseCase.find(20L)).thenReturn(chatRoom);
+        when(chatRoomUseCase.find(20L)).thenReturn(chatRoom);
         when(seqCachePort.exist(20L)).thenReturn(true);
         when(seqCachePort.increment(20L)).thenReturn(5L);
         when(chatOnlineCachePort.find(20L)).thenReturn(Set.of());

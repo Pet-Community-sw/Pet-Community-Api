@@ -1,12 +1,12 @@
 package com.example.petapp.application.service.chatting.strategy;
 
-import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
+import com.example.petapp.application.in.chatroom.ChatRoomUseCase;
 import com.example.petapp.application.in.chatting.MessageTypeStrategy;
 import com.example.petapp.application.in.chatting.model.dto.SendResponseDto;
 import com.example.petapp.application.in.chatting.model.dto.UpdateListDto;
 import com.example.petapp.application.in.chatting.model.type.CommandType;
 import com.example.petapp.application.in.notification.dto.NotificationEvent;
-import com.example.petapp.application.in.profile.ProfileQueryUseCase;
+import com.example.petapp.application.in.profile.ProfileUseCase;
 import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.ChatOnlineCachePort;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TalkStrategy implements MessageTypeStrategy {
 
-    private final ChatRoomQueryUseCase chatRoomQueryUseCase;
-    private final ProfileQueryUseCase profileQueryUseCase;
+    private final ChatRoomUseCase chatRoomUseCase;
+    private final ProfileUseCase profileUseCase;
     private final SendPort sendPort;
     private final ChatMessageRepository chatMessageRepository;
     private final SeqCachePort seqCachePort;
@@ -76,14 +76,14 @@ public class TalkStrategy implements MessageTypeStrategy {
         Long senderId = chatMessage.getSenderId();
         String message = chatMessage.getSenderName() + "님이 메시지를 보냈습니다.";
 
-        ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
+        ChatRoom chatRoom = chatRoomUseCase.find(chatRoomId);
         Set<Long> users = chatRoom.getUsers();
         Set<String> onlineUsers = chatOnlineCachePort.find(chatRoomId);
 
         users.stream().filter(userId -> !userId.equals(senderId))
                 .filter(userId -> !onlineUsers.contains(userId.toString()))
                 .forEach(userId -> {
-                    Profile profile = profileQueryUseCase.findOrThrow(userId);
+                    Profile profile = profileUseCase.findOrThrow(userId);
                     eventPublisher.publishEvent(new NotificationEvent(profile.getMember().getId(), message));
 
                     Long profileSeq = readMessageCachePort.find(chatRoomId, profile.getId());
@@ -97,7 +97,7 @@ public class TalkStrategy implements MessageTypeStrategy {
      */
     private void scheduleRetry(ChatMessage chatMessage) {
         Set<Long> unReadUsers = chatMessage.getUsers();
-        ChatRoom chatRoom = chatRoomQueryUseCase.find(chatMessage.getChatRoomId());
+        ChatRoom chatRoom = chatRoomUseCase.find(chatMessage.getChatRoomId());
         Set<Long> sendUsers = chatRoom.getUsers().stream().filter(userId -> !unReadUsers.contains(userId)).collect(Collectors.toSet());
         ackInfoRepository.save(chatMessage.getClientMessageId(), sendUsers);
 

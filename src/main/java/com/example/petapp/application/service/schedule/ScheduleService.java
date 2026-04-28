@@ -1,6 +1,6 @@
 package com.example.petapp.application.service.schedule;
 
-import com.example.petapp.application.in.profile.ProfileQueryUseCase;
+import com.example.petapp.application.in.profile.ProfileUseCase;
 import com.example.petapp.application.in.schedule.ScheduleUseCase;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
@@ -29,7 +29,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ScheduleService implements ScheduleUseCase {
 
-    private final ProfileQueryUseCase profileQueryUseCase;
+    private final ProfileUseCase profileUseCase;
     private final MemberRepository memberRepository;
     private final WalkingTogetherPostRepository walkingTogetherPostRepository;
     private final DelegateWalkPostRepository delegateWalkPostRepository;
@@ -47,7 +47,7 @@ public class ScheduleService implements ScheduleUseCase {
 
         List<GetSchedulesResponseDto> getSchedulesResponseDtos = new ArrayList<>();
         TimeDto timeDto = getTime(start, end);
-        Optional<Profile> profile = profileQueryUseCase.find(profileId);
+        Optional<Profile> profile = profileUseCase.find(profileId);
 
         if (profile.isPresent()) {
             List<WalkingTogetherPost> walkingTogetherPostList =

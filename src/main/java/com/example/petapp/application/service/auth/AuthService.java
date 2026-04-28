@@ -2,13 +2,13 @@ package com.example.petapp.application.service.auth;
 
 import com.example.petapp.application.in.auth.AuthUseCase;
 import com.example.petapp.application.in.email.EmailUseCase;
-import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.member.MemberUseCase;
 import com.example.petapp.application.in.member.object.dto.request.AccessTokenResponseDto;
 import com.example.petapp.application.in.member.object.dto.request.AuthCodeDto;
 import com.example.petapp.application.in.member.object.dto.request.LoginDto;
 import com.example.petapp.application.in.member.object.dto.request.SendEmailDto;
 import com.example.petapp.application.in.member.object.dto.response.LoginResponseDto;
-import com.example.petapp.application.in.role.RoleQueryUseCase;
+import com.example.petapp.application.in.role.RoleUseCase;
 import com.example.petapp.application.in.token.TokenUseCase;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.member.model.MemberRole;
@@ -23,20 +23,20 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthService implements AuthUseCase {
 
-    private final MemberQueryUseCase memberQueryUseCase;
+    private final MemberUseCase memberUseCase;
     private final TokenUseCase tokenUseCase;
     private final EmailUseCase emailUseCase;
-    private final RoleQueryUseCase roleQueryUseCase;
+    private final RoleUseCase roleUseCase;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
     @Override
     public LoginResponseDto login(LoginDto loginDto) {
-        Member member = memberQueryUseCase.findOrThrow(loginDto.getEmail());
+        Member member = memberUseCase.findOrThrow(loginDto.getEmail());
         if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
             throw new UnAuthorizedException("이메일 혹은 비밀번호가 일치하지 않습니다.");
         }
-        Role role = roleQueryUseCase.findUserRole();
+        Role role = roleUseCase.findUserRole();
         setRole(member, role);
         return tokenUseCase.save(member, role);
     }
@@ -47,13 +47,13 @@ public class AuthService implements AuthUseCase {
     @Override
     public AccessTokenResponseDto verifyCode(AuthCodeDto authCodeDto) {//sendEmail할 때 이메일 유효성 검사 했으므로 안해줘도 됨.
         emailUseCase.verifyCode(authCodeDto.getEmail(), authCodeDto.getCode());//todo : name을 email로?
-        Member member = memberQueryUseCase.findOrThrow(authCodeDto.getEmail());
+        Member member = memberUseCase.findOrThrow(authCodeDto.getEmail());
         return tokenUseCase.createResetPasswordJwt(member);
     }
 
     @Override
     public void sendEmail(SendEmailDto sendEmailDto) {
-        Member member = memberQueryUseCase.findOrThrow(sendEmailDto.getEmail());
+        Member member = memberUseCase.findOrThrow(sendEmailDto.getEmail());
         emailUseCase.send(member.getId(), member.getEmail());
     }
 

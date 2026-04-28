@@ -2,7 +2,7 @@ package com.example.petapp.application.service.location;
 
 import com.example.petapp.application.in.location.LocationProcessorUseCase;
 import com.example.petapp.application.in.location.dto.request.LocationMessage;
-import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
+import com.example.petapp.application.in.walkrecord.WalkRecordUseCase;
 import com.example.petapp.application.service.location.object.WalkRangeStatus;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectProvider;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
@@ -38,7 +39,10 @@ import static org.mockito.Mockito.when;
 class LocationPipelineTest {
 
     @Mock
-    private WalkRecordQueryUseCase walkRecordQueryUseCase;
+    private WalkRecordUseCase walkRecordUseCase;
+
+    @Mock
+    private ObjectProvider<WalkRecordUseCase> walkRecordUseCaseProvider;
 
     @Mock
     private LocationProcessorUseCase processorUseCase;
@@ -54,7 +58,8 @@ class LocationPipelineTest {
         testScheduler = new TestScheduler();
         RxJavaPlugins.setComputationSchedulerHandler(scheduler -> testScheduler);
         RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
-        pipeline = new LocationPipeline(walkRecordQueryUseCase, processorUseCase, directExecutor);
+        when(walkRecordUseCaseProvider.getObject()).thenReturn(walkRecordUseCase);
+        pipeline = new LocationPipeline(walkRecordUseCaseProvider, processorUseCase, directExecutor);
     }
 
     @AfterEach
@@ -65,45 +70,45 @@ class LocationPipelineTest {
     @Test
     void 같은_산책기록_ID로_전송하면_파이프라인은_한번만_초기화된다() {
         WalkRecord walkRecord = 산책기록을_생성한다(1L);
-        when(walkRecordQueryUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
+        when(walkRecordUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
 
         전송하고_처리한다(위치메시지를_생성한다(1L, 37.1, 127.1), "1");
         전송하고_처리한다(위치메시지를_생성한다(1L, 37.2, 127.2), "1");
 
-        verify(walkRecordQueryUseCase, times(1)).findAndValidate(1L, 1L);
+        verify(walkRecordUseCase, times(1)).findAndValidate(1L, 1L);
     }
 
     @Test
     void 다른_산책기록_ID로_전송하면_각각_독립적으로_초기화된다() {
         WalkRecord walkRecord1 = 산책기록을_생성한다(1L);
         WalkRecord walkRecord2 = 산책기록을_생성한다(2L);
-        when(walkRecordQueryUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord1);
-        when(walkRecordQueryUseCase.findAndValidate(2L, 2L)).thenReturn(walkRecord2);
+        when(walkRecordUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord1);
+        when(walkRecordUseCase.findAndValidate(2L, 2L)).thenReturn(walkRecord2);
 
         전송하고_처리한다(위치메시지를_생성한다(1L, 37.1, 127.1), "1");
         전송하고_처리한다(위치메시지를_생성한다(2L, 37.2, 127.2), "2");
 
-        verify(walkRecordQueryUseCase).findAndValidate(1L, 1L);
-        verify(walkRecordQueryUseCase).findAndValidate(2L, 2L);
+        verify(walkRecordUseCase).findAndValidate(1L, 1L);
+        verify(walkRecordUseCase).findAndValidate(2L, 2L);
     }
 
     @Test
     void 초기화에_실패하면_다음_전송에서_다시_초기화한다() {
         WalkRecord walkRecord = 산책기록을_생성한다(1L);
-        when(walkRecordQueryUseCase.findAndValidate(1L, 1L))
+        when(walkRecordUseCase.findAndValidate(1L, 1L))
                 .thenThrow(new RuntimeException("init failure"))
                 .thenReturn(walkRecord);
 
         전송하고_처리한다(위치메시지를_생성한다(1L, 37.1, 127.1), "1");
         전송하고_처리한다(위치메시지를_생성한다(1L, 37.2, 127.2), "1");
 
-        verify(walkRecordQueryUseCase, times(2)).findAndValidate(1L, 1L);
+        verify(walkRecordUseCase, times(2)).findAndValidate(1L, 1L);
     }
 
     @Test
     void 다른_회원_ID는_기존_파이프라인에_메시지를_보낼_수_없다() {
         WalkRecord walkRecord = 산책기록을_생성한다(1L);
-        when(walkRecordQueryUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
+        when(walkRecordUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
         when(processorUseCase.isEnoughMove(any(LocationMessage.class))).thenReturn(true);
         when(processorUseCase.checkRange(eq(walkRecord), any(LocationMessage.class)))
                 .thenReturn(new WalkRangeStatus(10, false));
@@ -112,15 +117,15 @@ class LocationPipelineTest {
         시간을_앞당긴다(2, TimeUnit.SECONDS);
         전송하고_처리한다(위치메시지를_생성한다(1L, 37.2, 127.2), "2");
 
-        verify(walkRecordQueryUseCase, times(1)).findAndValidate(1L, 1L);
-        verify(walkRecordQueryUseCase, never()).findAndValidate(1L, 2L);
+        verify(walkRecordUseCase, times(1)).findAndValidate(1L, 1L);
+        verify(walkRecordUseCase, never()).findAndValidate(1L, 2L);
         verify(processorUseCase, times(1)).saveAndSend(any(LocationMessage.class));
     }
 
     @Test
     void 스로틀_구간에서는_첫_이벤트만_처리한다() {
         WalkRecord walkRecord = 산책기록을_생성한다(1L);
-        when(walkRecordQueryUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
+        when(walkRecordUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
         when(processorUseCase.isEnoughMove(any(LocationMessage.class))).thenReturn(true);
         when(processorUseCase.checkRange(eq(walkRecord), any(LocationMessage.class)))
                 .thenReturn(new WalkRangeStatus(10, false));
@@ -139,7 +144,7 @@ class LocationPipelineTest {
     @Test
     void 이동량이_부족하면_이후_파이프라인_처리를_중단한다() {
         WalkRecord walkRecord = 산책기록을_생성한다(1L);
-        when(walkRecordQueryUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
+        when(walkRecordUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
         when(processorUseCase.isEnoughMove(any(LocationMessage.class))).thenReturn(false);
 
         전송하고_처리한다(위치메시지를_생성한다(1L, 37.1, 127.1), "1");
@@ -156,7 +161,7 @@ class LocationPipelineTest {
         LocationMessage first = 위치메시지를_생성한다(1L, 37.1, 127.1);
         LocationMessage second = 위치메시지를_생성한다(1L, 37.2, 127.2);
 
-        when(walkRecordQueryUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
+        when(walkRecordUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
         when(processorUseCase.isEnoughMove(any(LocationMessage.class))).thenReturn(true);
         when(processorUseCase.checkRange(walkRecord, first)).thenReturn(new WalkRangeStatus(10, false));
         when(processorUseCase.checkRange(walkRecord, second)).thenReturn(new WalkRangeStatus(25, false));
@@ -175,7 +180,7 @@ class LocationPipelineTest {
         LocationMessage first = 위치메시지를_생성한다(1L, 37.1, 127.1);
         LocationMessage second = 위치메시지를_생성한다(1L, 37.2, 127.2);
 
-        when(walkRecordQueryUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
+        when(walkRecordUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
         when(processorUseCase.isEnoughMove(any(LocationMessage.class))).thenReturn(true);
         when(processorUseCase.checkRange(walkRecord, first)).thenReturn(new WalkRangeStatus(10, false));
         when(processorUseCase.checkRange(walkRecord, second)).thenReturn(new WalkRangeStatus(30, true));
@@ -194,7 +199,7 @@ class LocationPipelineTest {
         LocationMessage first = 위치메시지를_생성한다(1L, 37.1, 127.1);
         LocationMessage second = 위치메시지를_생성한다(1L, 37.2, 127.2);
 
-        when(walkRecordQueryUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
+        when(walkRecordUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
         when(processorUseCase.isEnoughMove(any(LocationMessage.class))).thenReturn(true);
         doThrow(new RuntimeException("save failure")).when(processorUseCase).saveAndSend(first);
         when(processorUseCase.checkRange(walkRecord, second)).thenReturn(new WalkRangeStatus(40, true));
@@ -213,7 +218,7 @@ class LocationPipelineTest {
     @Test
     void 시간초과가_발생하면_정리하고_다음_전송에서_재초기화한다() {
         WalkRecord walkRecord = 산책기록을_생성한다(1L);
-        when(walkRecordQueryUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
+        when(walkRecordUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
 
         전송하고_처리한다(위치메시지를_생성한다(1L, 37.1, 127.1), "1");
         시간을_앞당긴다(10, TimeUnit.MINUTES);
@@ -223,20 +228,20 @@ class LocationPipelineTest {
 
         전송하고_처리한다(위치메시지를_생성한다(1L, 37.2, 127.2), "1");
 
-        verify(walkRecordQueryUseCase, times(2)).findAndValidate(1L, 1L);
+        verify(walkRecordUseCase, times(2)).findAndValidate(1L, 1L);
     }
 
     @Test
     void 수동_정리후에는_파이프라인을_다시_초기화할_수_있다() {
         WalkRecord walkRecord = 산책기록을_생성한다(1L);
-        when(walkRecordQueryUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
+        when(walkRecordUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
 
         전송하고_처리한다(위치메시지를_생성한다(1L, 37.1, 127.1), "1");
         pipeline.clean(1L);
         전송하고_처리한다(위치메시지를_생성한다(1L, 37.2, 127.2), "1");
 
         verify(processorUseCase).clean(1L);
-        verify(walkRecordQueryUseCase, times(2)).findAndValidate(1L, 1L);
+        verify(walkRecordUseCase, times(2)).findAndValidate(1L, 1L);
     }
 
     @Test
@@ -253,7 +258,7 @@ class LocationPipelineTest {
             테스트용_스케줄러를_재구성한다(pipelineExecutor, ioExecutor);
 
             WalkRecord walkRecord = 산책기록을_생성한다(1L);
-            when(walkRecordQueryUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
+            when(walkRecordUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
             when(processorUseCase.isEnoughMove(any(LocationMessage.class))).thenAnswer(invocation -> {
                 이동검증_스레드.set(Thread.currentThread().getName());
                 return true;
@@ -302,7 +307,7 @@ class LocationPipelineTest {
             테스트용_스케줄러를_재구성한다(pipelineExecutor, ioExecutor);
 
             WalkRecord walkRecord = 산책기록을_생성한다(1L);
-            when(walkRecordQueryUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
+            when(walkRecordUseCase.findAndValidate(1L, 1L)).thenReturn(walkRecord);
             when(processorUseCase.isEnoughMove(any(LocationMessage.class))).thenAnswer(invocation -> {
                 이동검증_스레드.set(Thread.currentThread().getName());
                 return true;
@@ -375,7 +380,7 @@ class LocationPipelineTest {
         Scheduler ioScheduler = Schedulers.from(ioExecutor);
         RxJavaPlugins.setComputationSchedulerHandler(scheduler -> testScheduler);
         RxJavaPlugins.setIoSchedulerHandler(scheduler -> ioScheduler);
-        pipeline = new LocationPipeline(walkRecordQueryUseCase, processorUseCase, pipelineExecutor);
+        pipeline = new LocationPipeline(walkRecordUseCaseProvider, processorUseCase, pipelineExecutor);
     }
 
     private void 이름있는_스레드에서_실행한다(String threadName, Runnable runnable) throws InterruptedException {

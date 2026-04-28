@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.stomp.strategy.command.impl;
 
-import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.member.MemberUseCase;
 import com.example.petapp.application.in.token.MemberInfo;
 import com.example.petapp.application.out.TokenPort;
 import com.example.petapp.domain.member.model.Member;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 public class ConnectStrategy implements StompCommandStrategy {
 
     private final TokenPort port;
-    private final MemberQueryUseCase memberQueryUseCase;
+    private final MemberUseCase memberUseCase;
 
     @Override
     public void handle(StompHeaderAccessor accessor) {
@@ -39,7 +39,7 @@ public class ConnectStrategy implements StompCommandStrategy {
 
         String accessToken = token.split(" ")[1];
         MemberInfo info = port.getInfo(TokenType.ACCESS, accessToken);
-        Member member = memberQueryUseCase.findOrThrow(info.getMemberId());
+        Member member = memberUseCase.findOrThrow(info.getMemberId());
 
         accessor.setUser(() -> member.getId().toString());
     }
