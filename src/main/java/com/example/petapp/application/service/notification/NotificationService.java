@@ -4,7 +4,7 @@ import com.example.petapp.application.common.JsonUtil;
 import com.example.petapp.application.in.chatting.model.dto.NotificationDto;
 import com.example.petapp.application.in.chatting.model.dto.SendResponseDto;
 import com.example.petapp.application.in.chatting.model.type.CommandType;
-import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.member.MemberUseCase;
 import com.example.petapp.application.in.notification.NotificationUseCase;
 import com.example.petapp.application.in.notification.dto.NotificationEvent;
 import com.example.petapp.application.in.notification.dto.NotificationListDto;
@@ -27,7 +27,7 @@ public class NotificationService implements NotificationUseCase {
 
     private final NotificationsCachePort notificationsCachePort;
     private final AppOnlineCachePort appOnlineCachePort;
-    private final MemberQueryUseCase useCase;
+    private final MemberUseCase useCase;
     private final SendPort sendPort;
     private final JsonUtil jsonUtil;
     //    private final FcmService fcmService;

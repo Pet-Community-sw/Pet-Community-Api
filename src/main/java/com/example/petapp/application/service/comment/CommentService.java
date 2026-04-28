@@ -1,20 +1,20 @@
 package com.example.petapp.application.service.comment;
 
-import com.example.petapp.application.in.comment.CommentQueryUseCase;
 import com.example.petapp.application.in.comment.CommentUseCase;
 import com.example.petapp.application.in.comment.dto.request.CommentDto;
 import com.example.petapp.application.in.comment.dto.request.UpdateCommentDto;
 import com.example.petapp.application.in.comment.dto.response.CreateCommentResponseDto;
 import com.example.petapp.application.in.comment.dto.response.GetCommentsResponseDto;
 import com.example.petapp.application.in.comment.mapper.CommentMapper;
-import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.member.MemberUseCase;
 import com.example.petapp.application.in.notification.dto.NotificationEvent;
-import com.example.petapp.application.in.post.PostQueryUseCase;
+import com.example.petapp.application.in.post.PostUseCase;
 import com.example.petapp.domain.comment.CommentRepository;
 import com.example.petapp.domain.comment.model.Comment;
 import com.example.petapp.domain.comment.model.Commentable;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.Post;
+import com.example.petapp.interfaces.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -27,16 +27,15 @@ import java.util.List;
 public class CommentService implements CommentUseCase {
 
     private final CommentRepository commentRepository;
-    private final CommentQueryUseCase commentQueryUseCase;
-    private final MemberQueryUseCase memberQueryUseCase;
-    private final PostQueryUseCase<Post> postQueryUseCase;
+    private final MemberUseCase memberUseCase;
+    private final PostUseCase<Post> postUseCase;
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional(readOnly = true)
     @Override
     public List<GetCommentsResponseDto> getComments(Long postId, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        Post post = postQueryUseCase.findOrThrow(postId);
+        Member member = memberUseCase.findOrThrow(id);
+        Post post = postUseCase.findOrThrow(postId);
 
         return CommentMapper.toGetCommentsResponseDtos((Commentable) post, member);
     }
@@ -44,8 +43,8 @@ public class CommentService implements CommentUseCase {
     @Transactional
     @Override
     public CreateCommentResponseDto createComment(CommentDto commentDto, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        Post post = postQueryUseCase.findOrThrow(commentDto.getPostId());
+        Member member = memberUseCase.findOrThrow(id);
+        Post post = postUseCase.findOrThrow(commentDto.getPostId());
 
         Comment comment = CommentMapper.toEntity(commentDto, post, member);
         commentRepository.save(comment);
@@ -59,8 +58,8 @@ public class CommentService implements CommentUseCase {
     @Transactional
     @Override
     public void deleteComment(Long commentId, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        Comment comment = commentQueryUseCase.findOrThrow(commentId);
+        Member member = memberUseCase.findOrThrow(id);
+        Comment comment = findOrThrow(commentId);
 
         comment.validated(member);
         commentRepository.delete(commentId);
@@ -69,11 +68,17 @@ public class CommentService implements CommentUseCase {
     @Transactional
     @Override
     public void updateComment(Long commentId, UpdateCommentDto updateCommentDto, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        Comment comment = commentQueryUseCase.findOrThrow(commentId);
+        Member member = memberUseCase.findOrThrow(id);
+        Comment comment = findOrThrow(commentId);
 
         comment.validated(member);
         comment.update(updateCommentDto.getContent());
 
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Comment findOrThrow(Long id) {
+        return commentRepository.find(id).orElseThrow(() -> new NotFoundException("해당 댓글은 없습니다."));
     }
 }

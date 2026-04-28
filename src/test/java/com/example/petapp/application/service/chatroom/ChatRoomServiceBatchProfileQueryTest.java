@@ -1,11 +1,11 @@
 package com.example.petapp.application.service.chatroom;
 
-import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
+import com.example.petapp.application.in.chatroom.ChatRoomUseCase;
 import com.example.petapp.application.in.chatroom.dto.response.ChatRoomResponseDto;
 import com.example.petapp.application.in.chatting.ReaderUseCase;
 import com.example.petapp.application.in.chatting.model.dto.LastMessageInfoDto;
 import com.example.petapp.application.in.chatting.model.type.ChatRoomType;
-import com.example.petapp.application.in.profile.ProfileQueryUseCase;
+import com.example.petapp.application.in.profile.ProfileUseCase;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.application.out.cache.SeqCachePort;
@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 class ChatRoomServiceBatchProfileQueryTest {
 
     @Mock
-    private ProfileQueryUseCase profileQueryUseCase;
+    private ProfileUseCase profileUseCase;
     @Mock
     private ChatRoomRepository chatRoomRepository;
     @Mock
@@ -42,7 +42,7 @@ class ChatRoomServiceBatchProfileQueryTest {
     @Mock
     private ReaderUseCase readerUseCase;
     @Mock
-    private ChatRoomQueryUseCase chatRoomQueryUseCase;
+    private ChatRoomUseCase chatRoomUseCase;
     @Mock
     private SeqCachePort seqCachePort;
     @Mock
@@ -94,7 +94,7 @@ class ChatRoomServiceBatchProfileQueryTest {
                 .lastMessageTime("2026-01-01T00:01:00")
                 .build());
 
-        when(profileQueryUseCase.findMapOrThrow(Set.of(1L, 2L, 3L))).thenReturn(Map.of(
+        when(profileUseCase.findMapOrThrow(Set.of(1L, 2L, 3L))).thenReturn(Map.of(
                 1L, p1,
                 2L, p2,
                 3L, p3
@@ -109,8 +109,8 @@ class ChatRoomServiceBatchProfileQueryTest {
         List<ChatRoomResponseDto> result = chatRoomService.getChatRooms(1L);
 
         assertThat(result).hasSize(2);
-        verify(profileQueryUseCase).findMapOrThrow(Set.of(1L, 2L, 3L));
-        verify(profileQueryUseCase, never()).findOrThrow(anyLong());
+        verify(profileUseCase).findMapOrThrow(Set.of(1L, 2L, 3L));
+        verify(profileUseCase, never()).findOrThrow(anyLong());
     }
 
     @Test
@@ -120,6 +120,6 @@ class ChatRoomServiceBatchProfileQueryTest {
         List<ChatRoomResponseDto> result = chatRoomService.getChatRooms(1L);
 
         assertThat(result).isEmpty();
-        verify(profileQueryUseCase, never()).findMapOrThrow(org.mockito.ArgumentMatchers.anySet());
+        verify(profileUseCase, never()).findMapOrThrow(org.mockito.ArgumentMatchers.anySet());
     }
 }

@@ -1,6 +1,6 @@
 package com.example.petapp.application.service.chatting;
 
-import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
+import com.example.petapp.application.in.chatroom.ChatRoomUseCase;
 import com.example.petapp.application.in.chatroom.dto.request.ChatMessageDtoMember;
 import com.example.petapp.application.in.chatroom.dto.response.ChatMessageResponseDto;
 import com.example.petapp.application.in.chatroom.mapper.ChatRoomMapper;
@@ -17,6 +17,7 @@ import com.example.petapp.domain.chatting.ChatMessageRepository;
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.infrastructure.database.mongo.MongoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +32,7 @@ import java.util.List;
 public class ReaderService implements ReaderUseCase {
 
     private final ChatMessageRepository chatMessageRepository;
-    private final ChatRoomQueryUseCase chatRoomQueryUseCase;
+    private final ObjectProvider<ChatRoomUseCase> chatRoomUseCaseProvider;
     private final SendPort sendPort;
     private final MongoService mongoService;
     private final ReadMessageCachePort readMessageCachePort;
@@ -40,7 +41,7 @@ public class ReaderService implements ReaderUseCase {
     @Transactional
     @Override
     public ChatMessageResponseDto getMessages(Long chatRoomId, Long userId, int page) {
-        ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
+        ChatRoom chatRoom = chatRoomUseCaseProvider.getObject().find(chatRoomId);
         chatRoom.validateUser(userId);
 
         Pageable pageRequest = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "seq"));
@@ -57,7 +58,7 @@ public class ReaderService implements ReaderUseCase {
     @Transactional
     @Override
     public ChatMessageResponseDto getAfterMessages(Long chatRoomId, Long lastSeq, Long userId) {
-        ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
+        ChatRoom chatRoom = chatRoomUseCaseProvider.getObject().find(chatRoomId);
         chatRoom.validateUser(userId);
 
         List<ChatMessage> afterMessages = chatMessageRepository.findAllBySeq(chatRoomId, lastSeq);

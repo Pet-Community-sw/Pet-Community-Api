@@ -6,6 +6,9 @@ import com.example.petapp.application.in.member.object.dto.response.TokenRespons
 import com.example.petapp.application.in.token.dto.ReissueTokenRequestDto;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.role.Role;
+import com.example.petapp.domain.token.model.Token;
+
+import java.util.Optional;
 
 public interface TokenUseCase {
     void delete(String authorization);
@@ -19,4 +22,8 @@ public interface TokenUseCase {
     String newAccessTokenByProfile(String accessToken, Member member, Long profileId);
 
     TokenResponseDto reissueToken(String accessToken, ReissueTokenRequestDto reissueTokenRequestDto);
+
+    Token findOrThrow(Long id);
+
+    Optional<Token> find(Long id);
 }

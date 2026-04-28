@@ -1,8 +1,8 @@
 package com.example.petapp.application.service.post;
 
-import com.example.petapp.application.in.like.LikeQueryUseCase;
-import com.example.petapp.application.in.member.MemberQueryUseCase;
-import com.example.petapp.application.in.post.PostQueryUseCase;
+import com.example.petapp.application.in.like.LikeUseCase;
+import com.example.petapp.application.in.member.MemberUseCase;
+import com.example.petapp.application.in.post.PostUseCase;
 import com.example.petapp.application.in.post.normal.NormalPostUseCase;
 import com.example.petapp.application.in.post.normal.dto.request.PostDto;
 import com.example.petapp.application.in.post.normal.dto.response.CreatePostResponseDto;
@@ -27,28 +27,28 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NormalPostService implements NormalPostUseCase {
 
-    private final PostQueryUseCase<NormalPost> postQueryUseCase;
+    private final PostUseCase<NormalPost> postUseCase;
     private final PostRepository<NormalPost> postRepository;
-    private final MemberQueryUseCase memberQueryUseCase;
-    private final LikeQueryUseCase likeQueryUseCase;
+    private final MemberUseCase memberUseCase;
+    private final LikeUseCase likeUseCase;
     private final StoragePort storagePort;
 
 
     @Override
     public List<PostResponseDto> getPosts(int page, Long id) {
-        memberQueryUseCase.findOrThrow(id);
+        memberUseCase.findOrThrow(id);
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "id"));
-        List<PostResponseDto> posts = postQueryUseCase.findList(id, pageRequest).getContent();
+        List<PostResponseDto> posts = postUseCase.findList(id, pageRequest).getContent();
         NormalPostMapper.toPostListResponseDto(posts);
         return posts;
     }
 
     @Override
     public List<PostResponseDto> getPostsByMember(Long memberId, int page, Long id) {
-        memberQueryUseCase.findOrThrow(memberId);
-        memberQueryUseCase.findOrThrow(id);
+        memberUseCase.findOrThrow(memberId);
+        memberUseCase.findOrThrow(id);
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "id"));
-        List<PostResponseDto> posts = postQueryUseCase.findListByMember(memberId, id, pageRequest).getContent();
+        List<PostResponseDto> posts = postUseCase.findListByMember(memberId, id, pageRequest).getContent();
         NormalPostMapper.toPostListResponseDto(posts);
         return posts;
     }
@@ -56,16 +56,16 @@ public class NormalPostService implements NormalPostUseCase {
     @Transactional
     @Override
     public GetPostResponseDto getPost(Long postId, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        NormalPost normalPost = postQueryUseCase.findOrThrow(postId);
+        Member member = memberUseCase.findOrThrow(id);
+        NormalPost normalPost = postUseCase.findOrThrow(postId);
         postRepository.incrementViewCount(normalPost.getId());
-        return NormalPostMapper.toGetPostResponseDto(normalPost, member, likeQueryUseCase.countByPost(normalPost), likeQueryUseCase.exist(normalPost, member));
+        return NormalPostMapper.toGetPostResponseDto(normalPost, member, likeUseCase.countByPost(normalPost), likeUseCase.exist(normalPost, member));
     }
 
     @Transactional
     @Override
     public CreatePostResponseDto createPost(PostDto createPostDto, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
+        Member member = memberUseCase.findOrThrow(id);
         String imageFileName = storagePort.uploadFile(createPostDto.getPostImageFile(), FileKind.POST);
         NormalPost normalPost = NormalPostMapper.toEntity(createPostDto, imageFileName, member);
         NormalPost savedPost = postRepository.save(normalPost);
@@ -75,8 +75,8 @@ public class NormalPostService implements NormalPostUseCase {
     @Transactional
     @Override
     public void deletePost(Long postId, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        NormalPost normalPost = postQueryUseCase.findOrThrow(postId);
+        Member member = memberUseCase.findOrThrow(id);
+        NormalPost normalPost = postUseCase.findOrThrow(postId);
         normalPost.validateMember(member);
         postRepository.delete(postId);
     }
@@ -84,8 +84,8 @@ public class NormalPostService implements NormalPostUseCase {
     @Transactional
     @Override
     public void updatePost(Long postId, PostDto updatePostDto, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        NormalPost normalPost = postQueryUseCase.findOrThrow(postId);
+        Member member = memberUseCase.findOrThrow(id);
+        NormalPost normalPost = postUseCase.findOrThrow(postId);
         normalPost.validateMember(member);
         normalPost.updateNormalPost(storagePort.uploadFile(updatePostDto.getPostImageFile(), FileKind.POST), updatePostDto.getTitle(), updatePostDto.getContent());
     }

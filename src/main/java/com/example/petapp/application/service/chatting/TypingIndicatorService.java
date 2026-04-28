@@ -1,11 +1,11 @@
 package com.example.petapp.application.service.chatting;
 
-import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
+import com.example.petapp.application.in.chatroom.ChatRoomUseCase;
 import com.example.petapp.application.in.chatting.TypingIndicatorUseCase;
 import com.example.petapp.application.in.chatting.model.dto.SendResponseDto;
 import com.example.petapp.application.in.chatting.model.dto.TypingMessageDto;
 import com.example.petapp.application.in.chatting.model.type.CommandType;
-import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.member.MemberUseCase;
 import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.TypingCachePort;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
@@ -28,9 +28,9 @@ import java.util.List;
 public class TypingIndicatorService implements TypingIndicatorUseCase {
 
     private final SendPort sendPort;
-    private final ChatRoomQueryUseCase chatRoomQueryUseCase;
+    private final ChatRoomUseCase chatRoomUseCase;
     private final TypingCachePort typingCachePort;
-    private final MemberQueryUseCase memberQueryUseCase;
+    private final MemberUseCase memberUseCase;
 
     /**
      * 타이핑 상태 전송
@@ -40,7 +40,7 @@ public class TypingIndicatorService implements TypingIndicatorUseCase {
     @Override
     public void sendTypingStatus(TypingMessageDto typingMessageDto, Long id) {
         log.info("[STOMP] 타이핑 상태 전송 chatRoomId: {}, senderId: {}", typingMessageDto.roomId(), id);
-        ChatRoom chatRoom = chatRoomQueryUseCase.find(typingMessageDto.roomId());
+        ChatRoom chatRoom = chatRoomUseCase.find(typingMessageDto.roomId());
         chatRoom.validateUser(id);
         //타이핑 중이라면 redis에 저장
         if (typingMessageDto.isTyping())
@@ -51,7 +51,7 @@ public class TypingIndicatorService implements TypingIndicatorUseCase {
 
         List<Long> typingUserIds = typingCachePort.getList(typingMessageDto.roomId());
 
-        List<String> userNames = memberQueryUseCase.findNamesOrThrowByIds(typingUserIds);
+        List<String> userNames = memberUseCase.findNamesOrThrowByIds(typingUserIds);
 
         sendPort.send("/sub/chat/typing/" + typingMessageDto.roomId(),
                 SendResponseDto.builder().commandType(CommandType.TYPING).body(userNames).build());

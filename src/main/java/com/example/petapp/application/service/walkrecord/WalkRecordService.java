@@ -2,9 +2,8 @@ package com.example.petapp.application.service.walkrecord;
 
 import com.example.petapp.application.common.DistanceUtil;
 import com.example.petapp.application.in.location.LocationUseCase;
-import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.in.member.MemberUseCase;
 import com.example.petapp.application.in.notification.dto.NotificationEvent;
-import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
 import com.example.petapp.application.in.walkrecord.WalkRecordUseCase;
 import com.example.petapp.application.in.walkrecord.dto.response.CreateWalkRecordResponseDto;
 import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordLocationResponseDto;
@@ -16,6 +15,7 @@ import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import com.example.petapp.domain.walkrecord.model.WalkStatus;
+import com.example.petapp.interfaces.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -28,8 +28,7 @@ import java.util.List;
 public class WalkRecordService implements WalkRecordUseCase {
 
     private final WalkRecordRepository walkRecordRepository;
-    private final WalkRecordQueryUseCase walkRecordQueryUseCase;
-    private final MemberQueryUseCase memberQueryUseCase;
+    private final MemberUseCase memberUseCase;
     private final LocationCachePort port;
     private final ApplicationEventPublisher eventPublisher;
     private final LocationUseCase locationUseCase;
@@ -37,7 +36,7 @@ public class WalkRecordService implements WalkRecordUseCase {
     @Transactional
     @Override
     public CreateWalkRecordResponseDto createWalkRecord(DelegateWalkPost delegateWalkPost) {
-        Member member = memberQueryUseCase.findOrThrow(delegateWalkPost.getSelectedApplicantMemberId());
+        Member member = memberUseCase.findOrThrow(delegateWalkPost.getSelectedApplicantMemberId());
         WalkRecord walkRecord = WalkRecordMapper.toEntity(delegateWalkPost, member);
         WalkRecord savedWalkRecord = walkRecordRepository.save(walkRecord);
 
@@ -48,14 +47,14 @@ public class WalkRecordService implements WalkRecordUseCase {
 
     @Override
     public GetWalkRecordResponseDto getWalkRecord(Long walkRecordId, Long id) {
-        WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
+        WalkRecord walkRecord = findOrThrow(walkRecordId);
         return WalkRecordMapper.toGetWalkRecordResponseDto(walkRecord);
     }
 
     @Override
     public GetWalkRecordLocationResponseDto getWalkRecordLocation(Long walkRecordId, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
+        Member member = memberUseCase.findOrThrow(id);
+        WalkRecord walkRecord = findOrThrow(walkRecordId);
         walkRecord.validateMember(member.getId());
         return new GetWalkRecordLocationResponseDto(port.find(walkRecordId));
     }
@@ -63,8 +62,8 @@ public class WalkRecordService implements WalkRecordUseCase {
     @Transactional
     @Override
     public void updateStartWalkRecord(Long walkRecordId, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
+        Member member = memberUseCase.findOrThrow(id);
+        WalkRecord walkRecord = findOrThrow(walkRecordId);
         walkRecord.validateMember(member.getId());
         walkRecord.updateWalkStatus(WalkStatus.START);
 
@@ -75,8 +74,8 @@ public class WalkRecordService implements WalkRecordUseCase {
     @Transactional
     @Override
     public void finishWalkRecord(Long walkRecordId, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
+        Member member = memberUseCase.findOrThrow(id);
+        WalkRecord walkRecord = findOrThrow(walkRecordId);
         walkRecord.validateMember(member.getId());
         walkRecord.updateWalkStatus(WalkStatus.FINISH);
 
@@ -93,6 +92,21 @@ public class WalkRecordService implements WalkRecordUseCase {
         Double totalDistance = DistanceUtil.calculateTotalDistance(paths);
         walkRecord.updateRecordToPath(totalDistance, paths);
         port.delete(walkRecordId);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public WalkRecord findOrThrow(Long id) {
+        return walkRecordRepository.find(id).orElseThrow(() -> new NotFoundException("해당 산책기록은 없습니다."));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public WalkRecord findAndValidate(Long id, Long memberId) {
+        WalkRecord walkRecord = findOrThrow(id);
+        walkRecord.validateMember(memberId);
+        walkRecord.validateStart();
+        return walkRecord;
     }
 
 }

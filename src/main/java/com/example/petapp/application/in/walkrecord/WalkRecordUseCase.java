@@ -4,6 +4,7 @@ import com.example.petapp.application.in.walkrecord.dto.response.CreateWalkRecor
 import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordLocationResponseDto;
 import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordResponseDto;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
+import com.example.petapp.domain.walkrecord.model.WalkRecord;
 
 public interface WalkRecordUseCase {
     CreateWalkRecordResponseDto createWalkRecord(DelegateWalkPost delegateWalkPost);
@@ -15,5 +16,9 @@ public interface WalkRecordUseCase {
     void finishWalkRecord(Long walkRecordId, Long id);
 
     GetWalkRecordLocationResponseDto getWalkRecordLocation(Long walkRecordId, Long id);
+
+    WalkRecord findOrThrow(Long id);
+
+    WalkRecord findAndValidate(Long id, Long memberId);
 
 }
