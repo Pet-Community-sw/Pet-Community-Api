@@ -25,6 +25,9 @@
 - Message Broker: RabbitMQ
 - CDC: Debezium
 - Realtime: WebSocket, STOMP
+- Cloud: AWS EC2, Amazon RDS, Amazon S3, Amazon CloudFront
+- CI/CD: GitHub Actions
+
 
 ---
 
@@ -91,11 +94,11 @@ chmod +x ./init-script.sh
 
 - Architecture
 
-<img width="676" height="452" alt="스크린샷 2026-02-26 20 10 10" src="https://github.com/user-attachments/assets/b3c75c95-d749-4e7d-8d87-0c2de00b9fb2" />
+<img width="676" height="452" alt="스크린샷 2026-02-26 20 10 10" src="https://github.com/user-attachments/assets/b3c75c95-d749-4e7d-8d87-0c2de00b9fb2" />
 
 - Sequence Diagram
 
-<img width="1114" height="560" alt="스크린샷 2026-02-25 22 19 54" src="https://github.com/user-attachments/assets/8e4ecd0f-1d31-4126-97a6-b74d98a53e2a" />
+<img width="1048" height="540" alt="Screenshot 2026-05-16 at 19 07 28" src="https://github.com/user-attachments/assets/855cee65-b28f-46cf-93d4-17c5af1013f9" />
 초기에는 알림, 메일, 검색 색인과 같은 부가 기능도 주요 비즈니스 로직과 같은 동기 흐름에서 처리했습니다.  
 이 구조에서는 트래픽이 증가할수록 부가 로직의 지연이 전체 응답 시간에 영향을 주고, 스레드 풀 및 DB 커넥션 고갈로 이어질 위험이 있었습니다.
 
@@ -110,38 +113,13 @@ chmod +x ./init-script.sh
 성능 측면에서도 최종 구조는 기존 동기 처리 방식 대비 p99 응답시간을 약 13% 개선했습니다. 동시에 이벤트 유실 가능성을 낮추고, 장애 발생 시에도 실패한 작업만 재처리할 수 있는 구조를 마련했습니다
 
 - 개선 전
-  <img width="1281" height="394" alt="동기" src="https://github.com/user-attachments/assets/14086d75-8dd1-4a06-b0bd-c98628ea55bb" />
+  <img width="1281" height="394" alt="동기" src="https://github.com/user-attachments/assets/14086d75-8dd1-4a06-b0bd-c98628ea55bb" />
 - 개선 후
-  <img width="1270" height="382" alt="최신 구조" src="https://github.com/user-attachments/assets/9356383f-ca08-466c-b8ef-f91896cdfeea" />
+  <img width="1270" height="382" alt="최신 구조" src="https://github.com/user-attachments/assets/9356383f-ca08-466c-b8ef-f91896cdfeea" />
 
 ---
 
-### 2. 초 단위 위치 이벤트로 인한 서버 부하 및 중복 처리 문제
-
-- Sequence Diagram
-
-<img width="844" height="696" alt="rxjava" src="https://github.com/user-attachments/assets/4b46f1d0-982d-42c2-9ff5-44bb284661ea" />
-
-
-위치 이벤트는 사용자의 한 번의 요청으로 끝나는 단건이 아니라 산책 중 짧은 주기로 계속 유입되는 연속 이벤트였습니다.
-
-따라서 모든 위치 이벤트를 동일하게 처리하면 위치 저장, 거리 계산, 실시간 전송, 범위 이탈 여부 판단이 매번 반복되어 서버 부하가 커질 수 있었습니다. 또한 GPS 오차나 제자리 근처의 미세한 좌표 변화처럼 실제
-의미가 크지 않은 이벤트까지 처리 대상에 포함될 수 있었습니다.
-
-이 문제를 줄이기 위해 위치 이벤트를 단순 요청이 아닌 스트림 데이터로 보고 RxJava 기반 비동기 스트림 파이프라인을 설계했습니다.
-
-- 사용자별 파이프라인을 1회만 생성하도록 동시성 제어
-- 2초 단위 throttling 적용
-- 이동 거리 임계값 기반 필터링으로 의미 없는 GPS 오차 제거
-- I/O 작업 분리
-- 상태 변화 시점에만 알림이 발생하도록 distinctUntilChanged 적용
-- timeout 기반 자동 정리로 메모리 누수 방지
-
-이를 통해 고빈도 위치 이벤트 환경에서도 불필요한 처리와 중복 연산을 줄일 수 있도록 개선했습니다.
-
----
-
-### 3. RDBMS 기반 부분 검색의 풀 스캔으로 인한 검색 성능 저하 문제
+### 2. RDBMS 기반 부분 검색의 풀 스캔으로 인한 검색 성능 저하 문제
 
 회원 검색 기능에서는 사용자가 이름 전체를 정확히 입력하지 않아도 원하는 사용자를 찾을 수 있도록 prefix 검색, 부분 포함 검색, 초성 검색을 지원하고자 했습니다.
 
@@ -157,24 +135,36 @@ chmod +x ./init-script.sh
 - 검색, 정렬, 집계에 사용하지 않는 필드에 index: false, doc_values: false 적용
 
 그 결과 동일 데이터 1만 건 기준으로 프라이머리 인덱스 저장 용량을 약 20% 절감했습니다.
-<img width="884" height="60" alt="스크린샷 2026-02-20 23 00 49" src="https://github.com/user-attachments/assets/2e5b0240-91f2-49bd-9f9f-51e8dc454d17" />
+<img width="884" height="60" alt="스크린샷 2026-02-20 23 00 49" src="https://github.com/user-attachments/assets/2e5b0240-91f2-49bd-9f9f-51e8dc454d17" />
 
 또한 자동완성 검색은 사용자가 입력할 때마다 짧은 주기로 반복 호출되는 특성이 있어 동일하거나 유사한 요청이 자주 발생했습니다.
 Elasticsearch로 전달되는 반복 요청을 줄이고 응답 시간을 개선하기 위해 Redis 캐시를 추가로 적용했습니다.
 
 - MySQL LIKE 기반 검색
-  <img width="1230" height="389" alt="mysql 그라파나 성능" src="https://github.com/user-attachments/assets/97ddc311-9361-465d-9ec7-6a237cddaf58" />
+  <img width="1230" height="389" alt="mysql 그라파나 성능" src="https://github.com/user-attachments/assets/97ddc311-9361-465d-9ec7-6a237cddaf58" />
   부분 포함 검색에서 인덱스 풀 스캔으로 인해 p99 응답시간이 약 0.149초까지 상승했습니다.
 
 
 - Elasticsearch 기반 검색
-  <img width="1264" height="391" alt="es 그라파나 성능" src="https://github.com/user-attachments/assets/1f9bf1a6-3c5d-44fe-ab3d-da5fe45d94be" />
+  <img width="1264" height="391" alt="es 그라파나 성능" src="https://github.com/user-attachments/assets/1f9bf1a6-3c5d-44fe-ab3d-da5fe45d94be" />
   Elasticsearch 도입으로 p99 응답시간을 약 0.088초까지 낮췄습니다. 이는 MySQL 대비 약 41% 개선했습니다.
 
 
 - Elasticsearch + Redis 캐시 적용
-  <img width="1254" height="413" alt="es redis 성능" src="https://github.com/user-attachments/assets/0d6ba99c-38fe-4bc0-9696-24b86b8828b3" />
+  <img width="1254" height="413" alt="es redis 성능" src="https://github.com/user-attachments/assets/0d6ba99c-38fe-4bc0-9696-24b86b8828b3" />
   Redis 캐시를 적용해 p99 응답시간을 약 0.05초까지 낮췄습니다. 이는 Elasticsearch 대비 약 43%, MySQL 대비 약 66% 개선된 수치입니다.
+
+---
+### 3. JWT의 Stateless 특성으로 인해 로그아웃 후에도 토큰 시간 만료 전까지 토큰 재사용이 가능한 문제
+
+회원 전용 API에서 요청 사용자를 식별하고 권한을 확인하기 위해 JWT 기반 인증 방식을 적용했습니다.  
+JWT는 서버가 사용자별 인증 상태를 저장하지 않아도 토큰 검증만으로 인증을 처리할 수 있다는 장점이 있지만, 로그아웃 이후 발급된 Access Token을 즉시 무효화하기 어렵다는 한계가 있었습니다.
+이를 보완하기 위해 로그아웃된 Access Token을 Redis에 저장했습니다.
+
+- Architecture
+<img width="743" height="572" alt="Screenshot 2026-05-14 at 00 14 29" src="https://github.com/user-attachments/assets/80dc704e-a7ea-4a28-9ac3-927a146cc35c" />
+
+로그아웃 요청 시 Access Token을 검증한 뒤 해당 사용자의 Refresh Token을 제거하고, 로그아웃된 Access Token을 Redis에 저장했습니다. 이때 TTL은 토큰의 기본 만료 시간과 동일하게 설정했습니다. 이후 요청 시 Redis에서 해당 Access Token의 존재 여부를 확인하고, 로그아웃 처리된 토큰이면 요청을 거부하도록 구성했습니다.
 
 ---
 
@@ -212,7 +202,7 @@ Elasticsearch로 전달되는 반복 요청을 줄이고 응답 시간을 개선
 
 프로젝트의 상세한 기술 선정 이유, 설계 배경, 문제 해결 과정, 성능 개선 내용은 아래 문서에 정리했습니다.
 
-### [📘포트폴리오]( https://www.notion.so/Project-Portfolio-329efd57b2f78066a524e7942a8756e2?source=copy_link )
+### [📘포트폴리오]( https://www.notion.so/Project-Portfolio-35aefd57b2f780989abec46b3ec46956?source=copy_link )
 
 
 
