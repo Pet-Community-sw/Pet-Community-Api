@@ -1,6 +1,6 @@
 package com.example.petapp.application.usecase.location;
 
-import com.example.petapp.application.service.location.object.WalkRangeStatus;
+import com.example.petapp.application.usecase.location.service.object.WalkRangeStatus;
 import com.example.petapp.application.usecase.location.dto.request.LocationMessage;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 

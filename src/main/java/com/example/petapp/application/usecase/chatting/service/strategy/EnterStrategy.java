@@ -1,0 +1,30 @@
+package com.example.petapp.application.usecase.chatting.service.strategy;
+
+import com.example.petapp.application.out.SendPort;
+import com.example.petapp.application.usecase.chatting.MessageTypeStrategy;
+import com.example.petapp.application.usecase.chatting.model.dto.NotificationDto;
+import com.example.petapp.application.usecase.chatting.model.dto.SendResponseDto;
+import com.example.petapp.application.usecase.chatting.model.type.CommandType;
+import com.example.petapp.domain.chatting.model.ChatMessage;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+public class EnterStrategy implements MessageTypeStrategy {
+
+    private final SendPort port;
+
+    @Override
+    public void handle(ChatMessage chatMessage) {
+        String message = (chatMessage.getSenderName() + "님이 입장하셨습니다.");
+        NotificationDto notificationDto = new NotificationDto(chatMessage.getSenderId(), message);
+        port.send("/sub/chat/" + chatMessage.getChatRoomId(),
+                SendResponseDto.builder().commandType(CommandType.ENTER).body(notificationDto).build());
+    }
+
+    @Override
+    public CommandType getCommand() {
+        return CommandType.ENTER;
+    }
+}

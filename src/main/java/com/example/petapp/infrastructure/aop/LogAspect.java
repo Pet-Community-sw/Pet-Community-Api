@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Slf4j
 public class LogAspect {
-    @Around("execution(* com.example.petapp.application.service..*Service.*(..))")
+    @Around("execution(* com.example.petapp.application.usecase..service..*Service.*(..))")
     public Object logTrace(ProceedingJoinPoint joinPoint) throws Throwable {
         log.info("[LOG] Method : {}", joinPoint.getSignature().toShortString());
         Object[] args = joinPoint.getArgs();
