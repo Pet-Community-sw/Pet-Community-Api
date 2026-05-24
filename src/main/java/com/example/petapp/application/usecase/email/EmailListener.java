@@ -1,29 +1,27 @@
-package com.example.petapp.application.listener;
+package com.example.petapp.application.usecase.email;
 
 import com.example.petapp.application.common.JsonUtil;
-import com.example.petapp.application.usecase.notification.dto.NotificationEvent;
 import com.example.petapp.application.usecase.outbox.OutboxEventUseCase;
 import com.example.petapp.domain.outboxevent.model.OutboxEvent;
 import com.example.petapp.infrastructure.mq.RabbitKeys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
-public class NotificationListener {
+public class EmailListener {
 
-    private final JsonUtil jsonUtil;
     private final OutboxEventUseCase useCase;
+    private final JsonUtil jsonUtil;
 
-    @Transactional
     @EventListener
-    public void handle(NotificationEvent event) {
+    public void handle(EmailEvent event) {
         useCase.save(OutboxEvent.builder()
-                .routingKey(RabbitKeys.NOTIFICATION_ROUTING_KEY)
+                .routingKey(RabbitKeys.MAIL_ROUTING_KEY)
                 .payload(jsonUtil.toJson(event))
                 .build()
         );
+
     }
 }

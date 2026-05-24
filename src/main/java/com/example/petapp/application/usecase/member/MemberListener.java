@@ -1,4 +1,4 @@
-package com.example.petapp.application.listener;
+package com.example.petapp.application.usecase.member;
 
 import com.example.petapp.application.common.JsonUtil;
 import com.example.petapp.application.usecase.member.object.MemberEvent;
