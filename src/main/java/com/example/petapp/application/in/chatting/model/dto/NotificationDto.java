@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class NotificationDto {
-    private Long userId;
+    private Long id;
     private String message;
 }

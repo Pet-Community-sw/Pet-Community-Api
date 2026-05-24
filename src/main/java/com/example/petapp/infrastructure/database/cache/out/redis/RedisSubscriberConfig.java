@@ -11,6 +11,7 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 @RequiredArgsConstructor
 public class RedisSubscriberConfig {
 
+    private static final String NOTIFICATION_CHANNEL = "notification-channel";
     private final RedisConnectionFactory redisConnectionFactory;
     private final NotificationSubscriber notificationSubscriber;
 
@@ -21,7 +22,7 @@ public class RedisSubscriberConfig {
 
         container.addMessageListener(
                 notificationSubscriber,
-                new PatternTopic("notification-channel")
+                new PatternTopic(NOTIFICATION_CHANNEL)
         );
 
         return container;
