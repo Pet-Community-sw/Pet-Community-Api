@@ -25,32 +25,6 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
 
-  mail:
-    host: ${SMTP_HOST}
-    port: ${SMTP_PORT}
-    username: ${SMTP_EMAIL}
-    password: ${SMTP_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-    default-encoding: UTF-8
-
-  rabbitmq:
-    addresses: ${RABBITMQ_HOST}:${RABBITMQ_PORT}
-    username: ${RABBITMQ_USERNAME}
-    password: ${RABBITMQ_PASSWORD}
-    listener:
-      simple:
-        prefetch: 10
-        acknowledge-mode: auto
-        concurrency: 4
-        max-concurrency: 8
-    publisher-confirm-type: correlated #해당 메시지 전송 확인
-    requested-heartbeat: 30
-
   data:
     mongodb:
       uri: ${MONGO_URL}
@@ -86,8 +60,6 @@ springdoc:
   swagger-ui:
     path: /swagger
 
-mail:
-  provider: smtp
 
 logging:
   level:

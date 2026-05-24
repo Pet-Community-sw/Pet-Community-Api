@@ -2,7 +2,7 @@ services:
 
   mysql:
     image: mysql:8.0
-    container_name: pet-app-mysql
+    container_name: pet-api-mysql
     restart: always
     networks:
       - pet-community-network
@@ -27,7 +27,7 @@ services:
 
   mongodb:
     image: mongo:latest
-    container_name: pet-app-mongo
+    container_name: pet-api-mongo
     restart: always
     ports:
       - "27017:27017"
@@ -45,7 +45,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: pet-app-redis
+    container_name: pet-api-redis
     restart: always
     ports:
       - "6379:6379"
@@ -60,7 +60,7 @@ services:
 
   es:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.18
-    container_name: pet-app-es
+    container_name: pet-api-es
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false #비번 없이 접속하기 위해 false로 설정

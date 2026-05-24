@@ -1,15 +1,13 @@
 services:
 
   app:
-    image: sunjaegood/pet-community:dev
-    container_name: pet-app
+    image: sunjaegood/pet-community-api:dev
+    container_name: pet-api
     ports:
       - "8080:8080"
     env_file:
-      - .env
+      - .env.dev
     depends_on:
-      rabbitmq:
-        condition: service_healthy
       mongodb:
         condition: service_healthy
       redis:
@@ -23,7 +21,7 @@ services:
 
   mongodb:
     image: mongo:latest
-    container_name: pet-app-mongo
+    container_name: pet-api-mongo
     environment:
       - MONGO_INITDB_DATABASE=${MONGO_DATABASE}
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
@@ -39,7 +37,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: pet-app-redis
+    container_name: pet-api-redis
     command: [ "redis-server", "--appendonly", "yes" ]
     volumes:
       - redis-data:/data
@@ -51,7 +49,7 @@ services:
 
   es:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.18
-    container_name: pet-app-es
+    container_name: pet-api-es
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -65,40 +63,9 @@ services:
       retries: 20
       start_period: 30s
 
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: pet-app-rabbitmq
-    ports:
-      - "15672:15672"# 관리 UI 포트
-    environment:
-      RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE} # 클러스터링 시 동일한 값으로 설정
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
-      TZ: Asia/Seoul
-    volumes:
-      - rabbitmq-data:/var/lib/rabbitmq
-    healthcheck:
-      test: [ "CMD", "rabbitmq-diagnostics", "check_port_connectivity" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-
-  debezium:
-    env_file: # 환경변수 파일을 사용하여 설정값을 관리할 수 있도록 env_file 옵션 추가
-      - .env
-    image: quay.io/debezium/server:3.4
-    container_name: pet-app-debezium
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-    volumes:
-      - ./debezium/config:/debezium/config
-      - ./debezium/data:/debezium/data
-
 volumes:
   mongo-data:
   redis-data:
   es-data:
-  rabbitmq-data:
 
 
