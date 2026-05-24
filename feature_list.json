@@ -1,0 +1,110 @@
+[
+  {
+    "name": "의미 있는 테스트만 유지하도록 테스트 스위트 정리",
+    "description": "단순 조회, 단순 위임, 단순 매퍼 테스트를 제거하고 복잡한 분기, 상태 전이, 캐시/파싱 회귀를 막는 테스트만 유지한다.",
+    "passes": true,
+    "notes": "위치 파이프라인, 채팅 재전송/읽음 처리, 산책 상태 전이, Redis 파싱, 댓글 회귀, 채팅방 프로필 배치 조회 테스트만 유지했고 ./gradlew test 통과를 확인했다."
+  },
+  {
+    "name": "TDD 전환용 테스트 우선순위 분석",
+    "description": "현재 남아 있는 테스트를 기준으로 복잡한 분기와 버그 가능성이 높은 영역의 테스트 추가 우선순위를 정리한다.",
+    "passes": true,
+    "notes": "우선순위는 ProfileService update 회귀, ScheduleService profile 미존재 경로, WalkRecordService 종료 처리, TokenService 재발급/로그아웃, STOMP 구독 권한 검증, ChatRoomService 생성/삭제 분기, TypingIndicatorService, Member 검색 캐시/정렬 흐름 순으로 정리했다."
+  },
+  {
+    "name": "LocationPipeline 백프레셔 단순화",
+    "description": "LocationPipeline에서 중복 성격이 강한 백프레셔 전략을 제거하고 throttle 기반 제어만 유지한다.",
+    "passes": true,
+    "notes": "BackpressureStrategy.LATEST를 제거하고 Observable 체인으로 변경했다. LocationPipelineTest와 전체 테스트가 모두 통과했다."
+  },
+  {
+    "name": "LocationPipeline 에러 종료 처리 단순화",
+    "description": "LocationPipeline의 timeout 및 파이프 에러를 subscribe의 에러 consumer에서 일관되게 정리하도록 변경한다.",
+    "passes": true,
+    "notes": "doOnError, onErrorComplete, onComplete 기반 정리를 제거하고 subscribe error consumer에서 로그 후 clean() 하도록 변경했다. LocationPipelineTest와 전체 테스트가 모두 통과했다."
+  },
+  {
+    "name": "LocationPipeline computation 제거 검증",
+    "description": "LocationPipeline에서 computation 스케줄러를 제거한 상태가 테스트 상 문제 없는지 검증하고 오류 처리 흐름을 정리한다.",
+    "passes": true,
+    "notes": "observeOn(Schedulers.computation()) 제거 상태에서 LocationPipelineTest와 전체 테스트를 모두 통과했다. 현재 saveAndSend 실패는 onErrorResumeNext(... Observable.empty())로 해당 이벤트만 버리고 다음 이벤트 처리를 유지한다."
+  },
+  {
+    "name": "LocationPipeline 실제 실행 스레드 검증",
+    "description": "LocationPipeline의 초기 요청과 재사용 요청에서 saveAndSend 전후가 어떤 스레드에서 실행되는지 테스트로 검증한다.",
+    "passes": true,
+    "notes": "첫 요청은 locationInitExecutor 스레드에서 filter까지 실행되고 saveAndSend 이후는 io 스레드에서 실행됨을 확인했다. 재사용 요청은 호출 스레드에서 filter까지 실행되고 saveAndSend 이후는 io 스레드에서 실행됨을 확인했다. LocationPipelineTest와 전체 테스트가 모두 통과했다."
+  },
+  {
+    "name": "LocationPipeline executor 명칭 정리",
+    "description": "LocationPipeline의 첫 요청 처리 역할까지 반영하도록 executor 명칭과 관련 테스트 표현을 정리한다.",
+    "passes": true,
+    "notes": "locationInitExecutor를 locationPipelineExecutor로 변경하고 스레드 prefix를 LocationPipelineThread-로 맞췄다. member mismatch 로그는 error로 올렸고, LocationPipelineTest와 전체 테스트가 모두 통과했다."
+  },
+  {
+    "name": "LocationPipeline onNext 실행 스레드 통일",
+    "description": "재사용 요청도 STOMP 스레드가 아닌 locationPipelineExecutor에서 onNext와 앞단 필터링이 시작되도록 실행 경계를 통일한다.",
+    "passes": true,
+    "notes": "thenAccept를 thenAcceptAsync(..., locationPipelineExecutor)로 변경하고 재사용 요청 스레드 기대값 테스트를 수정했다. LocationPipelineTest와 전체 테스트가 모두 통과했다."
+  },
+  {
+    "name": "Query 분리 구조 장점 분석",
+    "description": "읽기 책임을 QueryService와 QueryUseCase로 분리한 현재 프로젝트 구조의 장점을 정리한다.",
+    "passes": true,
+    "notes": "ChatRoomQueryService, ProfileQueryService 등 대표 구조를 확인했고 조회 전용 트랜잭션, 재사용 가능한 조회 계약, 쓰기 서비스 책임 축소, 테스트 범위 분리가 장점임을 정리했다. 추가로 단순 repository 위임만 있고 재사용·예외 정책·캐싱·배치 조회 가능성이 없다면 Query 분리가 과할 수 있다는 판단 기준을 정리했다. 면접 답변은 읽기/쓰기 책임 분리, 공통 조회 정책 재사용, 캐싱/배치 조회/readOnly 최적화 여지를 중심으로 설명하면 된다고 정리했다. 현재 프로젝트 기준으로는 대부분 기존 도메인 UseCase/Service로 합치는 편이 더 단순하고 설명 가능성이 높으며, PostQueryUseCase처럼 다형성 성격이 있는 계약은 별도 판단이 필요하다고 정리했다. 코드 변경이나 테스트 실행은 필요하지 않은 설명 요청이었다."
+  },
+  {
+    "name": "Query UseCase 통합",
+    "description": "분리되어 있던 QueryUseCase와 QueryService를 제거하고 각 도메인의 기존 UseCase와 Service로 조회 메서드를 흡수한다.",
+    "passes": true,
+    "notes": "Member, Profile, ChatRoom, WalkRecord, Token, PetBreed, Like, Comment, Review, WalkingTogetherPost의 조회 메서드를 기존 도메인 UseCase/Service로 통합했다. RoleQueryUseCase/RoleQueryService는 RoleUseCase/RoleService로, PostQueryUseCase/PostQueryService는 PostUseCase/PostService로 정리했다. ChatRoomService-ReaderService, WalkRecordService-LocationPipeline 순환 의존 가능성은 ObjectProvider로 지연 조회해 방지했다. 커밋 전 QueryUseCase/QueryService 참조가 남지 않음을 rg로 재확인했고, ./gradlew test 전체 테스트가 통과했다. `refactor : Query UseCase 통합` 커밋을 생성했다."
+  },
+  {
+    "name": "JWT 로그아웃 Redis TTL 포트폴리오 정리",
+    "description": "JWT의 stateless 특성으로 인해 로그아웃 후에도 access token이 만료 전까지 재사용될 수 있는 문제와 Redis TTL 기반 블랙리스트 설계 의도를 포트폴리오 문장으로 정리한다.",
+    "passes": true,
+    "notes": "AuthController, AuthService, TokenService, RedisTokenCacheAdapter, JwtAuthenticationFilter 흐름을 확인해 상황, 문제, 선택지, Redis TTL 선택 이유, 구현 흐름, 해결 효과를 정리했다. 코드 변경은 하지 않았다. 현재 코드에는 블랙리스트 저장 key와 조회 key가 일치하지 않는 개선 포인트가 있어 실제 기능 검증 작업은 별도 항목으로 다루는 것이 좋다."
+  },
+  {
+    "name": "p99 응답시간 성능 측정 면접 답변 정리",
+    "description": "loadtest 디렉터리의 k6 부하테스트 구성을 바탕으로 p99 응답시간을 어떻게 측정했고 평균이 아닌 p99를 본 이유를 면접 답변 형태로 정리한다.",
+    "passes": true,
+    "notes": "member-search-load.js와 README의 성능 수치를 확인했다. k6로 warmup 이후 ramping-vus 부하를 걸고 /members/auto-complete API의 res.timings.duration을 Trend 지표로 기록했으며, Grafana/Prometheus 지표에서 MySQL LIKE, Elasticsearch, Elasticsearch+Redis 캐시 적용 전후의 p99 응답시간을 비교한 흐름으로 설명하면 된다. 평균 대신 p99를 본 이유는 자동완성처럼 반복 호출되는 기능에서 일부 느린 요청이 실제 사용자 경험을 크게 해칠 수 있고 평균은 tail latency를 숨길 수 있기 때문이라고 정리했다. 코드 변경은 하지 않았다."
+  },
+  {
+    "name": "부트 순환참조 해결",
+    "description": "애플리케이션 부트 시 발생하는 ChatRoomService와 STOMP 구독 전략 사이의 Spring 빈 순환참조를 제거한다.",
+    "passes": false,
+    "notes": "./gradlew bootRun으로 실패를 재현했다. 순환 경로는 ChatRoomService -> ReaderService -> StompAdapter -> WebSocket 설정 -> StompInterceptor -> commandStrategyMap -> SubscribeStrategy -> ChatRoomSubscribeStrategy -> ChatRoomService이다. 원인 커밋은 6a91c79 refactor : Query UseCase 통합으로 판단된다. 해당 커밋에서 ChatRoomSubscribeStrategy 의존성이 ChatRoomQueryUseCase에서 ChatRoomUseCase로 바뀌고, 조회 메서드가 ChatRoomService에 흡수되면서 STOMP 구독 전략이 ReaderService와 StompAdapter까지 가진 큰 서비스 빈을 끌고 들어오게 되었다. 아직 코드 수정 전이며, ChatRoomSubscribeStrategy의 ChatRoomUseCase 의존성을 지연 조회로 바꾸는 계획을 먼저 검토받아야 한다."
+  },
+  {
+    "name": "Spring @Async private 메서드 동작 분석",
+    "description": "Spring AOP 프록시 기반 @Async가 private 메서드와 자기 자신 내부 호출에 적용되는지 정리한다.",
+    "passes": true,
+    "notes": "@Async는 Spring 프록시를 통해 외부에서 호출되는 메서드에 적용된다. private 메서드는 프록시가 오버라이드하거나 가로챌 수 없고, 같은 클래스 내부의 self-invocation도 프록시를 거치지 않으므로 비동기로 실행되지 않는다. 실제 적용 시에는 별도 Spring Bean의 public 또는 package-private 메서드로 분리해 다른 Bean에서 주입받아 호출하는 방식이 적절하다."
+  },
+  {
+    "name": "워커 서버 분리 후 API 서버 설정 정리",
+    "description": "워커 서버 분리 이후 API 서버에 남은 배포, 인프라, 메시징 설정 잔재를 정리한다.",
+    "passes": true,
+    "notes": "API 이미지명과 배포 경로를 pet-community-api 기준으로 정리했고 docker-compose-dev.yml에서 RabbitMQ와 Debezium 서비스를 제거했다. application.yml/application-dev.yml과 .env.example에서 API 서버가 직접 사용하지 않는 SMTP, RabbitMQ, Debezium 설정을 제거했다. nginx.conf도 삭제했다. `chore : 워커 분리 후 배포 설정 정리` 커밋을 생성했다."
+  },
+  {
+    "name": "미사용 FCM 코드 제거",
+    "description": "현재 호출 경로가 없는 FCM 토큰 저장 및 Firebase 발송 관련 코드를 API 서버에서 제거한다.",
+    "passes": true,
+    "notes": "FcmUseCase, FcmService, FcmRepository, FcmToken, FcmRepositoryAdapter, JpaFcmRepository, infrastructure/firebase 하위 주석 구현을 제거했다. Firebase/okhttp 의존성을 제거하면서 기존 코드가 사용하는 JetBrains annotations 의존성은 직접 명시했다. `refactor : 미사용 FCM 코드 제거` 커밋을 생성했고 컴파일을 확인했다."
+  },
+  {
+    "name": "CDC 전환 후 Outbox 재시도 코드 제거",
+    "description": "Debezium/CDC 기반 outbox 처리로 전환한 뒤 API 서버에 남아 있던 스케줄러 기반 재시도 코드와 상태 모델을 제거한다.",
+    "passes": true,
+    "notes": "OutboxPublishEvent, OutboxStatus, OutboxEventType, SchedulerConfig, OutboxScheduler를 제거했다. OutboxEventUseCase/Repository/Adapter/JpaOutboxRepository에서 findAllFailed 경로를 제거했고 OutboxEvent의 상태 필드 주석 잔재도 정리했다. RabbitKeys는 API 서버가 outbox 저장에 쓰는 routing key만 남겼다. `refactor : CDC 전환 후 Outbox 재시도 코드 제거` 커밋을 생성했고 ./gradlew compileJava 통과를 확인했다."
+  },
+  {
+    "name": "Redis 알림 구독 처리 정리",
+    "description": "워커가 Redis pub/sub으로 발행한 알림 메시지를 API 서버가 받아 STOMP 구독자에게 전달하도록 정리한다.",
+    "passes": true,
+    "notes": "NotificationSubscriber가 SimpMessagingTemplate 직접 사용 대신 SendPort를 통해 CommandType.NOTIFICATION 메시지를 전송하도록 변경했다. 알림 채널명을 상수화했고 NotificationService의 미사용 의존성을 제거했다. `fix : Redis 알림 구독 처리 정리` 커밋을 생성했고 ./gradlew compileJava 통과를 확인했다. 다만 NotificationTestDto 이름은 임시 성격이라 후속으로 메시지 계약 이름을 정리하는 것이 좋다."
+  }
+]
