@@ -1,7 +1,7 @@
 package com.example.petapp.application.service.chatting;
 
-import com.example.petapp.application.in.chatting.OfflineUserUseCase;
 import com.example.petapp.application.out.cache.ChatOnlineCachePort;
+import com.example.petapp.application.usecase.chatting.OfflineUserUseCase;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import lombok.RequiredArgsConstructor;

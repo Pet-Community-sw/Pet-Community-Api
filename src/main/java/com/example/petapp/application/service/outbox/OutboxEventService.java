@@ -1,6 +1,6 @@
 package com.example.petapp.application.service.outbox;
 
-import com.example.petapp.application.in.outbox.OutboxEventUseCase;
+import com.example.petapp.application.usecase.outbox.OutboxEventUseCase;
 import com.example.petapp.domain.outboxevent.OutboxEventRepository;
 import com.example.petapp.domain.outboxevent.model.OutboxEvent;
 import lombok.RequiredArgsConstructor;

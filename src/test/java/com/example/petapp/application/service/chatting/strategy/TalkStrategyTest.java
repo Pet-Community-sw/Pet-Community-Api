@@ -1,12 +1,12 @@
 package com.example.petapp.application.service.chatting.strategy;
 
-import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
-import com.example.petapp.application.in.profile.ProfileQueryUseCase;
 import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.ChatOnlineCachePort;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.application.out.cache.SeqCachePort;
+import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
+import com.example.petapp.application.usecase.profile.ProfileQueryUseCase;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.AckInfoRepository;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
@@ -28,9 +28,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TalkStrategyTest {

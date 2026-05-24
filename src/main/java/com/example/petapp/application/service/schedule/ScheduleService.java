@@ -1,7 +1,7 @@
 package com.example.petapp.application.service.schedule;
 
-import com.example.petapp.application.in.profile.ProfileQueryUseCase;
-import com.example.petapp.application.in.schedule.ScheduleUseCase;
+import com.example.petapp.application.usecase.profile.ProfileQueryUseCase;
+import com.example.petapp.application.usecase.schedule.ScheduleUseCase;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.DelegateWalkPostRepository;

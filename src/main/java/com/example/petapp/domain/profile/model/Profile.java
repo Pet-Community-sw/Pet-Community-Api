@@ -1,6 +1,6 @@
 package com.example.petapp.domain.profile.model;
 
-import com.example.petapp.application.in.profile.dto.request.ProfileDto;
+import com.example.petapp.application.usecase.profile.dto.request.ProfileDto;
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.member.model.Member;

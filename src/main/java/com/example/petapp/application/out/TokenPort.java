@@ -1,6 +1,6 @@
 package com.example.petapp.application.out;
 
-import com.example.petapp.application.in.token.MemberInfo;
+import com.example.petapp.application.usecase.token.MemberInfo;
 import com.example.petapp.domain.token.model.TokenType;
 
 import java.util.List;

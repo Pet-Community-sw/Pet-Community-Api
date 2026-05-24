@@ -1,13 +1,13 @@
 package com.example.petapp.application.service.chatting;
 
-import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
-import com.example.petapp.application.in.chatting.TypingIndicatorUseCase;
-import com.example.petapp.application.in.chatting.model.dto.SendResponseDto;
-import com.example.petapp.application.in.chatting.model.dto.TypingMessageDto;
-import com.example.petapp.application.in.chatting.model.type.CommandType;
-import com.example.petapp.application.in.member.MemberQueryUseCase;
 import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.TypingCachePort;
+import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
+import com.example.petapp.application.usecase.chatting.TypingIndicatorUseCase;
+import com.example.petapp.application.usecase.chatting.model.dto.SendResponseDto;
+import com.example.petapp.application.usecase.chatting.model.dto.TypingMessageDto;
+import com.example.petapp.application.usecase.chatting.model.type.CommandType;
+import com.example.petapp.application.usecase.member.MemberQueryUseCase;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

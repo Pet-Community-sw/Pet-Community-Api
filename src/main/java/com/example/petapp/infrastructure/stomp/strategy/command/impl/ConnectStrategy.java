@@ -1,8 +1,8 @@
 package com.example.petapp.infrastructure.stomp.strategy.command.impl;
 
-import com.example.petapp.application.in.member.MemberQueryUseCase;
-import com.example.petapp.application.in.token.MemberInfo;
 import com.example.petapp.application.out.TokenPort;
+import com.example.petapp.application.usecase.member.MemberQueryUseCase;
+import com.example.petapp.application.usecase.token.MemberInfo;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.token.model.TokenType;
 import com.example.petapp.infrastructure.stomp.strategy.command.StompCommandStrategy;

@@ -1,6 +1,6 @@
 package com.example.petapp.application.service.member;
 
-import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.usecase.member.MemberQueryUseCase;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.interfaces.exception.NotFoundException;

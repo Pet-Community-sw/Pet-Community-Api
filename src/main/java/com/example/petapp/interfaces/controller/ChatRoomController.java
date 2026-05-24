@@ -1,10 +1,10 @@
 package com.example.petapp.interfaces.controller;
 
 import com.example.petapp.application.common.AuthUtil;
-import com.example.petapp.application.in.chatroom.ChatRoomUseCase;
-import com.example.petapp.application.in.chatroom.dto.request.UpdateChatRoomDto;
-import com.example.petapp.application.in.chatroom.dto.response.ChatMessageResponseDto;
-import com.example.petapp.application.in.chatroom.dto.response.ChatRoomResponseDto;
+import com.example.petapp.application.usecase.chatroom.ChatRoomUseCase;
+import com.example.petapp.application.usecase.chatroom.dto.request.UpdateChatRoomDto;
+import com.example.petapp.application.usecase.chatroom.dto.response.ChatMessageResponseDto;
+import com.example.petapp.application.usecase.chatroom.dto.response.ChatRoomResponseDto;
 import com.example.petapp.interfaces.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

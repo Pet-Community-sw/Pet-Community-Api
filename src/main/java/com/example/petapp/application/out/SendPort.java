@@ -1,6 +1,6 @@
 package com.example.petapp.application.out;
 
-import com.example.petapp.application.in.chatting.model.dto.SendResponseDto;
+import com.example.petapp.application.usecase.chatting.model.dto.SendResponseDto;
 
 public interface SendPort {
     void send(String destination, SendResponseDto<?> sendResponseDto);

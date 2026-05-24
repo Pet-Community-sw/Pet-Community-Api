@@ -1,16 +1,16 @@
 package com.example.petapp.application.service.post;
 
-import com.example.petapp.application.in.like.LikeQueryUseCase;
-import com.example.petapp.application.in.member.MemberQueryUseCase;
-import com.example.petapp.application.in.post.PostQueryUseCase;
-import com.example.petapp.application.in.post.recommend.RecommendRoutePostUseCase;
-import com.example.petapp.application.in.post.recommend.dto.request.CreateRecommendRoutePostDto;
-import com.example.petapp.application.in.post.recommend.dto.request.UpdateRecommendRoutePostDto;
-import com.example.petapp.application.in.post.recommend.dto.response.CreateRecommendRoutePostResponseDto;
-import com.example.petapp.application.in.post.recommend.dto.response.GetRecommendPostResponseDto;
-import com.example.petapp.application.in.post.recommend.dto.response.GetRecommendRoutePostsResponseDto;
-import com.example.petapp.application.in.post.recommend.mapper.RecommendRoutePostMapper;
 import com.example.petapp.application.out.cache.LikeCachePort;
+import com.example.petapp.application.usecase.like.LikeQueryUseCase;
+import com.example.petapp.application.usecase.member.MemberQueryUseCase;
+import com.example.petapp.application.usecase.post.PostQueryUseCase;
+import com.example.petapp.application.usecase.post.recommend.RecommendRoutePostUseCase;
+import com.example.petapp.application.usecase.post.recommend.dto.request.CreateRecommendRoutePostDto;
+import com.example.petapp.application.usecase.post.recommend.dto.request.UpdateRecommendRoutePostDto;
+import com.example.petapp.application.usecase.post.recommend.dto.response.CreateRecommendRoutePostResponseDto;
+import com.example.petapp.application.usecase.post.recommend.dto.response.GetRecommendPostResponseDto;
+import com.example.petapp.application.usecase.post.recommend.dto.response.GetRecommendRoutePostsResponseDto;
+import com.example.petapp.application.usecase.post.recommend.mapper.RecommendRoutePostMapper;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.PostRepository;
 import com.example.petapp.domain.post.RecommendRoutePostRepository;

@@ -1,8 +1,8 @@
 package com.example.petapp.application.service.email;
 
-import com.example.petapp.application.in.email.EmailEvent;
-import com.example.petapp.application.in.email.EmailUseCase;
 import com.example.petapp.application.out.cache.EmailCachePort;
+import com.example.petapp.application.usecase.email.EmailEvent;
+import com.example.petapp.application.usecase.email.EmailUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;

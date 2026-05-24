@@ -1,10 +1,10 @@
 package com.example.petapp.application.service.like;
 
-import com.example.petapp.application.in.like.LikeUseCase;
-import com.example.petapp.application.in.like.mapper.LikeMapper;
-import com.example.petapp.application.in.member.MemberQueryUseCase;
-import com.example.petapp.application.in.notification.dto.NotificationEvent;
-import com.example.petapp.application.in.post.PostQueryUseCase;
+import com.example.petapp.application.usecase.like.LikeUseCase;
+import com.example.petapp.application.usecase.like.mapper.LikeMapper;
+import com.example.petapp.application.usecase.member.MemberQueryUseCase;
+import com.example.petapp.application.usecase.notification.dto.NotificationEvent;
+import com.example.petapp.application.usecase.post.PostQueryUseCase;
 import com.example.petapp.domain.like.LikeRepository;
 import com.example.petapp.domain.like.model.Like;
 import com.example.petapp.domain.member.model.Member;

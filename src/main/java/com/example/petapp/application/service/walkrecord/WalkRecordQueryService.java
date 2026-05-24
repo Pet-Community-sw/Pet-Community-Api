@@ -1,6 +1,6 @@
 package com.example.petapp.application.service.walkrecord;
 
-import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
+import com.example.petapp.application.usecase.walkrecord.WalkRecordQueryUseCase;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import com.example.petapp.interfaces.exception.NotFoundException;

@@ -1,15 +1,15 @@
 package com.example.petapp.application.service.chatting;
 
-import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
-import com.example.petapp.application.in.chatting.ChattingUseCase;
-import com.example.petapp.application.in.chatting.MessageTypeStrategy;
-import com.example.petapp.application.in.chatting.OfflineUserUseCase;
-import com.example.petapp.application.in.chatting.mapper.ChatMessageMapper;
-import com.example.petapp.application.in.chatting.model.dto.ChatMessageDto;
-import com.example.petapp.application.in.chatting.model.dto.UserInfo;
-import com.example.petapp.application.in.chatting.model.type.CommandType;
-import com.example.petapp.application.in.member.MemberQueryUseCase;
-import com.example.petapp.application.in.profile.ProfileQueryUseCase;
+import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
+import com.example.petapp.application.usecase.chatting.ChattingUseCase;
+import com.example.petapp.application.usecase.chatting.MessageTypeStrategy;
+import com.example.petapp.application.usecase.chatting.OfflineUserUseCase;
+import com.example.petapp.application.usecase.chatting.mapper.ChatMessageMapper;
+import com.example.petapp.application.usecase.chatting.model.dto.ChatMessageDto;
+import com.example.petapp.application.usecase.chatting.model.dto.UserInfo;
+import com.example.petapp.application.usecase.chatting.model.type.CommandType;
+import com.example.petapp.application.usecase.member.MemberQueryUseCase;
+import com.example.petapp.application.usecase.profile.ProfileQueryUseCase;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.member.model.Member;

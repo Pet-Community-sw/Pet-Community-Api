@@ -1,15 +1,15 @@
 package com.example.petapp.application.service.comment;
 
-import com.example.petapp.application.in.comment.CommentQueryUseCase;
-import com.example.petapp.application.in.comment.CommentUseCase;
-import com.example.petapp.application.in.comment.dto.request.CommentDto;
-import com.example.petapp.application.in.comment.dto.request.UpdateCommentDto;
-import com.example.petapp.application.in.comment.dto.response.CreateCommentResponseDto;
-import com.example.petapp.application.in.comment.dto.response.GetCommentsResponseDto;
-import com.example.petapp.application.in.comment.mapper.CommentMapper;
-import com.example.petapp.application.in.member.MemberQueryUseCase;
-import com.example.petapp.application.in.notification.dto.NotificationEvent;
-import com.example.petapp.application.in.post.PostQueryUseCase;
+import com.example.petapp.application.usecase.comment.CommentQueryUseCase;
+import com.example.petapp.application.usecase.comment.CommentUseCase;
+import com.example.petapp.application.usecase.comment.dto.request.CommentDto;
+import com.example.petapp.application.usecase.comment.dto.request.UpdateCommentDto;
+import com.example.petapp.application.usecase.comment.dto.response.CreateCommentResponseDto;
+import com.example.petapp.application.usecase.comment.dto.response.GetCommentsResponseDto;
+import com.example.petapp.application.usecase.comment.mapper.CommentMapper;
+import com.example.petapp.application.usecase.member.MemberQueryUseCase;
+import com.example.petapp.application.usecase.notification.dto.NotificationEvent;
+import com.example.petapp.application.usecase.post.PostQueryUseCase;
 import com.example.petapp.domain.comment.CommentRepository;
 import com.example.petapp.domain.comment.model.Comment;
 import com.example.petapp.domain.comment.model.Commentable;

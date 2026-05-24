@@ -1,16 +1,16 @@
 package com.example.petapp.application.service.walkrecord;
 
 import com.example.petapp.application.common.DistanceUtil;
-import com.example.petapp.application.in.location.LocationUseCase;
-import com.example.petapp.application.in.member.MemberQueryUseCase;
-import com.example.petapp.application.in.notification.dto.NotificationEvent;
-import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
-import com.example.petapp.application.in.walkrecord.WalkRecordUseCase;
-import com.example.petapp.application.in.walkrecord.dto.response.CreateWalkRecordResponseDto;
-import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordLocationResponseDto;
-import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordResponseDto;
-import com.example.petapp.application.in.walkrecord.mapper.WalkRecordMapper;
 import com.example.petapp.application.out.cache.LocationCachePort;
+import com.example.petapp.application.usecase.location.LocationUseCase;
+import com.example.petapp.application.usecase.member.MemberQueryUseCase;
+import com.example.petapp.application.usecase.notification.dto.NotificationEvent;
+import com.example.petapp.application.usecase.walkrecord.WalkRecordQueryUseCase;
+import com.example.petapp.application.usecase.walkrecord.WalkRecordUseCase;
+import com.example.petapp.application.usecase.walkrecord.dto.response.CreateWalkRecordResponseDto;
+import com.example.petapp.application.usecase.walkrecord.dto.response.GetWalkRecordLocationResponseDto;
+import com.example.petapp.application.usecase.walkrecord.dto.response.GetWalkRecordResponseDto;
+import com.example.petapp.application.usecase.walkrecord.mapper.WalkRecordMapper;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;

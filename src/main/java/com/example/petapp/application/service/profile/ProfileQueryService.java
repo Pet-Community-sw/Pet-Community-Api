@@ -1,6 +1,6 @@
 package com.example.petapp.application.service.profile;
 
-import com.example.petapp.application.in.profile.ProfileQueryUseCase;
+import com.example.petapp.application.usecase.profile.ProfileQueryUseCase;
 import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.interfaces.exception.ForbiddenException;

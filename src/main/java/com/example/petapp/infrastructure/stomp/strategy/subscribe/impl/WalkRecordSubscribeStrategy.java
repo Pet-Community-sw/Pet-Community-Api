@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.stomp.strategy.subscribe.impl;
 
-import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
+import com.example.petapp.application.usecase.walkrecord.WalkRecordQueryUseCase;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;

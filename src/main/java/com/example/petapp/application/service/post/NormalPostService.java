@@ -1,15 +1,15 @@
 package com.example.petapp.application.service.post;
 
-import com.example.petapp.application.in.like.LikeQueryUseCase;
-import com.example.petapp.application.in.member.MemberQueryUseCase;
-import com.example.petapp.application.in.post.PostQueryUseCase;
-import com.example.petapp.application.in.post.normal.NormalPostUseCase;
-import com.example.petapp.application.in.post.normal.dto.request.PostDto;
-import com.example.petapp.application.in.post.normal.dto.response.CreatePostResponseDto;
-import com.example.petapp.application.in.post.normal.dto.response.GetPostResponseDto;
-import com.example.petapp.application.in.post.normal.dto.response.PostResponseDto;
-import com.example.petapp.application.in.post.normal.mapper.NormalPostMapper;
 import com.example.petapp.application.out.StoragePort;
+import com.example.petapp.application.usecase.like.LikeQueryUseCase;
+import com.example.petapp.application.usecase.member.MemberQueryUseCase;
+import com.example.petapp.application.usecase.post.PostQueryUseCase;
+import com.example.petapp.application.usecase.post.normal.NormalPostUseCase;
+import com.example.petapp.application.usecase.post.normal.dto.request.PostDto;
+import com.example.petapp.application.usecase.post.normal.dto.response.CreatePostResponseDto;
+import com.example.petapp.application.usecase.post.normal.dto.response.GetPostResponseDto;
+import com.example.petapp.application.usecase.post.normal.dto.response.PostResponseDto;
+import com.example.petapp.application.usecase.post.normal.mapper.NormalPostMapper;
 import com.example.petapp.domain.file.FileKind;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.PostRepository;

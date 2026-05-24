@@ -1,0 +1,9 @@
+package com.example.petapp.application.usecase.role;
+
+import com.example.petapp.domain.role.Role;
+
+public interface RoleQueryUseCase {
+    Role findTemporaryRole();
+
+    Role findUserRole();
+}

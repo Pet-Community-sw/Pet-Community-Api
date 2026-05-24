@@ -1,18 +1,18 @@
 package com.example.petapp.application.service.match;
 
 
-import com.example.petapp.application.in.chatroom.ChatRoomUseCase;
-import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
-import com.example.petapp.application.in.match.WalkingTogetherPostQueryUseCase;
-import com.example.petapp.application.in.match.WalkingTogetherPostUseCase;
-import com.example.petapp.application.in.match.dto.request.CreateWalkingTogetherPostDto;
-import com.example.petapp.application.in.match.dto.request.UpdateWalkingTogetherPostDto;
-import com.example.petapp.application.in.match.dto.response.CreateWalkingTogetherPostResponseDto;
-import com.example.petapp.application.in.match.dto.response.GetWalkingTogetherPostResponseDto;
-import com.example.petapp.application.in.match.mapper.WalkingTogetherPostMapper;
-import com.example.petapp.application.in.petbreed.PetBreedQueryUseCase;
-import com.example.petapp.application.in.post.PostQueryUseCase;
-import com.example.petapp.application.in.profile.ProfileQueryUseCase;
+import com.example.petapp.application.usecase.chatroom.ChatRoomUseCase;
+import com.example.petapp.application.usecase.chatroom.dto.response.CreateChatRoomResponseDto;
+import com.example.petapp.application.usecase.match.WalkingTogetherPostQueryUseCase;
+import com.example.petapp.application.usecase.match.WalkingTogetherPostUseCase;
+import com.example.petapp.application.usecase.match.dto.request.CreateWalkingTogetherPostDto;
+import com.example.petapp.application.usecase.match.dto.request.UpdateWalkingTogetherPostDto;
+import com.example.petapp.application.usecase.match.dto.response.CreateWalkingTogetherPostResponseDto;
+import com.example.petapp.application.usecase.match.dto.response.GetWalkingTogetherPostResponseDto;
+import com.example.petapp.application.usecase.match.mapper.WalkingTogetherPostMapper;
+import com.example.petapp.application.usecase.petbreed.PetBreedQueryUseCase;
+import com.example.petapp.application.usecase.post.PostQueryUseCase;
+import com.example.petapp.application.usecase.profile.ProfileQueryUseCase;
 import com.example.petapp.domain.petbreed.model.PetBreed;
 import com.example.petapp.domain.post.model.RecommendRoutePost;
 import com.example.petapp.domain.profile.model.Profile;

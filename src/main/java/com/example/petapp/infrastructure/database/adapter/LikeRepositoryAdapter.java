@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.database.adapter;
 
-import com.example.petapp.application.in.like.dto.request.LikeCountDto;
+import com.example.petapp.application.usecase.like.dto.request.LikeCountDto;
 import com.example.petapp.domain.like.LikeRepository;
 import com.example.petapp.domain.like.model.Like;
 import com.example.petapp.domain.member.model.Member;

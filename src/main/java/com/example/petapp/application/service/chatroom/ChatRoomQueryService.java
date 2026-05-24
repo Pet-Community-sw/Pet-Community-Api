@@ -1,6 +1,6 @@
 package com.example.petapp.application.service.chatroom;
 
-import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
+import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.domain.chatroom.ChatRoomRepository;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;

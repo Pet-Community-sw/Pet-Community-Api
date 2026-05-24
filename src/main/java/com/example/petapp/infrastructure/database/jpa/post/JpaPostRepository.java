@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.database.jpa.post;
 
-import com.example.petapp.application.in.post.normal.dto.response.PostResponseDto;
+import com.example.petapp.application.usecase.post.normal.dto.response.PostResponseDto;
 import com.example.petapp.domain.post.model.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 public interface JpaPostRepository<T extends Post> extends JpaRepository<T, Long> {
 
     @Query(value = """
-            select new com.example.petapp.application.in.post.normal.dto.response.PostResponseDto(
+            select new com.example.petapp.application.usecase.post.normal.dto.response.PostResponseDto(
                 p.id, 
                 p.postImageUrl, 
                 m.id, 
@@ -33,7 +33,7 @@ public interface JpaPostRepository<T extends Post> extends JpaRepository<T, Long
     Page<PostResponseDto> findList(@Param("id") Long id, Pageable pageable);
 
     @Query(value = """
-            select new com.example.petapp.application.in.post.normal.dto.response.PostResponseDto(
+            select new com.example.petapp.application.usecase.post.normal.dto.response.PostResponseDto(
                 p.id,
                 p.postImageUrl,
                 m.id, 
@@ -54,7 +54,7 @@ public interface JpaPostRepository<T extends Post> extends JpaRepository<T, Long
     )
     Page<PostResponseDto> findAllByMemberId(@Param("targetId") Long targetId, @Param("id") Long id, Pageable pageable);
 
-    
+
     @Modifying
     @Query("update Post  p set p.viewCount = p.viewCount+1 where p.id = :id")
     void incrementViewCount(@Param("id") Long id);

@@ -1,6 +1,6 @@
 package com.example.petapp.application.service.role;
 
-import com.example.petapp.application.in.role.RoleQueryUseCase;
+import com.example.petapp.application.usecase.role.RoleQueryUseCase;
 import com.example.petapp.domain.role.Role;
 import com.example.petapp.domain.role.RoleRepository;
 import com.example.petapp.interfaces.exception.NotFoundException;

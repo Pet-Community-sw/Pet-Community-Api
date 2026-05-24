@@ -1,6 +1,6 @@
 package com.example.petapp.domain.post.model;
 
-import com.example.petapp.application.in.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
+import com.example.petapp.application.usecase.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
 import com.example.petapp.domain.comment.model.Comment;
 import com.example.petapp.domain.comment.model.Commentable;
 import com.example.petapp.domain.member.model.Member;

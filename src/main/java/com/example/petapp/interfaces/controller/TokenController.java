@@ -1,8 +1,8 @@
 package com.example.petapp.interfaces.controller;
 
-import com.example.petapp.application.in.member.object.dto.response.TokenResponseDto;
-import com.example.petapp.application.in.token.TokenUseCase;
-import com.example.petapp.application.in.token.dto.ReissueTokenRequestDto;
+import com.example.petapp.application.usecase.member.object.dto.response.TokenResponseDto;
+import com.example.petapp.application.usecase.token.TokenUseCase;
+import com.example.petapp.application.usecase.token.dto.ReissueTokenRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

@@ -1,8 +1,8 @@
 package com.example.petapp.infrastructure.database.elasticsearch;
 
 import com.example.petapp.application.common.NameChosungUtil;
-import com.example.petapp.application.in.member.object.dto.response.MemberSearchResponseDto;
 import com.example.petapp.application.out.MemberSearchPort;
+import com.example.petapp.application.usecase.member.object.dto.response.MemberSearchResponseDto;
 import com.example.petapp.domain.member.model.MemberSearch;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.common.unit.Fuzziness;

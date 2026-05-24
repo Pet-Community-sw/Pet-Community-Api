@@ -1,16 +1,16 @@
 package com.example.petapp.application.service.review;
 
-import com.example.petapp.application.in.member.MemberQueryUseCase;
-import com.example.petapp.application.in.profile.ProfileQueryUseCase;
-import com.example.petapp.application.in.review.ReviewQueryUseCase;
-import com.example.petapp.application.in.review.ReviewUseCase;
-import com.example.petapp.application.in.review.dto.request.CreateReviewDto;
-import com.example.petapp.application.in.review.dto.request.UpdateReviewDto;
-import com.example.petapp.application.in.review.dto.response.CreateReviewResponseDto;
-import com.example.petapp.application.in.review.dto.response.GetReviewListResponseDto;
-import com.example.petapp.application.in.review.dto.response.GetReviewResponseDto;
-import com.example.petapp.application.in.review.mapper.ReviewMapper;
-import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
+import com.example.petapp.application.usecase.member.MemberQueryUseCase;
+import com.example.petapp.application.usecase.profile.ProfileQueryUseCase;
+import com.example.petapp.application.usecase.review.ReviewQueryUseCase;
+import com.example.petapp.application.usecase.review.ReviewUseCase;
+import com.example.petapp.application.usecase.review.dto.request.CreateReviewDto;
+import com.example.petapp.application.usecase.review.dto.request.UpdateReviewDto;
+import com.example.petapp.application.usecase.review.dto.response.CreateReviewResponseDto;
+import com.example.petapp.application.usecase.review.dto.response.GetReviewListResponseDto;
+import com.example.petapp.application.usecase.review.dto.response.GetReviewResponseDto;
+import com.example.petapp.application.usecase.review.mapper.ReviewMapper;
+import com.example.petapp.application.usecase.walkrecord.WalkRecordQueryUseCase;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.review.ReviewRepository;

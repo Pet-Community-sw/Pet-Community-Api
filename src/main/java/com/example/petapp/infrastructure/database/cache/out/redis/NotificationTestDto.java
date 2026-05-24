@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.database.cache.out.redis;
 
-import com.example.petapp.application.in.chatting.model.dto.NotificationDto;
+import com.example.petapp.application.usecase.chatting.model.dto.NotificationDto;
 import lombok.Getter;
 
 @Getter

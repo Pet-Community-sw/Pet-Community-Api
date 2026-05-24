@@ -1,6 +1,6 @@
 package com.example.petapp.domain.walkingtogetherPost.model;
 
-import com.example.petapp.application.in.match.dto.request.UpdateWalkingTogetherPostDto;
+import com.example.petapp.application.usecase.match.dto.request.UpdateWalkingTogetherPostDto;
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.petbreed.model.PetBreed;

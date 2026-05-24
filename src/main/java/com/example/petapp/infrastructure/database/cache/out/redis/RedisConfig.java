@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.database.cache.out.redis;
 
-import com.example.petapp.application.in.member.object.dto.response.MemberSearchResponseDto;
-import com.example.petapp.application.in.notification.dto.NotificationListDto;
+import com.example.petapp.application.usecase.member.object.dto.response.MemberSearchResponseDto;
+import com.example.petapp.application.usecase.notification.dto.NotificationListDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

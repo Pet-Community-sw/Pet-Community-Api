@@ -1,16 +1,16 @@
 package com.example.petapp.application.service.token;
 
-import com.example.petapp.application.in.member.mapper.MemberMapper;
-import com.example.petapp.application.in.member.object.dto.request.AccessTokenResponseDto;
-import com.example.petapp.application.in.member.object.dto.response.LoginResponseDto;
-import com.example.petapp.application.in.member.object.dto.response.TokenResponseDto;
-import com.example.petapp.application.in.role.RoleQueryUseCase;
-import com.example.petapp.application.in.token.MemberInfo;
-import com.example.petapp.application.in.token.TokenQueryUseCase;
-import com.example.petapp.application.in.token.TokenUseCase;
-import com.example.petapp.application.in.token.dto.ReissueTokenRequestDto;
 import com.example.petapp.application.out.TokenPort;
 import com.example.petapp.application.out.cache.TokenCachePort;
+import com.example.petapp.application.usecase.member.mapper.MemberMapper;
+import com.example.petapp.application.usecase.member.object.dto.request.AccessTokenResponseDto;
+import com.example.petapp.application.usecase.member.object.dto.response.LoginResponseDto;
+import com.example.petapp.application.usecase.member.object.dto.response.TokenResponseDto;
+import com.example.petapp.application.usecase.role.RoleQueryUseCase;
+import com.example.petapp.application.usecase.token.MemberInfo;
+import com.example.petapp.application.usecase.token.TokenQueryUseCase;
+import com.example.petapp.application.usecase.token.TokenUseCase;
+import com.example.petapp.application.usecase.token.dto.ReissueTokenRequestDto;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.role.Role;
 import com.example.petapp.domain.token.TokenRepository;

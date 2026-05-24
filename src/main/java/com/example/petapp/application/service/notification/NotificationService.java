@@ -1,9 +1,9 @@
 package com.example.petapp.application.service.notification;
 
-import com.example.petapp.application.in.member.MemberQueryUseCase;
-import com.example.petapp.application.in.notification.NotificationUseCase;
-import com.example.petapp.application.in.notification.dto.NotificationListDto;
 import com.example.petapp.application.out.cache.NotificationsCachePort;
+import com.example.petapp.application.usecase.member.MemberQueryUseCase;
+import com.example.petapp.application.usecase.notification.NotificationUseCase;
+import com.example.petapp.application.usecase.notification.dto.NotificationListDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

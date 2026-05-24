@@ -1,6 +1,6 @@
 package com.example.petapp.application.service.review;
 
-import com.example.petapp.application.in.review.ReviewQueryUseCase;
+import com.example.petapp.application.usecase.review.ReviewQueryUseCase;
 import com.example.petapp.domain.review.ReviewRepository;
 import com.example.petapp.domain.review.model.Review;
 import com.example.petapp.interfaces.exception.NotFoundException;

@@ -1,15 +1,15 @@
 package com.example.petapp.application.service.location;
 
 import com.example.petapp.application.common.HaversineUtil;
-import com.example.petapp.application.in.chatting.model.dto.SendResponseDto;
-import com.example.petapp.application.in.chatting.model.type.CommandType;
-import com.example.petapp.application.in.location.LocationProcessorUseCase;
-import com.example.petapp.application.in.location.dto.request.LocationMessage;
-import com.example.petapp.application.in.notification.dto.NotificationEvent;
 import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.LocationCachePort;
 import com.example.petapp.application.service.location.object.LastPoint;
 import com.example.petapp.application.service.location.object.WalkRangeStatus;
+import com.example.petapp.application.usecase.chatting.model.dto.SendResponseDto;
+import com.example.petapp.application.usecase.chatting.model.type.CommandType;
+import com.example.petapp.application.usecase.location.LocationProcessorUseCase;
+import com.example.petapp.application.usecase.location.dto.request.LocationMessage;
+import com.example.petapp.application.usecase.notification.dto.NotificationEvent;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package com.example.petapp.application.service.match;
 
-import com.example.petapp.application.in.match.WalkingTogetherPostQueryUseCase;
+import com.example.petapp.application.usecase.match.WalkingTogetherPostQueryUseCase;
 import com.example.petapp.domain.walkingtogetherPost.WalkingTogetherPostRepository;
 import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
 import com.example.petapp.interfaces.exception.NotFoundException;

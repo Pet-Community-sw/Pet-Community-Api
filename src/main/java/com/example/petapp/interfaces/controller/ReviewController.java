@@ -1,12 +1,12 @@
 package com.example.petapp.interfaces.controller;
 
 import com.example.petapp.application.common.AuthUtil;
-import com.example.petapp.application.in.review.ReviewUseCase;
-import com.example.petapp.application.in.review.dto.request.CreateReviewDto;
-import com.example.petapp.application.in.review.dto.request.UpdateReviewDto;
-import com.example.petapp.application.in.review.dto.response.CreateReviewResponseDto;
-import com.example.petapp.application.in.review.dto.response.GetReviewListResponseDto;
-import com.example.petapp.application.in.review.dto.response.GetReviewResponseDto;
+import com.example.petapp.application.usecase.review.ReviewUseCase;
+import com.example.petapp.application.usecase.review.dto.request.CreateReviewDto;
+import com.example.petapp.application.usecase.review.dto.request.UpdateReviewDto;
+import com.example.petapp.application.usecase.review.dto.response.CreateReviewResponseDto;
+import com.example.petapp.application.usecase.review.dto.response.GetReviewListResponseDto;
+import com.example.petapp.application.usecase.review.dto.response.GetReviewResponseDto;
 import com.example.petapp.interfaces.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

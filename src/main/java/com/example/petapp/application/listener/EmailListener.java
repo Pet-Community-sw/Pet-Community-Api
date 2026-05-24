@@ -1,8 +1,8 @@
 package com.example.petapp.application.listener;
 
 import com.example.petapp.application.common.JsonUtil;
-import com.example.petapp.application.in.email.EmailEvent;
-import com.example.petapp.application.in.outbox.OutboxEventUseCase;
+import com.example.petapp.application.usecase.email.EmailEvent;
+import com.example.petapp.application.usecase.outbox.OutboxEventUseCase;
 import com.example.petapp.domain.outboxevent.model.OutboxEvent;
 import com.example.petapp.infrastructure.mq.RabbitKeys;
 import lombok.RequiredArgsConstructor;

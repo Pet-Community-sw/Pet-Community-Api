@@ -1,17 +1,17 @@
 package com.example.petapp.application.service.chatting;
 
-import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
-import com.example.petapp.application.in.chatroom.dto.request.ChatMessageDtoMember;
-import com.example.petapp.application.in.chatroom.dto.response.ChatMessageResponseDto;
-import com.example.petapp.application.in.chatroom.mapper.ChatRoomMapper;
-import com.example.petapp.application.in.chatting.ReaderUseCase;
-import com.example.petapp.application.in.chatting.model.dto.LastMessageInfoDto;
-import com.example.petapp.application.in.chatting.model.dto.SendResponseDto;
-import com.example.petapp.application.in.chatting.model.dto.UpdateMessageDto;
-import com.example.petapp.application.in.chatting.model.type.CommandType;
 import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
+import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
+import com.example.petapp.application.usecase.chatroom.dto.request.ChatMessageDtoMember;
+import com.example.petapp.application.usecase.chatroom.dto.response.ChatMessageResponseDto;
+import com.example.petapp.application.usecase.chatroom.mapper.ChatRoomMapper;
+import com.example.petapp.application.usecase.chatting.ReaderUseCase;
+import com.example.petapp.application.usecase.chatting.model.dto.LastMessageInfoDto;
+import com.example.petapp.application.usecase.chatting.model.dto.SendResponseDto;
+import com.example.petapp.application.usecase.chatting.model.dto.UpdateMessageDto;
+import com.example.petapp.application.usecase.chatting.model.type.CommandType;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
 import com.example.petapp.domain.chatting.model.ChatMessage;

@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.stomp.strategy.subscribe.impl;
 
-import com.example.petapp.application.in.member.MemberQueryUseCase;
+import com.example.petapp.application.usecase.member.MemberQueryUseCase;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.example.petapp.application.service.location;
 
-import com.example.petapp.application.in.location.LocationUseCase;
-import com.example.petapp.application.in.location.dto.request.LocationMessage;
+import com.example.petapp.application.usecase.location.LocationUseCase;
+import com.example.petapp.application.usecase.location.dto.request.LocationMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

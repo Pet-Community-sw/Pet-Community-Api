@@ -1,12 +1,12 @@
 package com.example.petapp.application.service.location;
 
-import com.example.petapp.application.in.location.LocationProcessorUseCase;
-import com.example.petapp.application.in.location.dto.request.LocationMessage;
-import com.example.petapp.application.in.walkrecord.WalkRecordQueryUseCase;
 import com.example.petapp.application.service.location.object.WalkRangeStatus;
+import com.example.petapp.application.usecase.location.LocationProcessorUseCase;
+import com.example.petapp.application.usecase.location.dto.request.LocationMessage;
+import com.example.petapp.application.usecase.walkrecord.WalkRecordQueryUseCase;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
-import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.schedulers.TestScheduler;
 import org.junit.jupiter.api.AfterEach;
@@ -16,35 +16,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class LocationPipelineTest {
 
+    private final Executor directExecutor = Runnable::run;
     @Mock
     private WalkRecordQueryUseCase walkRecordQueryUseCase;
-
     @Mock
     private LocationProcessorUseCase processorUseCase;
-
-    private final Executor directExecutor = Runnable::run;
-
     private LocationPipeline pipeline;
     private TestScheduler testScheduler;
 

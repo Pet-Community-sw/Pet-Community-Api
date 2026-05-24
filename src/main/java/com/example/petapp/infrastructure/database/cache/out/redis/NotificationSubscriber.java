@@ -1,9 +1,9 @@
 package com.example.petapp.infrastructure.database.cache.out.redis;
 
 import com.example.petapp.application.common.JsonUtil;
-import com.example.petapp.application.in.chatting.model.dto.SendResponseDto;
-import com.example.petapp.application.in.chatting.model.type.CommandType;
 import com.example.petapp.application.out.SendPort;
+import com.example.petapp.application.usecase.chatting.model.dto.SendResponseDto;
+import com.example.petapp.application.usecase.chatting.model.type.CommandType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;

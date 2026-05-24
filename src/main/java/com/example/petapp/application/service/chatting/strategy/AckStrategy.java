@@ -1,7 +1,7 @@
 package com.example.petapp.application.service.chatting.strategy;
 
-import com.example.petapp.application.in.chatting.MessageTypeStrategy;
-import com.example.petapp.application.in.chatting.model.type.CommandType;
+import com.example.petapp.application.usecase.chatting.MessageTypeStrategy;
+import com.example.petapp.application.usecase.chatting.model.type.CommandType;
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.infrastructure.database.adapter.AckInfoRepositoryAdapter;
 import lombok.RequiredArgsConstructor;

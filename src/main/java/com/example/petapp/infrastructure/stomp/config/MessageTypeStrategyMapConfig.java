@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.stomp.config;
 
-import com.example.petapp.application.in.chatting.MessageTypeStrategy;
-import com.example.petapp.application.in.chatting.model.type.CommandType;
+import com.example.petapp.application.usecase.chatting.MessageTypeStrategy;
+import com.example.petapp.application.usecase.chatting.model.type.CommandType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

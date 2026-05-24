@@ -1,20 +1,20 @@
 package com.example.petapp.application.service.chatroom;
 
-import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
-import com.example.petapp.application.in.chatroom.ChatRoomUseCase;
-import com.example.petapp.application.in.chatroom.dto.request.UpdateChatRoomDto;
-import com.example.petapp.application.in.chatroom.dto.response.ChatMessageResponseDto;
-import com.example.petapp.application.in.chatroom.dto.response.ChatRoomResponseDto;
-import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
-import com.example.petapp.application.in.chatroom.mapper.ChatRoomMapper;
-import com.example.petapp.application.in.chatting.ReaderUseCase;
-import com.example.petapp.application.in.chatting.model.dto.LastMessageInfoDto;
-import com.example.petapp.application.in.chatting.model.type.ChatRoomType;
-import com.example.petapp.application.in.profile.ProfileQueryUseCase;
-import com.example.petapp.application.in.profile.dto.response.ChatRoomUsersResponseDto;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.application.out.cache.SeqCachePort;
+import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
+import com.example.petapp.application.usecase.chatroom.ChatRoomUseCase;
+import com.example.petapp.application.usecase.chatroom.dto.request.UpdateChatRoomDto;
+import com.example.petapp.application.usecase.chatroom.dto.response.ChatMessageResponseDto;
+import com.example.petapp.application.usecase.chatroom.dto.response.ChatRoomResponseDto;
+import com.example.petapp.application.usecase.chatroom.dto.response.CreateChatRoomResponseDto;
+import com.example.petapp.application.usecase.chatroom.mapper.ChatRoomMapper;
+import com.example.petapp.application.usecase.chatting.ReaderUseCase;
+import com.example.petapp.application.usecase.chatting.model.dto.LastMessageInfoDto;
+import com.example.petapp.application.usecase.chatting.model.type.ChatRoomType;
+import com.example.petapp.application.usecase.profile.ProfileQueryUseCase;
+import com.example.petapp.application.usecase.profile.dto.response.ChatRoomUsersResponseDto;
 import com.example.petapp.domain.chatroom.ChatRoomRepository;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
@@ -26,11 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service

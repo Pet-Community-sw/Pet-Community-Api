@@ -1,6 +1,6 @@
 package com.example.petapp.domain.chatroom.model;
 
-import com.example.petapp.application.in.chatting.model.type.ChatRoomType;
+import com.example.petapp.application.usecase.chatting.model.type.ChatRoomType;
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;

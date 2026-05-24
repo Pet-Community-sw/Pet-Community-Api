@@ -1,6 +1,6 @@
 package com.example.petapp.application.service.comment;
 
-import com.example.petapp.application.in.comment.CommentQueryUseCase;
+import com.example.petapp.application.usecase.comment.CommentQueryUseCase;
 import com.example.petapp.domain.comment.CommentRepository;
 import com.example.petapp.domain.comment.model.Comment;
 import com.example.petapp.interfaces.exception.NotFoundException;

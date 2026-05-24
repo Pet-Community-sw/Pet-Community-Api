@@ -1,15 +1,15 @@
 package com.example.petapp.application.service.auth;
 
-import com.example.petapp.application.in.auth.AuthUseCase;
-import com.example.petapp.application.in.email.EmailUseCase;
-import com.example.petapp.application.in.member.MemberQueryUseCase;
-import com.example.petapp.application.in.member.object.dto.request.AccessTokenResponseDto;
-import com.example.petapp.application.in.member.object.dto.request.AuthCodeDto;
-import com.example.petapp.application.in.member.object.dto.request.LoginDto;
-import com.example.petapp.application.in.member.object.dto.request.SendEmailDto;
-import com.example.petapp.application.in.member.object.dto.response.LoginResponseDto;
-import com.example.petapp.application.in.role.RoleQueryUseCase;
-import com.example.petapp.application.in.token.TokenUseCase;
+import com.example.petapp.application.usecase.auth.AuthUseCase;
+import com.example.petapp.application.usecase.email.EmailUseCase;
+import com.example.petapp.application.usecase.member.MemberQueryUseCase;
+import com.example.petapp.application.usecase.member.object.dto.request.AccessTokenResponseDto;
+import com.example.petapp.application.usecase.member.object.dto.request.AuthCodeDto;
+import com.example.petapp.application.usecase.member.object.dto.request.LoginDto;
+import com.example.petapp.application.usecase.member.object.dto.request.SendEmailDto;
+import com.example.petapp.application.usecase.member.object.dto.response.LoginResponseDto;
+import com.example.petapp.application.usecase.role.RoleQueryUseCase;
+import com.example.petapp.application.usecase.token.TokenUseCase;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.member.model.MemberRole;
 import com.example.petapp.domain.role.Role;

@@ -1,6 +1,6 @@
 package com.example.petapp.application.service.token;
 
-import com.example.petapp.application.in.token.TokenQueryUseCase;
+import com.example.petapp.application.usecase.token.TokenQueryUseCase;
 import com.example.petapp.domain.token.TokenRepository;
 import com.example.petapp.domain.token.model.Token;
 import com.example.petapp.interfaces.exception.NotFoundException;

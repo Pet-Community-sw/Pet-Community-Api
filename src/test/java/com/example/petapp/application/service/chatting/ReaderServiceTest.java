@@ -1,10 +1,10 @@
 package com.example.petapp.application.service.chatting;
 
-import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
-import com.example.petapp.application.in.chatting.model.dto.LastMessageInfoDto;
 import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
+import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
+import com.example.petapp.application.usecase.chatting.model.dto.LastMessageInfoDto;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
 import com.example.petapp.infrastructure.database.mongo.MongoService;
@@ -18,9 +18,7 @@ import org.springframework.data.domain.Pageable;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReaderServiceTest {

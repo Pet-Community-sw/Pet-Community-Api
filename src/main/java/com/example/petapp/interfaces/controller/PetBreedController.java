@@ -1,7 +1,7 @@
 package com.example.petapp.interfaces.controller;
 
-import com.example.petapp.application.in.petbreed.PetBreedQueryUseCase;
-import com.example.petapp.application.in.petbreed.dto.PetBreedGetListDto;
+import com.example.petapp.application.usecase.petbreed.PetBreedQueryUseCase;
+import com.example.petapp.application.usecase.petbreed.dto.PetBreedGetListDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

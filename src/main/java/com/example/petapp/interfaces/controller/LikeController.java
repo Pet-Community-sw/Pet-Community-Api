@@ -2,9 +2,9 @@ package com.example.petapp.interfaces.controller;
 
 
 import com.example.petapp.application.common.AuthUtil;
-import com.example.petapp.application.in.like.LikeQueryUseCase;
-import com.example.petapp.application.in.like.LikeUseCase;
-import com.example.petapp.application.in.like.dto.response.LikeResponseDto;
+import com.example.petapp.application.usecase.like.LikeQueryUseCase;
+import com.example.petapp.application.usecase.like.LikeUseCase;
+import com.example.petapp.application.usecase.like.dto.response.LikeResponseDto;
 import com.example.petapp.interfaces.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
