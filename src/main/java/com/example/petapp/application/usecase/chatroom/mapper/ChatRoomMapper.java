@@ -47,14 +47,13 @@ public class ChatRoomMapper {
     }
 
 
-    public static ChatRoomResponseDto toChatRoomsResponseDto(ChatRoom chatRoom, Long userId, LastMessageInfoDto lastMessageInfoDto, long unReadCount, Set<ChatRoomUsersResponseDto> users) {
+    public static ChatRoomResponseDto toChatRoomsResponseDto(ChatRoom chatRoom, Long userId, LastMessageInfoDto lastMessageInfoDto, Set<ChatRoomUsersResponseDto> users) {
         return ChatRoomResponseDto.builder()
                 .chatRoomId(chatRoom.getId())
                 .chatName(chatRoom.getName())
                 .userSize(chatRoom.getUsers().size())
                 .users(users)
                 .lastMessage(lastMessageInfoDto.getLastMessage())
-                .unReadCount(unReadCount)
                 .lastMessageTime(lastMessageInfoDto.getLastMessageTime().isBlank() ? null : LocalDateTime.parse(lastMessageInfoDto.getLastMessageTime()))
                 .isOwner(chatRoom.getWalkingTogetherPost().getProfile().getId().equals(userId))
                 .build();
@@ -67,7 +66,6 @@ public class ChatRoomMapper {
                         .senderName(chatMessage.getSenderName())
                         .senderImageUrl(chatMessage.getSenderImageUrl())
                         .message(chatMessage.getMessage())
-                        .unReadCount(chatMessage.getUnReadCount())
                         .messageTime(chatMessage.getMessageTime())
                         .build()
                 )

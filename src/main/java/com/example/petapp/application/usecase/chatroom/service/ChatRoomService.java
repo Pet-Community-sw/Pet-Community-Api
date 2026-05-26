@@ -134,14 +134,12 @@ public class ChatRoomService implements ChatRoomUseCase {
     }
 
     private ChatRoomResponseDto toChatRoomsResponseDtoWithRedis(ChatRoom chatRoom, Long userId, Map<Long, Profile> profileMap) {
-        Long userSeq = readMessageCachePort.find(chatRoom.getId(), userId);
         LastMessageInfoDto lastMessageInfoDto = lastMessageCachePort.find(chatRoom.getId());
-        long unReadCount = Math.max(lastMessageInfoDto.getLastSeq() - userSeq, 0);
         Set<ChatRoomUsersResponseDto> users = chatRoom.getUsers().stream().map(id ->
                         ChatRoomMapper.toChatRoomUsersResponseDto(profileMap.get(id))
                 )//Member일 때도 구현해야할듯.
                 .collect(Collectors.toSet());
-        return ChatRoomMapper.toChatRoomsResponseDto(chatRoom, userId, lastMessageInfoDto, unReadCount, users);
+        return ChatRoomMapper.toChatRoomsResponseDto(chatRoom, userId, lastMessageInfoDto, users);
     }
 
     private void deleteRedis(Long chatRoomId) {

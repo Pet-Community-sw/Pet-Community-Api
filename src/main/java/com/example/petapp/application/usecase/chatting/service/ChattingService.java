@@ -3,7 +3,6 @@ package com.example.petapp.application.usecase.chatting.service;
 import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.usecase.chatting.ChattingUseCase;
 import com.example.petapp.application.usecase.chatting.MessageTypeStrategy;
-import com.example.petapp.application.usecase.chatting.OfflineUserUseCase;
 import com.example.petapp.application.usecase.chatting.mapper.ChatMessageMapper;
 import com.example.petapp.application.usecase.chatting.model.dto.ChatMessageDto;
 import com.example.petapp.application.usecase.chatting.model.dto.UserInfo;
@@ -30,7 +29,6 @@ public class ChattingService implements ChattingUseCase {
     private final Map<CommandType, MessageTypeStrategy> messageTypeMap;
     private final ChatRoomQueryUseCase chatRoomQueryUseCase;
     private final MemberQueryUseCase memberQueryUseCase;
-    private final OfflineUserUseCase offlineUserUseCase;
 
     @Transactional
     @Override
@@ -61,7 +59,6 @@ public class ChattingService implements ChattingUseCase {
             }
         }
         ChatMessage chatMessage = ChatMessageMapper.toEntity(chatMessageDto, chatRoom, senderId, userInfo);
-        offlineUserUseCase.setOfflineUsersAndUnreadCount(chatMessage, chatRoom);
         return chatMessage;
     }
 }

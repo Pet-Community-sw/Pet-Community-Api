@@ -8,8 +8,6 @@ services:
     env_file:
       - .env
     depends_on:
-      mongodb:
-        condition: service_healthy
       redis:
         condition: service_healthy
       es:
@@ -17,23 +15,6 @@ services:
     environment:
       TZ: Asia/Seoul
       SPRING_PROFILES_ACTIVE: dev
-
-
-  mongodb:
-    image: mongo:latest
-    container_name: pet-api-mongo
-    environment:
-      - MONGO_INITDB_DATABASE=${MONGO_DATABASE}
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
-    volumes:
-      - mongo-data:/data/db
-    healthcheck:
-      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-
 
   redis:
     image: redis:7-alpine
@@ -68,8 +49,6 @@ services:
       start_period: 30s
 
 volumes:
-  mongo-data:
   redis-data:
   es-data:
-
 

@@ -23,8 +23,6 @@ public class ChatRoomResponseDto {
 
     private int userSize;
 
-    private long unReadCount;
-
     private String lastMessage;
 
     private LocalDateTime lastMessageTime;

@@ -25,24 +25,6 @@ services:
       timeout: 5s
       retries: 10
 
-  mongodb:
-    image: mongo:latest
-    container_name: pet-api-mongo
-    restart: always
-    ports:
-      - "27017:27017"
-    environment:
-      - MONGO_INITDB_DATABASE=${MONGO_DATABASE}
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
-    volumes:
-      - mongo-data:/data/db
-    healthcheck:
-      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-
   redis:
     image: redis:7-alpine
     container_name: pet-api-redis
@@ -95,8 +77,6 @@ networks:
 
 volumes:
   mysql-data:
-  mongo-data:
   redis-data:
   es-data:
-
 

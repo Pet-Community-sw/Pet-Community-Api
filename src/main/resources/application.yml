@@ -26,10 +26,6 @@ spring:
     open-in-view: false
 
   data:
-    mongodb:
-      uri: ${MONGO_URL}
-      username: ${MONGO_USERNAME}
-      password: ${MONGO_PASSWORD}
     redis:
       repositories:
         enabled: false

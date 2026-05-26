@@ -19,8 +19,6 @@ public class ChatMessageDtoMember {
 
     private String message;
 
-    private int unReadCount;
-
     private LocalDateTime messageTime;
 
 }

@@ -3,7 +3,6 @@ package com.example.petapp.application.usecase.chatting.service.strategy;
 import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.ChatOnlineCachePort;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
-import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.application.out.cache.SeqCachePort;
 import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.usecase.profile.ProfileQueryUseCase;
@@ -46,8 +45,6 @@ class TalkStrategyTest {
     @Mock
     private ChatOnlineCachePort chatOnlineCachePort;
     @Mock
-    private ReadMessageCachePort readMessageCachePort;
-    @Mock
     private LastMessageCachePort lastMessageCachePort;
     @Mock
     private AckInfoRepository ackInfoRepository;
@@ -69,7 +66,6 @@ class TalkStrategyTest {
                 .senderId(1L)
                 .senderName("몽이")
                 .message("안녕")
-                .users(Set.of())
                 .messageTime(LocalDateTime.now())
                 .build();
 
@@ -94,7 +90,7 @@ class TalkStrategyTest {
         verify(seqCachePort).create(10L, 0L);
         verify(chatMessageRepository).save(chatMessage);
         verify(sendPort).send(eq("/sub/chat/10"), any());
-        verify(ackInfoRepository).save("c1", Set.of(1L));
+        verify(ackInfoRepository).save("c1", Set.of());
         verify(lastMessageCachePort).create(chatMessage);
         verify(eventPublisher, never()).publishEvent(any());
     }
@@ -107,19 +103,18 @@ class TalkStrategyTest {
                 .senderId(2L)
                 .senderName("철수")
                 .message("재전송 테스트")
-                .users(Set.of())
                 .messageTime(LocalDateTime.now())
                 .build();
 
         ChatRoom chatRoom = org.mockito.Mockito.mock(ChatRoom.class);
         SimpUser simpUser = org.mockito.Mockito.mock(SimpUser.class);
-        when(chatRoom.getUsers()).thenReturn(Set.of(2L));
+        when(chatRoom.getUsers()).thenReturn(Set.of(2L, 3L));
         when(chatRoomQueryUseCase.find(20L)).thenReturn(chatRoom);
         when(seqCachePort.exist(20L)).thenReturn(true);
         when(seqCachePort.increment(20L)).thenReturn(5L);
-        when(chatOnlineCachePort.find(20L)).thenReturn(Set.of());
-        when(ackInfoRepository.find("c2")).thenReturn(Set.of(2L));
-        when(simpUserRegistry.getUser("2")).thenReturn(simpUser);
+        when(chatOnlineCachePort.find(20L)).thenReturn(Set.of("3"));
+        when(ackInfoRepository.find("c2")).thenReturn(Set.of(3L));
+        when(simpUserRegistry.getUser("3")).thenReturn(simpUser);
         when(resendScheduler.schedule(any(Runnable.class), any(java.util.Date.class)))
                 .thenAnswer(invocation -> {
                     Runnable runnable = invocation.getArgument(0);
@@ -129,7 +124,7 @@ class TalkStrategyTest {
 
         talkStrategy.handle(chatMessage);
 
-        verify(sendPort).sendToUser(eq("2"), eq("/sub/chat"), any());
+        verify(sendPort).sendToUser(eq("3"), eq("/sub/chat"), any());
         verify(ackInfoRepository).clear("c2");
     }
 }

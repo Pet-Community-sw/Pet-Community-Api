@@ -1,17 +1,14 @@
-package com.example.petapp.infrastructure.database.mongo;
-
+package com.example.petapp.infrastructure.database.jpa.chatting;
 
 import com.example.petapp.domain.chatting.model.ChatMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-public interface MongoChatMessageRepository extends MongoRepository<ChatMessage, String> {
+public interface JpaChatMessageRepository extends JpaRepository<ChatMessage, Long> {
 
     Optional<ChatMessage> findFirstByChatRoomIdOrderBySeqDesc(Long chatRoomId);
 

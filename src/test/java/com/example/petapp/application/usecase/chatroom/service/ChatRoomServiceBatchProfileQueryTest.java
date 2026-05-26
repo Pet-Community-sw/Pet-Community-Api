@@ -80,8 +80,6 @@ class ChatRoomServiceBatchProfileQueryTest {
         when(walkingTogetherPost2.getProfile()).thenReturn(owner2);
         when(owner2.getId()).thenReturn(2L);
 
-        when(readMessageCachePort.find(100L, 1L)).thenReturn(2L);
-        when(readMessageCachePort.find(200L, 1L)).thenReturn(4L);
         when(lastMessageCachePort.find(100L)).thenReturn(LastMessageInfoDto.builder()
                 .lastSeq(5L)
                 .lastMessage("메시지1")

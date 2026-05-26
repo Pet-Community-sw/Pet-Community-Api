@@ -2,7 +2,7 @@ package com.example.petapp.infrastructure.database.adapter;
 
 import com.example.petapp.domain.chatting.ChatMessageRepository;
 import com.example.petapp.domain.chatting.model.ChatMessage;
-import com.example.petapp.infrastructure.database.mongo.MongoChatMessageRepository;
+import com.example.petapp.infrastructure.database.jpa.chatting.JpaChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 public class ChatMessageRepositoryAdapter implements ChatMessageRepository {
 
-    private final MongoChatMessageRepository repository;
+    private final JpaChatMessageRepository repository;
 
     @Override
     public void save(ChatMessage chatMessage) {

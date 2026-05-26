@@ -1,14 +1,11 @@
 package com.example.petapp.application.usecase.chatting.service;
 
-import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.usecase.chatting.model.dto.LastMessageInfoDto;
-import com.example.petapp.application.usecase.chatting.service.ReaderService;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.chatting.ChatMessageRepository;
-import com.example.petapp.infrastructure.database.mongo.MongoService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,10 +26,6 @@ class ReaderServiceTest {
     @Mock
     private ChatRoomQueryUseCase chatRoomQueryUseCase;
     @Mock
-    private SendPort sendPort;
-    @Mock
-    private MongoService mongoService;
-    @Mock
     private ReadMessageCachePort readMessageCachePort;
     @Mock
     private LastMessageCachePort lastMessageCachePort;
@@ -48,7 +41,6 @@ class ReaderServiceTest {
         ChatRoom chatRoom = org.mockito.Mockito.mock(ChatRoom.class);
         when(chatRoomQueryUseCase.find(chatRoomId)).thenReturn(chatRoom);
         when(chatMessageRepository.findAll(eq(chatRoomId), any(Pageable.class))).thenReturn(Page.empty());
-        when(readMessageCachePort.find(chatRoomId, userId)).thenReturn(3L);
         when(lastMessageCachePort.find(chatRoomId)).thenReturn(
                 LastMessageInfoDto.builder()
                         .lastSeq(10L)
@@ -61,6 +53,10 @@ class ReaderServiceTest {
 
         verify(lastMessageCachePort).find(chatRoomId);
         verify(lastMessageCachePort, never()).find(userId);
-        verify(mongoService).updateMessages(chatRoomId, userId, 3L, 10L);
+        verify(readMessageCachePort).create(argThat(chatMessage ->
+                chatMessage.getChatRoomId().equals(chatRoomId)
+                        && chatMessage.getSenderId().equals(userId)
+                        && chatMessage.getSeq().equals(10L)
+        ));
     }
 }

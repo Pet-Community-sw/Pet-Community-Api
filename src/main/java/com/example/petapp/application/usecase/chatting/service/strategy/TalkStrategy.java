@@ -3,7 +3,6 @@ package com.example.petapp.application.usecase.chatting.service.strategy;
 import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.ChatOnlineCachePort;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
-import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.application.out.cache.SeqCachePort;
 import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.usecase.chatting.MessageTypeStrategy;
@@ -37,7 +36,6 @@ public class TalkStrategy implements MessageTypeStrategy {
     private final ChatMessageRepository chatMessageRepository;
     private final SeqCachePort seqCachePort;
     private final ChatOnlineCachePort chatOnlineCachePort;
-    private final ReadMessageCachePort readMessageCachePort;
     private final LastMessageCachePort lastMessageCachePort;
     private final AckInfoRepository ackInfoRepository;
     private final SimpUserRegistry simpUserRegistry;
@@ -86,9 +84,8 @@ public class TalkStrategy implements MessageTypeStrategy {
                     Profile profile = profileQueryUseCase.findOrThrow(userId);
                     eventPublisher.publishEvent(new NotificationEvent(profile.getMember().getId(), message));
 
-                    Long profileSeq = readMessageCachePort.find(chatRoomId, profile.getId());
                     sendPort.send("/sub/list/" + profile.getMember().getId(),
-                            SendResponseDto.builder().commandType(CommandType.LIST_UPDATE).body(new UpdateListDto(chatRoomId, (chatMessage.getSeq() - profileSeq), chatMessage.getMessage(), chatMessage.getMessageTime())).build());
+                            SendResponseDto.builder().commandType(CommandType.LIST_UPDATE).body(new UpdateListDto(chatRoomId, chatMessage.getMessage(), chatMessage.getMessageTime())).build());
                 });
     }
 
@@ -96,9 +93,10 @@ public class TalkStrategy implements MessageTypeStrategy {
      * 재전송 로직 한번만 재전송을함.
      */
     private void scheduleRetry(ChatMessage chatMessage) {
-        Set<Long> unReadUsers = chatMessage.getUsers();
         ChatRoom chatRoom = chatRoomQueryUseCase.find(chatMessage.getChatRoomId());
-        Set<Long> sendUsers = chatRoom.getUsers().stream().filter(userId -> !unReadUsers.contains(userId)).collect(Collectors.toSet());
+        Set<Long> sendUsers = chatRoom.getUsers().stream()
+                .filter(userId -> !userId.equals(chatMessage.getSenderId()))
+                .collect(Collectors.toSet());
         ackInfoRepository.save(chatMessage.getClientMessageId(), sendUsers);
 
         resendScheduler.schedule(
