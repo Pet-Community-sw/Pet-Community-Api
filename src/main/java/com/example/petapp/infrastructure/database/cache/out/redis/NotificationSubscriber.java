@@ -24,14 +24,9 @@ public class NotificationSubscriber implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         String body = new String(message.getBody(), StandardCharsets.UTF_8);
 
-        NotificationTestDto notificationTestDto = jsonUtil.fromJson(body, NotificationTestDto.class);
+        RedisNotificationMessage redisNotificationMessage = jsonUtil.fromJson(body, RedisNotificationMessage.class);
 
-//        RedisNotificationMessage redisMessage =
-//                jsonUtil.fromJson(body, RedisNotificationMessage.class);
-
-        log.info("Received message: {}", notificationTestDto);
-
-        port.send(notificationTestDto.getDestination(),
-                SendResponseDto.builder().commandType(CommandType.NOTIFICATION).body(notificationTestDto.getNotificationDto()).build());
+        port.send(redisNotificationMessage.getDestination(),
+                SendResponseDto.builder().commandType(CommandType.NOTIFICATION).body(redisNotificationMessage.getNotificationDto()).build());
     }
 }
