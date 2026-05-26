@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.stomp.strategy.subscribe.impl;
 
-import com.example.petapp.application.in.profile.ProfileQueryUseCase;
+import com.example.petapp.application.usecase.member.MemberQueryUseCase;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;
 import com.example.petapp.interfaces.exception.ForbiddenException;
@@ -17,7 +17,7 @@ public class RoomListSubscribeStrategy extends SubscribeTypeStrategy {
 
     private static final String PATTERN = "/sub/list/{userId}";
 
-    private final ProfileQueryUseCase useCase;
+    private final MemberQueryUseCase useCase;
 
     @Override
     public boolean isHandler(String destination) {

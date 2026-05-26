@@ -1,6 +1,6 @@
 package com.example.petapp.application.out;
 
-import com.example.petapp.application.in.member.object.dto.response.MemberSearchResponseDto;
+import com.example.petapp.application.usecase.member.object.dto.response.MemberSearchResponseDto;
 
 import java.util.List;
 

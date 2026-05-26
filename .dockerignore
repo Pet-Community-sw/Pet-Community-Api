@@ -13,5 +13,15 @@ logs
 tmp
 *.iml
 
+AGENTS.md
+codex-progress.txt
+feature_list.json
+
+.github
+
+loadtest
+
+docker-compose*.yml
+
 src/test
 **/src/test/**

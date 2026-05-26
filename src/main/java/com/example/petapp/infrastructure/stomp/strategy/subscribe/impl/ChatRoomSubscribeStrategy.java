@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.stomp.strategy.subscribe.impl;
 
-import com.example.petapp.application.in.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.out.cache.ChatOnlineCachePort;
+import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.infrastructure.stomp.DestinationCachePort;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;

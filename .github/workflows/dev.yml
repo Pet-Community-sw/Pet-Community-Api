@@ -1,6 +1,5 @@
 name: CI/CD Pipeline
 
-
 on:
   push:
     branches:
@@ -18,10 +17,10 @@ jobs:
         run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
       - name: Docker Image Build
-        run: docker build -t sunjaegood/pet-community:dev .
+        run: docker build -t sunjaegood/pet-community-api:dev .
 
       - name: Docker Image Push
-        run: docker push sunjaegood/pet-community:dev
+        run: docker push sunjaegood/pet-community-api:dev
 
       - name: scp to EC2
         uses: appleboy/scp-action@v0.1.7
@@ -30,7 +29,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           source: docker-compose-dev.yml
-          target: /home/ubuntu/app
+          target: /home/ec2-user/api
 
       - name: SSH로 EC2에 접속
         uses: appleboy/ssh-action@v1.2.0
@@ -42,7 +41,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           envs: ENV
           script: |
-            cd /home/ubuntu/app
+            cd /home/ec2-user/api
             echo "$ENV" > .env
-            sudo docker pull sunjaegood/pet-community:dev
+            sudo docker pull sunjaegood/pet-community-api:dev
             sudo docker compose -f docker-compose-dev.yml up -d --remove-orphans

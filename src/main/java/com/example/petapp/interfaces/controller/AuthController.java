@@ -1,11 +1,11 @@
 package com.example.petapp.interfaces.controller;
 
-import com.example.petapp.application.in.auth.AuthUseCase;
-import com.example.petapp.application.in.member.object.dto.request.AccessTokenResponseDto;
-import com.example.petapp.application.in.member.object.dto.request.AuthCodeDto;
-import com.example.petapp.application.in.member.object.dto.request.LoginDto;
-import com.example.petapp.application.in.member.object.dto.request.SendEmailDto;
-import com.example.petapp.application.in.member.object.dto.response.LoginResponseDto;
+import com.example.petapp.application.usecase.auth.AuthUseCase;
+import com.example.petapp.application.usecase.member.object.dto.request.AccessTokenResponseDto;
+import com.example.petapp.application.usecase.member.object.dto.request.AuthCodeDto;
+import com.example.petapp.application.usecase.member.object.dto.request.LoginDto;
+import com.example.petapp.application.usecase.member.object.dto.request.SendEmailDto;
+import com.example.petapp.application.usecase.member.object.dto.response.LoginResponseDto;
 import com.example.petapp.interfaces.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

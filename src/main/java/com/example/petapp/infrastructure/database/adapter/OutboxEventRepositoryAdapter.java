@@ -6,7 +6,6 @@ import com.example.petapp.infrastructure.database.jpa.outbox.JpaOutboxRepository
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -23,10 +22,5 @@ public class OutboxEventRepositoryAdapter implements OutboxEventRepository {
     @Override
     public Optional<OutboxEvent> find(Long outboxId) {
         return repository.findById(outboxId);
-    }
-
-    @Override
-    public List<OutboxEvent> findAllFailed() {
-        return repository.findAllFailed();
     }
 }

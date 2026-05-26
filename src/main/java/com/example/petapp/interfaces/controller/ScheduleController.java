@@ -2,7 +2,7 @@ package com.example.petapp.interfaces.controller;
 
 
 import com.example.petapp.application.common.AuthUtil;
-import com.example.petapp.application.in.schedule.ScheduleUseCase;
+import com.example.petapp.application.usecase.schedule.ScheduleUseCase;
 import com.example.petapp.domain.schedule.model.dto.response.GetSchedulesResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

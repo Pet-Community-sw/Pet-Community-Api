@@ -2,11 +2,11 @@ package com.example.petapp.interfaces.controller;
 
 
 import com.example.petapp.application.common.AuthUtil;
-import com.example.petapp.application.in.comment.CommentUseCase;
-import com.example.petapp.application.in.comment.dto.request.CommentDto;
-import com.example.petapp.application.in.comment.dto.request.UpdateCommentDto;
-import com.example.petapp.application.in.comment.dto.response.CreateCommentResponseDto;
-import com.example.petapp.application.in.comment.dto.response.GetCommentsResponseDto;
+import com.example.petapp.application.usecase.comment.CommentUseCase;
+import com.example.petapp.application.usecase.comment.dto.request.CommentDto;
+import com.example.petapp.application.usecase.comment.dto.request.UpdateCommentDto;
+import com.example.petapp.application.usecase.comment.dto.response.CreateCommentResponseDto;
+import com.example.petapp.application.usecase.comment.dto.response.GetCommentsResponseDto;
 import com.example.petapp.interfaces.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.database.cache.out.redis.adapter;
 
-import com.example.petapp.application.in.member.object.dto.response.MemberSearchResponseDto;
 import com.example.petapp.application.out.cache.MemberSearchSuggestionsCachePort;
+import com.example.petapp.application.usecase.member.object.dto.response.MemberSearchResponseDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

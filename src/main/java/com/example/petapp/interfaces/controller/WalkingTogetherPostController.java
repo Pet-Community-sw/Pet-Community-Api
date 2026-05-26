@@ -1,12 +1,12 @@
 package com.example.petapp.interfaces.controller;
 
 import com.example.petapp.application.common.AuthUtil;
-import com.example.petapp.application.in.chatroom.dto.response.CreateChatRoomResponseDto;
-import com.example.petapp.application.in.match.WalkingTogetherPostUseCase;
-import com.example.petapp.application.in.match.dto.request.CreateWalkingTogetherPostDto;
-import com.example.petapp.application.in.match.dto.request.UpdateWalkingTogetherPostDto;
-import com.example.petapp.application.in.match.dto.response.CreateWalkingTogetherPostResponseDto;
-import com.example.petapp.application.in.match.dto.response.GetWalkingTogetherPostResponseDto;
+import com.example.petapp.application.usecase.chatroom.dto.response.CreateChatRoomResponseDto;
+import com.example.petapp.application.usecase.match.WalkingTogetherPostUseCase;
+import com.example.petapp.application.usecase.match.dto.request.CreateWalkingTogetherPostDto;
+import com.example.petapp.application.usecase.match.dto.request.UpdateWalkingTogetherPostDto;
+import com.example.petapp.application.usecase.match.dto.response.CreateWalkingTogetherPostResponseDto;
+import com.example.petapp.application.usecase.match.dto.response.GetWalkingTogetherPostResponseDto;
 import com.example.petapp.interfaces.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

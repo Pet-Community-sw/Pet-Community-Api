@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.jwt.provider;
 
-import com.example.petapp.application.in.token.MemberInfo;
+import com.example.petapp.application.usecase.token.MemberInfo;
 import com.example.petapp.domain.token.model.TokenType;
 import com.example.petapp.infrastructure.jwt.token.JwtAuthenticationToken;
 import com.example.petapp.infrastructure.jwt.util.JwtTokenizer;

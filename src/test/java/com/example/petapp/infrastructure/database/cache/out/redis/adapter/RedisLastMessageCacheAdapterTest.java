@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.database.cache.out.redis.adapter;
 
-import com.example.petapp.application.in.chatting.model.dto.LastMessageInfoDto;
+import com.example.petapp.application.usecase.chatting.model.dto.LastMessageInfoDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

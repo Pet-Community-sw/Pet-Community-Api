@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.jwt;
 
-import com.example.petapp.application.in.token.MemberInfo;
 import com.example.petapp.application.out.TokenPort;
+import com.example.petapp.application.usecase.token.MemberInfo;
 import com.example.petapp.domain.token.model.TokenType;
 import com.example.petapp.infrastructure.jwt.util.JwtTokenizer;
 import lombok.RequiredArgsConstructor;

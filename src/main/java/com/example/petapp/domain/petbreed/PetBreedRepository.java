@@ -1,6 +1,6 @@
 package com.example.petapp.domain.petbreed;
 
-import com.example.petapp.application.in.petbreed.dto.PetBreedGetListDto;
+import com.example.petapp.application.usecase.petbreed.dto.PetBreedGetListDto;
 import com.example.petapp.domain.petbreed.model.PetBreed;
 
 import java.util.List;

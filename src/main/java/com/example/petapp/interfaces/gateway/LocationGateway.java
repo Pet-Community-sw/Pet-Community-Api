@@ -1,7 +1,7 @@
 package com.example.petapp.interfaces.gateway;
 
-import com.example.petapp.application.in.location.LocationUseCase;
-import com.example.petapp.application.in.location.dto.request.LocationMessage;
+import com.example.petapp.application.usecase.location.LocationUseCase;
+import com.example.petapp.application.usecase.location.dto.request.LocationMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;

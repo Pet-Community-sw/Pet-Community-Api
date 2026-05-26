@@ -1,6 +1,6 @@
 package com.example.petapp.domain.review.model;
 
-import com.example.petapp.application.in.review.dto.request.UpdateReviewDto;
+import com.example.petapp.application.usecase.review.dto.request.UpdateReviewDto;
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.Content;

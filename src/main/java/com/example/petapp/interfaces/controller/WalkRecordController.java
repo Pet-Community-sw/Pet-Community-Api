@@ -1,9 +1,9 @@
 package com.example.petapp.interfaces.controller;
 
 import com.example.petapp.application.common.AuthUtil;
-import com.example.petapp.application.in.walkrecord.WalkRecordUseCase;
-import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordLocationResponseDto;
-import com.example.petapp.application.in.walkrecord.dto.response.GetWalkRecordResponseDto;
+import com.example.petapp.application.usecase.walkrecord.WalkRecordUseCase;
+import com.example.petapp.application.usecase.walkrecord.dto.response.GetWalkRecordLocationResponseDto;
+import com.example.petapp.application.usecase.walkrecord.dto.response.GetWalkRecordResponseDto;
 import com.example.petapp.interfaces.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

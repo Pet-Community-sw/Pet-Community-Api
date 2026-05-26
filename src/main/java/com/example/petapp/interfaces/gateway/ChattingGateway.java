@@ -1,9 +1,9 @@
 package com.example.petapp.interfaces.gateway;
 
-import com.example.petapp.application.in.chatting.ChattingUseCase;
-import com.example.petapp.application.in.chatting.TypingIndicatorUseCase;
-import com.example.petapp.application.in.chatting.model.dto.ChatMessageDto;
-import com.example.petapp.application.in.chatting.model.dto.TypingMessageDto;
+import com.example.petapp.application.usecase.chatting.ChattingUseCase;
+import com.example.petapp.application.usecase.chatting.TypingIndicatorUseCase;
+import com.example.petapp.application.usecase.chatting.model.dto.ChatMessageDto;
+import com.example.petapp.application.usecase.chatting.model.dto.TypingMessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;

@@ -1,14 +1,14 @@
 package com.example.petapp.interfaces.controller;
 
 import com.example.petapp.application.common.AuthUtil;
-import com.example.petapp.application.in.member.MemberUseCase;
-import com.example.petapp.application.in.member.object.dto.request.MemberSignDto;
-import com.example.petapp.application.in.member.object.dto.request.ResetPasswordDto;
-import com.example.petapp.application.in.member.object.dto.request.UpdateMemberRequestDto;
-import com.example.petapp.application.in.member.object.dto.response.FindByIdResponseDto;
-import com.example.petapp.application.in.member.object.dto.response.GetMemberResponseDto;
-import com.example.petapp.application.in.member.object.dto.response.MemberSearchResponseDto;
-import com.example.petapp.application.in.member.object.dto.response.MemberSignResponseDto;
+import com.example.petapp.application.usecase.member.MemberUseCase;
+import com.example.petapp.application.usecase.member.object.dto.request.MemberSignDto;
+import com.example.petapp.application.usecase.member.object.dto.request.ResetPasswordDto;
+import com.example.petapp.application.usecase.member.object.dto.request.UpdateMemberRequestDto;
+import com.example.petapp.application.usecase.member.object.dto.response.FindByIdResponseDto;
+import com.example.petapp.application.usecase.member.object.dto.response.GetMemberResponseDto;
+import com.example.petapp.application.usecase.member.object.dto.response.MemberSearchResponseDto;
+import com.example.petapp.application.usecase.member.object.dto.response.MemberSignResponseDto;
 import com.example.petapp.interfaces.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
