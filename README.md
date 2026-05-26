@@ -2,18 +2,7 @@
 
 멍냥로드는 반려견 보호자들이 정보를 공유하고, 함께 산책할 사용자를 찾으며, 실시간으로 소통할 수 있도록 지원하는 반려동물 커뮤니티 서비스입니다.
 
-프론트엔드 1명, 백엔드 1명이 함께 진행한 팀 프로젝트이며, 저는 백엔드 개발을 담당했습니다.
-
----
-
-## 주요 기능
-
-- 게시글, 댓글, 좋아요 기반 커뮤니티 기능
-- 산책 친구 모집 및 신청 기능
-- 1:1 및 그룹 실시간 채팅
-- 사용자 위치 이벤트 처리 및 실시간 위치 공유
-- 알림 기능
-- 회원 검색 기능
+프론트엔드 1명, 백엔드 1명이 함께 진행한 팀 프로젝트이며, 백엔드 개발을 담당했습니다.
 
 ---
 
@@ -21,11 +10,9 @@
 
 - Language: Java
 - Framework: Spring Boot, Spring Data JPA
-- Database: MySQL, Redis, Elasticsearch
-- Message Broker: RabbitMQ
-- CDC: Debezium
+- Database: MySQL, Redis
 - Realtime: WebSocket, STOMP
-- Cloud: AWS EC2, Amazon RDS, Amazon S3, Amazon CloudFront
+- Cloud: AWS EC2, RDS, S3, CloudFront
 - CI/CD: GitHub Actions
 
 
@@ -83,14 +70,18 @@ chmod +x ./init-script.sh
 
 ## System Architecture
 
-<img width="858" height="534" alt="system architecture" src="https://github.com/user-attachments/assets/6554e787-95e6-4056-8631-e291fae932ed" />
+<img width="650" alt="Screenshot 2026-05-26 at 12 21 55" src="https://github.com/user-attachments/assets/f63805c1-6554-4dc1-b49f-51c735660aed" />
 
+---
+
+## CI/CD Architecture
+<img width="1149" height="593" alt="Screenshot 2026-05-26 at 12 22 12" src="https://github.com/user-attachments/assets/67d8f9b4-3e12-4d12-ab46-bb35c635179d" />
 
 ---
 
 ## 기술적 고민과 해결
 
-### 1. 부가 작업 처리로 인해 응답 시간이 불규칙하고 예측이 어려운 문제
+### 1. 핵심 요청 흐름에 부가 작업이 포함되어 응답 성능이 저하된 문제
 
 - Architecture
 
