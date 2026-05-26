@@ -70,7 +70,8 @@ chmod +x ./init-script.sh
 
 ## System Architecture
 
-<img width="650" alt="Screenshot 2026-05-26 at 12 21 55" src="https://github.com/user-attachments/assets/f63805c1-6554-4dc1-b49f-51c735660aed" />
+<img width="650" alt="System Architecture" src="https://github.com/user-attachments/assets/89a08700-65f4-4c5b-8dca-c55089e946b1" />
+
 
 ---
 
