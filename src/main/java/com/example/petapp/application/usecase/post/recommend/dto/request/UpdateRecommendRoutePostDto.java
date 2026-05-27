@@ -2,7 +2,7 @@ package com.example.petapp.application.usecase.post.recommend.dto.request;
 
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 @Getter
 @Setter

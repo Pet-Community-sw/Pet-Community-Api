@@ -11,9 +11,26 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface JpaDelegateWalkPostRepository extends JpaRepository<DelegateWalkPost, Long> {
-    @Query("select d from DelegateWalkPost d " +
-            "where st_distance_sphere(point(d.location.locationLongitude, d.location.locationLatitude), point(:longitude, :latitude)) <= 1000" +
-            "order by d.createdAt desc"
+    @Query(
+            value = """
+                    select d.*
+                    from delegate_walk_post d
+                    join post p on p.id = d.post_id
+                    where st_distance_sphere(
+                        point(d.location_longitude, d.location_latitude),
+                        point(:longitude, :latitude)
+                    ) <= 1000
+                    order by p.created_at desc
+                    """,
+            countQuery = """
+                    select count(*)
+                    from delegate_walk_post d
+                    where st_distance_sphere(
+                        point(d.location_longitude, d.location_latitude),
+                        point(:longitude, :latitude)
+                    ) <= 1000
+                    """,
+            nativeQuery = true
     )
     Page<DelegateWalkPost> findByDelegateWalkPostByPlace(//나중에 paging해야할듯.
                                                          @Param("longitude") Double longitude,

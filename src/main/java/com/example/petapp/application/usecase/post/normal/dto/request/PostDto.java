@@ -3,7 +3,7 @@ package com.example.petapp.application.usecase.post.normal.dto.request;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 @Getter
 @Setter

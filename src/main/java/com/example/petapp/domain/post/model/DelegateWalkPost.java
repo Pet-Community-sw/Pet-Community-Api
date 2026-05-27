@@ -10,9 +10,9 @@ import com.example.petapp.domain.profile.model.Profile;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;

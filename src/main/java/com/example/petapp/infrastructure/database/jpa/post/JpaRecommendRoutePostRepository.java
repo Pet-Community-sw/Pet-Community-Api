@@ -8,9 +8,27 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface JpaRecommendRoutePostRepository extends JpaRepository<RecommendRoutePost, Long> {
-    @Query("select r from RecommendRoutePost r " +
-            "where st_distance_sphere(point(r.location.locationLongitude, r.location.locationLatitude), point(:longitude, :latitude)) <= 1000" +
-            "order by r.createdAt desc")
+    @Query(
+            value = """
+                    select r.*
+                    from recommend_route_post r
+                    join post p on p.id = r.post_id
+                    where st_distance_sphere(
+                        point(r.location_longitude, r.location_latitude),
+                        point(:longitude, :latitude)
+                    ) <= 1000
+                    order by p.created_at desc
+                    """,
+            countQuery = """
+                    select count(*)
+                    from recommend_route_post r
+                    where st_distance_sphere(
+                        point(r.location_longitude, r.location_latitude),
+                        point(:longitude, :latitude)
+                    ) <= 1000
+                    """,
+            nativeQuery = true
+    )
     Page<RecommendRoutePost> findByRecommendRoutePostByPlace(@Param("longitude") Double longitude,
                                                              @Param("latitude") Double latitude,
                                                              Pageable pageable);

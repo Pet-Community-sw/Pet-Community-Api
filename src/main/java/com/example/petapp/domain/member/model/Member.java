@@ -10,11 +10,11 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.validation.constraints.NotBlank;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 

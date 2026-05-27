@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,17 +22,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .formLogin().disable()
-                .csrf().disable()
-                .cors()
-                .and()
-                .httpBasic().disable()
-                .authorizeRequests()
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .formLogin(form -> form.disable())
+                .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults())
+                .httpBasic(httpBasic -> httpBasic.disable())
+                .authorizeHttpRequests(auth -> auth
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .mvcMatchers("/error", "/error/**").permitAll()
-                .antMatchers(
+                .requestMatchers("/error", "/error/**").permitAll()
+                .requestMatchers(
                         "/swagger",
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
@@ -40,23 +39,20 @@ public class SecurityConfig {
                         "/actuator/prometheus",
                         "/webjars/**"
                 ).permitAll()
-                .antMatchers("/image/profiles/**", "/image/members/**", "/image/posts/**", "/image/basic/**", "/favicon.ico").permitAll()
-                .mvcMatchers("/ws-stomp/**", "/pub/**", "/sub/**").permitAll()
-                .mvcMatchers("/members", "/members/login").permitAll()
-                .mvcMatchers("/auth", "/auth/emails", "/auth/emails/verify").permitAll()
-                .mvcMatchers("/token").permitAll()
+                .requestMatchers("/image/profiles/**", "/image/members/**", "/image/posts/**", "/image/basic/**", "/favicon.ico").permitAll()
+                .requestMatchers("/ws-stomp/**", "/pub/**", "/sub/**").permitAll()
+                .requestMatchers("/members", "/members/login").permitAll()
+                .requestMatchers("/auth", "/auth/emails", "/auth/emails/verify").permitAll()
+                .requestMatchers("/token").permitAll()
                 // 임시 비밀번호 발급 후 비밀번호 변경은 TEMPORARY 권한도 허용
-                .mvcMatchers("/members/reset-password").hasAnyRole("USER", "TEMPORARY")
+                .requestMatchers("/members/reset-password").hasAnyRole("USER", "TEMPORARY")
                 //ROLE_안붙여도 spring security가 자동으로 붙여줌
                 //여기서 설정 후 @PreAuthorize 설정 불가능 config에서 막히는게 우선순위가 더 높음
-                .mvcMatchers("/**").hasAnyRole("USER")
+                .requestMatchers("/**").hasAnyRole("USER")
                 .anyRequest().authenticated()
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(customAuthenticationEntryPoint)
-                .and()
-                .apply(authenticationManagerConfig)
-                .and()
+                )
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(customAuthenticationEntryPoint))
+                .with(authenticationManagerConfig, Customizer.withDefaults())
                 .build();
     }
 

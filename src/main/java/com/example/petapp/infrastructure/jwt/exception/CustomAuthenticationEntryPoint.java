@@ -1,21 +1,25 @@
 package com.example.petapp.infrastructure.jwt.exception;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
@@ -46,8 +50,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         Map<String, Object> errorInfo = new HashMap<>();
         errorInfo.put("message", exceptionCode.getMessage());
         errorInfo.put("code", exceptionCode.getCode());
-        Gson gson = new Gson(); //todo : 체크
-        String responseJson = gson.toJson(errorInfo);
+        String responseJson = objectMapper.writeValueAsString(errorInfo);
         response.getWriter().print(responseJson);
     }
 }

@@ -3,7 +3,7 @@ package com.example.petapp.application.usecase.match.dto.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter
