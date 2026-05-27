@@ -80,7 +80,7 @@ public class ProfileService implements ProfileUseCase {
         member.validateProfile(member, profile.getMember());
         validateBreed(profileDto, profile);
         String imageFileName = storagePort.uploadFile(profileDto.getPetImageUrl(), FileKind.PROFILE);
-        profile.updateProfile(profile, profileDto, imageFileName, petBreed);
+        profile.updateProfile(profileDto.getPetName(), profileDto.getPetBirthDate(), profileDto.getExtraInfo(), imageFileName, petBreed);
     }
 
     @Transactional

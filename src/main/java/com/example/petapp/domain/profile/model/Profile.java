@@ -1,6 +1,5 @@
 package com.example.petapp.domain.profile.model;
 
-import com.example.petapp.application.usecase.profile.dto.request.ProfileDto;
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.member.model.Member;
@@ -83,14 +82,14 @@ public class Profile extends BaseEntity {
         avoidBreeds.add(dogBreed);
     }
 
-    public void updateProfile(Profile profile, ProfileDto profileDto, String imageFimeName, PetBreed petBreed) {
-        profile.setPetImageUrl("/profile/" + imageFimeName);
-        profile.setPetName(profileDto.getPetName());
-        profile.setPetBirthDate(profileDto.getPetBirthDate());
-        profile.setPetAge(CalculateAge(profileDto.getPetBirthDate()) + "살");
-        profile.setPetBreed(petBreed);
-        profile.setExtraInfo(profileDto.getExtraInfo());
-        profile.getAvoidBreeds().clear();
+    public void updateProfile(String petName, LocalDate petBirthDate, String extraInfo, String imageFimeName, PetBreed petBreed) {
+        setPetImageUrl("/profile/" + imageFimeName);
+        setPetName(petName);
+        setPetBirthDate(petBirthDate);
+        setPetAge(CalculateAge(petBirthDate) + "살");
+        setPetBreed(petBreed);
+        setExtraInfo(extraInfo);
+        getAvoidBreeds().clear();
     }
 
 }
