@@ -6,7 +6,6 @@ import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.SeqCachePort;
 import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.usecase.profile.ProfileQueryUseCase;
-import com.example.petapp.domain.chatmessage.AckInfoRepository;
 import com.example.petapp.domain.chatmessage.ChatMessageRepository;
 import com.example.petapp.domain.chatmessage.model.ChatMessage;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
@@ -16,9 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.messaging.simp.user.SimpUser;
-import org.springframework.messaging.simp.user.SimpUserRegistry;
-import org.springframework.scheduling.TaskScheduler;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -47,12 +43,6 @@ class TalkStrategyTest {
     @Mock
     private LastMessageCachePort lastMessageCachePort;
     @Mock
-    private AckInfoRepository ackInfoRepository;
-    @Mock
-    private SimpUserRegistry simpUserRegistry;
-    @Mock
-    private TaskScheduler resendScheduler;
-    @Mock
     private ApplicationEventPublisher eventPublisher;
 
     @InjectMocks
@@ -76,13 +66,6 @@ class TalkStrategyTest {
         when(chatMessageRepository.findCurrent(10L)).thenReturn(Optional.empty());
         when(seqCachePort.increment(10L)).thenReturn(1L);
         when(chatOnlineCachePort.find(10L)).thenReturn(Set.of());
-        when(ackInfoRepository.find("c1")).thenReturn(Set.of());
-        when(resendScheduler.schedule(any(Runnable.class), any(java.util.Date.class)))
-                .thenAnswer(invocation -> {
-                    Runnable runnable = invocation.getArgument(0);
-                    runnable.run();
-                    return null;
-                });
 
         talkStrategy.handle(chatMessage);
 
@@ -90,41 +73,7 @@ class TalkStrategyTest {
         verify(seqCachePort).create(10L, 0L);
         verify(chatMessageRepository).save(chatMessage);
         verify(sendPort).send(eq("/sub/chat/10"), any());
-        verify(ackInfoRepository).save("c1", Set.of());
         verify(lastMessageCachePort).create(chatMessage);
         verify(eventPublisher, never()).publishEvent(any());
-    }
-
-    @Test
-    void 재전송시_미확인유저가_온라인이면_sendToUser를_호출하고_ack를_정리한다() {
-        ChatMessage chatMessage = ChatMessage.builder()
-                .clientMessageId("c2")
-                .chatRoomId(20L)
-                .senderId(2L)
-                .senderName("철수")
-                .message("재전송 테스트")
-                .messageTime(LocalDateTime.now())
-                .build();
-
-        ChatRoom chatRoom = org.mockito.Mockito.mock(ChatRoom.class);
-        SimpUser simpUser = org.mockito.Mockito.mock(SimpUser.class);
-        when(chatRoom.getUsers()).thenReturn(Set.of(2L, 3L));
-        when(chatRoomQueryUseCase.find(20L)).thenReturn(chatRoom);
-        when(seqCachePort.exist(20L)).thenReturn(true);
-        when(seqCachePort.increment(20L)).thenReturn(5L);
-        when(chatOnlineCachePort.find(20L)).thenReturn(Set.of("3"));
-        when(ackInfoRepository.find("c2")).thenReturn(Set.of(3L));
-        when(simpUserRegistry.getUser("3")).thenReturn(simpUser);
-        when(resendScheduler.schedule(any(Runnable.class), any(java.util.Date.class)))
-                .thenAnswer(invocation -> {
-                    Runnable runnable = invocation.getArgument(0);
-                    runnable.run();
-                    return null;
-                });
-
-        talkStrategy.handle(chatMessage);
-
-        verify(sendPort).sendToUser(eq("3"), eq("/sub/chat"), any());
-        verify(ackInfoRepository).clear("c2");
     }
 }

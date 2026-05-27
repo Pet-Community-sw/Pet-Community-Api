@@ -11,20 +11,15 @@ import com.example.petapp.application.usecase.chatmessage.model.type.CommandType
 import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.usecase.notification.dto.NotificationEvent;
 import com.example.petapp.application.usecase.profile.ProfileQueryUseCase;
-import com.example.petapp.domain.chatmessage.AckInfoRepository;
 import com.example.petapp.domain.chatmessage.ChatMessageRepository;
 import com.example.petapp.domain.chatmessage.model.ChatMessage;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.profile.model.Profile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.messaging.simp.user.SimpUserRegistry;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -37,9 +32,6 @@ public class TalkStrategy implements MessageTypeStrategy {
     private final SeqCachePort seqCachePort;
     private final ChatOnlineCachePort chatOnlineCachePort;
     private final LastMessageCachePort lastMessageCachePort;
-    private final AckInfoRepository ackInfoRepository;
-    private final SimpUserRegistry simpUserRegistry;
-    private final TaskScheduler resendScheduler;//stompConfig에서 선언해놓았던 스케줄러가 선언이됨.
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
@@ -59,7 +51,6 @@ public class TalkStrategy implements MessageTypeStrategy {
         sendPort.send("/sub/chat/" + chatMessage.getChatRoomId(),
                 SendResponseDto.builder().commandType(CommandType.TALK).body(chatMessage).build());
 
-        scheduleRetry(chatMessage);
         sendChatNotificationAndUpdateList(chatMessage);
         lastMessageCachePort.create(chatMessage);
     }
@@ -87,39 +78,5 @@ public class TalkStrategy implements MessageTypeStrategy {
                     sendPort.send("/sub/list/" + profile.getMember().getId(),
                             SendResponseDto.builder().commandType(CommandType.LIST_UPDATE).body(new UpdateListDto(chatRoomId, chatMessage.getMessage(), chatMessage.getMessageTime())).build());
                 });
-    }
-
-    /**
-     * 재전송 로직 한번만 재전송을함.
-     */
-    private void scheduleRetry(ChatMessage chatMessage) {
-        ChatRoom chatRoom = chatRoomQueryUseCase.find(chatMessage.getChatRoomId());
-        Set<Long> sendUsers = chatRoom.getUsers().stream()
-                .filter(userId -> !userId.equals(chatMessage.getSenderId()))
-                .collect(Collectors.toSet());
-        ackInfoRepository.save(chatMessage.getClientMessageId(), sendUsers);
-
-        resendScheduler.schedule(
-                () -> retrySend(chatMessage),// 실행할 작업
-                new Date(System.currentTimeMillis() + 1000) // 1초 후 실행
-        );
-    }
-
-    private void retrySend(ChatMessage chatMessage) {
-
-        Set<Long> unAckedUsers = ackInfoRepository.find(chatMessage.getClientMessageId());
-        if (unAckedUsers.isEmpty()) {
-            return;
-        }
-        // 재전송 로직
-        for (Long userId : unAckedUsers) {
-            if (simpUserRegistry.getUser(userId.toString()) == null) {
-                continue; //unsubscribe는 패스
-            }
-            sendPort.sendToUser(
-                    userId.toString(), "/sub/chat",
-                    SendResponseDto.builder().commandType(CommandType.TALK).body(chatMessage).build());
-        }
-        ackInfoRepository.clear(chatMessage.getClientMessageId());
     }
 }
