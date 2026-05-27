@@ -1,13 +1,13 @@
 package com.example.petapp.domain.walkingtogetherPost.model;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.match.dto.request.UpdateWalkingTogetherPostDto;
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.petbreed.model.PetBreed;
 import com.example.petapp.domain.post.model.RecommendRoutePost;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.interfaces.exception.ConflictException;
-import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Cascade;
@@ -57,15 +57,15 @@ public class WalkingTogetherPost extends BaseEntity {
 
     public void checkInMatch(Long profileId, PetBreed petBreed) {
         if (getProfiles().contains(profileId)) {
-            throw new ConflictException("이미 채팅방에 들어가있습니다.");
+            throw new PetCommunityException(ErrorCode.CONFLICT, "이미 채팅방에 들어가있습니다.");
         } else if (getAvoidBreeds().contains(petBreed.getId())) {
-            throw new ForbiddenException("해당 종은 참여할 수 없습니다.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "해당 종은 참여할 수 없습니다.");
         }
     }
 
     public void validated(Long profileId) {
         if (!(getProfile().getId().equals(profileId))) {
-            throw new ForbiddenException("권한이 없습니다.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "권한이 없습니다.");
         }
     }
 
@@ -89,7 +89,7 @@ public class WalkingTogetherPost extends BaseEntity {
 
     public void checkLimitCount(ChatRoom chatRoom) {
         if (limitCount <= chatRoom.getUsers().size()) {
-            throw new ConflictException("인원초과");
+            throw new PetCommunityException(ErrorCode.CONFLICT, "인원초과");
         }
     }
 }

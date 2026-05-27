@@ -3,6 +3,9 @@ package com.example.petapp.application.usecase.chatroom.service;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.application.out.cache.SeqCachePort;
+import com.example.petapp.application.usecase.chatmessage.ReaderUseCase;
+import com.example.petapp.application.usecase.chatmessage.model.dto.LastMessageInfoDto;
+import com.example.petapp.application.usecase.chatmessage.model.type.ChatRoomType;
 import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.usecase.chatroom.ChatRoomUseCase;
 import com.example.petapp.application.usecase.chatroom.dto.request.UpdateChatRoomDto;
@@ -10,14 +13,11 @@ import com.example.petapp.application.usecase.chatroom.dto.response.ChatMessageR
 import com.example.petapp.application.usecase.chatroom.dto.response.ChatRoomResponseDto;
 import com.example.petapp.application.usecase.chatroom.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.application.usecase.chatroom.mapper.ChatRoomMapper;
-import com.example.petapp.application.usecase.chatting.ReaderUseCase;
-import com.example.petapp.application.usecase.chatting.model.dto.LastMessageInfoDto;
-import com.example.petapp.application.usecase.chatting.model.type.ChatRoomType;
 import com.example.petapp.application.usecase.profile.ProfileQueryUseCase;
 import com.example.petapp.application.usecase.profile.dto.response.ChatRoomUsersResponseDto;
+import com.example.petapp.domain.chatmessage.ChatMessageRepository;
 import com.example.petapp.domain.chatroom.ChatRoomRepository;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
-import com.example.petapp.domain.chatting.ChatMessageRepository;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
@@ -103,7 +103,7 @@ public class ChatRoomService implements ChatRoomUseCase {
         ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
         chatRoom.validateUser(userId);
         chatRoom.deleteUser(userId);
-        readMessageCachePort.delete(chatRoomId, userId);
+        readMessageCachePort.deleteReadSeq(chatRoomId, userId);
         if (chatRoomRepository.countByProfile(chatRoomId) <= 1) {//방 사용자 수가 1이되면 채팅방 전체 삭제.
             chatMessageRepository.delete(chatRoomId);//채팅방 메시지 삭제.
             chatRoomRepository.delete(chatRoomId);
@@ -134,7 +134,7 @@ public class ChatRoomService implements ChatRoomUseCase {
     }
 
     private ChatRoomResponseDto toChatRoomsResponseDtoWithRedis(ChatRoom chatRoom, Long userId, Map<Long, Profile> profileMap) {
-        LastMessageInfoDto lastMessageInfoDto = lastMessageCachePort.find(chatRoom.getId());
+        LastMessageInfoDto lastMessageInfoDto = lastMessageCachePort.findLastMessageInfo(chatRoom.getId());
         Set<ChatRoomUsersResponseDto> users = chatRoom.getUsers().stream().map(id ->
                         ChatRoomMapper.toChatRoomUsersResponseDto(profileMap.get(id))
                 )//Member일 때도 구현해야할듯.
@@ -143,8 +143,8 @@ public class ChatRoomService implements ChatRoomUseCase {
     }
 
     private void deleteRedis(Long chatRoomId) {
-        seqCachePort.delete(chatRoomId);
-        lastMessageCachePort.delete(chatRoomId);
-        readMessageCachePort.delete(chatRoomId);
+        seqCachePort.deleteSeq(chatRoomId);
+        lastMessageCachePort.deleteLastMessageInfo(chatRoomId);
+        readMessageCachePort.deleteRoomReadState(chatRoomId);
     }
 }

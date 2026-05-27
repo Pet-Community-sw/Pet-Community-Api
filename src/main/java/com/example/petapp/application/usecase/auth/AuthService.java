@@ -1,5 +1,7 @@
 package com.example.petapp.application.usecase.auth;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.email.EmailUseCase;
 import com.example.petapp.application.usecase.member.MemberQueryUseCase;
 import com.example.petapp.application.usecase.member.object.dto.request.AccessTokenResponseDto;
@@ -12,7 +14,6 @@ import com.example.petapp.application.usecase.token.TokenUseCase;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.member.model.MemberRole;
 import com.example.petapp.domain.role.Role;
-import com.example.petapp.interfaces.exception.UnAuthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class AuthService implements AuthUseCase {
     public LoginResponseDto login(LoginDto loginDto) {
         Member member = memberQueryUseCase.findOrThrow(loginDto.getEmail());
         if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
-            throw new UnAuthorizedException("이메일 혹은 비밀번호가 일치하지 않습니다.");
+            throw new PetCommunityException(ErrorCode.UNAUTHORIZED, "이메일 혹은 비밀번호가 일치하지 않습니다.");
         }
         Role role = roleQueryUseCase.findUserRole();
         setRole(member, role);

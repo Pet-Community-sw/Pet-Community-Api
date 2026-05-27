@@ -31,8 +31,6 @@ public class StompInterceptor implements ChannelInterceptor {
         StompCommandStrategy strategy = commandStrategyMap.get(accessor.getCommand());
         if (strategy != null) {
             strategy.handle(accessor);
-        } else {
-            throw new IllegalArgumentException("지원하지 않는 command");
         }
         return message;
     }

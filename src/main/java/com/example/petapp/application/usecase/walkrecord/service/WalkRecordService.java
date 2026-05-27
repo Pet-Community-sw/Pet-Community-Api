@@ -57,7 +57,7 @@ public class WalkRecordService implements WalkRecordUseCase {
         Member member = memberQueryUseCase.findOrThrow(id);
         WalkRecord walkRecord = walkRecordQueryUseCase.findOrThrow(walkRecordId);
         walkRecord.validateMember(member.getId());
-        return new GetWalkRecordLocationResponseDto(port.find(walkRecordId));
+        return new GetWalkRecordLocationResponseDto(port.findLatestLocation(walkRecordId));
     }
 
     @Transactional
@@ -88,11 +88,11 @@ public class WalkRecordService implements WalkRecordUseCase {
     }
 
     private void updateWalkRecordPathData(Long walkRecordId, WalkRecord walkRecord) {
-        List<String> paths = port.findList(walkRecordId);
+        List<String> paths = port.findPath(walkRecordId);
 
         Double totalDistance = DistanceUtil.calculateTotalDistance(paths);
         walkRecord.updateRecordToPath(totalDistance, paths);
-        port.delete(walkRecordId);
+        port.deletePath(walkRecordId);
     }
 
 }

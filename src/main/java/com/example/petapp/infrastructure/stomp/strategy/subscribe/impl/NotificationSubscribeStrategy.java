@@ -14,19 +14,20 @@ import java.util.Map;
 @Slf4j
 public class NotificationSubscribeStrategy extends SubscribeTypeStrategy {
 
-    private static final String PATTEN = "/sub/notification/{id}";
+    private static final String KEY = "id";
+    private static final String PATTERN = "/sub/notification/{" + KEY + "}";
 
     private final MemberQueryUseCase useCase;
 
     @Override
     public boolean isHandler(String destination) {
-        return PATH.match(PATTEN, destination);
+        return PATH.match(PATTERN, destination);
     }
 
     @Override
     public void handle(SubscribeInfo subscribeInfo) {
-        Map<String, String> map = pathMap(PATTEN, subscribeInfo.getDestination());
-        Long memberId = Long.valueOf(map.get("id"));
+        Map<String, String> map = pathMap(PATTERN, subscribeInfo.getDestination());
+        Long memberId = Long.valueOf(map.get(KEY));
         useCase.findOrThrow(memberId);
         log.info("[STOMP] notification 구독 id : {}", memberId);
     }

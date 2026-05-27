@@ -1,9 +1,10 @@
 package com.example.petapp.application.usecase.walkrecord.service;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.walkrecord.WalkRecordQueryUseCase;
 import com.example.petapp.domain.walkrecord.WalkRecordRepository;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
-import com.example.petapp.interfaces.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,7 @@ public class WalkRecordQueryService implements WalkRecordQueryUseCase {
     @Override
     @Transactional(readOnly = true)
     public WalkRecord findOrThrow(Long id) {
-        return repository.find(id).orElseThrow(() -> new NotFoundException("해당 산책기록은 없습니다."));
+        return repository.find(id).orElseThrow(() -> new PetCommunityException(ErrorCode.NOT_FOUND, "해당 산책기록은 없습니다."));
     }
 
     @Override

@@ -1,9 +1,10 @@
 package com.example.petapp.application.usecase.match.service;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.match.WalkingTogetherPostQueryUseCase;
 import com.example.petapp.domain.walkingtogetherPost.WalkingTogetherPostRepository;
 import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
-import com.example.petapp.interfaces.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,6 @@ public class WalkingTogetherPostQueryService implements WalkingTogetherPostQuery
 
     @Override
     public WalkingTogetherPost findOrThrow(Long id) {
-        return repository.find(id).orElseThrow(() -> new NotFoundException("해당 함께 산책해요 게시글은 없습니다."));
+        return repository.find(id).orElseThrow(() -> new PetCommunityException(ErrorCode.NOT_FOUND, "해당 함께 산책해요 게시글은 없습니다."));
     }
 }

@@ -1,11 +1,11 @@
 package com.example.petapp.application.out.cache;
 
 public interface EmailCachePort {
-    void createWithDuration(String key, String value, long duration);
+    void createAuthCode(String email, String code, long ttlSeconds);
 
-    boolean exist(String key);
+    boolean exists(String email);
 
-    void delete(String key);
+    void deleteAuthCode(String email);
 
-    String get(String key);
+    String findAuthCode(String email);
 }

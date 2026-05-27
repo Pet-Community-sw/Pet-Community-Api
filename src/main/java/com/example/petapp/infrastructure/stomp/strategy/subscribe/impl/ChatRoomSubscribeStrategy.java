@@ -1,9 +1,11 @@
 package com.example.petapp.infrastructure.stomp.strategy.subscribe.impl;
 
-import com.example.petapp.application.out.cache.ChatOnlineCachePort;
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
-import com.example.petapp.infrastructure.stomp.DestinationCachePort;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
+import com.example.petapp.infrastructure.stomp.store.ChatOnlineStore;
+import com.example.petapp.infrastructure.stomp.store.ChatRoomSubscriptionStore;
 import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +18,12 @@ import java.util.Map;
 @Slf4j
 public class ChatRoomSubscribeStrategy extends SubscribeTypeStrategy {
 
-    private static final String PATTERN = "/sub/chat/{chatRoomId}";
+    private static final String KEY = "chatRoomId";
+    private static final String PATTERN = "/sub/chat/{" + KEY + "}";
 
     private final ChatRoomQueryUseCase chatRoomQueryUseCase;
-    private final ChatOnlineCachePort chatOnlineCachePort;
-    private final DestinationCachePort destinationCachePort;
+    private final ChatOnlineStore chatOnlineStore;
+    private final ChatRoomSubscriptionStore chatRoomSubscriptionStore;
 
     @Override
     public boolean isHandler(String destination) {
@@ -30,15 +33,14 @@ public class ChatRoomSubscribeStrategy extends SubscribeTypeStrategy {
     @Override
     public void handle(SubscribeInfo subscribeInfo) {
         Map<String, String> map = pathMap(PATTERN, subscribeInfo.getDestination());
-        String chatRoomId = map.get("chatRoomId");
-        String profileId = subscribeInfo.getPrincipal().getName();
+        Long chatRoomId = Long.valueOf(map.get(KEY));
+        Long memberId = Long.valueOf(subscribeInfo.getPrincipal().getName());
 
-        if (!chatRoomQueryUseCase.isExist(Long.valueOf(chatRoomId), Long.valueOf(profileId))) {
-            throw new IllegalArgumentException("잘못된 접근입니다.");
+        if (!chatRoomQueryUseCase.isExist(chatRoomId, memberId)) {
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "해당 채팅방에 접근할 권한이 없습니다.");
         }
-        chatOnlineCachePort.create(chatRoomId, profileId);
-        destinationCachePort.create(subscribeInfo.getSubscriptionId(), chatRoomId);
+        chatOnlineStore.createOnlineUser(chatRoomId, memberId);
+        chatRoomSubscriptionStore.createChatRoomSubscription(subscribeInfo.getSubscriptionId(), chatRoomId);
 
-        log.info("[STOMP] 구독 chatRoomId: {}, profileId: {}", chatRoomId, profileId);
     }
 }

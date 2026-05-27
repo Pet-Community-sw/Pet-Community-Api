@@ -1,5 +1,7 @@
 package com.example.petapp.application.usecase.post.service;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.chatroom.ChatRoomUseCase;
 import com.example.petapp.application.usecase.chatroom.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.application.usecase.member.MemberQueryUseCase;
@@ -22,7 +24,6 @@ import com.example.petapp.domain.post.PostRepository;
 import com.example.petapp.domain.post.model.Applicant;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
@@ -79,7 +80,7 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
         Member member = memberQueryUseCase.findOrThrow(id);
         DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
         if (delegateWalkPost.filtering(member)) {
-            throw new ForbiddenException("프로필 등록해주세요.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "프로필 등록해주세요.");
         }
         postRepository.incrementViewCount(delegateWalkPostId);
         return DelegateWalkPostMapper.toGetPostResponseDto(delegateWalkPost, member);

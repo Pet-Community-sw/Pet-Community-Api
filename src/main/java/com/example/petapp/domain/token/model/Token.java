@@ -1,9 +1,10 @@
 package com.example.petapp.domain.token.model;
 
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -28,7 +29,7 @@ public class Token extends BaseEntity {
 
     public void isEqual(String refreshToken) {
         if (!this.refreshToken.equals(refreshToken)) {
-            throw new ForbiddenException("RefreshToken이 유효하지 않습니다.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "RefreshToken이 유효하지 않습니다.");
         }
     }
 

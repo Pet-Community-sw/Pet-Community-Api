@@ -1,7 +1,7 @@
 package com.example.petapp.application.out.cache;
 
 public interface TokenCachePort {
-    void create(String key, String value, long duration);
+    void blacklist(String accessToken, long duration);
 
-    boolean exist(String key);
+    boolean isBlacklisted(String accessToken);
 }

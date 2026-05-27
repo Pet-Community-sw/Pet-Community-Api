@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.database.adapter;
 
-import com.example.petapp.domain.chatting.ChatMessageRepository;
-import com.example.petapp.domain.chatting.model.ChatMessage;
+import com.example.petapp.domain.chatmessage.ChatMessageRepository;
+import com.example.petapp.domain.chatmessage.model.ChatMessage;
 import com.example.petapp.infrastructure.database.jpa.chatting.JpaChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

@@ -1,9 +1,10 @@
 package com.example.petapp.infrastructure.stomp.strategy.subscribe.impl;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.member.MemberQueryUseCase;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;
-import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,8 @@ import java.util.Map;
 @Slf4j
 public class RoomListSubscribeStrategy extends SubscribeTypeStrategy {
 
-    private static final String PATTERN = "/sub/list/{userId}";
+    private static final String KEY = "userId";
+    private static final String PATTERN = "/sub/list/{" + KEY + "}";
 
     private final MemberQueryUseCase useCase;
 
@@ -27,11 +29,11 @@ public class RoomListSubscribeStrategy extends SubscribeTypeStrategy {
     @Override
     public void handle(SubscribeInfo subscribeInfo) {
         Map<String, String> map = pathMap(PATTERN, subscribeInfo.getDestination());
-        Long userId = Long.valueOf(map.get("userId"));
+        Long userId = Long.valueOf(map.get(KEY));
         if (userId.equals(Long.valueOf(subscribeInfo.getPrincipal().getName()))) {
             useCase.findOrThrow(userId);
         } else {
-            throw new ForbiddenException("[STOMP] userId가 다릅니다.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "[STOMP] userId가 다릅니다.");
         }
     }
 }

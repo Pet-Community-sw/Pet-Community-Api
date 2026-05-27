@@ -1,11 +1,11 @@
 package com.example.petapp.domain.chatroom.model;
 
-import com.example.petapp.application.usecase.chatting.model.type.ChatRoomType;
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
+import com.example.petapp.application.usecase.chatmessage.model.type.ChatRoomType;
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
-import com.example.petapp.interfaces.exception.ConflictException;
-import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -52,13 +52,13 @@ public class ChatRoom extends BaseEntity {
 
     public void validateUser(Long userId) {
         if (!users.contains(userId)) {
-            throw new ForbiddenException("권한이 없습니다.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "권한이 없습니다.");
         }
     }
 
     public void validateChatOwner(Profile profile) {
         if (!walkingTogetherPost.getProfile().equals(profile)) {
-            throw new ForbiddenException("권한이 없습니다.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "권한이 없습니다.");
         }
     }
 
@@ -72,7 +72,7 @@ public class ChatRoom extends BaseEntity {
 
     public void checkUser(Long userId) {
         if (users.contains(userId)) {
-            throw new ConflictException("이미 채팅방이있습니다.");
+            throw new PetCommunityException(ErrorCode.CONFLICT, "이미 채팅방이있습니다.");
         }
     }
 }

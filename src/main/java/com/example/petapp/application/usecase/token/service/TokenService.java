@@ -1,5 +1,7 @@
 package com.example.petapp.application.usecase.token.service;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.out.TokenPort;
 import com.example.petapp.application.out.cache.TokenCachePort;
 import com.example.petapp.application.usecase.member.mapper.MemberMapper;
@@ -16,7 +18,6 @@ import com.example.petapp.domain.role.Role;
 import com.example.petapp.domain.token.TokenRepository;
 import com.example.petapp.domain.token.model.Token;
 import com.example.petapp.domain.token.model.TokenType;
-import com.example.petapp.interfaces.exception.UnAuthorizedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -67,7 +68,7 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
     @Override
     public TokenResponseDto reissueToken(String header, ReissueTokenRequestDto reissueTokenRequestDto) {
         if (header == null || !header.startsWith("Bearer ")) {
-            throw new UnAuthorizedException("헤더가 null이거나 Bearer로 시작하지않음");
+            throw new PetCommunityException(ErrorCode.UNAUTHORIZED, "헤더가 null이거나 Bearer로 시작하지않음");
         }
         String[] str = header.split(" ");
         String accessToken = str[1];
@@ -129,6 +130,6 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
     }
 
     private void blacklistAccessToken(String accessToken) {
-        tokenCachePort.create("blacklist", accessToken, 30 * 60L);
+        tokenCachePort.blacklist(accessToken, 30 * 60L);
     }
 }

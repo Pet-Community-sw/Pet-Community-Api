@@ -2,11 +2,9 @@ package com.example.petapp.infrastructure.stomp.config;
 
 import com.example.petapp.infrastructure.stomp.interceptor.StompInterceptor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -39,12 +37,4 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
         registration.interceptors(stompInterceptor);
     }
 
-    @Bean
-    public ThreadPoolTaskScheduler resendScheduler() {//일회성 스케줄링 작업을 처리할 쓰레드 풀
-        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-        scheduler.setPoolSize(4);//풀 크기를 설정 하나로 하트비트를 주기적으로 처리함.
-        scheduler.setThreadNamePrefix("resend-");//로그 어떤 스레드가 보내는지 구분
-        scheduler.initialize();//스케줄러 인스턴스를 초기화해서 실행 상태로 전환.
-        return scheduler;
-    }
 }

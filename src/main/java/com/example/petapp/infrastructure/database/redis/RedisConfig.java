@@ -1,0 +1,82 @@
+package com.example.petapp.infrastructure.database.redis;
+
+import com.example.petapp.application.usecase.member.object.dto.response.MemberSearchResponseDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.util.List;
+
+@Configuration
+@EnableRedisRepositories
+@Slf4j
+@Getter
+public class RedisConfig {
+
+    @Value("${spring.redis.host}")
+    private String host;
+
+    @Value("${spring.redis.port}")
+    private int port;
+
+    @Bean
+    public RedisConnectionFactory redisConnectionFactory() {
+        return new LettuceConnectionFactory(host, port);
+    }
+
+    /**
+     * 공통 ObjectMapper: JavaTimeModule 등록 + 타임스탬프 비활성화
+     */
+    private ObjectMapper jacksonMapper() {
+        ObjectMapper om = new ObjectMapper();
+        om.registerModule(new JavaTimeModule());
+        om.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        return om;
+    }
+
+    @Bean//위치 저장을 위한 redisTemplate
+    public RedisTemplate<String, Object> locationRedisTemplate() {
+        RedisTemplate<String, Object> locationRedisTemplate = new RedisTemplate<>();
+        locationRedisTemplate.setConnectionFactory(redisConnectionFactory());
+        locationRedisTemplate.setKeySerializer(new StringRedisSerializer());
+        locationRedisTemplate.setHashKeySerializer(new StringRedisSerializer());//해시 설정
+        locationRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(Object.class));
+        locationRedisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(Object.class));
+        return locationRedisTemplate;
+    }
+
+    @Bean
+    public RedisTemplate<String, Long> likeRedisTemplate() {
+        RedisTemplate<String, Long> likeRedisTemplate = new RedisTemplate<>();
+        likeRedisTemplate.setConnectionFactory(redisConnectionFactory());
+        likeRedisTemplate.setKeySerializer(new StringRedisSerializer());
+        likeRedisTemplate.setValueSerializer(new GenericToStringSerializer<>(Long.class));
+        return likeRedisTemplate;
+    }
+
+    @Bean//멤버 검색 결과 캐싱을 위한 redisTemplate
+    public RedisTemplate<String, List<MemberSearchResponseDto>> memberSearchRedisTemplate() {
+        RedisTemplate<String, List<MemberSearchResponseDto>> memberSearchRedisTemplate = new RedisTemplate<>();
+        memberSearchRedisTemplate.setConnectionFactory(redisConnectionFactory());
+        memberSearchRedisTemplate.setKeySerializer(new StringRedisSerializer());
+        memberSearchRedisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        memberSearchRedisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer(jacksonMapper()));
+        memberSearchRedisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer(jacksonMapper()));
+        memberSearchRedisTemplate.afterPropertiesSet();
+        return memberSearchRedisTemplate;
+    }
+
+}

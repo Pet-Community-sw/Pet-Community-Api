@@ -1,13 +1,13 @@
 package com.example.petapp.application.out.cache;
 
-import com.example.petapp.domain.chatting.model.ChatMessage;
+import com.example.petapp.domain.chatmessage.model.ChatMessage;
 
 public interface ReadMessageCachePort {
-    void create(ChatMessage chatMessage);
+    void markAsRead(ChatMessage chatMessage);
 
-    Long find(Long chatRoomId, Long userId);
+    Long findLastReadSeq(Long chatRoomId, Long memberId);
 
-    void delete(Long chatRoomId, Long userId);
+    void deleteReadSeq(Long chatRoomId, Long memberId);
 
-    void delete(Long chatRoomId);
+    void deleteRoomReadState(Long chatRoomId);
 }

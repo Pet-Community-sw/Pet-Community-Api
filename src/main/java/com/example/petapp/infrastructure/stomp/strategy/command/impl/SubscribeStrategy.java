@@ -1,5 +1,7 @@
 package com.example.petapp.infrastructure.stomp.strategy.command.impl;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.command.StompCommandStrategy;
 import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;
@@ -27,7 +29,7 @@ public class SubscribeStrategy implements StompCommandStrategy {
         Principal user = accessor.getUser();
 
         if (destination == null || user == null) {
-            throw new IllegalArgumentException("destination 또는 user 정보가 없습니다.");
+            throw new PetCommunityException(ErrorCode.BAD_REQUEST, "destination 또는 user 정보가 없습니다.");
         }
 
         SubscribeInfo subscribeInfo = SubscribeInfo.builder()
@@ -42,7 +44,7 @@ public class SubscribeStrategy implements StompCommandStrategy {
                 return;
             }
         }
-        throw new IllegalArgumentException("알 수 없는 구독 경로입니다.");
+        throw new PetCommunityException(ErrorCode.BAD_REQUEST, "알 수 없는 구독 경로입니다.");
     }
 
     @Override

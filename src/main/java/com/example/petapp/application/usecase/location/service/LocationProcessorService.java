@@ -3,12 +3,12 @@ package com.example.petapp.application.usecase.location.service;
 import com.example.petapp.application.common.HaversineUtil;
 import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.LocationCachePort;
-import com.example.petapp.application.usecase.location.service.object.LastPoint;
-import com.example.petapp.application.usecase.location.service.object.WalkRangeStatus;
-import com.example.petapp.application.usecase.chatting.model.dto.SendResponseDto;
-import com.example.petapp.application.usecase.chatting.model.type.CommandType;
+import com.example.petapp.application.usecase.chatmessage.model.dto.SendResponseDto;
+import com.example.petapp.application.usecase.chatmessage.model.type.CommandType;
 import com.example.petapp.application.usecase.location.LocationProcessorUseCase;
 import com.example.petapp.application.usecase.location.dto.request.LocationMessage;
+import com.example.petapp.application.usecase.location.service.object.LastPoint;
+import com.example.petapp.application.usecase.location.service.object.WalkRangeStatus;
 import com.example.petapp.application.usecase.notification.dto.NotificationEvent;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import lombok.RequiredArgsConstructor;
@@ -80,7 +80,7 @@ public class LocationProcessorService implements LocationProcessorUseCase {
     @Override
     public void saveAndSend(LocationMessage message) {
         String location = message.getLongitude() + "," + message.getLatitude();
-        port.create(message.getWalkRecordId(), location);
+        port.createLocation(message.getWalkRecordId(), location);
 
         sendPort.send(
                 "/sub/walk/" + message.getWalkRecordId(),

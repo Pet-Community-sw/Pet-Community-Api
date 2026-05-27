@@ -3,16 +3,15 @@ package com.example.petapp.application.usecase.chatroom.service;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.application.out.cache.SeqCachePort;
+import com.example.petapp.application.usecase.chatmessage.ReaderUseCase;
+import com.example.petapp.application.usecase.chatmessage.model.dto.LastMessageInfoDto;
+import com.example.petapp.application.usecase.chatmessage.model.type.ChatRoomType;
 import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.usecase.chatroom.dto.response.ChatRoomResponseDto;
-import com.example.petapp.application.usecase.chatroom.service.ChatRoomService;
-import com.example.petapp.application.usecase.chatting.ReaderUseCase;
-import com.example.petapp.application.usecase.chatting.model.dto.LastMessageInfoDto;
-import com.example.petapp.application.usecase.chatting.model.type.ChatRoomType;
 import com.example.petapp.application.usecase.profile.ProfileQueryUseCase;
+import com.example.petapp.domain.chatmessage.ChatMessageRepository;
 import com.example.petapp.domain.chatroom.ChatRoomRepository;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
-import com.example.petapp.domain.chatting.ChatMessageRepository;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
 import org.junit.jupiter.api.Test;
@@ -80,12 +79,12 @@ class ChatRoomServiceBatchProfileQueryTest {
         when(walkingTogetherPost2.getProfile()).thenReturn(owner2);
         when(owner2.getId()).thenReturn(2L);
 
-        when(lastMessageCachePort.find(100L)).thenReturn(LastMessageInfoDto.builder()
+        when(lastMessageCachePort.findLastMessageInfo(100L)).thenReturn(LastMessageInfoDto.builder()
                 .lastSeq(5L)
                 .lastMessage("메시지1")
                 .lastMessageTime("2026-01-01T00:00:00")
                 .build());
-        when(lastMessageCachePort.find(200L)).thenReturn(LastMessageInfoDto.builder()
+        when(lastMessageCachePort.findLastMessageInfo(200L)).thenReturn(LastMessageInfoDto.builder()
                 .lastSeq(8L)
                 .lastMessage("메시지2")
                 .lastMessageTime("2026-01-01T00:01:00")

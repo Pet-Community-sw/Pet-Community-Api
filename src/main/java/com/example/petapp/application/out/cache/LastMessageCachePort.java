@@ -1,12 +1,12 @@
 package com.example.petapp.application.out.cache;
 
-import com.example.petapp.application.usecase.chatting.model.dto.LastMessageInfoDto;
-import com.example.petapp.domain.chatting.model.ChatMessage;
+import com.example.petapp.application.usecase.chatmessage.model.dto.LastMessageInfoDto;
+import com.example.petapp.domain.chatmessage.model.ChatMessage;
 
 public interface LastMessageCachePort {
-    void create(ChatMessage chatMessage);
+    void saveLastMessage(ChatMessage chatMessage);
 
-    LastMessageInfoDto find(Long id);
+    LastMessageInfoDto findLastMessageInfo(Long chatRoomId);
 
-    void delete(Long chatRoomId);
+    void deleteLastMessageInfo(Long chatRoomId);
 }
