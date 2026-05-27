@@ -18,7 +18,6 @@ public class NotificationService implements NotificationUseCase {
 
     private final NotificationsCachePort notificationsCachePort;
     private final MemberQueryUseCase useCase;
-    //    private final FcmService fcmService;
 
 
     @Transactional(readOnly = true)

@@ -20,9 +20,7 @@ public interface MemberUseCase {
     GetMemberResponseDto get(Long targetId, Long memberId);
 
     void delete(Long memberId);
-
-//    void createFcmToken(FcmTokenDto fcmTokenDto);
-
+    
     void update(UpdateMemberRequestDto requestDto, Long memberId);
 
     List<MemberSearchResponseDto> searchSuggestions(String keyword, Long memberId);

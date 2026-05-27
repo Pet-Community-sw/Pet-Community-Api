@@ -41,7 +41,6 @@ public class MemberService implements MemberUseCase {
     private final MemberQueryUseCase memberQueryUseCase;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    //    private final FcmUseCase fcmUseCase;
     private final TokenUseCase tokenUseCase;
     private final StoragePort storagePort;
     private final MemberSearchPort memberSearchPort;
@@ -134,14 +133,7 @@ public class MemberService implements MemberUseCase {
                 .build()
         );
     }
-
-//    @Transactional
-//    @Override
-//    public void createFcmToken(FcmTokenDto fcmTokenDto) {
-//        Member member = memberQueryUseCase.findOrThrow(fcmTokenDto.getMemberId());
-//        fcmUseCase.createFcmToken(member, fcmTokenDto.getFcmToken());
-//    }
-
+    
     @Override
     public List<MemberSearchResponseDto> searchSuggestions(String keyword, Long memberId) {
         if (keyword.trim().isEmpty()) {

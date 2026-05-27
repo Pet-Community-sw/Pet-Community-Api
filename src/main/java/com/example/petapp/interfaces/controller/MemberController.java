@@ -102,13 +102,4 @@ public class MemberController {
     public List<MemberSearchResponseDto> searchMembers(@RequestParam String keyword, @RequestParam(defaultValue = "0") int page, Authentication authentication) {
         return memberUseCase.searchMembers(keyword, page, AuthUtil.getMemberId(authentication));
     }
-
-//    @Operation(
-//            summary = "fcm토큰 생성"
-//    )
-//    @PostMapping("/fcm-token")
-//    public ResponseEntity<MessageResponse> createFcmToken(@RequestBody @Valid FcmTokenDto fcmTokenDto) {
-//        memberUseCase.createFcmToken(fcmTokenDto);
-//        return ResponseEntity.ok(new MessageResponse("fcm토큰 생성완료."));
-//    }
 }
