@@ -76,7 +76,7 @@ chmod +x ./init-script.sh
 ---
 
 ## CI/CD Architecture
-<img width="1147" height="584" alt="CI:CD Architecture" src="https://github.com/user-attachments/assets/a18057aa-cbd2-4c99-ac95-0dde55ea5f4b" />
+<img width="1004" height="506" alt="CI:CD Architecture" src="https://github.com/user-attachments/assets/e1b8f076-55c6-4603-95df-1533f57e84db" />
 
 ---
 
