@@ -5,7 +5,7 @@ import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.usecase.chatting.model.dto.LastMessageInfoDto;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
-import com.example.petapp.domain.chatting.ChatMessageRepository;
+import com.example.petapp.domain.message.ChatMessageRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

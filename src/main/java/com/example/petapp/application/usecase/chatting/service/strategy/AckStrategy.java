@@ -2,7 +2,7 @@ package com.example.petapp.application.usecase.chatting.service.strategy;
 
 import com.example.petapp.application.usecase.chatting.MessageTypeStrategy;
 import com.example.petapp.application.usecase.chatting.model.type.CommandType;
-import com.example.petapp.domain.chatting.model.ChatMessage;
+import com.example.petapp.domain.message.model.ChatMessage;
 import com.example.petapp.infrastructure.database.adapter.AckInfoRepositoryAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.example.petapp.domain.chatting.model;
+package com.example.petapp.domain.message.model;
 
 import com.example.petapp.application.usecase.chatting.model.type.ChatRoomType;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

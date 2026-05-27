@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.database.cache.out.redis.adapter;
 
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
-import com.example.petapp.domain.chatting.model.ChatMessage;
+import com.example.petapp.domain.message.model.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;

@@ -6,8 +6,8 @@ import com.example.petapp.application.usecase.chatting.model.dto.LastMessageInfo
 import com.example.petapp.application.usecase.chatting.model.type.ChatRoomType;
 import com.example.petapp.application.usecase.profile.dto.response.ChatRoomUsersResponseDto;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
-import com.example.petapp.domain.chatting.model.ChatMessage;
 import com.example.petapp.domain.member.model.Member;
+import com.example.petapp.domain.message.model.ChatMessage;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
 

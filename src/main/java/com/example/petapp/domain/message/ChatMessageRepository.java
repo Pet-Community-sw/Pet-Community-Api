@@ -1,7 +1,7 @@
-package com.example.petapp.domain.chatting;
+package com.example.petapp.domain.message;
 
 
-import com.example.petapp.domain.chatting.model.ChatMessage;
+import com.example.petapp.domain.message.model.ChatMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

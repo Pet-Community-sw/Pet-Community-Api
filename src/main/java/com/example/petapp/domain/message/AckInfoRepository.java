@@ -1,4 +1,4 @@
-package com.example.petapp.domain.chatting;
+package com.example.petapp.domain.message;
 
 import java.util.Set;
 
