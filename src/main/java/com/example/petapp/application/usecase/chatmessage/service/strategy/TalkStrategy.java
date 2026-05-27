@@ -1,7 +1,6 @@
 package com.example.petapp.application.usecase.chatmessage.service.strategy;
 
 import com.example.petapp.application.out.SendPort;
-import com.example.petapp.application.out.cache.ChatOnlineCachePort;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.SeqCachePort;
 import com.example.petapp.application.usecase.chatmessage.MessageTypeStrategy;
@@ -15,6 +14,7 @@ import com.example.petapp.domain.chatmessage.ChatMessageRepository;
 import com.example.petapp.domain.chatmessage.model.ChatMessage;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.profile.model.Profile;
+import com.example.petapp.infrastructure.stomp.store.ChatOnlineStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -30,20 +30,20 @@ public class TalkStrategy implements MessageTypeStrategy {
     private final SendPort sendPort;
     private final ChatMessageRepository chatMessageRepository;
     private final SeqCachePort seqCachePort;
-    private final ChatOnlineCachePort chatOnlineCachePort;
+    private final ChatOnlineStore chatOnlineStore;
     private final LastMessageCachePort lastMessageCachePort;
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public void handle(ChatMessage chatMessage) {
-        boolean isExist = seqCachePort.exist(chatMessage.getChatRoomId());
+        boolean isExist = seqCachePort.exists(chatMessage.getChatRoomId());
         if (!isExist) {
             Long LastMessageSeq = chatMessageRepository.findCurrent(chatMessage.getChatRoomId())
                     .map(ChatMessage::getSeq).orElse(0L);
 
-            seqCachePort.create(chatMessage.getChatRoomId(), LastMessageSeq);//seq가 0일수도있고 아닐수도있음.
+            seqCachePort.initializeIfAbsent(chatMessage.getChatRoomId(), LastMessageSeq);
         }
-        Long seq = seqCachePort.increment(chatMessage.getChatRoomId());
+        Long seq = seqCachePort.incrementAndGet(chatMessage.getChatRoomId());
         chatMessage.updateSeq(seq);
         chatMessageRepository.save(chatMessage);
 
@@ -52,7 +52,7 @@ public class TalkStrategy implements MessageTypeStrategy {
                 SendResponseDto.builder().commandType(CommandType.TALK).body(chatMessage).build());
 
         sendChatNotificationAndUpdateList(chatMessage);
-        lastMessageCachePort.create(chatMessage);
+        lastMessageCachePort.saveLastMessage(chatMessage);
     }
 
     @Override
@@ -67,10 +67,10 @@ public class TalkStrategy implements MessageTypeStrategy {
 
         ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
         Set<Long> users = chatRoom.getUsers();
-        Set<String> onlineUsers = chatOnlineCachePort.find(chatRoomId);
+        Set<Long> onlineUsers = chatOnlineStore.getOnlineUserList(chatRoomId);
 
         users.stream().filter(userId -> !userId.equals(senderId))
-                .filter(userId -> !onlineUsers.contains(userId.toString()))
+                .filter(userId -> !onlineUsers.contains(userId))
                 .forEach(userId -> {
                     Profile profile = profileQueryUseCase.findOrThrow(userId);
                     eventPublisher.publishEvent(new NotificationEvent(profile.getMember().getId(), message));

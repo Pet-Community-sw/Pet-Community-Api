@@ -4,8 +4,8 @@ import com.example.petapp.application.common.exception.ErrorCode;
 import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
-import com.example.petapp.infrastructure.stomp.registry.ChatOnlineRegistry;
-import com.example.petapp.infrastructure.stomp.registry.ChatRoomSubscriptionRegistry;
+import com.example.petapp.infrastructure.stomp.store.ChatOnlineStore;
+import com.example.petapp.infrastructure.stomp.store.ChatRoomSubscriptionStore;
 import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +22,8 @@ public class ChatRoomSubscribeStrategy extends SubscribeTypeStrategy {
     private static final String PATTERN = "/sub/chat/{" + KEY + "}";
 
     private final ChatRoomQueryUseCase chatRoomQueryUseCase;
-    private final ChatOnlineRegistry chatOnlineRegistry;
-    private final ChatRoomSubscriptionRegistry chatRoomSubscriptionRegistry;
+    private final ChatOnlineStore chatOnlineStore;
+    private final ChatRoomSubscriptionStore chatRoomSubscriptionStore;
 
     @Override
     public boolean isHandler(String destination) {
@@ -39,8 +39,8 @@ public class ChatRoomSubscribeStrategy extends SubscribeTypeStrategy {
         if (!chatRoomQueryUseCase.isExist(chatRoomId, memberId)) {
             throw new PetCommunityException(ErrorCode.FORBIDDEN, "해당 채팅방에 접근할 권한이 없습니다.");
         }
-        chatOnlineRegistry.createOnlineUser(chatRoomId, memberId);
-        chatRoomSubscriptionRegistry.createChatRoomSubscription(subscribeInfo.getSubscriptionId(), chatRoomId);
+        chatOnlineStore.createOnlineUser(chatRoomId, memberId);
+        chatRoomSubscriptionStore.createChatRoomSubscription(subscribeInfo.getSubscriptionId(), chatRoomId);
 
     }
 }
