@@ -1,6 +1,7 @@
 package com.example.petapp.interfaces.controller;
 
 import com.example.petapp.application.common.AuthUtil;
+import com.example.petapp.application.usecase.member.MemberSearchUseCase;
 import com.example.petapp.application.usecase.member.MemberUseCase;
 import com.example.petapp.application.usecase.member.object.dto.request.MemberSignDto;
 import com.example.petapp.application.usecase.member.object.dto.request.ResetPasswordDto;
@@ -29,6 +30,7 @@ import java.util.List;
 public class MemberController {
 
     private final MemberUseCase memberUseCase;
+    private final MemberSearchUseCase memberSearchUseCase;
 
     @Operation(
             summary = "회원가입",
@@ -92,7 +94,7 @@ public class MemberController {
     )
     @GetMapping("/search-suggestions")
     public List<MemberSearchResponseDto> searchSuggestions(@RequestParam String keyword, Authentication authentication) {
-        return memberUseCase.searchSuggestions(keyword, AuthUtil.getMemberId(authentication));
+        return memberSearchUseCase.searchSuggestions(keyword, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -100,6 +102,6 @@ public class MemberController {
     )
     @GetMapping("/searches")
     public List<MemberSearchResponseDto> searchMembers(@RequestParam String keyword, @RequestParam(defaultValue = "0") int page, Authentication authentication) {
-        return memberUseCase.searchMembers(keyword, page, AuthUtil.getMemberId(authentication));
+        return memberSearchUseCase.searchMembers(keyword, page, AuthUtil.getMemberId(authentication));
     }
 }

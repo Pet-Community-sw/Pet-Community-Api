@@ -5,10 +5,7 @@ import com.example.petapp.application.usecase.member.object.dto.request.ResetPas
 import com.example.petapp.application.usecase.member.object.dto.request.UpdateMemberRequestDto;
 import com.example.petapp.application.usecase.member.object.dto.response.FindByIdResponseDto;
 import com.example.petapp.application.usecase.member.object.dto.response.GetMemberResponseDto;
-import com.example.petapp.application.usecase.member.object.dto.response.MemberSearchResponseDto;
 import com.example.petapp.application.usecase.member.object.dto.response.MemberSignResponseDto;
-
-import java.util.List;
 
 public interface MemberUseCase {
     MemberSignResponseDto create(MemberSignDto memberSignDto);
@@ -22,8 +19,4 @@ public interface MemberUseCase {
     void delete(Long memberId);
     
     void update(UpdateMemberRequestDto requestDto, Long memberId);
-
-    List<MemberSearchResponseDto> searchSuggestions(String keyword, Long memberId);
-
-    List<MemberSearchResponseDto> searchMembers(String keyword, int page, Long memberId);
 }
