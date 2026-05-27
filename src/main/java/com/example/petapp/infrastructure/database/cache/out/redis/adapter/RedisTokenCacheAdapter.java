@@ -11,16 +11,17 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class RedisTokenCacheAdapter implements TokenCachePort {
 
+    private static final String KEY = "blacklist:";
     private final StringRedisTemplate template;
 
     @Override
-    public void create(String key, String value, long duration) {
-        template.opsForValue().set(key, value, Duration.ofSeconds(duration));
+    public void blacklist(String accessToken, long duration) {
+        template.opsForValue().set(KEY + accessToken, "logout", Duration.ofSeconds(duration));
     }
 
     @Override
-    public boolean exist(String key) {
-        return template.hasKey(key);
+    public boolean isBlacklisted(String accessToken) {
+        return template.hasKey(KEY + accessToken);
     }
 
 }

@@ -129,6 +129,6 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
     }
 
     private void blacklistAccessToken(String accessToken) {
-        tokenCachePort.create("blacklist", accessToken, 30 * 60L);
+        tokenCachePort.blacklist(accessToken, 30 * 60L);
     }
 }

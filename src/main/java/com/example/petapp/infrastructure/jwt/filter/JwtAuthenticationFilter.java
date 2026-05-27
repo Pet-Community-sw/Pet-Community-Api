@@ -88,7 +88,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authorization = request.getHeader("Authorization");
         if (StringUtils.hasText(authorization) && authorization.startsWith("Bearer")) {
             String[] arr = authorization.split(" ");
-            if (port.exist(arr[1])) {
+            if (port.isBlacklisted(arr[1])) {
                 throw new BadCredentialsException("로그아웃된 토큰입니다.");
             }
             return arr[1];
