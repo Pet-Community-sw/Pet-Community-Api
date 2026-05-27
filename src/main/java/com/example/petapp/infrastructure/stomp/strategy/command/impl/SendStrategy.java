@@ -1,5 +1,7 @@
 package com.example.petapp.infrastructure.stomp.strategy.command.impl;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.infrastructure.stomp.strategy.command.StompCommandStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +22,7 @@ public class SendStrategy implements StompCommandStrategy {
         String destination = accessor.getDestination();
         Principal user = accessor.getUser();
         if (destination == null || user == null) {
-            throw new IllegalArgumentException("destination 또는 user 정보가 없습니다.");
+            throw new PetCommunityException(ErrorCode.BAD_REQUEST, "destination 또는 user 정보가 없습니다.");
         }
     }
 

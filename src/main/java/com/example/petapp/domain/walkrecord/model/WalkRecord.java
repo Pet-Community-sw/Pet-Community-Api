@@ -1,10 +1,10 @@
 package com.example.petapp.domain.walkrecord.model;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
-import com.example.petapp.interfaces.exception.ConflictException;
-import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -59,9 +59,9 @@ public class WalkRecord extends BaseEntity {
 
     public void validatedForCreate(Member member) {
         if (getWalkStatus() != WalkStatus.FINISH) {
-            throw new ConflictException("산책을 다해야 후기를 작성할 수 있습니다.");
+            throw new PetCommunityException(ErrorCode.CONFLICT, "산책을 다해야 후기를 작성할 수 있습니다.");
         } else if (!(getMember().equals(member))) {
-            throw new ForbiddenException("권한이 없습니다.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "권한이 없습니다.");
         }
     }
 
@@ -70,10 +70,10 @@ public class WalkRecord extends BaseEntity {
         setPathPoints(paths);
 
     }
-    
+
     public void validateMember(Long id) {
         if (!getDelegateWalkPost().getSelectedApplicantMemberId().equals(id)) {
-            throw new ForbiddenException("권한 없음.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "권한 없음.");
         }
     }
 
@@ -89,7 +89,7 @@ public class WalkRecord extends BaseEntity {
 
     public void validateStart() {
         if (getWalkStatus() != WalkStatus.START) {
-            throw new ForbiddenException("start 권한 없음.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "start 권한 없음.");
         }
     }
 

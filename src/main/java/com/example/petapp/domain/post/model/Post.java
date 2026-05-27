@@ -1,9 +1,10 @@
 package com.example.petapp.domain.post.model;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.like.model.Like;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -63,7 +64,7 @@ public abstract class Post extends BaseEntity {
 
     public void validateMember(Member member) {
         if (!(this.member.equals(member))) {
-            throw new ForbiddenException("권한 없음.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "권한 없음.");
         }
     }
 }

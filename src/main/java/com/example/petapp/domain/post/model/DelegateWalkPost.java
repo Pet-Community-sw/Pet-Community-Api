@@ -1,12 +1,12 @@
 package com.example.petapp.domain.post.model;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.post.delegate.model.dto.request.UpdateDelegateWalkPostDto;
 import com.example.petapp.domain.comment.model.Comment;
 import com.example.petapp.domain.comment.model.Commentable;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.interfaces.exception.ConflictException;
-import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -99,13 +99,13 @@ public class DelegateWalkPost extends Post implements Commentable {
 
     public void validatedUser(Member member) {
         if (!getProfile().getMember().equals(member)) {
-            throw new ForbiddenException("권한 없음.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "권한 없음.");
         }
     }
 
     public void validatedUser(Long profileId) {
         if (!getProfile().getId().equals(profileId)) {
-            throw new ForbiddenException("권한 없음.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "권한 없음.");
         }
     }
 
@@ -137,9 +137,9 @@ public class DelegateWalkPost extends Post implements Commentable {
     public void apply(Member member, String content) {
         filtering(member);
         if (!hasApplicant(member.getId())) {
-            throw new ConflictException("이미 신청한 회원입니다.");
+            throw new PetCommunityException(ErrorCode.CONFLICT, "이미 신청한 회원입니다.");
         } else if (getStatus() == DelegateWalkStatus.COMPLETED) {
-            throw new ConflictException("모집 완료 게시글입니다.");
+            throw new PetCommunityException(ErrorCode.CONFLICT, "모집 완료 게시글입니다.");
         } else {
             addApplicant(member, content);
         }
@@ -148,7 +148,7 @@ public class DelegateWalkPost extends Post implements Commentable {
     public void validatedAndSelectApplicant(Long selectedMemberId, Member member) {
         validatedUser(member);
         if (hasApplicant(selectedMemberId)) {
-            throw new ForbiddenException("권한 없음.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "권한 없음.");
         }
         setStatus(DelegateWalkStatus.COMPLETED);
         setSelectedApplicantMemberId(selectedMemberId);

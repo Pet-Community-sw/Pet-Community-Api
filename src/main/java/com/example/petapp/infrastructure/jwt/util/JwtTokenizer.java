@@ -1,8 +1,9 @@
 package com.example.petapp.infrastructure.jwt.util;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.token.MemberInfo;
 import com.example.petapp.domain.token.model.TokenType;
-import com.example.petapp.interfaces.exception.UnAuthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -92,7 +93,7 @@ public class JwtTokenizer {
 
         } catch (Exception e) {
             log.error("토큰 파싱 에러: {}", e.getMessage());
-            throw new UnAuthorizedException("토큰 파싱 에러");//만료된 토큰도 파싱 에러 남.
+            throw new PetCommunityException(ErrorCode.UNAUTHORIZED, "토큰 파싱 에러");//만료된 토큰도 파싱 에러 남.
         }
     }
 

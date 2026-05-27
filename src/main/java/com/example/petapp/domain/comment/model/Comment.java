@@ -1,9 +1,10 @@
 package com.example.petapp.domain.comment.model;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.Post;
-import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -42,7 +43,7 @@ public class Comment extends BaseEntity {
 
     public void validated(Member member) {
         if (!(getMember().equals(member))) {
-            throw new ForbiddenException("권한이 없습니다.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "권한이 없습니다.");
         }
     }
 

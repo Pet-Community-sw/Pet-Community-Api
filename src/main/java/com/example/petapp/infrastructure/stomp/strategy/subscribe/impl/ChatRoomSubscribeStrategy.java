@@ -1,5 +1,7 @@
 package com.example.petapp.infrastructure.stomp.strategy.subscribe.impl;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.out.cache.ChatOnlineCachePort;
 import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.infrastructure.stomp.DestinationCachePort;
@@ -34,7 +36,7 @@ public class ChatRoomSubscribeStrategy extends SubscribeTypeStrategy {
         String profileId = subscribeInfo.getPrincipal().getName();
 
         if (!chatRoomQueryUseCase.isExist(Long.valueOf(chatRoomId), Long.valueOf(profileId))) {
-            throw new IllegalArgumentException("잘못된 접근입니다.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "해당 채팅방에 접근할 권한이 없습니다.");
         }
         chatOnlineCachePort.create(chatRoomId, profileId);
         destinationCachePort.create(subscribeInfo.getSubscriptionId(), chatRoomId);

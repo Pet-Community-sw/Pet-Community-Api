@@ -1,9 +1,10 @@
 package com.example.petapp.domain.member.model;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.post.model.Post;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.interfaces.exception.ForbiddenException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -82,7 +83,7 @@ public class Member extends BaseEntity {//수정 필요
 
     public void validateProfile(Member member, Member profileMember) {
         if (!(member.equals(profileMember))) {
-            throw new ForbiddenException("권한이 없습니다.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "권한이 없습니다.");
         }
     }
 

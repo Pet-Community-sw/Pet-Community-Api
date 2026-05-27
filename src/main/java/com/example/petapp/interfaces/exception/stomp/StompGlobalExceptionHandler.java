@@ -1,5 +1,8 @@
-package com.example.petapp.infrastructure.stomp.config;
+package com.example.petapp.interfaces.exception.stomp;
 
+import com.example.petapp.application.common.JsonUtil;
+import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
@@ -11,21 +14,27 @@ import org.springframework.web.socket.messaging.StompSubProtocolErrorHandler;
 import java.nio.charset.StandardCharsets;
 
 @Configuration(proxyBeanMethods = false)
+@RequiredArgsConstructor
+public class StompGlobalExceptionHandler {
 
-public class StompErrorConfig {
+    private final JsonUtil jsonUtil;
 
     @Bean
     public StompSubProtocolErrorHandler stompSubProtocolErrorHandler() {
         return new StompSubProtocolErrorHandler() {
             @Override
-            public Message<byte[]> handleClientMessageProcessingError(Message<byte[]> clientMessage, Throwable ex) {
+            public @Nullable Message<byte[]> handleClientMessageProcessingError(@Nullable Message<byte[]> clientMessage, Throwable ex) {
+                Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
+
+                StompErrorResponse response = StompErrorResponse.from(cause);
+
                 StompHeaderAccessor accessor = StompHeaderAccessor.create(StompCommand.ERROR);
-                accessor.setMessage(ex.getMessage());      // headers[message]
+                accessor.setMessage(response.getMessage());
                 accessor.setLeaveMutable(true);
-                byte[] payload = (ex.getMessage() == null ? "" : ex.getMessage()).getBytes(StandardCharsets.UTF_8);
+
+                byte[] payload = jsonUtil.toJson(response).getBytes(StandardCharsets.UTF_8);
                 return MessageBuilder.createMessage(payload, accessor.getMessageHeaders());
             }
         };
     }
 }
-

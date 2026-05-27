@@ -1,10 +1,11 @@
 package com.example.petapp.application.usecase.post.service;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.post.PostQueryUseCase;
 import com.example.petapp.application.usecase.post.normal.dto.response.PostResponseDto;
 import com.example.petapp.domain.post.PostRepository;
 import com.example.petapp.domain.post.model.Post;
-import com.example.petapp.interfaces.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,7 @@ public class PostQueryService<T extends Post> implements PostQueryUseCase<T> {
 
     @Override
     public T findOrThrow(Long id) {
-        return repository.find(id).orElseThrow(() -> new NotFoundException("해당 게시글은 없습니다."));
+        return repository.find(id).orElseThrow(() -> new PetCommunityException(ErrorCode.NOT_FOUND, "해당 게시글은 없습니다."));
     }
 
     @Override

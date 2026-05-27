@@ -1,10 +1,11 @@
 package com.example.petapp.application.usecase.petbreed.service;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.petbreed.PetBreedQueryUseCase;
 import com.example.petapp.application.usecase.petbreed.dto.PetBreedGetListDto;
 import com.example.petapp.domain.petbreed.PetBreedRepository;
 import com.example.petapp.domain.petbreed.model.PetBreed;
-import com.example.petapp.interfaces.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,12 +26,12 @@ public class PetBreedQueryService implements PetBreedQueryUseCase {
 
     @Override
     public PetBreed findOrThrow(Long id) {
-        return repository.find(id).orElseThrow(() -> new NotFoundException("해당 종은 없습니다."));
+        return repository.find(id).orElseThrow(() -> new PetCommunityException(ErrorCode.NOT_FOUND, "해당 종은 없습니다."));
     }
 
     @Override
     public PetBreed findOrThrow(String name) {
-        return repository.find(name).orElseThrow(() -> new NotFoundException("해당 종은 없습니다."));
+        return repository.find(name).orElseThrow(() -> new PetCommunityException(ErrorCode.NOT_FOUND, "해당 종은 없습니다."));
     }
 
     @Override

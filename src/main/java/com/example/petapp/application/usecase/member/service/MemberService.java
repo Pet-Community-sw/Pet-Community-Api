@@ -1,6 +1,8 @@
 package com.example.petapp.application.usecase.member.service;
 
 import com.example.petapp.application.common.NameChosungUtil;
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.out.StoragePort;
 import com.example.petapp.application.out.cache.MemberRecentViewCachePort;
 import com.example.petapp.application.usecase.member.MemberQueryUseCase;
@@ -18,7 +20,6 @@ import com.example.petapp.application.usecase.token.TokenUseCase;
 import com.example.petapp.domain.file.FileKind;
 import com.example.petapp.domain.member.MemberRepository;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.interfaces.exception.ConflictException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -46,7 +47,7 @@ public class MemberService implements MemberUseCase {
     @Override
     public MemberSignResponseDto create(MemberSignDto memberSignDto) {
         if (memberRepository.exist(memberSignDto.getEmail())) {
-            throw new ConflictException("이미 가입된 회원입니다.");
+            throw new PetCommunityException(ErrorCode.CONFLICT, "이미 가입된 회원입니다.");
         }
         String imageFileName = storagePort.uploadFile(memberSignDto.getMemberImageUrl(), FileKind.MEMBER);
         Member member = MemberMapper.toEntity(memberSignDto, passwordEncoder.encode(memberSignDto.getPassword()), imageFileName);

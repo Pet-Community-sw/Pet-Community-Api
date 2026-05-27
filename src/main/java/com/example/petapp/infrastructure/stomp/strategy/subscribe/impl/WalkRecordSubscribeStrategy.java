@@ -1,5 +1,7 @@
 package com.example.petapp.infrastructure.stomp.strategy.subscribe.impl;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.walkrecord.WalkRecordQueryUseCase;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
@@ -34,7 +36,7 @@ public class WalkRecordSubscribeStrategy extends SubscribeTypeStrategy {
         Long ownerMemberId = walkRecord.getDelegateWalkPost().getProfile().getMember().getId();
 
         if (!ownerMemberId.equals(memberId)) {
-            throw new IllegalArgumentException("잘못된 접근입니다.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "해당 산책 기록에 접근할 권한이 없습니다.");
         }
 
         log.info("[STOMP] 구독 walkRecordId: {}, id: {}", walkRecordId, memberId);

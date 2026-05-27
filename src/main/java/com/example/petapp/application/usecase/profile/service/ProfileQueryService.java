@@ -1,9 +1,10 @@
 package com.example.petapp.application.usecase.profile.service;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.profile.ProfileQueryUseCase;
 import com.example.petapp.domain.profile.ProfileRepository;
 import com.example.petapp.domain.profile.model.Profile;
-import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,7 @@ public class ProfileQueryService implements ProfileQueryUseCase {
 
     @Override
     public Profile findOrThrow(Long id) {
-        return repository.find(id).orElseThrow(() -> new ForbiddenException("프로필을 등록해주세요."));
+        return repository.find(id).orElseThrow(() -> new PetCommunityException(ErrorCode.FORBIDDEN, "프로필을 등록해주세요."));
     }
 
     @Override
@@ -41,7 +42,7 @@ public class ProfileQueryService implements ProfileQueryUseCase {
                 .collect(Collectors.toMap(Profile::getId, Function.identity()));
 
         if (profileMap.size() != ids.size()) {
-            throw new ForbiddenException("프로필을 등록해주세요.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "프로필을 등록해주세요.");
         }
 
         return profileMap;

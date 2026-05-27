@@ -1,9 +1,10 @@
 package com.example.petapp.infrastructure.stomp.strategy.subscribe.impl;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.member.MemberQueryUseCase;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;
-import com.example.petapp.interfaces.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,7 @@ public class RoomListSubscribeStrategy extends SubscribeTypeStrategy {
         if (userId.equals(Long.valueOf(subscribeInfo.getPrincipal().getName()))) {
             useCase.findOrThrow(userId);
         } else {
-            throw new ForbiddenException("[STOMP] userId가 다릅니다.");
+            throw new PetCommunityException(ErrorCode.FORBIDDEN, "[STOMP] userId가 다릅니다.");
         }
     }
 }
