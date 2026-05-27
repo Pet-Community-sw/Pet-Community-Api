@@ -80,7 +80,7 @@ public class LocationProcessorService implements LocationProcessorUseCase {
     @Override
     public void saveAndSend(LocationMessage message) {
         String location = message.getLongitude() + "," + message.getLatitude();
-        port.create(message.getWalkRecordId(), location);
+        port.createLocation(message.getWalkRecordId(), location);
 
         sendPort.send(
                 "/sub/walk/" + message.getWalkRecordId(),

@@ -60,9 +60,9 @@ public class ReaderService implements ReaderUseCase {
     }
 
     private void updateReadSeq(Long chatRoomId, Long userId) {
-        LastMessageInfoDto lastMessageInfoDto = lastMessageCachePort.find(chatRoomId);
+        LastMessageInfoDto lastMessageInfoDto = lastMessageCachePort.findLastMessageInfo(chatRoomId);
         if (lastMessageInfoDto.getLastSeq() > 0) {
-            readMessageCachePort.create(ChatMessage.builder()
+            readMessageCachePort.markAsRead(ChatMessage.builder()
                     .chatRoomId(chatRoomId)
                     .senderId(userId)
                     .seq(lastMessageInfoDto.getLastSeq())

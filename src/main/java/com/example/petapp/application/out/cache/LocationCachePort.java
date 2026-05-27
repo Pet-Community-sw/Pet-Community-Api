@@ -3,11 +3,11 @@ package com.example.petapp.application.out.cache;
 import java.util.List;
 
 public interface LocationCachePort {
-    void create(Long key, String value);
+    void createLocation(Long walkRecordId, String location);
 
-    String find(Long key);
+    String findLatestLocation(Long walkRecordId);
 
-    List<String> findList(Long key);
+    List<String> findPath(Long walkRecordId);
 
-    void delete(Long key);
+    void deletePath(Long walkRecordId);
 }

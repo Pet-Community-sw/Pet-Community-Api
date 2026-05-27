@@ -1,4 +1,4 @@
-package com.example.petapp.infrastructure.database.cache.out.redis.adapter;
+package com.example.petapp.infrastructure.database.redis.adapter;
 
 import com.example.petapp.application.out.cache.MemberRecentViewCachePort;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +13,14 @@ import java.util.Set;
 @Repository
 public class RedisMemberRecentViewCacheAdapter implements MemberRecentViewCachePort {
 
+    private final static String KEY_PREFIX = "member:recentView:";
+
     private final StringRedisTemplate redisTemplate;
 
     @Override
-    public void create(Long memberId, Long targetId) {
+    public void createRecentView(Long memberId, Long targetMemberId) {
         String key = getKey(memberId);
-        redisTemplate.opsForZSet().add(key, String.valueOf(targetId), System.currentTimeMillis());
+        redisTemplate.opsForZSet().add(key, String.valueOf(targetMemberId), System.currentTimeMillis());
 
         redisTemplate.expire(key, Duration.ofDays(7));
 
@@ -30,7 +32,7 @@ public class RedisMemberRecentViewCacheAdapter implements MemberRecentViewCacheP
     }
 
     @Override
-    public List<Long> findList(Long memberId) {
+    public List<Long> findRecentViewMemberIds(Long memberId) {
         Set<String> ids = redisTemplate.opsForZSet().reverseRange(getKey(memberId), 0, -1);
 
         if (ids == null) return List.of();
@@ -42,6 +44,6 @@ public class RedisMemberRecentViewCacheAdapter implements MemberRecentViewCacheP
     }
 
     private String getKey(Long memberId) {
-        return "member:recentView:" + memberId;
+        return KEY_PREFIX + memberId;
     }
 }

@@ -87,7 +87,7 @@ public class MemberService implements MemberUseCase {
     public GetMemberResponseDto get(Long targetId, Long memberId) {
         Member member = memberQueryUseCase.findOrThrow(targetId);
 
-        memberRecentViewCachePort.create(memberId, targetId); // 최근 본 회원 캐시에 저장
+        memberRecentViewCachePort.createRecentView(memberId, targetId);
 
         return MemberMapper.toGetMemberResponseDto(member);
     }

@@ -4,9 +4,9 @@ import com.example.petapp.application.usecase.chatmessage.model.dto.LastMessageI
 import com.example.petapp.domain.chatmessage.model.ChatMessage;
 
 public interface LastMessageCachePort {
-    void create(ChatMessage chatMessage);
+    void saveLastMessage(ChatMessage chatMessage);
 
-    LastMessageInfoDto find(Long id);
+    LastMessageInfoDto findLastMessageInfo(Long chatRoomId);
 
-    void delete(Long chatRoomId);
+    void deleteLastMessageInfo(Long chatRoomId);
 }

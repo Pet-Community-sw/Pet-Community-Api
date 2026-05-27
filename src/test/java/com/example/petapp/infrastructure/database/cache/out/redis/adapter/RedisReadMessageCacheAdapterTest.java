@@ -1,5 +1,6 @@
 package com.example.petapp.infrastructure.database.cache.out.redis.adapter;
 
+import com.example.petapp.infrastructure.database.redis.adapter.RedisReadMessageCacheAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +33,7 @@ class RedisReadMessageCacheAdapterTest {
     void 읽은메세지_seq가_문자열이면_Long으로_변환한다() {
         when(hashOperations.get(RedisReadMessageCacheAdapter.getKey(1L), "2")).thenReturn("15");
 
-        Long result = adapter.find(1L, 2L);
+        Long result = adapter.findLastReadSeq(1L, 2L);
 
         assertThat(result).isEqualTo(15L);
     }
@@ -41,7 +42,7 @@ class RedisReadMessageCacheAdapterTest {
     void 읽은메세지_seq가_숫자가아니면_0을_반환한다() {
         when(hashOperations.get(RedisReadMessageCacheAdapter.getKey(1L), "2")).thenReturn("not-number");
 
-        Long result = adapter.find(1L, 2L);
+        Long result = adapter.findLastReadSeq(1L, 2L);
 
         assertThat(result).isEqualTo(0L);
     }

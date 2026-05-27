@@ -1,11 +1,11 @@
 package com.example.petapp.application.out.cache;
 
 public interface SeqCachePort {
-    boolean exist(Long chatRoomId);
+    boolean exists(Long chatRoomId);
 
-    Long increment(Long chatRoomId);
+    Long incrementAndGet(Long chatRoomId);
 
-    void create(Long chatRoomId, Long seq);
+    void initializeIfAbsent(Long chatRoomId, Long seq);
 
-    void delete(Long chatRoomId);
+    void deleteSeq(Long chatRoomId);
 }

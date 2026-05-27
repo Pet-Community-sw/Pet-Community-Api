@@ -1,4 +1,4 @@
-package com.example.petapp.infrastructure.database.cache.out.redis.adapter;
+package com.example.petapp.infrastructure.database.redis.adapter;
 
 import com.example.petapp.application.out.cache.EmailCachePort;
 import lombok.RequiredArgsConstructor;
@@ -14,22 +14,22 @@ public class RedisEmailCacheAdapter implements EmailCachePort {
     private final StringRedisTemplate template;
 
     @Override
-    public void createWithDuration(String key, String value, long duration) {
-        template.opsForValue().set(key, value, Duration.ofSeconds(duration));
+    public void createAuthCode(String email, String code, long ttlSeconds) {
+        template.opsForValue().set(email, code, Duration.ofSeconds(ttlSeconds));
     }
 
     @Override
-    public boolean exist(String key) {
-        return template.hasKey(key);
+    public boolean exists(String email) {
+        return template.hasKey(email);
     }
 
     @Override
-    public void delete(String key) {
-        template.delete(key);
+    public void deleteAuthCode(String email) {
+        template.delete(email);
     }
 
     @Override
-    public String get(String key) {
-        return template.opsForValue().get(key);
+    public String findAuthCode(String email) {
+        return template.opsForValue().get(email);
     }
 }

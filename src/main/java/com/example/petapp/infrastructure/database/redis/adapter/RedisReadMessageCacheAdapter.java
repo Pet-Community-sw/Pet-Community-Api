@@ -1,4 +1,4 @@
-package com.example.petapp.infrastructure.database.cache.out.redis.adapter;
+package com.example.petapp.infrastructure.database.redis.adapter;
 
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.domain.chatmessage.model.ChatMessage;
@@ -10,15 +10,17 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class RedisReadMessageCacheAdapter implements ReadMessageCachePort {
 
+    private final static String KEY_PREFIX = "chatRoomId:";
+    private final static String KEY_SUFFIX = ":read";
     private final StringRedisTemplate redisTemplate;
 
     // Read Message per user
     public static String getKey(long chatRoomId) {
-        return "chatRoomId:" + chatRoomId + ":read";
+        return KEY_PREFIX + chatRoomId + KEY_SUFFIX;
     }
 
     @Override
-    public void create(ChatMessage chatMessage) {
+    public void markAsRead(ChatMessage chatMessage) {
         redisTemplate.opsForHash().put(
                 getKey(chatMessage.getChatRoomId()),
                 String.valueOf(chatMessage.getSenderId()),
@@ -27,8 +29,8 @@ public class RedisReadMessageCacheAdapter implements ReadMessageCachePort {
     }
 
     @Override
-    public Long find(Long chatRoomId, Long userId) {
-        Object seq = redisTemplate.opsForHash().get(getKey(chatRoomId), String.valueOf(userId));
+    public Long findLastReadSeq(Long chatRoomId, Long memberId) {
+        Object seq = redisTemplate.opsForHash().get(getKey(chatRoomId), String.valueOf(memberId));
         if (seq == null) {
             return 0L;
         }
@@ -41,12 +43,12 @@ public class RedisReadMessageCacheAdapter implements ReadMessageCachePort {
     }
 
     @Override
-    public void delete(Long chatRoomId, Long userId) {
-        redisTemplate.opsForHash().delete(getKey(chatRoomId), String.valueOf(userId));
+    public void deleteReadSeq(Long chatRoomId, Long memberId) {
+        redisTemplate.opsForHash().delete(getKey(chatRoomId), String.valueOf(memberId));
     }
 
     @Override
-    public void delete(Long chatRoomId) {
+    public void deleteRoomReadState(Long chatRoomId) {
         redisTemplate.delete(getKey(chatRoomId));
     }
 }

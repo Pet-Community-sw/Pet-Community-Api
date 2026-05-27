@@ -41,7 +41,7 @@ class ReaderServiceTest {
         ChatRoom chatRoom = org.mockito.Mockito.mock(ChatRoom.class);
         when(chatRoomQueryUseCase.find(chatRoomId)).thenReturn(chatRoom);
         when(chatMessageRepository.findAll(eq(chatRoomId), any(Pageable.class))).thenReturn(Page.empty());
-        when(lastMessageCachePort.find(chatRoomId)).thenReturn(
+        when(lastMessageCachePort.findLastMessageInfo(chatRoomId)).thenReturn(
                 LastMessageInfoDto.builder()
                         .lastSeq(10L)
                         .lastMessage("")
@@ -51,9 +51,9 @@ class ReaderServiceTest {
 
         readerService.getMessages(chatRoomId, userId, 0);
 
-        verify(lastMessageCachePort).find(chatRoomId);
-        verify(lastMessageCachePort, never()).find(userId);
-        verify(readMessageCachePort).create(argThat(chatMessage ->
+        verify(lastMessageCachePort).findLastMessageInfo(chatRoomId);
+        verify(lastMessageCachePort, never()).findLastMessageInfo(userId);
+        verify(readMessageCachePort).markAsRead(argThat(chatMessage ->
                 chatMessage.getChatRoomId().equals(chatRoomId)
                         && chatMessage.getSenderId().equals(userId)
                         && chatMessage.getSeq().equals(10L)

@@ -44,12 +44,12 @@ public class TypingIndicatorService implements TypingIndicatorUseCase {
         chatRoom.validateUser(id);
         //타이핑 중이라면 redis에 저장
         if (typingMessageDto.isTyping())
-            typingCachePort.create(typingMessageDto.roomId(), id, 3 * 1000L);
+            typingCachePort.markTyping(typingMessageDto.roomId(), id, 3 * 1000L);
             //false면 redis에서 삭제
         else
-            typingCachePort.delete(typingMessageDto.roomId(), id);
+            typingCachePort.clearTyping(typingMessageDto.roomId(), id);
 
-        List<Long> typingUserIds = typingCachePort.getList(typingMessageDto.roomId());
+        List<Long> typingUserIds = typingCachePort.findTypingMemberIds(typingMessageDto.roomId());
 
         List<String> userNames = memberQueryUseCase.findNamesOrThrowByIds(typingUserIds);
 

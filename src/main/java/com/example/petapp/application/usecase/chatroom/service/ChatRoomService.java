@@ -103,7 +103,7 @@ public class ChatRoomService implements ChatRoomUseCase {
         ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
         chatRoom.validateUser(userId);
         chatRoom.deleteUser(userId);
-        readMessageCachePort.delete(chatRoomId, userId);
+        readMessageCachePort.deleteReadSeq(chatRoomId, userId);
         if (chatRoomRepository.countByProfile(chatRoomId) <= 1) {//방 사용자 수가 1이되면 채팅방 전체 삭제.
             chatMessageRepository.delete(chatRoomId);//채팅방 메시지 삭제.
             chatRoomRepository.delete(chatRoomId);
@@ -134,7 +134,7 @@ public class ChatRoomService implements ChatRoomUseCase {
     }
 
     private ChatRoomResponseDto toChatRoomsResponseDtoWithRedis(ChatRoom chatRoom, Long userId, Map<Long, Profile> profileMap) {
-        LastMessageInfoDto lastMessageInfoDto = lastMessageCachePort.find(chatRoom.getId());
+        LastMessageInfoDto lastMessageInfoDto = lastMessageCachePort.findLastMessageInfo(chatRoom.getId());
         Set<ChatRoomUsersResponseDto> users = chatRoom.getUsers().stream().map(id ->
                         ChatRoomMapper.toChatRoomUsersResponseDto(profileMap.get(id))
                 )//Member일 때도 구현해야할듯.
@@ -143,8 +143,8 @@ public class ChatRoomService implements ChatRoomUseCase {
     }
 
     private void deleteRedis(Long chatRoomId) {
-        seqCachePort.delete(chatRoomId);
-        lastMessageCachePort.delete(chatRoomId);
-        readMessageCachePort.delete(chatRoomId);
+        seqCachePort.deleteSeq(chatRoomId);
+        lastMessageCachePort.deleteLastMessageInfo(chatRoomId);
+        readMessageCachePort.deleteRoomReadState(chatRoomId);
     }
 }

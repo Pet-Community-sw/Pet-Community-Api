@@ -15,7 +15,7 @@ public class ReadStrategy implements MessageTypeStrategy {
 
     @Override
     public void handle(ChatMessage chatMessage) {
-        port.create(chatMessage);
+        port.markAsRead(chatMessage);
     }
 
     @Override

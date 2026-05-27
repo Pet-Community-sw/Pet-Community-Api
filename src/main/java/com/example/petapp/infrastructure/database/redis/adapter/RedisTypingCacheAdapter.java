@@ -1,4 +1,4 @@
-package com.example.petapp.infrastructure.database.cache.out.redis.adapter;
+package com.example.petapp.infrastructure.database.redis.adapter;
 
 import com.example.petapp.application.out.cache.TypingCachePort;
 import lombok.RequiredArgsConstructor;
@@ -18,21 +18,21 @@ public class RedisTypingCacheAdapter implements TypingCachePort {
      * 해당 roomId에 각각 userId에 대한 타이핑 상태를 duration동안 저장하기 위해 ZSet을 사용
      */
     @Override
-    public void create(Long roomId, Long userId, long duration) {
-        long expireTime = System.currentTimeMillis() + duration;
+    public void markTyping(Long chatRoomId, Long memberId, long durationMillis) {
+        long expireTime = System.currentTimeMillis() + durationMillis;
         // 현재 시간에 duration을 더해 만료 시간 계산(durtion바로 넣으면 사용 불가)
         // expireTime이 지나도 자동으로 삭제되지 않음
-        template.opsForZSet().add(getKey(roomId), String.valueOf(userId), expireTime);
+        template.opsForZSet().add(getKey(chatRoomId), String.valueOf(memberId), expireTime);
     }
 
     @Override
-    public void delete(Long roomId, Long userId) {
-        template.opsForZSet().remove(getKey(roomId), String.valueOf(userId));
+    public void clearTyping(Long chatRoomId, Long memberId) {
+        template.opsForZSet().remove(getKey(chatRoomId), String.valueOf(memberId));
     }
 
     @Override
-    public List<Long> getList(Long roomId) {
-        String key = getKey(roomId);
+    public List<Long> findTypingMemberIds(Long chatRoomId) {
+        String key = getKey(chatRoomId);
         template.opsForZSet().removeRangeByScore(key, 0, System.currentTimeMillis());
         // 현재 시간 이전의 값들은 만료된 값이므로 삭제
         Set<String> users = template.opsForZSet().range(key, 0, -1);

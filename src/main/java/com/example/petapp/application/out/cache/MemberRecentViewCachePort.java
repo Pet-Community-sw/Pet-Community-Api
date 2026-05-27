@@ -3,7 +3,7 @@ package com.example.petapp.application.out.cache;
 import java.util.List;
 
 public interface MemberRecentViewCachePort {
-    void create(Long memberId, Long targetId);
+    void createRecentView(Long memberId, Long targetMemberId);
 
-    List<Long> findList(Long memberId);
+    List<Long> findRecentViewMemberIds(Long memberId);
 }

@@ -1,6 +1,7 @@
 package com.example.petapp.infrastructure.database.cache.out.redis.adapter;
 
 import com.example.petapp.application.usecase.chatmessage.model.dto.LastMessageInfoDto;
+import com.example.petapp.infrastructure.database.redis.adapter.RedisLastMessageCacheAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +41,7 @@ class RedisLastMessageCacheAdapterTest {
         values.put("lastMessageTime", "2026-01-01T00:00");
         when(hashOperations.entries(RedisLastMessageCacheAdapter.key(1L))).thenReturn(values);
 
-        LastMessageInfoDto result = adapter.find(1L);
+        LastMessageInfoDto result = adapter.findLastMessageInfo(1L);
 
         assertThat(result.getLastSeq()).isEqualTo(7L);
         assertThat(result.getLastMessage()).isEqualTo("hello");
@@ -53,7 +54,7 @@ class RedisLastMessageCacheAdapterTest {
         values.put("seq", "not-number");
         when(hashOperations.entries(RedisLastMessageCacheAdapter.key(1L))).thenReturn(values);
 
-        LastMessageInfoDto result = adapter.find(1L);
+        LastMessageInfoDto result = adapter.findLastMessageInfo(1L);
 
         assertThat(result.getLastSeq()).isEqualTo(0L);
     }

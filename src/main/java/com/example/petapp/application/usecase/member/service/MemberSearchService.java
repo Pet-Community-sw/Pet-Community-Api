@@ -3,18 +3,12 @@ package com.example.petapp.application.usecase.member.service;
 import com.example.petapp.application.out.MemberSearchPort;
 import com.example.petapp.application.out.cache.MemberRecentViewCachePort;
 import com.example.petapp.application.out.cache.MemberSearchCachePort;
-import com.example.petapp.application.out.cache.MemberSearchSuggestionsCachePort;
 import com.example.petapp.application.usecase.member.MemberSearchUseCase;
 import com.example.petapp.application.usecase.member.object.dto.response.MemberSearchResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +16,6 @@ public class MemberSearchService implements MemberSearchUseCase {
 
     private final MemberSearchPort memberSearchPort;
     private final MemberSearchCachePort memberSearchCachePort;
-    private final MemberSearchSuggestionsCachePort memberSearchSuggestionsCachePort;
     private final MemberRecentViewCachePort memberRecentViewCachePort;
 
     @Override
@@ -32,11 +25,11 @@ public class MemberSearchService implements MemberSearchUseCase {
         }
 
         String key = keywordFilter(keyword);
-        List<MemberSearchResponseDto> result = memberSearchSuggestionsCachePort.get(key);
+        List<MemberSearchResponseDto> result = memberSearchCachePort.findSuggestions(key);
 
         if (result == null) {
             result = memberSearchPort.searchSuggestions(key);
-            memberSearchSuggestionsCachePort.create(key, result);
+            memberSearchCachePort.createSuggestions(key, result);
         }
         if (result == null || result.isEmpty()) {
             return result;
@@ -52,16 +45,16 @@ public class MemberSearchService implements MemberSearchUseCase {
         }
 
         String key = keywordFilter(keyword);
-        List<MemberSearchResponseDto> result = memberSearchCachePort.get(key, page);
+        List<MemberSearchResponseDto> result = memberSearchCachePort.findSearchResult(key, page);
         if (result == null) {
             result = memberSearchPort.search(key, page);
-            memberSearchCachePort.create(key, page, result);
+            memberSearchCachePort.createSearchResult(key, page, result);
         }
         return result;
     }
 
     private List<MemberSearchResponseDto> sortByRecentViews(List<MemberSearchResponseDto> result, Long memberId) {
-        List<Long> viewList = memberRecentViewCachePort.findList(memberId);
+        List<Long> viewList = memberRecentViewCachePort.findRecentViewMemberIds(memberId);
         if (viewList == null || viewList.isEmpty()) {
             return result;
         }

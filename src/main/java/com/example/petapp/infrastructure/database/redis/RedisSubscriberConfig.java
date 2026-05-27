@@ -1,4 +1,4 @@
-package com.example.petapp.infrastructure.database.cache.out.redis;
+package com.example.petapp.infrastructure.database.redis;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

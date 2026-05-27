@@ -1,4 +1,4 @@
-package com.example.petapp.infrastructure.database.cache.out.redis;
+package com.example.petapp.infrastructure.database.redis;
 
 import com.example.petapp.application.common.JsonUtil;
 import com.example.petapp.application.out.SendPort;

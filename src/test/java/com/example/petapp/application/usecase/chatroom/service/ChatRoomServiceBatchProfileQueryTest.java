@@ -79,12 +79,12 @@ class ChatRoomServiceBatchProfileQueryTest {
         when(walkingTogetherPost2.getProfile()).thenReturn(owner2);
         when(owner2.getId()).thenReturn(2L);
 
-        when(lastMessageCachePort.find(100L)).thenReturn(LastMessageInfoDto.builder()
+        when(lastMessageCachePort.findLastMessageInfo(100L)).thenReturn(LastMessageInfoDto.builder()
                 .lastSeq(5L)
                 .lastMessage("메시지1")
                 .lastMessageTime("2026-01-01T00:00:00")
                 .build());
-        when(lastMessageCachePort.find(200L)).thenReturn(LastMessageInfoDto.builder()
+        when(lastMessageCachePort.findLastMessageInfo(200L)).thenReturn(LastMessageInfoDto.builder()
                 .lastSeq(8L)
                 .lastMessage("메시지2")
                 .lastMessageTime("2026-01-01T00:01:00")

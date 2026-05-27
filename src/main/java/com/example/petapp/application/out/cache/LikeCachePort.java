@@ -3,9 +3,9 @@ package com.example.petapp.application.out.cache;
 import java.util.Set;
 
 public interface LikeCachePort {
-    Set<Long> getList(Long id);
+    Set<Long> findLikedMemberIds(Long postId);
 
-    void create(Long id, Long value);
+    void createLike(Long postId, Long memberId);
 
-    void delete(Long id, Long value);
+    void deleteLike(Long postId, Long memberId);
 }
