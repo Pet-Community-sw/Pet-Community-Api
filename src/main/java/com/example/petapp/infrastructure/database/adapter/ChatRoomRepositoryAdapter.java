@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.database.adapter;
 
-import com.example.petapp.application.usecase.chatting.model.type.ChatRoomType;
+import com.example.petapp.application.usecase.chatmessage.model.type.ChatRoomType;
 import com.example.petapp.domain.chatroom.ChatRoomRepository;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;

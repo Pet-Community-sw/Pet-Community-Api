@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.database.jpa.chatting;
 
-import com.example.petapp.domain.message.model.ChatMessage;
+import com.example.petapp.domain.chatmessage.model.ChatMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

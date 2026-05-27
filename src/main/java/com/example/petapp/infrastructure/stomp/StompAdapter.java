@@ -1,7 +1,7 @@
 package com.example.petapp.infrastructure.stomp;
 
 import com.example.petapp.application.out.SendPort;
-import com.example.petapp.application.usecase.chatting.model.dto.SendResponseDto;
+import com.example.petapp.application.usecase.chatmessage.model.dto.SendResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;

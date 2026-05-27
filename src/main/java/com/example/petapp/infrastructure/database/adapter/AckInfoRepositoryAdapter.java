@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.database.adapter;
 
-import com.example.petapp.domain.message.AckInfoRepository;
+import com.example.petapp.domain.chatmessage.AckInfoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Set;

@@ -1,6 +1,6 @@
 package com.example.petapp.application.out.cache;
 
-import com.example.petapp.domain.message.model.ChatMessage;
+import com.example.petapp.domain.chatmessage.model.ChatMessage;
 
 public interface ReadMessageCachePort {
     void create(ChatMessage chatMessage);

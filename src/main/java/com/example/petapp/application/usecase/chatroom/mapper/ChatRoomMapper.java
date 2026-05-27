@@ -1,13 +1,13 @@
 package com.example.petapp.application.usecase.chatroom.mapper;
 
+import com.example.petapp.application.usecase.chatmessage.model.dto.LastMessageInfoDto;
+import com.example.petapp.application.usecase.chatmessage.model.type.ChatRoomType;
 import com.example.petapp.application.usecase.chatroom.dto.request.ChatMessageDtoMember;
 import com.example.petapp.application.usecase.chatroom.dto.response.ChatRoomResponseDto;
-import com.example.petapp.application.usecase.chatting.model.dto.LastMessageInfoDto;
-import com.example.petapp.application.usecase.chatting.model.type.ChatRoomType;
 import com.example.petapp.application.usecase.profile.dto.response.ChatRoomUsersResponseDto;
+import com.example.petapp.domain.chatmessage.model.ChatMessage;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.message.model.ChatMessage;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
 
