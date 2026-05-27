@@ -22,7 +22,7 @@
 
 ### 사전 요구사항
 
-- Java 17
+- Java 21
 - Docker
 
 ### 설치 방법
@@ -76,7 +76,7 @@ chmod +x ./init-script.sh
 ---
 
 ## CI/CD Architecture
-<img width="1149" height="593" alt="Screenshot 2026-05-26 at 12 22 12" src="https://github.com/user-attachments/assets/67d8f9b4-3e12-4d12-ab46-bb35c635179d" />
+<img width="1147" height="584" alt="CI:CD Architecture" src="https://github.com/user-attachments/assets/a18057aa-cbd2-4c99-ac95-0dde55ea5f4b" />
 
 ---
 
