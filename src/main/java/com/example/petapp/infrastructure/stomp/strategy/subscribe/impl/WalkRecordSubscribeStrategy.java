@@ -17,7 +17,8 @@ import java.util.Map;
 @Slf4j
 public class WalkRecordSubscribeStrategy extends SubscribeTypeStrategy {
 
-    private static final String PATTERN = "/sub/walk/{walkRecordId}";
+    private static final String KEY = "walkRecordId";
+    private static final String PATTERN = "/sub/walk/{" + KEY + "}";
 
     private final WalkRecordQueryUseCase useCase;
 
@@ -29,7 +30,7 @@ public class WalkRecordSubscribeStrategy extends SubscribeTypeStrategy {
     @Override
     public void handle(SubscribeInfo subscribeInfo) {
         Map<String, String> map = pathMap(PATTERN, subscribeInfo.getDestination());
-        Long walkRecordId = Long.valueOf(map.get("walkRecordId"));
+        Long walkRecordId = Long.valueOf(map.get(KEY));
         Long memberId = Long.valueOf(subscribeInfo.getPrincipal().getName());
 
         WalkRecord walkRecord = useCase.findOrThrow(walkRecordId);

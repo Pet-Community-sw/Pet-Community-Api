@@ -16,7 +16,8 @@ import java.util.Map;
 @Slf4j
 public class RoomListSubscribeStrategy extends SubscribeTypeStrategy {
 
-    private static final String PATTERN = "/sub/list/{userId}";
+    private static final String KEY = "userId";
+    private static final String PATTERN = "/sub/list/{" + KEY + "}";
 
     private final MemberQueryUseCase useCase;
 
@@ -28,7 +29,7 @@ public class RoomListSubscribeStrategy extends SubscribeTypeStrategy {
     @Override
     public void handle(SubscribeInfo subscribeInfo) {
         Map<String, String> map = pathMap(PATTERN, subscribeInfo.getDestination());
-        Long userId = Long.valueOf(map.get("userId"));
+        Long userId = Long.valueOf(map.get(KEY));
         if (userId.equals(Long.valueOf(subscribeInfo.getPrincipal().getName()))) {
             useCase.findOrThrow(userId);
         } else {
