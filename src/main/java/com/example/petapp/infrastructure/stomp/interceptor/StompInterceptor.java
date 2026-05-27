@@ -1,7 +1,5 @@
 package com.example.petapp.infrastructure.stomp.interceptor;
 
-import com.example.petapp.application.common.exception.ErrorCode;
-import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.infrastructure.stomp.strategy.command.StompCommandStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +31,6 @@ public class StompInterceptor implements ChannelInterceptor {
         StompCommandStrategy strategy = commandStrategyMap.get(accessor.getCommand());
         if (strategy != null) {
             strategy.handle(accessor);
-        } else {
-            throw new PetCommunityException(ErrorCode.BAD_REQUEST, "지원하지 않는 command");
         }
         return message;
     }
