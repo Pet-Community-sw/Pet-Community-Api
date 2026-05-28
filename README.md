@@ -190,6 +190,38 @@ JWT는 서버가 사용자별 인증 상태를 저장하지 않아도 토큰 검
 
 ---
 
+### 6. S3 직접 접근 구조를 CloudFront 기반 캐싱 구조로 개선
+
+기존에는 프로필 이미지, 게시글 이미지와 같은 정적 리소스를 Amazon S3에 저장하고, API 서버가 S3 URL을 그대로 반환하는 구조였습니다.
+
+이미지 리소스는 한 번 업로드되면 자주 변경되지 않고 여러 사용자가 반복적으로 조회하는 특성이 있어, CloudFront를 도입해 캐싱 계층에서 정적 리소스 요청을 처리하도록 개선했습니다.
+
+- Architecture
+<img width="813" height="382" alt="s3 + cloud" src="https://github.com/user-attachments/assets/4f530884-e418-4aa2-ae22-10221ebe400d" />
+
+
+이미지 업로드 시에는 API 서버가 파일을 S3에 저장하고 CloudFront 도메인 URL을 반환합니다. 이후 이미지 조회 요청은 CloudFront를 통해 처리되며, 캐시된 리소스가 있으면 CloudFront에서 바로 응답하고 캐시가 없는 경우에만 S3에서 원본을 조회합니다.
+
+#### 6-1) 성능 측정
+
+k6를 사용해 동일한 이미지 리소스에 대해 가상 사용자 5명, 총 100회의 GET 요청을 수행했습니다. 애플리케이션 서버의 처리 시간을 제외하고 정적 리소스 조회 성능만 비교하기 위해 S3 URL과 CloudFront URL에 직접 요청을 보내는 방식으로 측정했습니다.
+
+- S3
+<img width="910" height="418" alt="s3 성능" src="https://github.com/user-attachments/assets/b22d03ca-21d7-4445-b299-e0f7be9b04d1" />
+
+- S3 + CloudFront
+<img width="885" height="410" alt="s3 + cloudfront성능" src="https://github.com/user-attachments/assets/81ecafa6-2a4d-4675-8ae3-651e898f6661" />
+
+CloudFront 적용 후 p99 응답 시간이 **63.73ms에서 26.93ms로 감소**했으며, 약 **57.7% 개선**된 것을 확인했습니다.
+
+#### 6-2) 비용 개선
+
+S3 직접 접근 방식은 이미지 조회 요청이 발생할 때마다 S3 GET 요청 비용이 누적되는 구조였습니다. 반면 CloudFront Free 플랜은 월 100만 요청과 100GB 데이터 전송을 무료 사용량으로 제공하며, CloudFront와 S3 간 데이터 전송 비용도 면제됩니다.
+
+이를 통해 S3 직접 접근 방식 대비 비용 부담을 완화할 수 있는 구조로 개선했습니다.
+
+---
+
 ## 포트폴리오
 
 프로젝트의 상세한 기술 선정 이유, 설계 배경, 문제 해결 과정, 성능 개선 내용은 아래 문서에 정리했습니다.
