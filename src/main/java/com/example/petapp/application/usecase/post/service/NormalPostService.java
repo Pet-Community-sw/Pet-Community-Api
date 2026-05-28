@@ -1,5 +1,6 @@
 package com.example.petapp.application.usecase.post.service;
 
+import com.example.petapp.application.common.PagePolicy;
 import com.example.petapp.application.out.StoragePort;
 import com.example.petapp.application.usecase.like.LikeQueryUseCase;
 import com.example.petapp.application.usecase.member.MemberQueryUseCase;
@@ -37,7 +38,7 @@ public class NormalPostService implements NormalPostUseCase {
     @Override
     public List<PostResponseDto> getPosts(int page, Long id) {
         memberQueryUseCase.findOrThrow(id);
-        PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "id"));
+        PageRequest pageRequest = PageRequest.of(page - 1, PagePolicy.DEFAULT_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
         List<PostResponseDto> posts = postQueryUseCase.findList(id, pageRequest).getContent();
         NormalPostMapper.toPostListResponseDto(posts);
         return posts;
@@ -47,7 +48,7 @@ public class NormalPostService implements NormalPostUseCase {
     public List<PostResponseDto> getPostsByMember(Long memberId, int page, Long id) {
         memberQueryUseCase.findOrThrow(memberId);
         memberQueryUseCase.findOrThrow(id);
-        PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "id"));
+        PageRequest pageRequest = PageRequest.of(page - 1, PagePolicy.DEFAULT_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
         List<PostResponseDto> posts = postQueryUseCase.findListByMember(memberId, id, pageRequest).getContent();
         NormalPostMapper.toPostListResponseDto(posts);
         return posts;
@@ -90,4 +91,3 @@ public class NormalPostService implements NormalPostUseCase {
         normalPost.updateNormalPost(storagePort.uploadFile(updatePostDto.getPostImageFile(), FileKind.POST), updatePostDto.getTitle(), updatePostDto.getContent());
     }
 }
-

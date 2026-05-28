@@ -19,7 +19,7 @@ public interface JpaDelegateWalkPostRepository extends JpaRepository<DelegateWal
                     where st_distance_sphere(
                         point(d.location_longitude, d.location_latitude),
                         point(:longitude, :latitude)
-                    ) <= 1000
+                    ) <= :radiusMeters
                     order by p.created_at desc
                     """,
             countQuery = """
@@ -28,13 +28,14 @@ public interface JpaDelegateWalkPostRepository extends JpaRepository<DelegateWal
                     where st_distance_sphere(
                         point(d.location_longitude, d.location_latitude),
                         point(:longitude, :latitude)
-                    ) <= 1000
+                    ) <= :radiusMeters
                     """,
             nativeQuery = true
     )
     Page<DelegateWalkPost> findByDelegateWalkPostByPlace(//나중에 paging해야할듯.
                                                          @Param("longitude") Double longitude,
                                                          @Param("latitude") Double latitude,
+                                                         @Param("radiusMeters") int radiusMeters,
                                                          Pageable pageable
     );
 

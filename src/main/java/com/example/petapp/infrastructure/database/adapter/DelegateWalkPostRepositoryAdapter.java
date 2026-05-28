@@ -1,5 +1,6 @@
 package com.example.petapp.infrastructure.database.adapter;
 
+import com.example.petapp.application.common.PostSearchPolicy;
 import com.example.petapp.domain.post.DelegateWalkPostRepository;
 import com.example.petapp.domain.post.model.DelegateWalkPost;
 import com.example.petapp.infrastructure.database.jpa.post.JpaDelegateWalkPostRepository;
@@ -19,7 +20,7 @@ public class DelegateWalkPostRepositoryAdapter implements DelegateWalkPostReposi
 
     @Override
     public Page<DelegateWalkPost> findList(Double longitude, Double latitude, Pageable pageable) {
-        return repository.findByDelegateWalkPostByPlace(longitude, latitude, pageable);
+        return repository.findByDelegateWalkPostByPlace(longitude, latitude, PostSearchPolicy.RADIUS_METERS, pageable);
     }
 
     @Override

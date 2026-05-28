@@ -1,5 +1,7 @@
 package com.example.petapp.application.usecase.post.service;
 
+import com.example.petapp.application.common.PagePolicy;
+import com.example.petapp.application.common.PostSearchPolicy;
 import com.example.petapp.application.out.cache.LikeCachePort;
 import com.example.petapp.application.usecase.like.LikeQueryUseCase;
 import com.example.petapp.application.usecase.member.MemberQueryUseCase;
@@ -48,10 +50,16 @@ public class RecommendRoutePostService implements RecommendRoutePostUseCase {
     @Override
     public List<GetRecommendRoutePostsResponseDto> getRecommendRoutePosts(Double minLongitude, Double minLatitude, Double maxLongitude, Double maxLatitude, int page, Long id) {
         Member member = memberQueryUseCase.findOrThrow(id);
-        Pageable pageable = PageRequest.of(page - 1, 10);
+        Pageable pageable = PageRequest.of(page - 1, PagePolicy.DEFAULT_PAGE_SIZE);
         Set<Long> memberIds = port.findLikedMemberIds(member.getId());
         List<RecommendRoutePost> recommendRoutePosts = recommendRoutePostRepository
-                .findList(minLongitude - 0.01, minLatitude - 0.01, maxLongitude + 0.01, maxLatitude + 0.01, pageable)
+                .findList(
+                        minLongitude - PostSearchPolicy.BOUNDING_BOX_MARGIN_DEGREES,
+                        minLatitude - PostSearchPolicy.BOUNDING_BOX_MARGIN_DEGREES,
+                        maxLongitude + PostSearchPolicy.BOUNDING_BOX_MARGIN_DEGREES,
+                        maxLatitude + PostSearchPolicy.BOUNDING_BOX_MARGIN_DEGREES,
+                        pageable
+                )
                 .getContent();
         return RecommendRoutePostMapper.toRecommendRoutePostsList(recommendRoutePosts, likeQueryUseCase.getCountMap(recommendRoutePosts), memberIds, member);
     }
@@ -60,7 +68,7 @@ public class RecommendRoutePostService implements RecommendRoutePostUseCase {
     @Override
     public List<GetRecommendRoutePostsResponseDto> getRecommendRoutePosts(Double longitude, Double latitude, int page, Long id) {
         Member member = memberQueryUseCase.findOrThrow(id);
-        Pageable pageable = PageRequest.of(page - 1, 10);
+        Pageable pageable = PageRequest.of(page - 1, PagePolicy.DEFAULT_PAGE_SIZE);
         Set<Long> memberIds = port.findLikedMemberIds(member.getId());
         List<RecommendRoutePost> recommendRoutePosts = recommendRoutePostRepository.findList(longitude, latitude, pageable).getContent();
         return RecommendRoutePostMapper.toRecommendRoutePostsList(recommendRoutePosts, likeQueryUseCase.getCountMap(recommendRoutePosts), memberIds, member);

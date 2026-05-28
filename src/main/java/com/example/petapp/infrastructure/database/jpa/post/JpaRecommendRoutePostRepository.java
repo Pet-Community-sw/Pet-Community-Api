@@ -16,7 +16,7 @@ public interface JpaRecommendRoutePostRepository extends JpaRepository<Recommend
                     where st_distance_sphere(
                         point(r.location_longitude, r.location_latitude),
                         point(:longitude, :latitude)
-                    ) <= 1000
+                    ) <= :radiusMeters
                     order by p.created_at desc
                     """,
             countQuery = """
@@ -25,12 +25,13 @@ public interface JpaRecommendRoutePostRepository extends JpaRepository<Recommend
                     where st_distance_sphere(
                         point(r.location_longitude, r.location_latitude),
                         point(:longitude, :latitude)
-                    ) <= 1000
+                    ) <= :radiusMeters
                     """,
             nativeQuery = true
     )
     Page<RecommendRoutePost> findByRecommendRoutePostByPlace(@Param("longitude") Double longitude,
                                                              @Param("latitude") Double latitude,
+                                                             @Param("radiusMeters") int radiusMeters,
                                                              Pageable pageable);
 
     @Query("select r from RecommendRoutePost r where r.location.locationLongitude between :minLongitude and :maxLongitude " +

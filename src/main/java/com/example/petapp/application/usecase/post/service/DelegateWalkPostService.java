@@ -1,5 +1,7 @@
 package com.example.petapp.application.usecase.post.service;
 
+import com.example.petapp.application.common.PagePolicy;
+import com.example.petapp.application.common.PostSearchPolicy;
 import com.example.petapp.application.common.exception.ErrorCode;
 import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.chatroom.ChatRoomUseCase;
@@ -60,8 +62,14 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
     @Override
     public List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByLocation(Double minLongitude, Double minLatitude, Double maxLongitude, Double maxLatitude, int page, Long id) {
         Member member = memberQueryUseCase.findOrThrow(id);
-        Pageable pageable = PageRequest.of(page - 1, 10);
-        List<DelegateWalkPost> delegateWalkPosts = delegateWalkPostRepository.findList(minLongitude - 0.01, minLatitude - 0.01, maxLongitude + 0.01, maxLatitude + 0.01, pageable).getContent();
+        Pageable pageable = PageRequest.of(page - 1, PagePolicy.DEFAULT_PAGE_SIZE);
+        List<DelegateWalkPost> delegateWalkPosts = delegateWalkPostRepository.findList(
+                minLongitude - PostSearchPolicy.BOUNDING_BOX_MARGIN_DEGREES,
+                minLatitude - PostSearchPolicy.BOUNDING_BOX_MARGIN_DEGREES,
+                maxLongitude + PostSearchPolicy.BOUNDING_BOX_MARGIN_DEGREES,
+                maxLatitude + PostSearchPolicy.BOUNDING_BOX_MARGIN_DEGREES,
+                pageable
+        ).getContent();
         return DelegateWalkPostMapper.toGetDelegateWalkPostsResponseDtos(member, delegateWalkPosts);
     }
 
@@ -69,7 +77,7 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
     @Override
     public List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByPlace(Double longitude, Double latitude, int page, Long id) {
         Member member = memberQueryUseCase.findOrThrow(id);
-        Pageable pageable = PageRequest.of(page - 1, 10);
+        Pageable pageable = PageRequest.of(page - 1, PagePolicy.DEFAULT_PAGE_SIZE);
         List<DelegateWalkPost> delegateWalkPosts = delegateWalkPostRepository.findList(longitude, latitude, pageable).getContent();
         return DelegateWalkPostMapper.toGetDelegateWalkPostsResponseDtos(member, delegateWalkPosts);
     }
@@ -142,4 +150,3 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
         return new ApplyToDelegateWalkPostResponseDto(member.getId());
     }
 }
-

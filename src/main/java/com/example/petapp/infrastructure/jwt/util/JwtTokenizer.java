@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.time.Duration;
 import java.util.Date;
 import java.util.List;
 
@@ -20,9 +21,9 @@ import java.util.List;
 @Component
 public class JwtTokenizer {
 
-    private static final Long ACCESS_TOKEN_EXPIRE_COUNT = 24 * 60 * 60 * 1000L;
-    private static final Long REFRESH_TOKEN_EXPIRE_COUNT = 7 * 24 * 60 * 60 * 1000L;
-    private static final Long EMAIL_TOKEN_EXPIRE_COUNT = 3 * 60 * 1000L;
+    private static final long ACCESS_TOKEN_EXPIRE_MILLIS = Duration.ofDays(1).toMillis();
+    private static final long REFRESH_TOKEN_EXPIRE_MILLIS = Duration.ofDays(7).toMillis();
+    private static final long EMAIL_TOKEN_EXPIRE_MILLIS = Duration.ofMinutes(3).toMillis();
     private final byte[] accessKey;
     private final byte[] refreshKey;
 
@@ -48,17 +49,17 @@ public class JwtTokenizer {
     public String create(TokenType tokenType, Long memberId, Long profileId, String name, List<String> roles) {
         switch (tokenType) {
             case ACCESS -> {
-                return createToken(memberId, profileId, name, roles, ACCESS_TOKEN_EXPIRE_COUNT, accessKey);
+                return createToken(memberId, profileId, name, roles, ACCESS_TOKEN_EXPIRE_MILLIS, accessKey);
             }
             case REFRESH -> {
                 //어차피 profile선택할 때마다 refresh안줄거임왜냐면 토큰은 회원
                 //유지를 도와주는거임 access재요청이있을 때 memberid에 해당하는 리프레쉬 토큰이있으면 인증 확인했다하고 access에 profile뽑아서 다시 만듦.
                 //refreshToken
-                return createToken(memberId, null, name, roles, REFRESH_TOKEN_EXPIRE_COUNT, refreshKey);
+                return createToken(memberId, null, name, roles, REFRESH_TOKEN_EXPIRE_MILLIS, refreshKey);
             }
             case EMAIL_ACCESS -> {
                 //이메일 인증후 비밀번호 재설정할 때 사용할 임시 토큰
-                return createToken(memberId, null, null, roles, EMAIL_TOKEN_EXPIRE_COUNT, accessKey);
+                return createToken(memberId, null, null, roles, EMAIL_TOKEN_EXPIRE_MILLIS, accessKey);
             }
             default -> {
                 throw new RuntimeException("지원하지 않는 tokenType");
@@ -66,7 +67,7 @@ public class JwtTokenizer {
         }
     }
 
-    private String createToken(Long id, Long profileId, String name, List<String> roles, Long expire, byte[] key) {
+    private String createToken(Long id, Long profileId, String name, List<String> roles, long expire, byte[] key) {
         Claims claims = Jwts.claims().setSubject(String.valueOf(id));
         claims.put("name", name);
         claims.put("roles", roles);
