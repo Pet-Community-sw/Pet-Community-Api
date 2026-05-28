@@ -28,36 +28,29 @@ import java.util.Set;
 @AllArgsConstructor
 public class DelegateWalkPost extends Post implements Commentable {
 
-    @Setter
     @Embedded
     private Location location;
 
-    @Setter
     @Min(0)
     @NotNull
     @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
     private long price;
 
-    @Setter
     @NotNull
     @Column(nullable = false)
     private Integer allowedRadiusMeters;
 
-    @Setter
     @Column(nullable = true)
     private Long selectedApplicantMemberId;
 
-    @Setter
     @NotNull
     @Column(nullable = false)
     private boolean requireProfile;//profile여부 true or false
 
-    @Setter
     @NotNull
     @Column(nullable = false)
     private boolean startAuthorized;// start권한 부여
 
-    @Setter
     @Column(nullable = false)
     private LocalDateTime scheduledTime;
 
@@ -65,7 +58,6 @@ public class DelegateWalkPost extends Post implements Commentable {
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
-    @Setter
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -114,15 +106,15 @@ public class DelegateWalkPost extends Post implements Commentable {
     }
 
     public void grantAuthorize() {
-        setStartAuthorized(true);
+        startAuthorized = true;
     }
 
     public void updateDelegateWalkPost(UpdateDelegateWalkPostDto updateDelegateWalkPostDto) {
-        setContent(new Content(updateDelegateWalkPostDto.getTitle(), updateDelegateWalkPostDto.getContent()));
-        setPrice(updateDelegateWalkPostDto.getPrice());
-        setAllowedRadiusMeters(updateDelegateWalkPostDto.getAllowedRedisMeters());
-        setRequireProfile(updateDelegateWalkPostDto.isRequireProfile());
-        setScheduledTime(updateDelegateWalkPostDto.getScheduledTime());
+        updateContent(updateDelegateWalkPostDto.getTitle(), updateDelegateWalkPostDto.getContent());
+        price = updateDelegateWalkPostDto.getPrice();
+        allowedRadiusMeters = updateDelegateWalkPostDto.getAllowedRedisMeters();
+        requireProfile = updateDelegateWalkPostDto.isRequireProfile();
+        scheduledTime = updateDelegateWalkPostDto.getScheduledTime();
     }
 
     public void addApplicant(Member member, String content) {
@@ -150,7 +142,7 @@ public class DelegateWalkPost extends Post implements Commentable {
         if (hasApplicant(selectedMemberId)) {
             throw new PetCommunityException(ErrorCode.FORBIDDEN, "권한 없음.");
         }
-        setStatus(DelegateWalkStatus.COMPLETED);
-        setSelectedApplicantMemberId(selectedMemberId);
+        status = DelegateWalkStatus.COMPLETED;
+        selectedApplicantMemberId = selectedMemberId;
     }
 }

@@ -113,7 +113,7 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
                 tokenPort.create(TokenType.ACCESS, memberId, null, name, roles)  //getProfileId를 했을 때 null이면 일반 토큰 있으면 profile토큰
                 : tokenPort.create(TokenType.ACCESS, memberId, Long.valueOf(profileId.toString()), name, roles);//profile이있으면 붙혀서 반환.
         String newRefreshToken = tokenPort.create(TokenType.REFRESH, memberId, null, name, roles);
-        token.setRefreshToken(newRefreshToken);
+        token.updateRefreshToken(newRefreshToken);
 
         return new TokenResponseDto(newAccessToken, newRefreshToken);
 

@@ -21,22 +21,18 @@ import java.util.List;
 @SuperBuilder
 public class WalkRecord extends BaseEntity {
 
-    @Setter
     @NotNull
     @Column(nullable = false)
     private LocalDateTime startTime;
 
-    @Setter
     @NotNull
     @Column(nullable = false)
     private LocalDateTime finishTime;
 
-    @Setter
     @NotNull
     @Column(nullable = false)
     private Double walkDistance;
 
-    @Setter
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -50,7 +46,6 @@ public class WalkRecord extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @Setter
     @Builder.Default
     @ElementCollection
     @CollectionTable(name = "walk_path_points", joinColumns = @JoinColumn(name = "walk_record_id"))
@@ -66,8 +61,8 @@ public class WalkRecord extends BaseEntity {
     }
 
     public void updateRecordToPath(Double totalDistance, List<String> paths) {
-        setWalkDistance(totalDistance);
-        setPathPoints(paths);
+        walkDistance = totalDistance;
+        pathPoints = paths;
 
     }
 
@@ -78,12 +73,12 @@ public class WalkRecord extends BaseEntity {
     }
 
     public void updateWalkStatus(WalkStatus walkStatus) {
-        setWalkStatus(walkStatus);
+        this.walkStatus = walkStatus;
         LocalDateTime now = LocalDateTime.now();
         if (walkStatus == WalkStatus.START) {
-            setStartTime(now);
+            startTime = now;
         } else if (walkStatus == WalkStatus.FINISH) {
-            setFinishTime(now);
+            finishTime = now;
         }
     }
 

@@ -2,14 +2,13 @@ package com.example.petapp.domain.post.model;
 
 import com.example.petapp.domain.comment.model.Comment;
 import com.example.petapp.domain.comment.model.Commentable;
-import com.example.petapp.domain.member.model.Member;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,13 +31,7 @@ public class NormalPost extends Post implements Commentable {
     }
 
     public void updateNormalPost(String newPostImageUrl, String newTitle, String newContent) {
-        setPostImageUrl(newPostImageUrl);
-        setContent(new Content(newTitle, newContent));
-    }
-
-    public void updateViewCount(Member member) {//todo : 동시성 이슈 가능.
-        if (!getMember().equals(member)) {
-            setViewCount(getViewCount() + 1);
-        }
+        updateImage(newPostImageUrl);
+        updateContent(newTitle, newContent);
     }
 }

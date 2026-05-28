@@ -98,9 +98,8 @@ public class MemberService implements MemberUseCase {
         Member member = memberQueryUseCase.findOrThrow(memberId);
         String imageFileName = storagePort.uploadFile(requestDto.getMemberImageUrl(), FileKind.MEMBER);
 
-        member.setName(requestDto.getName());
+        member.updateInfo(requestDto.getName(), imageFileName);
         String chosung = NameChosungUtil.getChosung(requestDto.getName());
-        member.setMemberImageUrl(imageFileName);
 
         eventPublisher.publishEvent(MemberEvent.builder()
                 .methodType(MethodType.UPDATE)

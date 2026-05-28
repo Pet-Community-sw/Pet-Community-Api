@@ -5,11 +5,11 @@ import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.like.model.Like;
 import com.example.petapp.domain.member.model.Member;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +26,10 @@ import java.util.List;
 public abstract class Post extends BaseEntity {
 
     @Embedded
-    @Setter
     private Content content;
 
-    @Setter
     private String postImageUrl;
 
-    @Setter
     @Min(0)
     @Column(nullable = false)
     private long viewCount;
@@ -56,6 +53,10 @@ public abstract class Post extends BaseEntity {
 
     public void updateContent(String newTitle, String newContent) {
         content = new Content(newTitle, newContent);
+    }
+
+    public void updateImage(String postImageUrl) {
+        this.postImageUrl = postImageUrl;
     }
 
     public void countUpLike(Like like) {

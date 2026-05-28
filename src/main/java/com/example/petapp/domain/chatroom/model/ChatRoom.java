@@ -22,16 +22,13 @@ import java.util.Set;
 @SuperBuilder
 public class ChatRoom extends BaseEntity {
 
-    @Setter
     @NotBlank
     @Column(nullable = false)
     private String name;
 
-    @Setter
     @Enumerated(EnumType.STRING)
     private ChatRoomType chatRoomType;
 
-    @Setter
     @NotNull
     @Column(nullable = false)
     private int limitCount;
@@ -40,7 +37,6 @@ public class ChatRoom extends BaseEntity {
     @JoinColumn(name = "walking_together_post_id")
     private WalkingTogetherPost walkingTogetherPost;
 
-    @Setter
     @ElementCollection
     @CollectionTable(
             name = "chat_room_users",
@@ -68,6 +64,11 @@ public class ChatRoom extends BaseEntity {
 
     public void addUser(Long userId) {
         users.add(userId);
+    }
+
+    public void updateInfo(String name, int limitCount) {
+        this.name = name;
+        this.limitCount = limitCount;
     }
 
     public void checkUser(Long userId) {

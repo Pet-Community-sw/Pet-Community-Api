@@ -22,7 +22,6 @@ public class Token extends BaseEntity {
     @JoinColumn(name = "member_id", unique = true)
     private Member member;
 
-    @Setter
     @NotBlank
     @Column(nullable = false, length = 512)
     private String refreshToken;

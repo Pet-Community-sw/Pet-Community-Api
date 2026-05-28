@@ -22,13 +22,11 @@ import jakarta.validation.constraints.NotNull;
 //따로 db에 리스틑 저장안할거임 누른 후 인식만하고 어떤 요청이 있을 때 좋아요 올리기 요청을 보냄?
 public class Comment extends BaseEntity {
 
-    @Setter
     @NotBlank
     @Column(nullable = false)
     private String content;
 
     @Min(0)
-    @Setter
     @NotNull
     @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
     private long likeCount;
@@ -48,7 +46,6 @@ public class Comment extends BaseEntity {
     }
 
     public void update(String content) {
-        setContent(content);
+        this.content = content;
     }
 }
-
