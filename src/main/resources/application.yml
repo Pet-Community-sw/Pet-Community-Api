@@ -67,23 +67,6 @@ aws:
   cloudfront:
     domain: ${AWS_CLOUD_FRONT:}
 
-management:
-  metrics:
-    distribution:
-      percentiles-histogram:
-        http:
-          server:
-            requests: true
-    enable:
-      all: true
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,prometheus
-  health:
-    mongo:
-      enabled: false
-
 server:
   address: 0.0.0.0
   port: 8080

@@ -36,7 +36,6 @@ public class SecurityConfig {
                         "/v3/api-docs/**",
                         "/v3/api-docs.yaml",
                         "/swagger-resources/**",
-                        "/actuator/prometheus",
                         "/webjars/**"
                 ).permitAll()
                 .requestMatchers("/image/profiles/**", "/image/members/**", "/image/posts/**", "/image/basic/**", "/favicon.ico").permitAll()
