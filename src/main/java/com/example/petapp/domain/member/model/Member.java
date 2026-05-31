@@ -10,11 +10,11 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.validation.constraints.NotBlank;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,28 +32,23 @@ import java.util.List;
 * */
 public class Member extends BaseEntity {//수정 필요
 
-    @Setter
     @NotBlank
     @Column(nullable = false)
     private String phoneNumber;
 
-    @Setter
     @NotBlank
     @Column(nullable = false)
     private String name;
 
-    @Setter
     @NotBlank
     @Column(nullable = false)
     private String email;
 
-    @Setter
     @JsonIgnore//중요한 정보 숨김. 반환 값에 넣어도 반환이 안됨.
     @NotBlank
     @Column(nullable = false)
     private String password;
 
-    @Setter
     @Column(nullable = false)
     private String memberImageUrl;
 
@@ -79,6 +74,11 @@ public class Member extends BaseEntity {//수정 필요
 
     public void updatePassword(String newPassword) {
         password = newPassword;
+    }
+
+    public void updateInfo(String name, String memberImageUrl) {
+        this.name = name;
+        this.memberImageUrl = memberImageUrl;
     }
 
     public void validateProfile(Member member, Member profileMember) {

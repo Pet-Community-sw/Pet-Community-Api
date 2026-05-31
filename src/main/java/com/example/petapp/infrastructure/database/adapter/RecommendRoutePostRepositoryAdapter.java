@@ -1,5 +1,6 @@
 package com.example.petapp.infrastructure.database.adapter;
 
+import com.example.petapp.application.common.PostSearchPolicy;
 import com.example.petapp.domain.post.RecommendRoutePostRepository;
 import com.example.petapp.domain.post.model.RecommendRoutePost;
 import com.example.petapp.infrastructure.database.jpa.post.JpaRecommendRoutePostRepository;
@@ -16,7 +17,7 @@ public class RecommendRoutePostRepositoryAdapter implements RecommendRoutePostRe
 
     @Override
     public Page<RecommendRoutePost> findList(Double longitude, Double latitude, Pageable pageable) {
-        return repository.findByRecommendRoutePostByPlace(longitude, latitude, pageable);
+        return repository.findByRecommendRoutePostByPlace(longitude, latitude, PostSearchPolicy.RADIUS_METERS, pageable);
     }
 
     @Override

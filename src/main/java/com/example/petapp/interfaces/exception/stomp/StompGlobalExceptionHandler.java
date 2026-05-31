@@ -2,7 +2,6 @@ package com.example.petapp.interfaces.exception.stomp;
 
 import com.example.petapp.application.common.JsonUtil;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
@@ -23,7 +22,7 @@ public class StompGlobalExceptionHandler {
     public StompSubProtocolErrorHandler stompSubProtocolErrorHandler() {
         return new StompSubProtocolErrorHandler() {
             @Override
-            public @Nullable Message<byte[]> handleClientMessageProcessingError(@Nullable Message<byte[]> clientMessage, Throwable ex) {
+            public Message<byte[]> handleClientMessageProcessingError(Message<byte[]> clientMessage, Throwable ex) {
                 Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
 
                 StompErrorResponse response = StompErrorResponse.from(cause);

@@ -3,7 +3,7 @@ package com.example.petapp.application.usecase.post.delegate.model.dto.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Getter

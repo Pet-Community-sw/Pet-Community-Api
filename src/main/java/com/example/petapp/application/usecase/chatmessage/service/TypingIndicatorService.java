@@ -27,6 +27,8 @@ import java.util.List;
 @Slf4j
 public class TypingIndicatorService implements TypingIndicatorUseCase {
 
+    private static final long TYPING_TTL = 3000L;
+
     private final SendPort sendPort;
     private final ChatRoomQueryUseCase chatRoomQueryUseCase;
     private final TypingCachePort typingCachePort;
@@ -44,7 +46,7 @@ public class TypingIndicatorService implements TypingIndicatorUseCase {
         chatRoom.validateUser(id);
         //타이핑 중이라면 redis에 저장
         if (typingMessageDto.isTyping())
-            typingCachePort.markTyping(typingMessageDto.roomId(), id, 3 * 1000L);
+            typingCachePort.markTyping(typingMessageDto.roomId(), id, TYPING_TTL);
             //false면 redis에서 삭제
         else
             typingCachePort.clearTyping(typingMessageDto.roomId(), id);

@@ -9,9 +9,9 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -26,34 +26,28 @@ import static com.example.petapp.application.common.AgeUtil.CalculateAge;
 @SuperBuilder
 public class Profile extends BaseEntity {
 
-    @Setter
     @NotBlank
     @Column(nullable = false)
     private String petImageUrl;
 
-    @Setter
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull
     @Column(nullable = false)
     private LocalDate petBirthDate;
 
-    @Setter
     @NotBlank
     @Column(nullable = false)
     private String petAge;
 
-    @Setter
     @NotNull
     @JoinColumn(name = "pet_breed_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private PetBreed petBreed;
 
-    @Setter
     @NotBlank
     @Column(nullable = false)
     private String petName;
 
-    @Setter
     @Column(nullable = false)
     private String extraInfo;
 
@@ -61,7 +55,6 @@ public class Profile extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @Setter
     @Builder.Default
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "profile_breed",
@@ -77,18 +70,18 @@ public class Profile extends BaseEntity {
 
     public void addAvoidBreeds(PetBreed dogBreed) {
         if (getAvoidBreeds() == null) {
-            setAvoidBreeds(new HashSet<>());
+            avoidBreeds = new HashSet<>();
         }
         avoidBreeds.add(dogBreed);
     }
 
     public void updateProfile(String petName, LocalDate petBirthDate, String extraInfo, String imageFimeName, PetBreed petBreed) {
-        setPetImageUrl("/profile/" + imageFimeName);
-        setPetName(petName);
-        setPetBirthDate(petBirthDate);
-        setPetAge(CalculateAge(petBirthDate) + "살");
-        setPetBreed(petBreed);
-        setExtraInfo(extraInfo);
+        this.petImageUrl = "/profile/" + imageFimeName;
+        this.petName = petName;
+        this.petBirthDate = petBirthDate;
+        this.petAge = CalculateAge(petBirthDate) + "살";
+        this.petBreed = petBreed;
+        this.extraInfo = extraInfo;
         getAvoidBreeds().clear();
     }
 

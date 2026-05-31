@@ -8,8 +8,8 @@ import com.example.petapp.domain.member.model.Member;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Getter
@@ -22,7 +22,6 @@ public class Token extends BaseEntity {
     @JoinColumn(name = "member_id", unique = true)
     private Member member;
 
-    @Setter
     @NotBlank
     @Column(nullable = false, length = 512)
     private String refreshToken;

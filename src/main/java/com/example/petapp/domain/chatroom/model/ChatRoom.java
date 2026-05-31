@@ -9,9 +9,9 @@ import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,16 +22,13 @@ import java.util.Set;
 @SuperBuilder
 public class ChatRoom extends BaseEntity {
 
-    @Setter
     @NotBlank
     @Column(nullable = false)
     private String name;
 
-    @Setter
     @Enumerated(EnumType.STRING)
     private ChatRoomType chatRoomType;
 
-    @Setter
     @NotNull
     @Column(nullable = false)
     private int limitCount;
@@ -40,7 +37,6 @@ public class ChatRoom extends BaseEntity {
     @JoinColumn(name = "walking_together_post_id")
     private WalkingTogetherPost walkingTogetherPost;
 
-    @Setter
     @ElementCollection
     @CollectionTable(
             name = "chat_room_users",
@@ -68,6 +64,11 @@ public class ChatRoom extends BaseEntity {
 
     public void addUser(Long userId) {
         users.add(userId);
+    }
+
+    public void updateInfo(String name, int limitCount) {
+        this.name = name;
+        this.limitCount = limitCount;
     }
 
     public void checkUser(Long userId) {

@@ -1,14 +1,12 @@
 package com.example.petapp.infrastructure.database.adapter;
 
 import com.example.petapp.domain.post.model.RecommendRoutePost;
-import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogetherPost.WalkingTogetherPostRepository;
 import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
 import com.example.petapp.infrastructure.database.jpa.match.JpaWalkingTogetherPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,12 +20,7 @@ public class WalkingTogetherPostRepositoryAdapter implements WalkingTogetherPost
     public List<WalkingTogetherPost> findAllByRecommendRoutePost(RecommendRoutePost recommendRoutePost) {
         return repository.findAllByRecommendRoutePost(recommendRoutePost);
     }
-
-    @Override
-    public List<WalkingTogetherPost> findAllByProfileContainsAndScheduledTimeBetween(Profile profile, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        return repository.findAllByProfileContainsAndScheduledTimeBetween(profile, startDateTime, endDateTime);
-    }
-
+    
     @Override
     public WalkingTogetherPost save(WalkingTogetherPost walkingTogetherPost) {
         return repository.save(walkingTogetherPost);

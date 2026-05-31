@@ -1,100 +1,63 @@
 import http from 'k6/http';
-import {check} from 'k6';
-import {Counter, Trend} from 'k6/metrics';
+import exec from 'k6/execution';
+import {Trend} from 'k6/metrics';
 
 export const options = {
     scenarios: {
-        signup_stage_1: {
-            executor: 'shared-iterations',
+        warmup: {
+            executor: 'constant-vus', //vu 고정으로 duration동안 계속 요청
             vus: 5,
-            iterations: 1000,
-            maxDuration: '30s',
-            startTime: '0s',
+            duration: '30s',
+            exec: 'warmup',
         },
-        signup_stage_2: {
-            executor: 'shared-iterations',
-            vus: 10,
-            iterations: 2000,
-            maxDuration: '1m',
-            startTime: '30s',
-        },
-        signup_stage_3: {
-            executor: 'shared-iterations',
-            vus: 15,
-            iterations: 3000,
-            maxDuration: '1m30s',
-            startTime: '1m30s',
-        },
-        signup_stage_4: {
-            executor: 'shared-iterations',
+        measure: {
+            executor: 'shared-iterations', //전체 iterations를 vu에 나눠서 실행
             vus: 20,
-            iterations: 4000,
-            maxDuration: '2m',
-            startTime: '3m',
+            iterations: 10000,
+            startTime: '35s',
+            exec: 'measure', //실행할 함수
         },
     },
+    summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(90)', 'p(95)', 'p(99)'],
 };
 
-const SIGNUP_URL = `http://localhost:8080/members`;
-
-const signupDuration = new Trend('signup_api_duration');
-const successCount = new Counter('signup_success_count');
-const failCount = new Counter('signup_fail_count');
-
-const validNames = [
-    '민수',
-    '서연',
-    '지훈',
-    '수빈',
-    '선재',
-    '지우',
-    '하린',
-    '도윤',
-    '지민',
-    '유진',
-];
+const signupDuration = new Trend('signup_duration', true); //웜업 요청 빼고 실제 측정할 때만 설정
+const SIGNUP_URL = `http://localhost:8080/load-test/members/sync-index`;
 
 function uniqueSuffix() {
-    return `${Date.now()}_${__VU}_${__ITER}`;
+    return `${exec.scenario.name}_${__VU}_${__ITER}`;
 }
 
-function makePhoneNumber() {
-    const n = 10000000 + ((__VU * 100000 + __ITER) % 90000000);
-    return `010${String(n).padStart(8, '0')}`;
-}
-
-export default function () {
+function sendSignup() {
     const suffix = uniqueSuffix();
-    const name = validNames[(__VU + __ITER) % validNames.length];
-    const phoneNumber = makePhoneNumber();
     const email = `user${suffix}@test.com`;
 
     const payload = JSON.stringify({
-        name: name,
+        name: '테스트유저',
         email: email,
         password: 'Test1234!',
-        phoneNumber: phoneNumber,
+        phoneNumber: '01012345678',
     });
 
     const res = http.post(SIGNUP_URL, payload, {
         headers: {
-            'Content-Type': 'application/json; charset=utf-8',
+            'Content-Type': 'application/json',
         },
-        timeout: '10s',
     });
-
-    signupDuration.add(res.timings.duration);
-
-    const ok = check(res, {
-        'status is 201': (r) => r.status === 201,
-    });
-
-    if (ok) {
-        successCount.add(1);
-    } else {
-        failCount.add(1);
+    if (res.status !== 201) {
         console.log(
-            `name=${name}, email=${email}, phone=${phoneNumber}, status=${res.status}, body=${res.body}`
+            `email=${email}, status=${res.status}, body=${res.body}`
         );
     }
+
+    return res;
+}
+
+export function warmup() {
+    sendSignup();
+}
+
+export function measure() {
+    const res = sendSignup();
+    signupDuration.add(res.timings.duration);
 }

@@ -12,8 +12,8 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Cascade;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +25,6 @@ import java.util.Set;
 @SuperBuilder
 public class WalkingTogetherPost extends BaseEntity {
 
-    @Setter
     @NotNull
     @Column(nullable = false)
     private int limitCount;
@@ -38,7 +37,6 @@ public class WalkingTogetherPost extends BaseEntity {
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
-    @Setter
     @NotNull
     @Column(nullable = false)
     private LocalDateTime scheduledTime;
@@ -70,8 +68,8 @@ public class WalkingTogetherPost extends BaseEntity {
     }
 
     public void update(UpdateWalkingTogetherPostDto updateWalkingTogetherPostDto) {
-        setScheduledTime(updateWalkingTogetherPostDto.getScheduledTime());
-        setLimitCount(updateWalkingTogetherPostDto.getLimitCount());
+        scheduledTime = updateWalkingTogetherPostDto.getScheduledTime();
+        limitCount = updateWalkingTogetherPostDto.getLimitCount();
     }
 
     public void matchingStart(Long profileId, Profile profile) {
@@ -93,4 +91,3 @@ public class WalkingTogetherPost extends BaseEntity {
         }
     }
 }
-

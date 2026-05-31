@@ -17,30 +17,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    database-platform: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
-
-  rabbitmq:
-    addresses: ${RABBITMQ_HOST}:${RABBITMQ_PORT}
-    username: ${RABBITMQ_USERNAME}
-    password: ${RABBITMQ_PASSWORD}
-    listener:
-      simple:
-        prefetch: 10
-        acknowledge-mode: auto
-        concurrency: 4
-        max-concurrency: 8
-    publisher-confirm-type: correlated #해당 메시지 전송 확인
-    requested-heartbeat: 30
 
   data:
     redis:
       repositories:
         enabled: false
-
-  redis:
-    host: ${REDIS_HOST}
-    port: ${REDIS_PORT}
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
 
   servlet:
     multipart:
@@ -54,11 +38,6 @@ spring:
         secret-key: ${AWS_IAM_SECRET_KEY}
       region:
         static: ${AWS_S3_REGION}
-
-  # Elasticsearch Reactive Repositories 오토컨피그 비활성화
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.data.elasticsearch.ReactiveElasticsearchRepositoriesAutoConfiguration
 
 springdoc:
   swagger-ui:

@@ -2,11 +2,10 @@ package com.example.petapp.domain.post.model;
 
 import lombok.*;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,5 +19,4 @@ public class Applicant {
 
     private String content;
 }
-
 

@@ -117,8 +117,7 @@ public class ChatRoomService implements ChatRoomUseCase {
         ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
         Profile profile = profileQueryUseCase.findOrThrow(profileId);
         chatRoom.validateChatOwner(profile);
-        chatRoom.setName(updateChatRoomDto.getChatRoomName());
-        chatRoom.setLimitCount(updateChatRoomDto.getLimitCount());
+        chatRoom.updateInfo(updateChatRoomDto.getChatRoomName(), updateChatRoomDto.getLimitCount());
     }
 
     @Transactional(readOnly = true)

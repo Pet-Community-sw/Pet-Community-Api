@@ -20,7 +20,6 @@ import com.example.petapp.domain.token.model.Token;
 import com.example.petapp.domain.token.model.TokenType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,15 +36,6 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
     private final RoleQueryUseCase roleQueryUseCase;
     private final TokenQueryUseCase tokenQueryUseCase;
     private final TokenPort tokenPort;
-
-    @NotNull
-    private static List<String> getRoles(Member member) {
-        return member
-                .getMemberRoles()
-                .stream()
-                .map(memberRole -> memberRole.getRole().getName())
-                .collect(Collectors.toList());
-    }
 
     @Transactional
     @Override
@@ -123,7 +113,7 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
                 tokenPort.create(TokenType.ACCESS, memberId, null, name, roles)  //getProfileId를 했을 때 null이면 일반 토큰 있으면 profile토큰
                 : tokenPort.create(TokenType.ACCESS, memberId, Long.valueOf(profileId.toString()), name, roles);//profile이있으면 붙혀서 반환.
         String newRefreshToken = tokenPort.create(TokenType.REFRESH, memberId, null, name, roles);
-        token.setRefreshToken(newRefreshToken);
+        token.updateRefreshToken(newRefreshToken);
 
         return new TokenResponseDto(newAccessToken, newRefreshToken);
 
@@ -131,5 +121,13 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
 
     private void blacklistAccessToken(String accessToken) {
         tokenCachePort.blacklist(accessToken, 30 * 60L);
+    }
+
+    private List<String> getRoles(Member member) {
+        return member
+                .getMemberRoles()
+                .stream()
+                .map(memberRole -> memberRole.getRole().getName())
+                .collect(Collectors.toList());
     }
 }

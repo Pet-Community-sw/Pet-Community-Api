@@ -7,7 +7,6 @@ import com.example.petapp.domain.comment.model.Comment;
 import com.example.petapp.domain.comment.model.Commentable;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.post.model.Post;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +24,6 @@ public class CommentMapper {
                 .build();
     }
 
-    @NotNull
     private static List<GetCommentsResponseDto> getCommentsResponseDtos(List<Comment> comments, Member member) {
         return comments.stream().map(
                 comment -> new GetCommentsResponseDto(

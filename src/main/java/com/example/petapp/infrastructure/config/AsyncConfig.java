@@ -3,7 +3,6 @@ package com.example.petapp.infrastructure.config;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -11,8 +10,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.concurrent.Executor;
 
 @Configuration(proxyBeanMethods = false)
-@EnableAsync(order = 1) //@EnableAsync와 @EnableRetry의 order 속성을 설정하여 우선순위를 지정
-@EnableRetry(order = 2)
+@EnableAsync
 public class AsyncConfig implements AsyncConfigurer {
 
     @Bean(name = "locationPipelineExecutor")
