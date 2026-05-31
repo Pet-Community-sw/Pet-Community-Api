@@ -69,8 +69,7 @@ chmod +x ./init-script.sh
 
 ## System Architecture
 
-<img width="603" height="524" alt="System Architecutre" src="https://github.com/user-attachments/assets/f722e08b-1d73-4c10-90fa-1da3a7fe4763" />
-
+<img width="634" height="544" alt="System Architecture" src="https://github.com/user-attachments/assets/773decc2-5e7a-461c-801d-779e9749120e" />
 
 ---
 
@@ -227,11 +226,13 @@ CloudFront URL에 직접 요청을 보내는 방식으로 측정했습니다.
 
 - S3
 
-<img width="910" height="418" alt="s3 성능" src="https://github.com/user-attachments/assets/b22d03ca-21d7-4445-b299-e0f7be9b04d1" />
+<img width="895" height="374" alt="s3 k6" src="https://github.com/user-attachments/assets/7eab8d88-8b18-4504-a208-d560fb61cccd" />
+
 
 - S3 + CloudFront
 
-<img width="885" height="410" alt="s3 + cloudfront성능" src="https://github.com/user-attachments/assets/81ecafa6-2a4d-4675-8ae3-651e898f6661" />
+<img width="870" height="354" alt="s3 + cloudfront k6" src="https://github.com/user-attachments/assets/1aa0b983-7af9-4788-98c8-1f6787ea8ebc" />
+
 
 CloudFront 적용 후 p99 응답 시간이 63.73ms에서 26.93ms로 감소했으며, 약 57.7% 개선된 것을 확인했습니다.
 
