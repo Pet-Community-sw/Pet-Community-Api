@@ -105,9 +105,12 @@ chmod +x ./init-script.sh
 성능 측면에서도 최종 구조는 기존 동기 처리 방식 대비 p99 응답시간을 약 13% 개선했습니다. 동시에 이벤트 유실 가능성을 낮추고, 장애 발생 시에도 실패한 작업만 재처리할 수 있는 구조를 마련했습니다
 
 - 개선 전
-  <img width="1281" height="394" alt="동기" src="https://github.com/user-attachments/assets/14086d75-8dd1-4a06-b0bd-c98628ea55bb" />
+
+<img width="1042" height="317" alt="동기 k6" src="https://github.com/user-attachments/assets/fd2e8398-0150-4d08-af26-ab2a81df0b9f" />
+
 - 개선 후
-  <img width="1270" height="382" alt="최신 구조" src="https://github.com/user-attachments/assets/9356383f-ca08-466c-b8ef-f91896cdfeea" />
+  
+<img width="1034" height="381" alt="아웃박스 k6" src="https://github.com/user-attachments/assets/c92574d8-c54a-43a1-8745-228712aa689a" />
 
 ---
 
@@ -133,18 +136,21 @@ chmod +x ./init-script.sh
 Elasticsearch로 전달되는 반복 요청을 줄이고 응답 시간을 개선하기 위해 Redis 캐시를 추가로 적용했습니다.
 
 - MySQL LIKE 기반 검색
-  <img width="1230" height="389" alt="mysql 그라파나 성능" src="https://github.com/user-attachments/assets/97ddc311-9361-465d-9ec7-6a237cddaf58" />
-  부분 포함 검색에서 인덱스 풀 스캔으로 인해 p99 응답시간이 약 0.149초까지 상승했습니다.
+
+<img width="960" height="387" alt="mysql 부분검색 k6" src="https://github.com/user-attachments/assets/ac2319d1-b32e-4f44-883e-a655cef671e5" />
+부분 포함 검색에서 인덱스 풀 스캔으로 인해 p99 응답시간이 약 0.149초까지 상승했습니다.
 
 
 - Elasticsearch 기반 검색
-  <img width="1264" height="391" alt="es 그라파나 성능" src="https://github.com/user-attachments/assets/1f9bf1a6-3c5d-44fe-ab3d-da5fe45d94be" />
-  Elasticsearch 도입으로 p99 응답시간을 약 0.088초까지 낮췄습니다. 이는 MySQL 대비 약 41% 개선했습니다.
+
+<img width="1006" height="388" alt="es 부분검색 k6" src="https://github.com/user-attachments/assets/327c7e03-eb04-47b9-9d92-9268f63b960b" />
+Elasticsearch 도입으로 p99 응답시간을 약 0.088초까지 낮췄습니다. 이는 MySQL 대비 약 41% 개선했습니다.
 
 
 - Elasticsearch + Redis 캐시 적용
-  <img width="1254" height="413" alt="es redis 성능" src="https://github.com/user-attachments/assets/0d6ba99c-38fe-4bc0-9696-24b86b8828b3" />
-  Redis 캐시를 적용해 p99 응답시간을 약 0.05초까지 낮췄습니다. 이는 Elasticsearch 대비 약 43%, MySQL 대비 약 66% 개선된 수치입니다.
+
+<img width="1030" height="378" alt="es + redis prefix k6" src="https://github.com/user-attachments/assets/b29a6a37-74ad-423b-9472-230269c45260" />
+Redis 캐시를 적용해 p99 응답시간을 약 0.05초까지 낮췄습니다. 이는 Elasticsearch 대비 약 43%, MySQL 대비 약 66% 개선된 수치입니다.
 
 ---
 ### 3. JWT의 Stateless 특성으로 인해 로그아웃 후에도 토큰 시간 만료 전까지 토큰 재사용이 가능한 문제
