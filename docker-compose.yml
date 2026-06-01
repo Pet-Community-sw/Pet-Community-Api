@@ -2,51 +2,27 @@ services:
 
   mysql:
     image: mysql:8.0
-    container_name: pet-api-mysql
-    restart: always
     networks:
       - pet-community-network
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      TZ: Asia/Seoul
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-pet_community}
     ports:
       - "3306:3306"
     command:
       - --default-authentication-plugin=mysql_native_password
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
-      - --default-time-zone=Asia/Seoul
     volumes:
       - mysql-data:/var/lib/mysql
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD}" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
 
   redis:
     image: redis:7-alpine
-    container_name: pet-api-redis
-    restart: always
     ports:
       - "6379:6379"
-    command: [ "redis-server", "--appendonly", "yes" ]
-    volumes:
-      - redis-data:/data
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
 
   es:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.18
-    container_name: pet-api-es
     environment:
       - discovery.type=single-node
-      - xpack.security.enabled=false #비번 없이 접속하기 위해 false로 설정
-      - ES_JAVA_OPTS=-Xms256m -Xmx256m #힙 메모리 설정 es는 jvm 기반이라 메모리 설정 필요
     ports:
       - "9200:9200"
     volumes:
@@ -58,6 +34,4 @@ networks:
 
 volumes:
   mysql-data:
-  redis-data:
   es-data:
-
