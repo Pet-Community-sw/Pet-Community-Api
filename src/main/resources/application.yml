@@ -1,9 +1,9 @@
 jwt:
-  accessKey: ${ACCESS_KEY}
-  refreshKey: ${REFRESH_KEY}
+  accessKey: ${ACCESS_KEY:12345678901234567890123456789012}
+  refreshKey: ${REFRESH_KEY:12345678901234567890123456789012}
 spring:
   elasticsearch:
-    uris: ${ELASTICSEARCH_URI}
+    uris: ${ELASTICSEARCH_URI:http://localhost:9200}
   datasource:
     hikari:
       maximum-pool-size: 30
@@ -11,9 +11,9 @@ spring:
       connection-timeout: 3000
       validation-timeout: 1000
       leak-detection-threshold: 5000
-    url: ${MYSQL_URL}
-    username: ${MYSQL_ROOT_USERNAME}
-    password: ${MYSQL_ROOT_PASSWORD}
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/pet_community?useUnicode=true&serverTimezone=Asia/Seoul}
+    username: ${MYSQL_ROOT_USERNAME:root}
+    password: ${MYSQL_ROOT_PASSWORD:password}
   jpa:
     hibernate:
       ddl-auto: update
@@ -28,8 +28,8 @@ spring:
     redis:
       repositories:
         enabled: false
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
 
   servlet:
     multipart:
@@ -39,10 +39,10 @@ spring:
   cloud:
     aws:
       credentials:
-        access-key: ${AWS_IAM_ACCESS_KEY}
-        secret-key: ${AWS_IAM_SECRET_KEY}
+        access-key: ${AWS_ACCESS_KEY:aws-access-key}
+        secret-key: ${AWS_SECRET_KEY:aws-secret-key}
       region:
-        static: ${AWS_S3_REGION}
+        static: ${AWS_S3_REGION:ap-northeast-2}
 
   # Elasticsearch Reactive Repositories 오토컨피그 비활성화
   autoconfigure:
@@ -63,9 +63,9 @@ storage:
 
 aws:
   s3:
-    bucket: ${AWS_S3_BUCKET:}
+    bucket: ${AWS_S3_BUCKET:aws-s3-bucket}
   cloudfront:
-    domain: ${AWS_CLOUD_FRONT:}
+    domain: ${AWS_CLOUD_FRONT:aws-cloudfront}
 
 server:
   address: 0.0.0.0
