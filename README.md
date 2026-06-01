@@ -33,32 +33,10 @@ git clone https://github.com/Pet-Community-sw/Pet-Community-Api.git
 cd Pet-Community-Api
 ```
 
-### 2. 환경 변수 파일 생성
-
-`.env.example` 파일을 복사한 뒤, 환경에 맞게 값을 입력해주세요.
+### 2. 스크립트 실행
 
 ```bash
-cp .env.example .env
-```
-
-### 3. 실행 스크립트 권한 부여
-
-```bash
-chmod +x ./init-script.sh
-```
-
-### 4. 인프라 실행 및 Elasticsearch 인덱스 생성
-
-아래 명령어를 실행하면 Docker 컨테이너가 실행되고, Elasticsearch가 준비될 때까지 대기한 뒤 인덱스를 생성합니다.
-
-```bash
-./init-script.sh
-```
-
-### 5. Spring Boot 애플리케이션 실행
-
-```bash
-./gradlew bootRun
+bash ./init-script.sh
 ```
 
 ## Swagger
