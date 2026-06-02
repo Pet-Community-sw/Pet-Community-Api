@@ -4,11 +4,14 @@ import com.example.petapp.application.usecase.comment.dto.request.CommentDto;
 import com.example.petapp.application.usecase.comment.dto.request.UpdateCommentDto;
 import com.example.petapp.application.usecase.comment.dto.response.CreateCommentResponseDto;
 import com.example.petapp.application.usecase.comment.dto.response.GetCommentsResponseDto;
+import com.example.petapp.domain.comment.model.Comment;
 
 import java.util.List;
 
 public interface CommentUseCase {
     CreateCommentResponseDto createComment(CommentDto commentDto, Long id);
+
+    Comment findOrThrow(Long id);
 
     void deleteComment(Long commentId, Long id);
 

@@ -2,7 +2,7 @@ package com.example.petapp.infrastructure.stomp.strategy.subscribe.impl;
 
 import com.example.petapp.application.common.exception.ErrorCode;
 import com.example.petapp.application.common.exception.PetCommunityException;
-import com.example.petapp.application.usecase.walkrecord.WalkRecordQueryUseCase;
+import com.example.petapp.domain.walkrecord.WalkRecordRepository;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;
@@ -20,7 +20,7 @@ public class WalkRecordSubscribeStrategy extends SubscribeTypeStrategy {
     private static final String KEY = "walkRecordId";
     private static final String PATTERN = "/sub/walk/{" + KEY + "}";
 
-    private final WalkRecordQueryUseCase useCase;
+    private final WalkRecordRepository walkRecordRepository;
 
     @Override
     public boolean isHandler(String destination) {
@@ -33,7 +33,8 @@ public class WalkRecordSubscribeStrategy extends SubscribeTypeStrategy {
         Long walkRecordId = Long.valueOf(map.get(KEY));
         Long memberId = Long.valueOf(subscribeInfo.getPrincipal().getName());
 
-        WalkRecord walkRecord = useCase.findOrThrow(walkRecordId);
+        WalkRecord walkRecord = walkRecordRepository.find(walkRecordId)
+                .orElseThrow(() -> new PetCommunityException(ErrorCode.NOT_FOUND, "해당 산책기록은 없습니다."));
         Long ownerMemberId = walkRecord.getDelegateWalkPost().getProfile().getMember().getId();
 
         if (!ownerMemberId.equals(memberId)) {

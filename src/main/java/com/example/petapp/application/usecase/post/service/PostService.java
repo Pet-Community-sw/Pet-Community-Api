@@ -2,7 +2,7 @@ package com.example.petapp.application.usecase.post.service;
 
 import com.example.petapp.application.common.exception.ErrorCode;
 import com.example.petapp.application.common.exception.PetCommunityException;
-import com.example.petapp.application.usecase.post.PostQueryUseCase;
+import com.example.petapp.application.usecase.post.PostUseCase;
 import com.example.petapp.application.usecase.post.normal.dto.response.PostResponseDto;
 import com.example.petapp.domain.post.PostRepository;
 import com.example.petapp.domain.post.model.Post;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
-public class PostQueryService<T extends Post> implements PostQueryUseCase<T> {
+public class PostService<T extends Post> implements PostUseCase<T> {
 
     private final PostRepository<T> repository;
 

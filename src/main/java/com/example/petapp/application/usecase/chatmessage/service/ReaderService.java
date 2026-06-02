@@ -4,7 +4,6 @@ import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.application.usecase.chatmessage.ReaderUseCase;
 import com.example.petapp.application.usecase.chatmessage.model.dto.LastMessageInfoDto;
-import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.usecase.chatroom.dto.request.ChatMessageDtoMember;
 import com.example.petapp.application.usecase.chatroom.dto.response.ChatMessageResponseDto;
 import com.example.petapp.application.usecase.chatroom.mapper.ChatRoomMapper;
@@ -26,16 +25,13 @@ import java.util.List;
 public class ReaderService implements ReaderUseCase {
 
     private final ChatMessageRepository chatMessageRepository;
-    private final ChatRoomQueryUseCase chatRoomQueryUseCase;
     private final ReadMessageCachePort readMessageCachePort;
     private final LastMessageCachePort lastMessageCachePort;
 
     @Transactional
     @Override
-    public ChatMessageResponseDto getMessages(Long chatRoomId, Long userId, int page) {
-        ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
-        chatRoom.validateUser(userId);
-
+    public ChatMessageResponseDto getMessages(ChatRoom chatRoom, Long userId, int page) {
+        Long chatRoomId = chatRoom.getId();
         Pageable pageRequest = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "seq"));
         Page<ChatMessage> messages = chatMessageRepository.findAll(chatRoomId, pageRequest);//seq로 정렬 redis원자적연산인 seq로 정렬 순서 보장
         updateReadSeq(chatRoomId, userId);
@@ -49,10 +45,8 @@ public class ReaderService implements ReaderUseCase {
      */
     @Transactional
     @Override
-    public ChatMessageResponseDto getAfterMessages(Long chatRoomId, Long lastSeq, Long userId) {
-        ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
-        chatRoom.validateUser(userId);
-
+    public ChatMessageResponseDto getAfterMessages(ChatRoom chatRoom, Long lastSeq, Long userId) {
+        Long chatRoomId = chatRoom.getId();
         List<ChatMessage> afterMessages = chatMessageRepository.findAllBySeq(chatRoomId, lastSeq);
         updateReadSeq(chatRoomId, userId);
 

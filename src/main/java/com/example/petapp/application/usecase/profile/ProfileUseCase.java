@@ -5,11 +5,21 @@ import com.example.petapp.application.usecase.profile.dto.response.AccessTokenBy
 import com.example.petapp.application.usecase.profile.dto.response.CreateProfileResponseDto;
 import com.example.petapp.application.usecase.profile.dto.response.GetProfileResponseDto;
 import com.example.petapp.application.usecase.profile.dto.response.ProfileListResponseDto;
+import com.example.petapp.domain.profile.model.Profile;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public interface ProfileUseCase {
     CreateProfileResponseDto createProfile(ProfileDto addProfileDto, Long id);
+
+    Profile findOrThrow(Long id);
+
+    Optional<Profile> find(Long id);
+
+    Map<Long, Profile> findMapOrThrow(Set<Long> ids);
 
     List<ProfileListResponseDto> getProfiles(Long id);
 

@@ -5,7 +5,6 @@ import com.example.petapp.application.common.exception.ErrorCode;
 import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.out.StoragePort;
 import com.example.petapp.application.out.cache.MemberRecentViewCachePort;
-import com.example.petapp.application.usecase.member.MemberQueryUseCase;
 import com.example.petapp.application.usecase.member.MemberUseCase;
 import com.example.petapp.application.usecase.member.mapper.MemberMapper;
 import com.example.petapp.application.usecase.member.object.MemberEvent;
@@ -27,13 +26,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberService implements MemberUseCase {
 
-    private final MemberQueryUseCase memberQueryUseCase;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenUseCase tokenUseCase;
@@ -66,16 +65,35 @@ public class MemberService implements MemberUseCase {
         return new MemberSignResponseDto(savedMember.getId());
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public Member findOrThrow(String email) {
+        return memberRepository.findByEmail(email).orElseThrow(() -> new PetCommunityException(ErrorCode.NOT_FOUND, "해당 유저는 없습니다."));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Member findOrThrow(Long id) {
+        return memberRepository.find(id).orElseThrow(() -> new PetCommunityException(ErrorCode.NOT_FOUND, "해당 유저는 없습니다."));
+    }
+    
+    @Transactional(readOnly = true)
+    @Override
+    public List<String> findNamesOrThrowByIds(List<Long> ids) {
+        return memberRepository.findAllByIds(ids);
+    }
+
+    @Transactional(readOnly = true)
     @Override
     public FindByIdResponseDto findById(String phoneNumber) {
-        Member member = memberQueryUseCase.findOrThrowByPhoneNumber(phoneNumber);
+        Member member = memberRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new PetCommunityException(ErrorCode.NOT_FOUND, "해당 유저는 없는 유저입니다. 회원가입 해주세요."));
         return new FindByIdResponseDto(member.getEmail());
     }
 
     @Transactional
     @Override
     public void resetPassword(ResetPasswordDto resetPasswordDto, Long memberId) {
-        Member member = memberQueryUseCase.findOrThrow(memberId);
+        Member member = findOrThrow(memberId);
         if (member.isSamePassword(passwordEncoder, resetPasswordDto.getNewPassword())) {
             throw new IllegalArgumentException("전 비밀번호와 다르게 설정해야합니다.");
         } else {
@@ -83,9 +101,10 @@ public class MemberService implements MemberUseCase {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public GetMemberResponseDto get(Long targetId, Long memberId) {
-        Member member = memberQueryUseCase.findOrThrow(targetId);
+        Member member = findOrThrow(targetId);
 
         memberRecentViewCachePort.createRecentView(memberId, targetId);
 
@@ -95,7 +114,7 @@ public class MemberService implements MemberUseCase {
     @Override
     @Transactional
     public void update(UpdateMemberRequestDto requestDto, Long memberId) {
-        Member member = memberQueryUseCase.findOrThrow(memberId);
+        Member member = findOrThrow(memberId);
         String imageFileName = storagePort.uploadFile(requestDto.getMemberImageUrl(), FileKind.MEMBER);
 
         member.updateInfo(requestDto.getName(), imageFileName);
@@ -114,7 +133,7 @@ public class MemberService implements MemberUseCase {
     @Transactional
     @Override
     public void delete(Long memberId) {
-        Member member = memberQueryUseCase.findOrThrow(memberId);
+        Member member = findOrThrow(memberId);
         tokenUseCase.delete(memberId);
         memberRepository.delete(member);
 

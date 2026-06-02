@@ -8,9 +8,8 @@ import com.example.petapp.application.usecase.member.mapper.MemberMapper;
 import com.example.petapp.application.usecase.member.object.dto.request.AccessTokenResponseDto;
 import com.example.petapp.application.usecase.member.object.dto.response.LoginResponseDto;
 import com.example.petapp.application.usecase.member.object.dto.response.TokenResponseDto;
-import com.example.petapp.application.usecase.role.RoleQueryUseCase;
+import com.example.petapp.application.usecase.role.RoleUseCase;
 import com.example.petapp.application.usecase.token.MemberInfo;
-import com.example.petapp.application.usecase.token.TokenQueryUseCase;
 import com.example.petapp.application.usecase.token.TokenUseCase;
 import com.example.petapp.application.usecase.token.dto.ReissueTokenRequestDto;
 import com.example.petapp.domain.member.model.Member;
@@ -24,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,8 +33,7 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
 
     private final TokenRepository tokenRepository;
     private final TokenCachePort tokenCachePort;
-    private final RoleQueryUseCase roleQueryUseCase;
-    private final TokenQueryUseCase tokenQueryUseCase;
+    private final RoleUseCase roleUseCase;
     private final TokenPort tokenPort;
 
     @Transactional
@@ -45,7 +44,7 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
         String accessToken = tokenPort.create(TokenType.ACCESS, member.getId(), null, member.getName(), roles);
         String refreshToken = tokenPort.create(TokenType.REFRESH, member.getId(), null, member.getName(), roles);
 
-        tokenQueryUseCase.find(member.getId()).ifPresentOrElse(
+        find(member.getId()).ifPresentOrElse(
                 token -> token.updateRefreshToken(refreshToken),
                 () -> tokenRepository.save(new Token(member, refreshToken))
         );
@@ -64,7 +63,7 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
         String accessToken = str[1];
 
         MemberInfo info = tokenPort.getInfo(TokenType.ACCESS, accessToken);
-        Token refreshToken = tokenQueryUseCase.findOrThrow(info.getMemberId());
+        Token refreshToken = findOrThrow(info.getMemberId());
         refreshToken.isEqual(reissueTokenRequestDto.getRefreshToken());
         blacklistAccessToken(accessToken);
         return createNewToken(refreshToken);
@@ -75,7 +74,7 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
      */
     @Override
     public AccessTokenResponseDto createResetPasswordJwt(Member member) {
-        List<String> roles = List.of(roleQueryUseCase.findTemporaryRole().getName());
+        List<String> roles = List.of(roleUseCase.findTemporaryRole().getName());
 
         String resetPasswordToken = tokenPort.create(TokenType.EMAIL_ACCESS, member.getId(), null, null, roles);
         return new AccessTokenResponseDto(resetPasswordToken);
@@ -98,6 +97,19 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
         blacklistAccessToken(accessToken);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public Token findOrThrow(Long id) {
+        return tokenRepository.find(id).orElseThrow(() -> new PetCommunityException(ErrorCode.NOT_FOUND, "refreshToken이 없음. 다시 로그인."));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<Token> find(Long id) {
+        return tokenRepository.find(id);
+    }
+
+    @Transactional
     @Override
     public void delete(Long memberId) {
         tokenRepository.delete(memberId);

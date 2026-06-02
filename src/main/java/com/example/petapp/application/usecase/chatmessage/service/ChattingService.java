@@ -6,9 +6,9 @@ import com.example.petapp.application.usecase.chatmessage.mapper.ChatMessageMapp
 import com.example.petapp.application.usecase.chatmessage.model.dto.ChatMessageDto;
 import com.example.petapp.application.usecase.chatmessage.model.dto.UserInfo;
 import com.example.petapp.application.usecase.chatmessage.model.type.CommandType;
-import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
-import com.example.petapp.application.usecase.member.MemberQueryUseCase;
-import com.example.petapp.application.usecase.profile.ProfileQueryUseCase;
+import com.example.petapp.application.usecase.chatroom.ChatRoomUseCase;
+import com.example.petapp.application.usecase.member.MemberUseCase;
+import com.example.petapp.application.usecase.profile.ProfileUseCase;
 import com.example.petapp.domain.chatmessage.model.ChatMessage;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.member.model.Member;
@@ -25,16 +25,16 @@ import java.util.Map;
 @Slf4j
 public class ChattingService implements ChattingUseCase {
 
-    private final ProfileQueryUseCase profileQueryUseCase;
+    private final ProfileUseCase profileUseCase;
     private final Map<CommandType, MessageTypeStrategy> messageTypeMap;
-    private final ChatRoomQueryUseCase chatRoomQueryUseCase;
-    private final MemberQueryUseCase memberQueryUseCase;
+    private final ChatRoomUseCase chatRoomUseCase;
+    private final MemberUseCase memberUseCase;
 
     @Transactional
     @Override
     public void sendToMessage(ChatMessageDto chatMessageDto, Long senderId) {
         log.info("[STOMP] 일반 메시지 전송 chatRoomId: {}, messageType: {}", chatMessageDto.getChatRoomId(), chatMessageDto.getCommandType());
-        ChatRoom chatRoom = chatRoomQueryUseCase.find(chatMessageDto.getChatRoomId());
+        ChatRoom chatRoom = chatRoomUseCase.find(chatMessageDto.getChatRoomId());
         chatRoom.validateUser(senderId);
         ChatMessage chatMessage = getChatMessage(chatMessageDto, senderId, chatRoom);
 //        chatMessage.checkSeq();//?
@@ -50,11 +50,11 @@ public class ChattingService implements ChattingUseCase {
         UserInfo userInfo = null;
         switch (chatRoom.getChatRoomType()) {
             case MANY -> {
-                Profile profile = profileQueryUseCase.findOrThrow(senderId);
+                Profile profile = profileUseCase.findOrThrow(senderId);
                 userInfo = new UserInfo(profile.getPetName(), profile.getPetImageUrl());
             }
             case ONE -> {
-                Member member = memberQueryUseCase.findOrThrow(senderId);
+                Member member = memberUseCase.findOrThrow(senderId);
                 userInfo = new UserInfo(member.getName(), member.getMemberImageUrl());
             }
         }

@@ -5,12 +5,15 @@ import com.example.petapp.application.usecase.match.dto.request.CreateWalkingTog
 import com.example.petapp.application.usecase.match.dto.request.UpdateWalkingTogetherPostDto;
 import com.example.petapp.application.usecase.match.dto.response.CreateWalkingTogetherPostResponseDto;
 import com.example.petapp.application.usecase.match.dto.response.GetWalkingTogetherPostResponseDto;
+import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
 
 import java.util.List;
 
 public interface WalkingTogetherPostUseCase {
 
     CreateWalkingTogetherPostResponseDto createWalkingTogetherPost(CreateWalkingTogetherPostDto createWalkingTogetherPostDto, Long profileId);
+
+    WalkingTogetherPost findOrThrow(Long id);
 
     void deleteWalkingTogetherPost(Long walkingTogetherPostId, Long profileId);
 

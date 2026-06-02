@@ -3,7 +3,6 @@ package com.example.petapp.application.usecase.chatmessage.service;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.application.usecase.chatmessage.model.dto.LastMessageInfoDto;
-import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.domain.chatmessage.ChatMessageRepository;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import org.junit.jupiter.api.Test;
@@ -24,8 +23,6 @@ class ReaderServiceTest {
     @Mock
     private ChatMessageRepository chatMessageRepository;
     @Mock
-    private ChatRoomQueryUseCase chatRoomQueryUseCase;
-    @Mock
     private ReadMessageCachePort readMessageCachePort;
     @Mock
     private LastMessageCachePort lastMessageCachePort;
@@ -37,9 +34,9 @@ class ReaderServiceTest {
     void 메세지조회시_마지막메세지조회는_채팅방ID를_사용한다() {
         Long chatRoomId = 1L;
         Long userId = 2L;
-
         ChatRoom chatRoom = org.mockito.Mockito.mock(ChatRoom.class);
-        when(chatRoomQueryUseCase.find(chatRoomId)).thenReturn(chatRoom);
+
+        when(chatRoom.getId()).thenReturn(chatRoomId);
         when(chatMessageRepository.findAll(eq(chatRoomId), any(Pageable.class))).thenReturn(Page.empty());
         when(lastMessageCachePort.findLastMessageInfo(chatRoomId)).thenReturn(
                 LastMessageInfoDto.builder()
@@ -49,7 +46,7 @@ class ReaderServiceTest {
                         .build()
         );
 
-        readerService.getMessages(chatRoomId, userId, 0);
+        readerService.getMessages(chatRoom, userId, 0);
 
         verify(lastMessageCachePort).findLastMessageInfo(chatRoomId);
         verify(lastMessageCachePort, never()).findLastMessageInfo(userId);

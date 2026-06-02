@@ -1,6 +1,6 @@
 package com.example.petapp.infrastructure.stomp.strategy.subscribe.impl;
 
-import com.example.petapp.application.usecase.member.MemberQueryUseCase;
+import com.example.petapp.application.usecase.member.MemberUseCase;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class NotificationSubscribeStrategy extends SubscribeTypeStrategy {
     private static final String KEY = "id";
     private static final String PATTERN = "/sub/notification/{" + KEY + "}";
 
-    private final MemberQueryUseCase useCase;
+    private final MemberUseCase useCase;
 
     @Override
     public boolean isHandler(String destination) {

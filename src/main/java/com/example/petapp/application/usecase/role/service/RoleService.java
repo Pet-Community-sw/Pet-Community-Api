@@ -2,7 +2,7 @@ package com.example.petapp.application.usecase.role.service;
 
 import com.example.petapp.application.common.exception.ErrorCode;
 import com.example.petapp.application.common.exception.PetCommunityException;
-import com.example.petapp.application.usecase.role.RoleQueryUseCase;
+import com.example.petapp.application.usecase.role.RoleUseCase;
 import com.example.petapp.domain.role.Role;
 import com.example.petapp.domain.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
-public class RoleQueryService implements RoleQueryUseCase {
+public class RoleService implements RoleUseCase {
 
     private final RoleRepository repository;
 
@@ -25,5 +25,4 @@ public class RoleQueryService implements RoleQueryUseCase {
     public Role findUserRole() {
         return repository.find("ROLE_USER").orElseThrow(() -> new PetCommunityException(ErrorCode.NOT_FOUND, "해당 role은 없습니다."));
     }
-
 }
