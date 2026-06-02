@@ -4,15 +4,15 @@ import com.example.petapp.infrastructure.stomp.store.ChatRoomSubscriptionStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 @Repository
 @RequiredArgsConstructor
 public class InMemoryChatRoomSubscriptionStore implements ChatRoomSubscriptionStore {
 
-    private final ConcurrentMap<String, Long> subscriptionMap = new ConcurrentHashMap<>();
+    private final Map<String, Long> subscriptionMap = new ConcurrentHashMap<>();
 
     @Override
     public void deleteChatRoomSubscription(String subscriptionId) {

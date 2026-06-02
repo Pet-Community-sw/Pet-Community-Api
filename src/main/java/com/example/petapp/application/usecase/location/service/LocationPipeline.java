@@ -1,9 +1,11 @@
 package com.example.petapp.application.usecase.location.service;
 
-import com.example.petapp.application.usecase.location.service.object.PipelineContext;
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.location.LocationProcessorUseCase;
 import com.example.petapp.application.usecase.location.dto.request.LocationMessage;
-import com.example.petapp.application.usecase.walkrecord.WalkRecordQueryUseCase;
+import com.example.petapp.application.usecase.location.service.object.PipelineContext;
+import com.example.petapp.domain.walkrecord.WalkRecordRepository;
 import com.example.petapp.domain.walkrecord.model.WalkRecord;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -29,7 +31,7 @@ public class LocationPipeline {
     private static final long TIMEOUT_MINUTES = 10;//해당 파이프에 대해 10분동안 이벤트가 없으면 파이프 제거
     private static final long THROTTLE_SECONDS = 2;//많은 이벤트 중 2초에 한 번 씩 이벤트를 받음.
 
-    private final WalkRecordQueryUseCase useCase;
+    private final WalkRecordRepository walkRecordRepository;
     private final LocationProcessorUseCase processorUseCase;
     private final Executor locationPipelineExecutor;
 
@@ -59,7 +61,10 @@ public class LocationPipeline {
 
     private PipelineContext initPipeline(Long walkRecordId, String memberId) {
         //파이프라인 초기화 전에 호출 시 매번 DB조회가 발생 함으로 여기에 위치
-        WalkRecord walkRecord = useCase.findAndValidate(walkRecordId, Long.valueOf(memberId));
+        WalkRecord walkRecord = walkRecordRepository.find(walkRecordId)
+                .orElseThrow(() -> new PetCommunityException(ErrorCode.NOT_FOUND, "해당 산책기록은 없습니다."));
+        walkRecord.validateMember(Long.valueOf(memberId));
+        walkRecord.validateStart();
 
         /*
          * Subject는 thread-safe이 아니라 동시성 이슈가 있을 수 있으므로 toSerialized()로 감싸서 사용해야 함

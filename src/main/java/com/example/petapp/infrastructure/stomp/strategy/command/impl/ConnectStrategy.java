@@ -3,7 +3,7 @@ package com.example.petapp.infrastructure.stomp.strategy.command.impl;
 import com.example.petapp.application.common.exception.ErrorCode;
 import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.out.TokenPort;
-import com.example.petapp.application.usecase.member.MemberQueryUseCase;
+import com.example.petapp.application.usecase.member.MemberUseCase;
 import com.example.petapp.application.usecase.token.MemberInfo;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.token.model.TokenType;
@@ -29,7 +29,7 @@ public class ConnectStrategy implements StompCommandStrategy {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
     private final TokenPort port;
-    private final MemberQueryUseCase memberQueryUseCase;
+    private final MemberUseCase memberUseCase;
 
     @Override
     public void handle(StompHeaderAccessor accessor) {
@@ -43,7 +43,7 @@ public class ConnectStrategy implements StompCommandStrategy {
 
         String accessToken = token.substring(BEARER_PREFIX.length());
         MemberInfo info = port.getInfo(TokenType.ACCESS, accessToken);
-        Member member = memberQueryUseCase.findOrThrow(info.getMemberId());
+        Member member = memberUseCase.findOrThrow(info.getMemberId());
 
         accessor.setUser(() -> member.getId().toString());
     }

@@ -1,19 +1,20 @@
 package com.example.petapp.application.usecase.chatroom.service;
 
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.application.out.cache.SeqCachePort;
 import com.example.petapp.application.usecase.chatmessage.ReaderUseCase;
 import com.example.petapp.application.usecase.chatmessage.model.dto.LastMessageInfoDto;
 import com.example.petapp.application.usecase.chatmessage.model.type.ChatRoomType;
-import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
 import com.example.petapp.application.usecase.chatroom.ChatRoomUseCase;
 import com.example.petapp.application.usecase.chatroom.dto.request.UpdateChatRoomDto;
 import com.example.petapp.application.usecase.chatroom.dto.response.ChatMessageResponseDto;
 import com.example.petapp.application.usecase.chatroom.dto.response.ChatRoomResponseDto;
 import com.example.petapp.application.usecase.chatroom.dto.response.CreateChatRoomResponseDto;
 import com.example.petapp.application.usecase.chatroom.mapper.ChatRoomMapper;
-import com.example.petapp.application.usecase.profile.ProfileQueryUseCase;
+import com.example.petapp.application.usecase.profile.ProfileUseCase;
 import com.example.petapp.application.usecase.profile.dto.response.ChatRoomUsersResponseDto;
 import com.example.petapp.domain.chatmessage.ChatMessageRepository;
 import com.example.petapp.domain.chatroom.ChatRoomRepository;
@@ -32,20 +33,17 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-/*
- *   todo : 지금은 profile 채팅방만 구현해놨음.
- * */
 public class ChatRoomService implements ChatRoomUseCase {
 
-    private final ProfileQueryUseCase profileQueryUseCase;
+    private final ProfileUseCase profileUseCase;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ReaderUseCase readerUseCase;
-    private final ChatRoomQueryUseCase chatRoomQueryUseCase;
     private final SeqCachePort seqCachePort;
     private final ReadMessageCachePort readMessageCachePort;
     private final LastMessageCachePort lastMessageCachePort;
 
+    @Transactional(readOnly = true)
     @Override
     public List<ChatRoomResponseDto> getChatRooms(Long profileId) {//todo : 나중에 One으로도 같이 내보내면 될듯?
         List<ChatRoom> chatRoomList = chatRoomRepository.findAll(profileId, ChatRoomType.MANY);//나중에 타입 파라미터로 방아야함
@@ -56,7 +54,7 @@ public class ChatRoomService implements ChatRoomUseCase {
         Set<Long> profileIds = chatRoomList.stream()
                 .flatMap(chatRoom -> chatRoom.getUsers().stream())
                 .collect(Collectors.toSet());
-        Map<Long, Profile> profileMap = profileQueryUseCase.findMapOrThrow(profileIds);
+        Map<Long, Profile> profileMap = profileUseCase.findMapOrThrow(profileIds);
 
         return chatRoomList.stream()
                 .map(chatRoom -> toChatRoomsResponseDtoWithRedis(chatRoom, profileId, profileMap))
@@ -66,7 +64,7 @@ public class ChatRoomService implements ChatRoomUseCase {
     @Transactional
     @Override
     public CreateChatRoomResponseDto createChatRoom(WalkingTogetherPost walkingTogetherPost, Profile profile) {
-        Optional<ChatRoom> chatRoom = chatRoomQueryUseCase.find(walkingTogetherPost);
+        Optional<ChatRoom> chatRoom = find(walkingTogetherPost);
         if (chatRoom.isEmpty()) {//채팅방이 없으면 새로운생성 있으면 profiles에 신청자 Profile 추가
             ChatRoom savedChatRoom = chatRoomRepository.save(ChatRoomMapper.toEntity(walkingTogetherPost, profile));
             return new CreateChatRoomResponseDto(savedChatRoom.getId(), true);
@@ -79,7 +77,7 @@ public class ChatRoomService implements ChatRoomUseCase {
         }
     }
 
-    //todo : type잘봐보자 type별로 할건지 다시생각
+    @Transactional
     @Override
     public CreateChatRoomResponseDto createChatRoom(Member member, Member applicationMember) {
         ChatRoom chatRoom = ChatRoomMapper.toEntity(member);
@@ -91,8 +89,26 @@ public class ChatRoomService implements ChatRoomUseCase {
 
     @Transactional(readOnly = true)
     @Override
+    public ChatRoom find(Long id) {
+        return chatRoomRepository.find(id).orElseThrow(() -> new PetCommunityException(ErrorCode.NOT_FOUND, "해당 채팅방은 없습니다."));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<ChatRoom> find(WalkingTogetherPost walkingTogetherPost) {
+        return chatRoomRepository.find(walkingTogetherPost);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public boolean isExist(Long chatRoomId, Long profileId) {
+        return chatRoomRepository.existAndContain(chatRoomId, profileId);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public List<Long> getUsers(Long chatRoomId) {
-        ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
+        ChatRoom chatRoom = find(chatRoomId);
         return new ArrayList<>(chatRoom
                 .getUsers());
     }
@@ -100,7 +116,7 @@ public class ChatRoomService implements ChatRoomUseCase {
     @Transactional
     @Override
     public void deleteChatRoom(Long chatRoomId, Long userId) {
-        ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
+        ChatRoom chatRoom = find(chatRoomId);
         chatRoom.validateUser(userId);
         chatRoom.deleteUser(userId);
         readMessageCachePort.deleteReadSeq(chatRoomId, userId);
@@ -114,8 +130,8 @@ public class ChatRoomService implements ChatRoomUseCase {
     @Transactional
     @Override//방장만 수정할 수 있도록 설정.
     public void updateChatRoom(Long chatRoomId, UpdateChatRoomDto updateChatRoomDto, Long profileId) {
-        ChatRoom chatRoom = chatRoomQueryUseCase.find(chatRoomId);
-        Profile profile = profileQueryUseCase.findOrThrow(profileId);
+        ChatRoom chatRoom = find(chatRoomId);
+        Profile profile = profileUseCase.findOrThrow(profileId);
         chatRoom.validateChatOwner(profile);
         chatRoom.updateInfo(updateChatRoomDto.getChatRoomName(), updateChatRoomDto.getLimitCount());
     }
@@ -123,13 +139,17 @@ public class ChatRoomService implements ChatRoomUseCase {
     @Transactional(readOnly = true)
     @Override//todo : service 따로 둬야할듯.
     public ChatMessageResponseDto getMessages(Long chatRoomId, Long userId, int page) {
-        return readerUseCase.getMessages(chatRoomId, userId, page);
+        ChatRoom chatRoom = find(chatRoomId);
+        chatRoom.validateUser(userId);
+        return readerUseCase.getMessages(chatRoom, userId, page);
     }
 
     @Transactional(readOnly = true)
     @Override
     public ChatMessageResponseDto getAfterMessages(Long chatRoomId, Long lastSeq, Long userId) {
-        return readerUseCase.getAfterMessages(chatRoomId, lastSeq, userId);
+        ChatRoom chatRoom = find(chatRoomId);
+        chatRoom.validateUser(userId);
+        return readerUseCase.getAfterMessages(chatRoom, lastSeq, userId);
     }
 
     private ChatRoomResponseDto toChatRoomsResponseDtoWithRedis(ChatRoom chatRoom, Long userId, Map<Long, Profile> profileMap) {

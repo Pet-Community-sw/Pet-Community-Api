@@ -1,15 +1,16 @@
 package com.example.petapp.application.usecase.comment.service;
 
-import com.example.petapp.application.usecase.comment.CommentQueryUseCase;
+import com.example.petapp.application.common.exception.ErrorCode;
+import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.comment.CommentUseCase;
 import com.example.petapp.application.usecase.comment.dto.request.CommentDto;
 import com.example.petapp.application.usecase.comment.dto.request.UpdateCommentDto;
 import com.example.petapp.application.usecase.comment.dto.response.CreateCommentResponseDto;
 import com.example.petapp.application.usecase.comment.dto.response.GetCommentsResponseDto;
 import com.example.petapp.application.usecase.comment.mapper.CommentMapper;
-import com.example.petapp.application.usecase.member.MemberQueryUseCase;
+import com.example.petapp.application.usecase.member.MemberUseCase;
 import com.example.petapp.application.usecase.notification.dto.NotificationEvent;
-import com.example.petapp.application.usecase.post.PostQueryUseCase;
+import com.example.petapp.application.usecase.post.PostUseCase;
 import com.example.petapp.domain.comment.CommentRepository;
 import com.example.petapp.domain.comment.model.Comment;
 import com.example.petapp.domain.comment.model.Commentable;
@@ -27,16 +28,15 @@ import java.util.List;
 public class CommentService implements CommentUseCase {
 
     private final CommentRepository commentRepository;
-    private final CommentQueryUseCase commentQueryUseCase;
-    private final MemberQueryUseCase memberQueryUseCase;
-    private final PostQueryUseCase<Post> postQueryUseCase;
+    private final MemberUseCase memberUseCase;
+    private final PostUseCase<Post> postUseCase;
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional(readOnly = true)
     @Override
     public List<GetCommentsResponseDto> getComments(Long postId, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        Post post = postQueryUseCase.findOrThrow(postId);
+        Member member = memberUseCase.findOrThrow(id);
+        Post post = postUseCase.findOrThrow(postId);
 
         return CommentMapper.toGetCommentsResponseDtos((Commentable) post, member);
     }
@@ -44,8 +44,8 @@ public class CommentService implements CommentUseCase {
     @Transactional
     @Override
     public CreateCommentResponseDto createComment(CommentDto commentDto, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        Post post = postQueryUseCase.findOrThrow(commentDto.getPostId());
+        Member member = memberUseCase.findOrThrow(id);
+        Post post = postUseCase.findOrThrow(commentDto.getPostId());
 
         Comment comment = CommentMapper.toEntity(commentDto, post, member);
         commentRepository.save(comment);
@@ -55,12 +55,17 @@ public class CommentService implements CommentUseCase {
         return new CreateCommentResponseDto(comment.getId());
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public Comment findOrThrow(Long id) {
+        return commentRepository.find(id).orElseThrow(() -> new PetCommunityException(ErrorCode.NOT_FOUND, "해당 댓글은 없습니다."));
+    }
 
     @Transactional
     @Override
     public void deleteComment(Long commentId, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        Comment comment = commentQueryUseCase.findOrThrow(commentId);
+        Member member = memberUseCase.findOrThrow(id);
+        Comment comment = findOrThrow(commentId);
 
         comment.validated(member);
         commentRepository.delete(commentId);
@@ -69,8 +74,8 @@ public class CommentService implements CommentUseCase {
     @Transactional
     @Override
     public void updateComment(Long commentId, UpdateCommentDto updateCommentDto, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        Comment comment = commentQueryUseCase.findOrThrow(commentId);
+        Member member = memberUseCase.findOrThrow(id);
+        Comment comment = findOrThrow(commentId);
 
         comment.validated(member);
         comment.update(updateCommentDto.getContent());

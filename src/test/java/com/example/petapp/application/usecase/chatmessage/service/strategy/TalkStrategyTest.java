@@ -3,8 +3,8 @@ package com.example.petapp.application.usecase.chatmessage.service.strategy;
 import com.example.petapp.application.out.SendPort;
 import com.example.petapp.application.out.cache.LastMessageCachePort;
 import com.example.petapp.application.out.cache.SeqCachePort;
-import com.example.petapp.application.usecase.chatroom.ChatRoomQueryUseCase;
-import com.example.petapp.application.usecase.profile.ProfileQueryUseCase;
+import com.example.petapp.application.usecase.chatroom.ChatRoomUseCase;
+import com.example.petapp.application.usecase.profile.ProfileUseCase;
 import com.example.petapp.domain.chatmessage.ChatMessageRepository;
 import com.example.petapp.domain.chatmessage.model.ChatMessage;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
@@ -29,9 +29,9 @@ import static org.mockito.Mockito.*;
 class TalkStrategyTest {
 
     @Mock
-    private ChatRoomQueryUseCase chatRoomQueryUseCase;
+    private ChatRoomUseCase chatRoomUseCase;
     @Mock
-    private ProfileQueryUseCase profileQueryUseCase;
+    private ProfileUseCase profileUseCase;
     @Mock
     private SendPort sendPort;
     @Mock
@@ -61,7 +61,7 @@ class TalkStrategyTest {
 
         ChatRoom chatRoom = org.mockito.Mockito.mock(ChatRoom.class);
         when(chatRoom.getUsers()).thenReturn(Set.of(1L));
-        when(chatRoomQueryUseCase.find(10L)).thenReturn(chatRoom);
+        when(chatRoomUseCase.find(10L)).thenReturn(chatRoom);
         when(seqCachePort.exists(10L)).thenReturn(false);
         when(chatMessageRepository.findCurrent(10L)).thenReturn(Optional.empty());
         when(seqCachePort.incrementAndGet(10L)).thenReturn(1L);

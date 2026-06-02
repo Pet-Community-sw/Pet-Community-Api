@@ -1,10 +1,11 @@
 package com.example.petapp.application.usecase.chatmessage;
 
 import com.example.petapp.application.usecase.chatroom.dto.response.ChatMessageResponseDto;
+import com.example.petapp.domain.chatroom.model.ChatRoom;
 
 public interface ReaderUseCase {
 
-    ChatMessageResponseDto getMessages(Long chatRoomId, Long userId, int page);
+    ChatMessageResponseDto getMessages(ChatRoom chatRoom, Long userId, int page);
 
-    ChatMessageResponseDto getAfterMessages(Long chatRoomId, Long lastSeq, Long userId);
+    ChatMessageResponseDto getAfterMessages(ChatRoom chatRoom, Long lastSeq, Long userId);
 }

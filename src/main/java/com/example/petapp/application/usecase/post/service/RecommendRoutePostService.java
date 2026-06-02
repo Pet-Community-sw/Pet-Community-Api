@@ -3,9 +3,9 @@ package com.example.petapp.application.usecase.post.service;
 import com.example.petapp.application.common.PagePolicy;
 import com.example.petapp.application.common.PostSearchPolicy;
 import com.example.petapp.application.out.cache.LikeCachePort;
-import com.example.petapp.application.usecase.like.LikeQueryUseCase;
-import com.example.petapp.application.usecase.member.MemberQueryUseCase;
-import com.example.petapp.application.usecase.post.PostQueryUseCase;
+import com.example.petapp.application.usecase.like.LikeUseCase;
+import com.example.petapp.application.usecase.member.MemberUseCase;
+import com.example.petapp.application.usecase.post.PostUseCase;
 import com.example.petapp.application.usecase.post.recommend.RecommendRoutePostUseCase;
 import com.example.petapp.application.usecase.post.recommend.dto.request.CreateRecommendRoutePostDto;
 import com.example.petapp.application.usecase.post.recommend.dto.request.UpdateRecommendRoutePostDto;
@@ -31,16 +31,16 @@ import java.util.Set;
 public class RecommendRoutePostService implements RecommendRoutePostUseCase {
 
     private final RecommendRoutePostRepository recommendRoutePostRepository;
-    private final LikeQueryUseCase likeQueryUseCase;
-    private final MemberQueryUseCase memberQueryUseCase;
+    private final LikeUseCase likeUseCase;
+    private final MemberUseCase memberUseCase;
     private final LikeCachePort port;
-    private final PostQueryUseCase<RecommendRoutePost> postQueryUseCase;
+    private final PostUseCase<RecommendRoutePost> postUseCase;
     private final PostRepository<RecommendRoutePost> postRepository;
 
     @Transactional
     @Override
     public CreateRecommendRoutePostResponseDto createRecommendRoutePost(CreateRecommendRoutePostDto createRecommendRoutePostDto, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
+        Member member = memberUseCase.findOrThrow(id);
         RecommendRoutePost recommendRoutePost = RecommendRoutePostMapper.toEntity(createRecommendRoutePostDto, member);
         RecommendRoutePost savedRecommendRoutePost = postRepository.save(recommendRoutePost);
         return new CreateRecommendRoutePostResponseDto(savedRecommendRoutePost.getId());
@@ -49,7 +49,7 @@ public class RecommendRoutePostService implements RecommendRoutePostUseCase {
     @Transactional(readOnly = true)
     @Override
     public List<GetRecommendRoutePostsResponseDto> getRecommendRoutePosts(Double minLongitude, Double minLatitude, Double maxLongitude, Double maxLatitude, int page, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
+        Member member = memberUseCase.findOrThrow(id);
         Pageable pageable = PageRequest.of(page - 1, PagePolicy.DEFAULT_PAGE_SIZE);
         Set<Long> memberIds = port.findLikedMemberIds(member.getId());
         List<RecommendRoutePost> recommendRoutePosts = recommendRoutePostRepository
@@ -61,32 +61,32 @@ public class RecommendRoutePostService implements RecommendRoutePostUseCase {
                         pageable
                 )
                 .getContent();
-        return RecommendRoutePostMapper.toRecommendRoutePostsList(recommendRoutePosts, likeQueryUseCase.getCountMap(recommendRoutePosts), memberIds, member);
+        return RecommendRoutePostMapper.toRecommendRoutePostsList(recommendRoutePosts, likeUseCase.getCountMap(recommendRoutePosts), memberIds, member);
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<GetRecommendRoutePostsResponseDto> getRecommendRoutePosts(Double longitude, Double latitude, int page, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
+        Member member = memberUseCase.findOrThrow(id);
         Pageable pageable = PageRequest.of(page - 1, PagePolicy.DEFAULT_PAGE_SIZE);
         Set<Long> memberIds = port.findLikedMemberIds(member.getId());
         List<RecommendRoutePost> recommendRoutePosts = recommendRoutePostRepository.findList(longitude, latitude, pageable).getContent();
-        return RecommendRoutePostMapper.toRecommendRoutePostsList(recommendRoutePosts, likeQueryUseCase.getCountMap(recommendRoutePosts), memberIds, member);
+        return RecommendRoutePostMapper.toRecommendRoutePostsList(recommendRoutePosts, likeUseCase.getCountMap(recommendRoutePosts), memberIds, member);
     }
 
     @Override
     public GetRecommendPostResponseDto getRecommendRoutePost(Long recommendRoutePostId, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        RecommendRoutePost recommendRoutePost = postQueryUseCase.findOrThrow(recommendRoutePostId);
+        Member member = memberUseCase.findOrThrow(id);
+        RecommendRoutePost recommendRoutePost = postUseCase.findOrThrow(recommendRoutePostId);
         postRepository.incrementViewCount(recommendRoutePostId);
-        return RecommendRoutePostMapper.toGetRecommendPostResponseDto(member, recommendRoutePost, likeQueryUseCase.countByPost(recommendRoutePost), likeQueryUseCase.exist(recommendRoutePost, member));
+        return RecommendRoutePostMapper.toGetRecommendPostResponseDto(member, recommendRoutePost, likeUseCase.countByPost(recommendRoutePost), likeUseCase.exist(recommendRoutePost, member));
     }
 
     @Transactional
     @Override
     public void updateRecommendRoutePost(Long recommendRoutePostId, UpdateRecommendRoutePostDto updateRecommendRoutePostDto, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        RecommendRoutePost recommendRoutePost = postQueryUseCase.findOrThrow(recommendRoutePostId);
+        Member member = memberUseCase.findOrThrow(id);
+        RecommendRoutePost recommendRoutePost = postUseCase.findOrThrow(recommendRoutePostId);
         recommendRoutePost.validateMember(member);
         recommendRoutePost.updateContent(updateRecommendRoutePostDto.getTitle(), updateRecommendRoutePostDto.getContent());
     }
@@ -94,8 +94,8 @@ public class RecommendRoutePostService implements RecommendRoutePostUseCase {
     @Transactional
     @Override
     public void deleteRecommendRoutePost(Long recommendRoutePostId, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        RecommendRoutePost recommendRoutePost = postQueryUseCase.findOrThrow(recommendRoutePostId);
+        Member member = memberUseCase.findOrThrow(id);
+        RecommendRoutePost recommendRoutePost = postUseCase.findOrThrow(recommendRoutePostId);
         recommendRoutePost.validateMember(member);
         postRepository.delete(recommendRoutePostId);
     }

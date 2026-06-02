@@ -6,9 +6,9 @@ import com.example.petapp.application.common.exception.ErrorCode;
 import com.example.petapp.application.common.exception.PetCommunityException;
 import com.example.petapp.application.usecase.chatroom.ChatRoomUseCase;
 import com.example.petapp.application.usecase.chatroom.dto.response.CreateChatRoomResponseDto;
-import com.example.petapp.application.usecase.member.MemberQueryUseCase;
+import com.example.petapp.application.usecase.member.MemberUseCase;
 import com.example.petapp.application.usecase.notification.dto.NotificationEvent;
-import com.example.petapp.application.usecase.post.PostQueryUseCase;
+import com.example.petapp.application.usecase.post.PostUseCase;
 import com.example.petapp.application.usecase.post.delegate.DelegateWalkPostUseCase;
 import com.example.petapp.application.usecase.post.delegate.mapper.DelegateWalkPostMapper;
 import com.example.petapp.application.usecase.post.delegate.model.dto.request.CreateDelegateWalkPostDto;
@@ -17,7 +17,7 @@ import com.example.petapp.application.usecase.post.delegate.model.dto.request.Up
 import com.example.petapp.application.usecase.post.delegate.model.dto.response.ApplyToDelegateWalkPostResponseDto;
 import com.example.petapp.application.usecase.post.delegate.model.dto.response.CreateDelegateWalkPostResponseDto;
 import com.example.petapp.application.usecase.post.delegate.model.dto.response.GetDelegateWalkPostsResponseDto;
-import com.example.petapp.application.usecase.profile.ProfileQueryUseCase;
+import com.example.petapp.application.usecase.profile.ProfileUseCase;
 import com.example.petapp.application.usecase.walkrecord.WalkRecordUseCase;
 import com.example.petapp.application.usecase.walkrecord.dto.response.CreateWalkRecordResponseDto;
 import com.example.petapp.domain.member.model.Member;
@@ -43,17 +43,17 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
 
     private final DelegateWalkPostRepository delegateWalkPostRepository;
     private final WalkRecordUseCase walkRecordUseCase;
-    private final ProfileQueryUseCase profileQueryUseCase;
-    private final MemberQueryUseCase memberQueryUseCase;
+    private final ProfileUseCase profileUseCase;
+    private final MemberUseCase memberUseCase;
     private final ChatRoomUseCase chatRoomUseCase;
-    private final PostQueryUseCase<DelegateWalkPost> postQueryUseCase;
+    private final PostUseCase<DelegateWalkPost> postUseCase;
     private final PostRepository<DelegateWalkPost> postRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     @Override
     public CreateDelegateWalkPostResponseDto createDelegateWalkPost(CreateDelegateWalkPostDto createDelegateWalkPostDto, Long profileId) {
-        Profile profile = profileQueryUseCase.findOrThrow(profileId);
+        Profile profile = profileUseCase.findOrThrow(profileId);
         DelegateWalkPost savedDelegateWalkPost = postRepository.save(DelegateWalkPostMapper.toEntity(createDelegateWalkPostDto, profile));
         return new CreateDelegateWalkPostResponseDto(savedDelegateWalkPost.getId());
     }
@@ -61,7 +61,7 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
     @Transactional(readOnly = true)
     @Override
     public List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByLocation(Double minLongitude, Double minLatitude, Double maxLongitude, Double maxLatitude, int page, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
+        Member member = memberUseCase.findOrThrow(id);
         Pageable pageable = PageRequest.of(page - 1, PagePolicy.DEFAULT_PAGE_SIZE);
         List<DelegateWalkPost> delegateWalkPosts = delegateWalkPostRepository.findList(
                 minLongitude - PostSearchPolicy.BOUNDING_BOX_MARGIN_DEGREES,
@@ -76,7 +76,7 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
     @Transactional(readOnly = true)
     @Override
     public List<GetDelegateWalkPostsResponseDto> getDelegateWalkPostsByPlace(Double longitude, Double latitude, int page, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
+        Member member = memberUseCase.findOrThrow(id);
         Pageable pageable = PageRequest.of(page - 1, PagePolicy.DEFAULT_PAGE_SIZE);
         List<DelegateWalkPost> delegateWalkPosts = delegateWalkPostRepository.findList(longitude, latitude, pageable).getContent();
         return DelegateWalkPostMapper.toGetDelegateWalkPostsResponseDtos(member, delegateWalkPosts);
@@ -85,8 +85,8 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
     @Transactional()
     @Override
     public GetDelegatePostResponseDto getDelegateWalkPost(Long delegateWalkPostId, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
+        Member member = memberUseCase.findOrThrow(id);
+        DelegateWalkPost delegateWalkPost = postUseCase.findOrThrow(delegateWalkPostId);
         if (delegateWalkPost.filtering(member)) {
             throw new PetCommunityException(ErrorCode.FORBIDDEN, "프로필 등록해주세요.");
         }
@@ -97,9 +97,9 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
     @Transactional
     @Override
     public CreateChatRoomResponseDto selectApplicant(Long delegateWalkPostId, Long memberId, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        Member applicantMember = memberQueryUseCase.findOrThrow(memberId);
-        DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
+        Member member = memberUseCase.findOrThrow(id);
+        Member applicantMember = memberUseCase.findOrThrow(memberId);
+        DelegateWalkPost delegateWalkPost = postUseCase.findOrThrow(delegateWalkPostId);
         delegateWalkPost.validatedAndSelectApplicant(memberId, member);
         //켈린더에 넣는 로직필요.
         return chatRoomUseCase.createChatRoom(member, applicantMember);
@@ -108,7 +108,7 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
     @Transactional//산책 허가.
     @Override
     public CreateWalkRecordResponseDto grantAuthorize(Long delegateWalkPostId, Long profileId) {
-        DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
+        DelegateWalkPost delegateWalkPost = postUseCase.findOrThrow(delegateWalkPostId);
         delegateWalkPost.validatedUser(profileId);
         delegateWalkPost.grantAuthorize();//산책 start 허가.
         return walkRecordUseCase.createWalkRecord(delegateWalkPost);
@@ -117,8 +117,8 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
     @Transactional
     @Override
     public void updateDelegateWalkPost(Long delegateWalkPostId, UpdateDelegateWalkPostDto updateDelegateWalkPostDto, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
+        Member member = memberUseCase.findOrThrow(id);
+        DelegateWalkPost delegateWalkPost = postUseCase.findOrThrow(delegateWalkPostId);
         delegateWalkPost.validatedUser(member);
         delegateWalkPost.updateDelegateWalkPost(updateDelegateWalkPostDto);
     }
@@ -126,8 +126,8 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
     @Transactional
     @Override
     public void deleteDelegateWalkPost(Long delegateWalkPostId, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
+        Member member = memberUseCase.findOrThrow(id);
+        DelegateWalkPost delegateWalkPost = postUseCase.findOrThrow(delegateWalkPostId);
         delegateWalkPost.validatedUser(member);
         postRepository.delete(delegateWalkPostId);
     }
@@ -135,15 +135,15 @@ public class DelegateWalkPostService implements DelegateWalkPostUseCase {
     @Transactional(readOnly = true)
     @Override
     public Set<Applicant> getApplicants(Long delegateWalkPostId, Long profileId) {
-        DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
+        DelegateWalkPost delegateWalkPost = postUseCase.findOrThrow(delegateWalkPostId);
         return delegateWalkPost.validatedAndGetApplicants(profileId);
     }
 
     @Transactional
     @Override
     public ApplyToDelegateWalkPostResponseDto applyToDelegateWalkPost(Long delegateWalkPostId, String content, Long id) {
-        Member member = memberQueryUseCase.findOrThrow(id);
-        DelegateWalkPost delegateWalkPost = postQueryUseCase.findOrThrow(delegateWalkPostId);
+        Member member = memberUseCase.findOrThrow(id);
+        DelegateWalkPost delegateWalkPost = postUseCase.findOrThrow(delegateWalkPostId);
         delegateWalkPost.apply(member, content);
 
         eventPublisher.publishEvent(new NotificationEvent(delegateWalkPost.getProfile().getMember().getId(), member.getName() + "님이 회원님의 대리산책자 게시글에 지원했습니다."));

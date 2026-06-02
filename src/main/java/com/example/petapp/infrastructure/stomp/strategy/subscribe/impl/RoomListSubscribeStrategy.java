@@ -2,7 +2,7 @@ package com.example.petapp.infrastructure.stomp.strategy.subscribe.impl;
 
 import com.example.petapp.application.common.exception.ErrorCode;
 import com.example.petapp.application.common.exception.PetCommunityException;
-import com.example.petapp.application.usecase.member.MemberQueryUseCase;
+import com.example.petapp.application.usecase.member.MemberUseCase;
 import com.example.petapp.infrastructure.stomp.dto.SubscribeInfo;
 import com.example.petapp.infrastructure.stomp.strategy.subscribe.SubscribeTypeStrategy;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class RoomListSubscribeStrategy extends SubscribeTypeStrategy {
     private static final String KEY = "userId";
     private static final String PATTERN = "/sub/list/{" + KEY + "}";
 
-    private final MemberQueryUseCase useCase;
+    private final MemberUseCase useCase;
 
     @Override
     public boolean isHandler(String destination) {

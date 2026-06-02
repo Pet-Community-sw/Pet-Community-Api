@@ -6,9 +6,16 @@ import com.example.petapp.application.usecase.member.object.dto.response.TokenRe
 import com.example.petapp.application.usecase.token.dto.ReissueTokenRequestDto;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.role.Role;
+import com.example.petapp.domain.token.model.Token;
+
+import java.util.Optional;
 
 public interface TokenUseCase {
     void delete(String authorization);
+
+    Token findOrThrow(Long id);
+
+    Optional<Token> find(Long id);
 
     void delete(Long memberId);
 
