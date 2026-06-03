@@ -39,7 +39,7 @@ public class RecommendRoutePostMapper {
                         .locationLongitude(recommendRoutePost.getLocation().getLocationLongitude())
                         .locationLatitude(recommendRoutePost.getLocation().getLocationLatitude())
                         .createdAt(TimeUtil.getTimeAgo(recommendRoutePost.getCreatedAt()))
-                        .isOwner(member.getId().equals(recommendRoutePost.getMember().getId()))
+                        .isOwner(member.equals(recommendRoutePost.getMember()))
                         .isLike(likedRecommendPostIds.contains(recommendRoutePost.getId()))
                         .build()
                 )
@@ -57,7 +57,7 @@ public class RecommendRoutePostMapper {
                 .createdAt(TimeUtil.getTimeAgo(post.getCreatedAt()))
                 .viewCount(post.getViewCount())
                 .likeCount(likeCount)
-                .isOwner(post.getMember().getId().equals(member.getId()))
+                .isOwner(post.getMember().equals(member))
                 .isLike(isLike)
                 .build();
     }

@@ -1,28 +1,30 @@
 package com.example.petapp.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-// Spring Data JPA에서 createdAt, updatedAt 같은 시간 필드를 자동으로 채워주는 기능을 활성화하기 위해 사용하는 어노테이션.
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
 @SuperBuilder
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public abstract class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Long id;
 
     @CreatedDate
@@ -30,13 +32,39 @@ public abstract class BaseEntity {
     @JsonIgnore
     private LocalDateTime createdAt;
 
-    /*
-     * //@LastModifiedDate vs @UpdateTimestamp
-     * spring date Jpa           hibernate
-     * dirty checking            update query문
-     * */
     @LastModifiedDate
     @Column(name = "updated_at", updatable = true)
     @JsonIgnore
     private LocalDateTime updatedAt;
+
+    private static Class<?> getEffectiveClass(Object object) {
+        if (object instanceof HibernateProxy proxy) {
+            return proxy.getHibernateLazyInitializer().getPersistentClass();
+        }
+
+        return object.getClass();
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null) {
+            return false;
+        }
+
+        if (getEffectiveClass(this) != getEffectiveClass(o)) {
+            return false;
+        }
+
+        BaseEntity entity = (BaseEntity) o;
+        return getId() != null && Objects.equals(getId(), entity.getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return getEffectiveClass(this).hashCode();
+    }
 }
