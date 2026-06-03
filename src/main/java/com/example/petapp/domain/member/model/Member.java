@@ -6,31 +6,24 @@ import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.post.model.Post;
 import com.example.petapp.domain.profile.model.Profile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)//JPA 내부에서는 접근 가능하고, 외부에서는 new로 빈 객체 생성 못 하게
-//기본 생성자를 protected로 두는 게 안전하고 객체지향적이다
 @AllArgsConstructor
 @SuperBuilder
-/*
-* 부모 클래스의 필드를 equals/hashCode에 포함하고 싶다면
- @EqualsAndHashCode(callSuper = true) 사용
-자식 클래스의 필드만 비교하고 싶다면
- @EqualsAndHashCode(callSuper = false) 사용
-* */
-public class Member extends BaseEntity {//수정 필요
+public class Member extends BaseEntity {
 
     @NotBlank
     @Column(nullable = false)
