@@ -6,7 +6,9 @@ import com.example.petapp.application.usecase.member.object.dto.request.AuthCode
 import com.example.petapp.application.usecase.member.object.dto.request.LoginDto;
 import com.example.petapp.application.usecase.member.object.dto.request.SendEmailDto;
 import com.example.petapp.application.usecase.member.object.dto.response.LoginResponseDto;
+import com.example.petapp.application.usecase.member.object.dto.response.TokenResponseDto;
 import com.example.petapp.interfaces.dto.MessageResponse;
+import com.example.petapp.application.usecase.token.dto.ReissueTokenRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,6 +41,14 @@ public class AuthController {
     public ResponseEntity<MessageResponse> logout(@Parameter(hidden = true) @RequestHeader("Authorization") String accessToken) {
         authUseCase.logout(accessToken);
         return ResponseEntity.ok(new MessageResponse("로그아웃 되었습니다."));
+    }
+
+    @Operation(
+            summary = "토큰 재발급"
+    )
+    @PostMapping("/tokens")
+    public TokenResponseDto reissueToken(@RequestBody ReissueTokenRequestDto reissueTokenRequestDto) {
+        return authUseCase.reissueToken(reissueTokenRequestDto);
     }
 
     @Operation(

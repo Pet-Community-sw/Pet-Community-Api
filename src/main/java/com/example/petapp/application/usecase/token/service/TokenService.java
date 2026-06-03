@@ -55,17 +55,10 @@ public class TokenService implements TokenUseCase {//리펙토링 필요.
 
     @Transactional
     @Override
-    public TokenResponseDto reissueToken(String header, ReissueTokenRequestDto reissueTokenRequestDto) {
-        if (header == null || !header.startsWith("Bearer ")) {
-            throw new PetCommunityException(ErrorCode.UNAUTHORIZED, "헤더가 null이거나 Bearer로 시작하지않음");
-        }
-        String[] str = header.split(" ");
-        String accessToken = str[1];
-
-        MemberInfo info = tokenPort.getInfo(TokenType.ACCESS, accessToken);
+    public TokenResponseDto reissueToken(ReissueTokenRequestDto reissueTokenRequestDto) {
+        MemberInfo info = tokenPort.getInfo(TokenType.REFRESH, reissueTokenRequestDto.getRefreshToken());
         Token refreshToken = findOrThrow(info.getMemberId());
         refreshToken.isEqual(reissueTokenRequestDto.getRefreshToken());
-        blacklistAccessToken(accessToken);
         return createNewToken(refreshToken);
     }
 
