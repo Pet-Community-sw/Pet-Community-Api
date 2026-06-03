@@ -21,7 +21,7 @@ import java.util.List;
 @Component
 public class JwtTokenizer {
 
-    private static final long ACCESS_TOKEN_EXPIRE_MILLIS = Duration.ofDays(1).toMillis();
+    private static final long ACCESS_TOKEN_EXPIRE_MILLIS = Duration.ofMinutes(30).toMillis();
     private static final long REFRESH_TOKEN_EXPIRE_MILLIS = Duration.ofDays(7).toMillis();
     private static final long EMAIL_TOKEN_EXPIRE_MILLIS = Duration.ofMinutes(3).toMillis();
     private final byte[] accessKey;

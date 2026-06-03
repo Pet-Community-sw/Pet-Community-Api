@@ -41,8 +41,7 @@ public class SecurityConfig {
                 .requestMatchers("/image/profiles/**", "/image/members/**", "/image/posts/**", "/image/basic/**", "/favicon.ico").permitAll()
                 .requestMatchers("/ws-stomp/**", "/pub/**", "/sub/**").permitAll()
                 .requestMatchers("/members", "/members/login").permitAll()
-                .requestMatchers("/auth", "/auth/emails", "/auth/emails/verify").permitAll()
-                .requestMatchers("/token").permitAll()
+                .requestMatchers("/auth", "/auth/emails", "/auth/emails/verify", "/auth/tokens").permitAll()
                 // 임시 비밀번호 발급 후 비밀번호 변경은 TEMPORARY 권한도 허용
                 .requestMatchers("/members/reset-password").hasAnyRole("USER", "TEMPORARY")
                 //ROLE_안붙여도 spring security가 자동으로 붙여줌

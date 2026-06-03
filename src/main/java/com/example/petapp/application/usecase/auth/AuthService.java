@@ -9,8 +9,10 @@ import com.example.petapp.application.usecase.member.object.dto.request.AuthCode
 import com.example.petapp.application.usecase.member.object.dto.request.LoginDto;
 import com.example.petapp.application.usecase.member.object.dto.request.SendEmailDto;
 import com.example.petapp.application.usecase.member.object.dto.response.LoginResponseDto;
+import com.example.petapp.application.usecase.member.object.dto.response.TokenResponseDto;
 import com.example.petapp.application.usecase.role.RoleUseCase;
 import com.example.petapp.application.usecase.token.TokenUseCase;
+import com.example.petapp.application.usecase.token.dto.ReissueTokenRequestDto;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.member.model.MemberRole;
 import com.example.petapp.domain.role.Role;
@@ -60,6 +62,11 @@ public class AuthService implements AuthUseCase {
     @Override
     public void logout(String accessToken) {
         tokenUseCase.delete(accessToken);
+    }
+
+    @Override
+    public TokenResponseDto reissueToken(ReissueTokenRequestDto reissueTokenRequestDto) {
+        return tokenUseCase.reissueToken(reissueTokenRequestDto);
     }
 
     private void setRole(Member member, Role role) {

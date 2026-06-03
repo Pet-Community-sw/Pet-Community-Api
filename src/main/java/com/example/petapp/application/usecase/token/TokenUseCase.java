@@ -25,5 +25,5 @@ public interface TokenUseCase {
 
     String newAccessTokenByProfile(String accessToken, Member member, Long profileId);
 
-    TokenResponseDto reissueToken(String accessToken, ReissueTokenRequestDto reissueTokenRequestDto);
+    TokenResponseDto reissueToken(ReissueTokenRequestDto reissueTokenRequestDto);
 }
