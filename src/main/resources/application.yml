@@ -13,7 +13,7 @@ spring:
       leak-detection-threshold: 5000
     url: ${MYSQL_URL:jdbc:mysql://localhost:3306/pet_community?useUnicode=true&serverTimezone=Asia/Seoul}
     username: ${MYSQL_ROOT_USERNAME:root}
-    password: ${MYSQL_ROOT_PASSWORD:password}
+    password: ${MYSQL_ROOT_PASSWORD:root}
   jpa:
     hibernate:
       ddl-auto: update
