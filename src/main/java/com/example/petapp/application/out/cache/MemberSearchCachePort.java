@@ -8,8 +8,4 @@ public interface MemberSearchCachePort {
     List<MemberSearchResponseDto> findSuggestions(String keyword);
 
     void createSuggestions(String keyword, List<MemberSearchResponseDto> dtos);
-
-    void createSearchResult(String keyword, int page, List<MemberSearchResponseDto> dtos);
-
-    List<MemberSearchResponseDto> findSearchResult(String keyword, int page);
 }
