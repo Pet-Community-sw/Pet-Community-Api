@@ -45,12 +45,7 @@ public class MemberSearchService implements MemberSearchUseCase {
         }
 
         String key = keywordFilter(keyword);
-        List<MemberSearchResponseDto> result = memberSearchCachePort.findSearchResult(key, page);
-        if (result == null) {
-            result = memberSearchPort.search(key, page);
-            memberSearchCachePort.createSearchResult(key, page, result);
-        }
-        return result;
+        return memberSearchPort.search(key, page);
     }
 
     private List<MemberSearchResponseDto> sortByRecentViews(List<MemberSearchResponseDto> result, Long memberId) {
