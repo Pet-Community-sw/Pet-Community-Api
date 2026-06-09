@@ -6,7 +6,7 @@ INDEX_NAME="members"
 MAPPING_FILE="elasticsearch/members/v6/indexV6.json"
 
 echo "1. docker compose 실행"
-docker compose --env-file /dev/null up -d
+docker compose up -d
 
 echo "2. Elasticsearch 준비 대기"
 until curl -fsS "$ELASTICSEARCH_URI" >/dev/null; do
