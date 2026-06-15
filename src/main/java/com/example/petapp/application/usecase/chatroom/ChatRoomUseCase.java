@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public interface ChatRoomUseCase {
 
-    List<ChatRoomResponseDto> getChatRooms(Long userId);
+    List<ChatRoomResponseDto> getChatRooms(Long memberId);
 
     CreateChatRoomResponseDto createChatRoom(WalkingTogetherPost walkingTogetherPost, Profile profile);
 
@@ -30,9 +30,9 @@ public interface ChatRoomUseCase {
 
     ChatMessageResponseDto getMessages(Long chatRoomId, Long userId, int page);
 
-    void deleteChatRoom(Long chatRoomId, Long profileId);
+    void deleteChatRoom(Long chatRoomId, Long memberId);
 
     List<Long> getUsers(Long chatRoomId);
 
-    ChatMessageResponseDto getAfterMessages(Long chatRoomId, Long lastSeq, Long profileId);
+    ChatMessageResponseDto getAfterMessages(Long chatRoomId, Long lastSeq, Long memberId);
 }

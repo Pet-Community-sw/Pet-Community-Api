@@ -11,7 +11,6 @@ public class ChatMessageMapper {
 
     public static ChatMessage toEntity(ChatMessageDto chatMessageDto, ChatRoom chatRoom, Long senderId, UserInfo userInfo) {
         return ChatMessage.builder()
-                .chatRoomType(chatRoom.getChatRoomType())
                 .chatRoomId(chatMessageDto.getChatRoomId())
                 .senderId(senderId)
                 .senderName(userInfo.getUserName())

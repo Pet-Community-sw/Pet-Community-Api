@@ -1,6 +1,4 @@
 package com.example.petapp.domain.chatmessage.model;
-
-import com.example.petapp.application.usecase.chatmessage.model.type.ChatRoomType;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -35,10 +33,6 @@ public class ChatMessage {
 
     @Column(name = "client_message_id", nullable = false)
     private String clientMessageId;//client는 이 값을 보고 유저가 보낸건지 확인 후 필요한 부가 기능만 사용하면 될 듯.
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "chat_room_type", nullable = false)
-    private ChatRoomType chatRoomType;
 
     @Column(name = "chat_room_id", nullable = false)
     private Long chatRoomId;

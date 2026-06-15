@@ -9,11 +9,10 @@ import com.example.petapp.application.usecase.chatmessage.model.dto.UpdateListDt
 import com.example.petapp.application.usecase.chatmessage.model.type.CommandType;
 import com.example.petapp.application.usecase.chatroom.ChatRoomUseCase;
 import com.example.petapp.application.usecase.notification.dto.NotificationEvent;
-import com.example.petapp.application.usecase.profile.ProfileUseCase;
 import com.example.petapp.domain.chatmessage.ChatMessageRepository;
 import com.example.petapp.domain.chatmessage.model.ChatMessage;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
-import com.example.petapp.domain.profile.model.Profile;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.infrastructure.stomp.store.ChatOnlineStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -26,7 +25,6 @@ import java.util.Set;
 public class TalkStrategy implements MessageTypeStrategy {
 
     private final ChatRoomUseCase chatRoomUseCase;
-    private final ProfileUseCase profileUseCase;
     private final SendPort sendPort;
     private final ChatMessageRepository chatMessageRepository;
     private final SeqCachePort seqCachePort;
@@ -66,16 +64,17 @@ public class TalkStrategy implements MessageTypeStrategy {
         String message = chatMessage.getSenderName() + "님이 메시지를 보냈습니다.";
 
         ChatRoom chatRoom = chatRoomUseCase.find(chatRoomId);
-        Set<Long> users = chatRoom.getUsers();
+        Set<Member> users = chatRoom.getUsers();
         Set<Long> onlineUsers = chatOnlineStore.getOnlineUserList(chatRoomId);
 
-        users.stream().filter(userId -> !userId.equals(senderId))
+        users.stream()
+                .map(Member::getId)
+                .filter(userId -> !userId.equals(senderId))
                 .filter(userId -> !onlineUsers.contains(userId))
                 .forEach(userId -> {
-                    Profile profile = profileUseCase.findOrThrow(userId);
-                    eventPublisher.publishEvent(new NotificationEvent(profile.getMember().getId(), message));
+                    eventPublisher.publishEvent(new NotificationEvent(userId, message));
 
-                    sendPort.send("/sub/list/" + profile.getMember().getId(),
+                    sendPort.send("/sub/list/" + userId,
                             SendResponseDto.builder().commandType(CommandType.LIST_UPDATE).body(new UpdateListDto(chatRoomId, chatMessage.getMessage(), chatMessage.getMessageTime())).build());
                 });
     }
