@@ -29,7 +29,7 @@ public class ChatRoomController {
     )
     @GetMapping()
     public List<ChatRoomResponseDto> chatRoomList(Authentication authentication) {
-        return chatRoomUseCase.getChatRooms(AuthUtil.getProfileId(authentication));
+        return chatRoomUseCase.getChatRooms(AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -37,7 +37,7 @@ public class ChatRoomController {
     )
     @GetMapping("/{chatRoomId}")
     public ChatMessageResponseDto getMessages(@PathVariable Long chatRoomId, @RequestParam(defaultValue = "0") int page, Authentication authentication) {
-        return chatRoomUseCase.getMessages(chatRoomId, AuthUtil.getProfileId(authentication), page);
+        return chatRoomUseCase.getMessages(chatRoomId, AuthUtil.getMemberId(authentication), page);
     }
 
     @Operation(
@@ -45,7 +45,7 @@ public class ChatRoomController {
     )
     @GetMapping("/{chatRoomId}/messages")
     public ChatMessageResponseDto getAfterMessages(@PathVariable Long chatRoomId, @RequestParam Long lastSeq, Authentication authentication) {
-        return chatRoomUseCase.getAfterMessages(chatRoomId, lastSeq, AuthUtil.getProfileId(authentication));
+        return chatRoomUseCase.getAfterMessages(chatRoomId, lastSeq, AuthUtil.getMemberId(authentication));
     }
 
     @Operation(
@@ -62,7 +62,7 @@ public class ChatRoomController {
     )
     @DeleteMapping("/{chatRoomId}")
     public ResponseEntity<MessageResponse> deleteChatRoom(@PathVariable Long chatRoomId, Authentication authentication) {
-        chatRoomUseCase.deleteChatRoom(chatRoomId, AuthUtil.getProfileId(authentication));
+        chatRoomUseCase.deleteChatRoom(chatRoomId, AuthUtil.getMemberId(authentication));
         return ResponseEntity.ok(new MessageResponse("삭제 되었습니다."));
     }
 }

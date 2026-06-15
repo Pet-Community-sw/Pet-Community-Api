@@ -5,13 +5,13 @@ import com.example.petapp.application.out.cache.ReadMessageCachePort;
 import com.example.petapp.application.out.cache.SeqCachePort;
 import com.example.petapp.application.usecase.chatmessage.ReaderUseCase;
 import com.example.petapp.application.usecase.chatmessage.model.dto.LastMessageInfoDto;
-import com.example.petapp.application.usecase.chatmessage.model.type.ChatRoomType;
 import com.example.petapp.application.usecase.chatroom.ChatRoomUseCase;
 import com.example.petapp.application.usecase.chatroom.dto.response.ChatRoomResponseDto;
 import com.example.petapp.application.usecase.profile.ProfileUseCase;
 import com.example.petapp.domain.chatmessage.ChatMessageRepository;
 import com.example.petapp.domain.chatroom.ChatRoomRepository;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
+import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.Profile;
 import com.example.petapp.domain.walkingtogetherPost.model.WalkingTogetherPost;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,32 +51,32 @@ class ChatRoomServiceBatchProfileQueryTest {
     private ChatRoomService chatRoomService;
 
     @Test
-    void 채팅방_목록조회시_프로필은_한번에_조회한다() {
+    void 채팅방_목록조회시_회원정보로_참여자를_반환한다() {
         ChatRoom chatRoom1 = org.mockito.Mockito.mock(ChatRoom.class);
         ChatRoom chatRoom2 = org.mockito.Mockito.mock(ChatRoom.class);
         WalkingTogetherPost walkingTogetherPost1 = org.mockito.Mockito.mock(WalkingTogetherPost.class);
         WalkingTogetherPost walkingTogetherPost2 = org.mockito.Mockito.mock(WalkingTogetherPost.class);
         Profile owner1 = org.mockito.Mockito.mock(Profile.class);
         Profile owner2 = org.mockito.Mockito.mock(Profile.class);
-        Profile p1 = org.mockito.Mockito.mock(Profile.class);
-        Profile p2 = org.mockito.Mockito.mock(Profile.class);
-        Profile p3 = org.mockito.Mockito.mock(Profile.class);
+        Member member1 = org.mockito.Mockito.mock(Member.class);
+        Member member2 = org.mockito.Mockito.mock(Member.class);
+        Member member3 = org.mockito.Mockito.mock(Member.class);
 
-        when(chatRoomRepository.findAll(1L, ChatRoomType.MANY)).thenReturn(List.of(chatRoom1, chatRoom2));
+        when(chatRoomRepository.findAll(1L)).thenReturn(List.of(chatRoom1, chatRoom2));
 
         when(chatRoom1.getId()).thenReturn(100L);
         when(chatRoom1.getName()).thenReturn("채팅방1");
-        when(chatRoom1.getUsers()).thenReturn(Set.of(1L, 2L));
+        when(chatRoom1.getUsers()).thenReturn(Set.of(member1, member2));
         when(chatRoom1.getWalkingTogetherPost()).thenReturn(walkingTogetherPost1);
         when(walkingTogetherPost1.getProfile()).thenReturn(owner1);
-        when(owner1.getId()).thenReturn(1L);
+        when(owner1.getMember()).thenReturn(member1);
 
         when(chatRoom2.getId()).thenReturn(200L);
         when(chatRoom2.getName()).thenReturn("채팅방2");
-        when(chatRoom2.getUsers()).thenReturn(Set.of(2L, 3L));
+        when(chatRoom2.getUsers()).thenReturn(Set.of(member2, member3));
         when(chatRoom2.getWalkingTogetherPost()).thenReturn(walkingTogetherPost2);
         when(walkingTogetherPost2.getProfile()).thenReturn(owner2);
-        when(owner2.getId()).thenReturn(2L);
+        when(owner2.getMember()).thenReturn(member2);
 
         when(lastMessageCachePort.findLastMessageInfo(100L)).thenReturn(LastMessageInfoDto.builder()
                 .lastSeq(5L)
@@ -90,28 +89,26 @@ class ChatRoomServiceBatchProfileQueryTest {
                 .lastMessageTime("2026-01-01T00:01:00")
                 .build());
 
-        when(profileUseCase.findMapOrThrow(Set.of(1L, 2L, 3L))).thenReturn(Map.of(
-                1L, p1,
-                2L, p2,
-                3L, p3
-        ));
-        when(p1.getId()).thenReturn(1L);
-        when(p1.getPetImageUrl()).thenReturn("1.png");
-        when(p2.getId()).thenReturn(2L);
-        when(p2.getPetImageUrl()).thenReturn("2.png");
-        when(p3.getId()).thenReturn(3L);
-        when(p3.getPetImageUrl()).thenReturn("3.png");
+        when(member1.getId()).thenReturn(1L);
+        when(member1.getMemberImageUrl()).thenReturn("1.png");
+        when(member2.getId()).thenReturn(2L);
+        when(member2.getMemberImageUrl()).thenReturn("2.png");
+        when(member3.getId()).thenReturn(3L);
+        when(member3.getMemberImageUrl()).thenReturn("3.png");
 
         List<ChatRoomResponseDto> result = chatRoomService.getChatRooms(1L);
 
         assertThat(result).hasSize(2);
-        verify(profileUseCase).findMapOrThrow(Set.of(1L, 2L, 3L));
+        assertThat(result.get(0).getUsers()).extracting("userId").containsExactlyInAnyOrder(1L, 2L);
+        assertThat(result.get(1).getUsers()).extracting("userId").containsExactlyInAnyOrder(2L, 3L);
+        verify(chatRoomRepository).findAll(1L);
+        verify(profileUseCase, never()).findMapOrThrow(org.mockito.ArgumentMatchers.anySet());
         verify(profileUseCase, never()).findOrThrow(anyLong());
     }
 
     @Test
     void 채팅방이_없으면_프로필_배치조회는_호출하지_않는다() {
-        when(chatRoomRepository.findAll(1L, ChatRoomType.MANY)).thenReturn(List.of());
+        when(chatRoomRepository.findAll(1L)).thenReturn(List.of());
 
         List<ChatRoomResponseDto> result = chatRoomService.getChatRooms(1L);
 

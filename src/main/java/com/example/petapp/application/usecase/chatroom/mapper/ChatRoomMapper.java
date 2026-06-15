@@ -23,11 +23,10 @@ public class ChatRoomMapper {
                 .name(walkingTogetherPost.getProfile().getPetName() + "님의 방")
                 .limitCount(walkingTogetherPost.getLimitCount())//나중에 게시물에서 인원 수를 고정.
                 .walkingTogetherPost(walkingTogetherPost)
-                .chatRoomType(ChatRoomType.MANY)//todo : 다시봐야함.
-                //이게 수정에서 가능하려나?
+                .chatRoomType(ChatRoomType.MANY)
                 .build();
-        chatRoom.addUser(walkingTogetherPost.getProfile().getId());//글 작성자.
-        chatRoom.addUser(profile.getId());//신청하는사람.
+        chatRoom.addUser(walkingTogetherPost.getProfile().getMember());//글 작성자.
+        chatRoom.addUser(profile.getMember());
         return chatRoom;
     }
 
@@ -39,15 +38,15 @@ public class ChatRoomMapper {
                 .build();
     }
 
-    public static ChatRoomUsersResponseDto toChatRoomUsersResponseDto(Profile profile) {
+    public static ChatRoomUsersResponseDto toChatRoomUsersResponseDto(Member member) {
         return ChatRoomUsersResponseDto.builder()
-                .userId(profile.getId())
-                .userImageUrl(profile.getPetImageUrl())
+                .userId(member.getId())
+                .userImageUrl(member.getMemberImageUrl())
                 .build();
     }
 
 
-    public static ChatRoomResponseDto toChatRoomsResponseDto(ChatRoom chatRoom, Long userId, LastMessageInfoDto lastMessageInfoDto, Set<ChatRoomUsersResponseDto> users) {
+    public static ChatRoomResponseDto toChatRoomsResponseDto(ChatRoom chatRoom, Long memberId, LastMessageInfoDto lastMessageInfoDto, Set<ChatRoomUsersResponseDto> users) {
         return ChatRoomResponseDto.builder()
                 .chatRoomId(chatRoom.getId())
                 .chatName(chatRoom.getName())
@@ -55,7 +54,7 @@ public class ChatRoomMapper {
                 .users(users)
                 .lastMessage(lastMessageInfoDto.getLastMessage())
                 .lastMessageTime(lastMessageInfoDto.getLastMessageTime().isBlank() ? null : LocalDateTime.parse(lastMessageInfoDto.getLastMessageTime()))
-                .isOwner(chatRoom.getWalkingTogetherPost().getProfile().getId().equals(userId))
+                .isOwner(chatRoom.getWalkingTogetherPost().getProfile().getMember().getId().equals(memberId))
                 .build();
     }
 

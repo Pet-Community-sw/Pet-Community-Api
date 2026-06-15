@@ -8,11 +8,9 @@ import com.example.petapp.application.usecase.chatmessage.model.dto.UserInfo;
 import com.example.petapp.application.usecase.chatmessage.model.type.CommandType;
 import com.example.petapp.application.usecase.chatroom.ChatRoomUseCase;
 import com.example.petapp.application.usecase.member.MemberUseCase;
-import com.example.petapp.application.usecase.profile.ProfileUseCase;
 import com.example.petapp.domain.chatmessage.model.ChatMessage;
 import com.example.petapp.domain.chatroom.model.ChatRoom;
 import com.example.petapp.domain.member.model.Member;
-import com.example.petapp.domain.profile.model.Profile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +23,6 @@ import java.util.Map;
 @Slf4j
 public class ChattingService implements ChattingUseCase {
 
-    private final ProfileUseCase profileUseCase;
     private final Map<CommandType, MessageTypeStrategy> messageTypeMap;
     private final ChatRoomUseCase chatRoomUseCase;
     private final MemberUseCase memberUseCase;
@@ -37,7 +34,6 @@ public class ChattingService implements ChattingUseCase {
         ChatRoom chatRoom = chatRoomUseCase.find(chatMessageDto.getChatRoomId());
         chatRoom.validateUser(senderId);
         ChatMessage chatMessage = getChatMessage(chatMessageDto, senderId, chatRoom);
-//        chatMessage.checkSeq();//?
         MessageTypeStrategy messageTypeStrategy = messageTypeMap.get(chatMessageDto.getCommandType());
         if (messageTypeStrategy == null) {
             throw new IllegalArgumentException("[ERROR] : messageType 외 요청");
@@ -47,18 +43,8 @@ public class ChattingService implements ChattingUseCase {
 
 
     private ChatMessage getChatMessage(ChatMessageDto chatMessageDto, Long senderId, ChatRoom chatRoom) {
-        UserInfo userInfo = null;
-        switch (chatRoom.getChatRoomType()) {
-            case MANY -> {
-                Profile profile = profileUseCase.findOrThrow(senderId);
-                userInfo = new UserInfo(profile.getPetName(), profile.getPetImageUrl());
-            }
-            case ONE -> {
-                Member member = memberUseCase.findOrThrow(senderId);
-                userInfo = new UserInfo(member.getName(), member.getMemberImageUrl());
-            }
-        }
-        ChatMessage chatMessage = ChatMessageMapper.toEntity(chatMessageDto, chatRoom, senderId, userInfo);
-        return chatMessage;
+        Member member = memberUseCase.findOrThrow(senderId);
+        UserInfo userInfo = new UserInfo(member.getName(), member.getMemberImageUrl());
+        return ChatMessageMapper.toEntity(chatMessageDto, chatRoom, senderId, userInfo);
     }
 }
