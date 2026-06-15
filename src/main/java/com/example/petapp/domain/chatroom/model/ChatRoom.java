@@ -2,7 +2,6 @@ package com.example.petapp.domain.chatroom.model;
 
 import com.example.petapp.application.common.exception.ErrorCode;
 import com.example.petapp.application.common.exception.PetCommunityException;
-import com.example.petapp.application.usecase.chatmessage.model.type.ChatRoomType;
 import com.example.petapp.domain.BaseEntity;
 import com.example.petapp.domain.member.model.Member;
 import com.example.petapp.domain.profile.model.Profile;
@@ -26,9 +25,6 @@ public class ChatRoom extends BaseEntity {
     @NotBlank
     @Column(nullable = false)
     private String name;
-
-    @Enumerated(EnumType.STRING)
-    private ChatRoomType chatRoomType;
 
     @NotNull
     @Column(nullable = false)

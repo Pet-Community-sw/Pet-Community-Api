@@ -1,7 +1,6 @@
 package com.example.petapp.application.usecase.chatroom.mapper;
 
 import com.example.petapp.application.usecase.chatmessage.model.dto.LastMessageInfoDto;
-import com.example.petapp.application.usecase.chatmessage.model.type.ChatRoomType;
 import com.example.petapp.application.usecase.chatroom.dto.request.ChatMessageDtoMember;
 import com.example.petapp.application.usecase.chatroom.dto.response.ChatRoomResponseDto;
 import com.example.petapp.application.usecase.profile.dto.response.ChatRoomUsersResponseDto;
@@ -23,7 +22,6 @@ public class ChatRoomMapper {
                 .name(walkingTogetherPost.getProfile().getPetName() + "님의 방")
                 .limitCount(walkingTogetherPost.getLimitCount())//나중에 게시물에서 인원 수를 고정.
                 .walkingTogetherPost(walkingTogetherPost)
-                .chatRoomType(ChatRoomType.MANY)
                 .build();
         chatRoom.addUser(walkingTogetherPost.getProfile().getMember());//글 작성자.
         chatRoom.addUser(profile.getMember());
@@ -32,7 +30,6 @@ public class ChatRoomMapper {
 
     public static ChatRoom toEntity(Member member) {
         return ChatRoom.builder()
-                .chatRoomType(ChatRoomType.ONE)
                 .name(member.getName() + "님의 방")
                 .limitCount(2)
                 .build();
