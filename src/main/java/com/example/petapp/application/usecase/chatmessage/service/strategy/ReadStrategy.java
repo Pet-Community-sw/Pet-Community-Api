@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ReadStrategy implements MessageTypeStrategy {
 
-    private final ReadMessageCachePort port;
+    private final ReadMessageCachePort readMessageCachePort;
 
     @Override
     public void handle(ChatMessage chatMessage) {
-        port.markAsRead(chatMessage);
+        readMessageCachePort.markAsRead(chatMessage);
     }
 
     @Override

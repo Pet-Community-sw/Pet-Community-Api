@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class EnterStrategy implements MessageTypeStrategy {
 
-    private final SendPort port;
+    private final SendPort sendPort;
 
     @Override
     public void handle(ChatMessage chatMessage) {
         String message = (chatMessage.getSenderName() + "님이 입장하셨습니다.");
         NotificationDto notificationDto = new NotificationDto(chatMessage.getSenderId(), message);
-        port.send("/sub/chat/" + chatMessage.getChatRoomId(),
+        sendPort.send("/sub/chat/" + chatMessage.getChatRoomId(),
                 SendResponseDto.builder().commandType(CommandType.ENTER).body(notificationDto).build());
     }
 
