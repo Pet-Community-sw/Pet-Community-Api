@@ -65,7 +65,7 @@ class TalkStrategyTest {
         when(seqCachePort.exists(10L)).thenReturn(false);
         when(chatMessageRepository.findCurrent(10L)).thenReturn(Optional.empty());
         when(seqCachePort.incrementAndGet(10L)).thenReturn(1L);
-        when(chatOnlineStore.getOnlineUserList(10L)).thenReturn(Set.of());
+        when(chatOnlineStore.getOnlineUserIds(10L)).thenReturn(Set.of());
 
         talkStrategy.handle(chatMessage);
 

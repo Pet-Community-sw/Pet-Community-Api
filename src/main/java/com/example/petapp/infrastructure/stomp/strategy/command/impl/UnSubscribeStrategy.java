@@ -22,7 +22,7 @@ public class UnSubscribeStrategy implements StompCommandStrategy {
 
         chatRoomSubscriptionStore.getChatRoomIdBySubscriptionId(subscriptionId)
                 .ifPresent(chatRoomId -> {
-                    chatOnlineStore.deleteOnlineUser(chatRoomId, memberId);
+                    chatOnlineStore.removeOnlineUser(chatRoomId, memberId);
                     chatRoomSubscriptionStore.deleteChatRoomSubscription(subscriptionId);
                 });
     }

@@ -28,7 +28,8 @@ public class ConnectStrategy implements StompCommandStrategy {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
-    private final TokenPort port;
+
+    private final TokenPort tokenPort;
     private final MemberUseCase memberUseCase;
 
     @Override
@@ -42,7 +43,7 @@ public class ConnectStrategy implements StompCommandStrategy {
         }
 
         String accessToken = token.substring(BEARER_PREFIX.length());
-        MemberInfo info = port.getInfo(TokenType.ACCESS, accessToken);
+        MemberInfo info = tokenPort.getInfo(TokenType.ACCESS, accessToken);
         Member member = memberUseCase.findOrThrow(info.getMemberId());
 
         accessor.setUser(() -> member.getId().toString());

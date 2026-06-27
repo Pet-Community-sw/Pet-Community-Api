@@ -93,21 +93,6 @@ public class ChatRoomService implements ChatRoomUseCase {
         return chatRoomRepository.find(walkingTogetherPost);
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public boolean isExist(Long chatRoomId, Long profileId) {
-        return chatRoomRepository.existAndContain(chatRoomId, profileId);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<Long> getUsers(Long chatRoomId) {
-        ChatRoom chatRoom = find(chatRoomId);
-        return chatRoom.getUsers().stream()
-                .map(Member::getId)
-                .collect(Collectors.toList());
-    }
-
     @Transactional
     @Override
     public void deleteChatRoom(Long chatRoomId, Long userId) {

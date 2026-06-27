@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SubscribeStrategy implements StompCommandStrategy {
 
-    private final List<SubscribeTypeStrategy> handlers;
+    private final List<SubscribeTypeStrategy> subscribeTypeStrategies;
 
     @Override
     public void handle(StompHeaderAccessor accessor) {
@@ -28,8 +28,12 @@ public class SubscribeStrategy implements StompCommandStrategy {
         String destination = accessor.getDestination();
         Principal user = accessor.getUser();
 
-        if (destination == null || user == null) {
-            throw new PetCommunityException(ErrorCode.BAD_REQUEST, "destination 또는 user 정보가 없습니다.");
+        if (destination == null) {
+            throw new PetCommunityException(ErrorCode.BAD_REQUEST, "destination 정보가 없습니다.");
+        }
+
+        if (user == null) {
+            throw new PetCommunityException(ErrorCode.UNAUTHORIZED, "사용자 정보가 없습니다.");
         }
 
         SubscribeInfo subscribeInfo = SubscribeInfo.builder()
@@ -38,8 +42,8 @@ public class SubscribeStrategy implements StompCommandStrategy {
                 .principal(user)
                 .build();
 
-        for (SubscribeTypeStrategy subscribeTypeStrategy : handlers) {
-            if (subscribeTypeStrategy.isHandler(destination)) {
+        for (SubscribeTypeStrategy subscribeTypeStrategy : subscribeTypeStrategies) {
+            if (subscribeTypeStrategy.supports(destination)) {
                 subscribeTypeStrategy.handle(subscribeInfo);
                 return;
             }
@@ -52,3 +56,5 @@ public class SubscribeStrategy implements StompCommandStrategy {
         return StompCommand.SUBSCRIBE;
     }
 }
+
+

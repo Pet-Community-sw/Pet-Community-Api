@@ -22,13 +22,13 @@ public class RoomListSubscribeStrategy extends SubscribeTypeStrategy {
     private final MemberUseCase useCase;
 
     @Override
-    public boolean isHandler(String destination) {
+    public boolean supports(String destination) {
         return PATH.match(PATTERN, destination);
     }
 
     @Override
     public void handle(SubscribeInfo subscribeInfo) {
-        Map<String, String> map = pathMap(PATTERN, subscribeInfo.getDestination());
+        Map<String, String> map = extractPathVariables(PATTERN, subscribeInfo.getDestination());
         Long userId = Long.valueOf(map.get(KEY));
         if (userId.equals(Long.valueOf(subscribeInfo.getPrincipal().getName()))) {
             useCase.findOrThrow(userId);

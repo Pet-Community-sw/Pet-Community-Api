@@ -15,12 +15,12 @@ public class InMemoryChatOnlineStore implements ChatOnlineStore {
     private final ConcurrentHashMap<Long, Set<Long>> onlineMap = new ConcurrentHashMap<>();
 
     @Override
-    public void createOnlineUser(Long chatRoomId, Long memberId) {
-        onlineMap.computeIfAbsent(chatRoomId, k -> new HashSet<>()).add(memberId);
+    public void addOnlineUser(Long chatRoomId, Long memberId) {
+        onlineMap.computeIfAbsent(chatRoomId, k -> ConcurrentHashMap.newKeySet()).add(memberId);
     }
 
     @Override
-    public void deleteOnlineUser(Long chatRoomId, Long memberId) {
+    public void removeOnlineUser(Long chatRoomId, Long memberId) {
         Set<Long> onlineUsers = onlineMap.get(chatRoomId);
         if (onlineUsers == null) return;
         onlineUsers.remove(memberId);
@@ -28,7 +28,7 @@ public class InMemoryChatOnlineStore implements ChatOnlineStore {
     }
 
     @Override
-    public Set<Long> getOnlineUserList(Long chatRoomId) {
+    public Set<Long> getOnlineUserIds(Long chatRoomId) {
         return onlineMap.getOrDefault(chatRoomId, new HashSet<>());
     }
 }

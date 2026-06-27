@@ -4,9 +4,9 @@ import java.util.Set;
 
 public interface ChatOnlineStore {
 
-    void createOnlineUser(Long chatroomId, Long memberId);
+    void addOnlineUser(Long chatroomId, Long memberId);
 
-    void deleteOnlineUser(Long chatRoomId, Long memberId);
+    void removeOnlineUser(Long chatRoomId, Long memberId);
 
-    Set<Long> getOnlineUserList(Long chatRoomId);
+    Set<Long> getOnlineUserIds(Long chatRoomId);
 }
