@@ -23,16 +23,12 @@ public interface ChatRoomUseCase {
     ChatRoom find(Long id);
 
     Optional<ChatRoom> find(WalkingTogetherPost walkingTogetherPost);
-
-    boolean isExist(Long chatRoomId, Long profileId);
-
+    
     void updateChatRoom(Long chatRoomId, UpdateChatRoomDto updateChatRoomDto, Long profileId);
 
     ChatMessageResponseDto getMessages(Long chatRoomId, Long userId, int page);
 
     void deleteChatRoom(Long chatRoomId, Long memberId);
-
-    List<Long> getUsers(Long chatRoomId);
 
     ChatMessageResponseDto getAfterMessages(Long chatRoomId, Long lastSeq, Long memberId);
 }

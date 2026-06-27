@@ -20,13 +20,13 @@ public class NotificationSubscribeStrategy extends SubscribeTypeStrategy {
     private final MemberUseCase useCase;
 
     @Override
-    public boolean isHandler(String destination) {
+    public boolean supports(String destination) {
         return PATH.match(PATTERN, destination);
     }
 
     @Override
     public void handle(SubscribeInfo subscribeInfo) {
-        Map<String, String> map = pathMap(PATTERN, subscribeInfo.getDestination());
+        Map<String, String> map = extractPathVariables(PATTERN, subscribeInfo.getDestination());
         Long memberId = Long.valueOf(map.get(KEY));
         useCase.findOrThrow(memberId);
         log.info("[STOMP] notification 구독 id : {}", memberId);

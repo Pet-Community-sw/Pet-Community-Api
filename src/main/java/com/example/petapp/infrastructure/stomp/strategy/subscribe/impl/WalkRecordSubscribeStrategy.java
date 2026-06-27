@@ -23,13 +23,13 @@ public class WalkRecordSubscribeStrategy extends SubscribeTypeStrategy {
     private final WalkRecordRepository walkRecordRepository;
 
     @Override
-    public boolean isHandler(String destination) {
+    public boolean supports(String destination) {
         return PATH.match(PATTERN, destination);
     }
 
     @Override
     public void handle(SubscribeInfo subscribeInfo) {
-        Map<String, String> map = pathMap(PATTERN, subscribeInfo.getDestination());
+        Map<String, String> map = extractPathVariables(PATTERN, subscribeInfo.getDestination());
         Long walkRecordId = Long.valueOf(map.get(KEY));
         Long memberId = Long.valueOf(subscribeInfo.getPrincipal().getName());
 

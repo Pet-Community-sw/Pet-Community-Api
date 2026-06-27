@@ -65,7 +65,7 @@ public class TalkStrategy implements MessageTypeStrategy {
 
         ChatRoom chatRoom = chatRoomUseCase.find(chatRoomId);
         Set<Member> users = chatRoom.getUsers();
-        Set<Long> onlineUsers = chatOnlineStore.getOnlineUserList(chatRoomId);
+        Set<Long> onlineUsers = chatOnlineStore.getOnlineUserIds(chatRoomId);
 
         users.stream()
                 .map(Member::getId)

@@ -8,11 +8,11 @@ import java.util.Map;
 public abstract class SubscribeTypeStrategy {
     protected static final AntPathMatcher PATH = new AntPathMatcher();
 
-    public abstract boolean isHandler(String destination);
+    public abstract boolean supports(String destination);
 
     public abstract void handle(SubscribeInfo subscribeInfo);
 
-    protected Map<String, String> pathMap(String pattern, String destination) {
+    protected Map<String, String> extractPathVariables(String pattern, String destination) {
         return PATH.extractUriTemplateVariables(pattern, destination);
     }
 }

@@ -3,22 +3,22 @@ package com.example.petapp.infrastructure.stomp.interceptor;
 import com.example.petapp.infrastructure.stomp.strategy.command.StompCommandStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 @RequiredArgsConstructor
-@Configuration(proxyBeanMethods = false)
+@Component
 @Slf4j
 public class StompInterceptor implements ChannelInterceptor {
 
-    private final Map<StompCommand, StompCommandStrategy> commandStrategyMap;
+    private final Map<StompCommand, StompCommandStrategy> stompCommandStrategyMap;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -28,7 +28,8 @@ public class StompInterceptor implements ChannelInterceptor {
             return message;
         }
         log.info("[STOMP] command : {}, destination : {}", accessor.getCommand(), accessor.getDestination());
-        StompCommandStrategy strategy = commandStrategyMap.get(accessor.getCommand());
+
+        StompCommandStrategy strategy = stompCommandStrategyMap.get(accessor.getCommand());
         if (strategy != null) {
             strategy.handle(accessor);
         }

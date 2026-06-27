@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 @Configuration(proxyBeanMethods = false)
-public class StompStrategyMapConfig {
+public class StompCommandStrategyMapConfig {
 
     @Bean
-    public Map<StompCommand, StompCommandStrategy> commandStrategyMap(List<StompCommandStrategy> strategies) {
+    public Map<StompCommand, StompCommandStrategy> stompCommandStrategyMap(List<StompCommandStrategy> strategies) {
         Map<StompCommand, StompCommandStrategy> map = new HashMap<>();
         for (StompCommandStrategy strategy : strategies) {
             map.put(strategy.getCommand(), strategy);
