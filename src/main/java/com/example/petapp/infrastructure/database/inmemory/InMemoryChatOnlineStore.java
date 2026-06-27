@@ -15,7 +15,11 @@ public class InMemoryChatOnlineStore implements ChatOnlineStore {
 
     @Override
     public void addOnlineUser(Long chatRoomId, Long memberId) {
-        onlineMap.computeIfAbsent(chatRoomId, k -> ConcurrentHashMap.newKeySet()).add(memberId);
+        onlineMap.compute(chatRoomId, (k, onLineUsers) -> {
+            if (onLineUsers == null) onLineUsers = ConcurrentHashMap.newKeySet();
+            onLineUsers.add(memberId);
+            return onLineUsers;
+        });
     }
 
     @Override
