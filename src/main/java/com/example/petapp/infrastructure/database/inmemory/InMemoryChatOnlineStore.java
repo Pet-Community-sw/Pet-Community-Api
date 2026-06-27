@@ -4,7 +4,6 @@ import com.example.petapp.infrastructure.stomp.store.ChatOnlineStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,19 +15,23 @@ public class InMemoryChatOnlineStore implements ChatOnlineStore {
 
     @Override
     public void addOnlineUser(Long chatRoomId, Long memberId) {
-        onlineMap.computeIfAbsent(chatRoomId, k -> ConcurrentHashMap.newKeySet()).add(memberId);
+        onlineMap.compute(chatRoomId, (k, onLineUsers) -> {
+            if (onLineUsers == null) onLineUsers = ConcurrentHashMap.newKeySet();
+            onLineUsers.add(memberId);
+            return onLineUsers;
+        });
     }
 
     @Override
     public void removeOnlineUser(Long chatRoomId, Long memberId) {
-        Set<Long> onlineUsers = onlineMap.get(chatRoomId);
-        if (onlineUsers == null) return;
-        onlineUsers.remove(memberId);
-        if (onlineUsers.isEmpty()) onlineMap.remove(chatRoomId);
+        onlineMap.computeIfPresent(chatRoomId, (k, onLineUsers) -> {
+            onLineUsers.remove(memberId);
+            return onLineUsers.isEmpty() ? null : onLineUsers;
+        });
     }
 
     @Override
     public Set<Long> getOnlineUserIds(Long chatRoomId) {
-        return onlineMap.getOrDefault(chatRoomId, new HashSet<>());
+        return onlineMap.getOrDefault(chatRoomId, Set.of());
     }
 }
